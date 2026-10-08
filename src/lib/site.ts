@@ -9,3 +9,6 @@ export const SITE = site as {
   description: string;
   email: string;
 };
+
+/* A site with no real address yet is a demo: search engines are told to stay out. */
+export const LISTED = new URL(SITE.url).hostname !== "example.com";

@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Marcellus } from "next/font/google";
-import { SITE } from "@/lib/site";
+import { LISTED, SITE } from "@/lib/site";
 import "./globals.css";
 
 const sans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: { default: `${SITE.name} — we find the patients your clinic never saw`, template: `%s · ${SITE.name}` },
   description: SITE.description,
   openGraph: { title: SITE.name, description: SITE.description, url: SITE.url, type: "website" },
+  ...(LISTED ? {} : { robots: { index: false, follow: false } }),
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#0d0807" };
