@@ -111,4 +111,21 @@ preset was declined (`declined_preset_id`) and the same request resubmitted.
 
 ---
 
-Credits to date: 10 stills x 2.75 = 27.5, plus clips at 10 each.
+## Clip M — flight over Dubai
+
+- Job `81e72497` · start = DXB B · end = DXB-close
+- Prompt:
+  > One continuous slow aerial flight straight forward and gently descending over the glowing night city, from the first frame to the last, at constant speed with no easing, no cut, no shake and no rotation. The tall spire tower keeps its exact shape and stays upright. The glowing road lines and points stay steady and do not flicker or pulse; no vehicles, no moving lights. The sky stays dark. Silent.
+- Gates (contact sheet): tower keeps shape PASS · no cut PASS · ends on the end frame PASS
+- Verdict: owner's call pending
+- Learned: the end still had far more building detail than the start still, and the model grew the detail smoothly across the flight instead of jumping. A start and end frame need the same landmarks, not the same level of detail.
+
+---
+
+Credits to date: 10 stills x 2.75 = 27.5 and 4 clips x 10 = 40. Total 67.5 (from the quotes; two stills were rejected).
+
+## What the page taught, for the playbook
+
+- The first scene's frames load with the page. Left alone they put 3.3 MB on first load and broke the motion budget. Loading three frames first and the rest on the first scroll brought first load to 469 KB.
+- A 16:9 clip cropped on a tall phone lost the subject and was soft. Phones need their own 3:4 cut centred on the subject, and that cut's first frame doubles as the scene's still.
+- Anything drawn by code on top of a clip (points, tags) only stays put on a held frame. The sweep runs after the flight ends, not during it.

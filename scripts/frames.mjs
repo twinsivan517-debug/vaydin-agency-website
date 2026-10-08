@@ -13,7 +13,7 @@ const CLIPS = { m: 0.72, a: 0.68, b: 0.68, c: 0.68 };
 const cut = (cx) => `crop=1080:1440:${Math.round(Math.min(Math.max(2560 * cx - 540, 0), 1480))}:0,`;
 const SIZES = { d: () => "scale=1280:-2", m: (cx) => `${cut(cx)}scale=648:-2` };
 const FPS = 12;
-const QUALITY = 62;
+const QUALITY = { d: 62, m: 52 };
 
 const ff = (...args) => execFileSync("ffmpeg", ["-v", "error", "-y", ...args], { stdio: "inherit" });
 
@@ -25,7 +25,7 @@ for (const [clip, cx] of Object.entries(CLIPS)) {
     rmSync(dir, { recursive: true, force: true });
     mkdirSync(dir, { recursive: true });
     ff("-i", src, "-vf", `fps=${FPS},${shape(cx)}:flags=lanczos`, "-c:v", "libwebp",
-      "-quality", String(QUALITY), "-an", `${dir}/%03d.webp`);
+      "-quality", String(QUALITY[key]), "-an", `${dir}/%03d.webp`);
     counts[clip] = readdirSync(dir).length;
   }
   mkdirSync("public/img", { recursive: true });

@@ -10,7 +10,6 @@ import { SITE } from "@/lib/site";
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const WHATSAPP = "https://wa.me/971505553148";
-const SIZES = "(max-width: 820px) 134vh, 100vw";
 
 /* Where each sample clinic sits on the last frame of the city flight,
    as a fraction of the picture. Illustration only: no real clinic. */
@@ -69,6 +68,40 @@ function Points({ fixing = false }: { fixing?: boolean }) {
   });
 }
 
+/* A scene's still picture. Phones take the first or last frame of their own
+   3:4 sequence, which the canvas then reuses from the cache. */
+function Poster({
+  clip,
+  end = false,
+  alt,
+  eager = false,
+  className,
+  style,
+}: {
+  clip: keyof typeof FRAMES;
+  end?: boolean;
+  alt: string;
+  eager?: boolean;
+  className?: string;
+  style?: CSSProperties;
+}) {
+  const frame = String(end ? FRAMES[clip] : 1).padStart(3, "0");
+  return (
+    <picture>
+      <source media="(max-width: 820px)" srcSet={`/frames/${clip}/m/${frame}.webp`} />
+      <img
+        src={`/img/${clip}-${end ? "last" : "first"}.webp`}
+        alt={alt}
+        loading={eager ? "eager" : "lazy"}
+        fetchPriority={eager ? "high" : "auto"}
+        decoding="async"
+        className={className}
+        style={style}
+      />
+    </picture>
+  );
+}
+
 const TEXT = "absolute inset-x-0 bottom-0 grid px-5 pb-10 sm:px-12 sm:pb-16";
 const BLOCK = "max-w-xl [grid-area:1/1] self-end";
 const H = "font-display text-3xl leading-tight sm:text-5xl";
@@ -97,8 +130,8 @@ export default function Home() {
               className="dive"
               style={vars({ "--at": 0.8, "--xn": CHOSEN.x, "--y": `${CHOSEN.y * 100}%` })}
             >
-              <Image src="/img/m-first.webp" alt="Dubai at night, seen from above, drawn in gold light" fill sizes={SIZES} loading="eager" fetchPriority="high" />
-              <Image src="/img/m-last.webp" alt="" fill sizes={SIZES} className="fade-in" style={vars({ "--at": 0.3, "--over": 0.02 })} />
+              <Poster clip="m" alt="Dubai at night, seen from above, drawn in gold light" eager />
+              <Poster clip="m" end alt="" className="fade-in" style={vars({ "--at": 0.3, "--over": 0.02 })} />
               <ScrubSequence name="m" count={FRAMES.m} from={0.02} to={0.32} />
               <div className="beam" style={vars({ "--b0": SWEEP.b0, "--b1": SWEEP.b1 })} />
               <div className="hide absolute inset-0" style={vars({ "--b0": SWEEP.b0, "--b1": SWEEP.b1, "--at": 0.79 })}>
@@ -129,7 +162,7 @@ export default function Home() {
 
         <Scene id="inside" length={260} label="Inside one clinic">
           <div className="stage" style={vars({ "--cx": 0.68 })}>
-            <Image src="/img/a-first.webp" alt="An empty clinic reception at sunset, a phone glowing on the marble desk" fill sizes={SIZES} />
+            <Poster clip="a" alt="An empty clinic reception at sunset, a phone glowing on the marble desk" />
             <ScrubSequence name="a" count={FRAMES.a} from={0.05} to={0.92} />
           </div>
           <div className="scrim" />
@@ -151,8 +184,8 @@ export default function Home() {
 
         <Scene id="wait" length={420} label="The wait">
           <div className="stage" style={vars({ "--cx": 0.68 })}>
-            <Image src="/img/b-first.webp" alt="The phone on the desk, still unanswered" fill sizes={SIZES} />
-            <Image src="/img/b-last.webp" alt="" fill sizes={SIZES} className="fade-in" style={vars({ "--at": 0.5, "--over": 0.02 })} />
+            <Poster clip="b" alt="The phone on the desk, still unanswered" />
+            <Poster clip="b" end alt="" className="fade-in" style={vars({ "--at": 0.5, "--over": 0.02 })} />
             <ScrubSequence name="b" count={FRAMES.b} from={0.05} to={0.8} />
           </div>
           <div className="scrim" />
@@ -192,11 +225,11 @@ export default function Home() {
 
         <Scene id="fix" length={520} label="The fix">
           <div className="stage" style={vars({ "--cx": 0.68 })}>
-            <Image src="/img/c-first.webp" alt="" fill sizes={SIZES} />
+            <Poster clip="c" alt="" />
             <ScrubSequence name="c" count={FRAMES.c} from={0} to={0.22} />
           </div>
           <div className="stage fade-in" style={vars({ "--cx": 0.72, "--at": 0.2, "--over": 0.06 })}>
-            <Image src="/img/m-last.webp" alt="The city again, the clinic points turning from red to green" fill sizes={SIZES} />
+            <Poster clip="m" end alt="The city again, the clinic points turning from red to green" />
             <ScrubSequence name="m" count={FRAMES.m} from={0.82} to={1} reverse />
             <div className="beam" style={vars({ "--b0": RESWEEP.b0, "--b1": RESWEEP.b1 })} />
             <div className="hide absolute inset-0" style={vars({ "--b0": -2, "--b1": -1, "--at": 0.8 })}>

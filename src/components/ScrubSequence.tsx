@@ -6,6 +6,18 @@ import { useSceneProgress } from "./Scene";
 const PHONE = "(max-width: 820px)";
 const REDUCE = "(prefers-reduced-motion: reduce)";
 const MAX_DPR = 1.5;
+const FIRST_PASS = 3;
+
+/* Until the visitor scrolls, a sequence loads only a few frames: the page's
+   first load stays light, and nothing is scrubbed before a scroll anyway. */
+let scrolled: Promise<void> | undefined;
+function firstScroll() {
+  scrolled ??= new Promise((resolve) => {
+    if (scrollY > 0) resolve();
+    else addEventListener("scroll", () => resolve(), { once: true, passive: true });
+  });
+  return scrolled;
+}
 
 function loadOrder(count: number): number[] {
   const seen = new Set<number>();
@@ -92,7 +104,9 @@ export function ScrubSequence({
 
     let run = 0;
     const load = async (mine: number) => {
+      let done = 0;
       for (const slot of loadOrder(s.total)) {
+        if (done++ === FIRST_PASS) await firstScroll();
         if (mine !== run) return;
         if (s.frames[slot]) continue;
         const img = new Image();
