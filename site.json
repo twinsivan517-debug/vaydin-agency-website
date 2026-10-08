@@ -1,0 +1,7 @@
+{
+  "name": "Starter",
+  "tier": "static",
+  "url": "https://example.com",
+  "description": "One clear sentence about what this site is for.",
+  "email": "hello@example.com"
+}

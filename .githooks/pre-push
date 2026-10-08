@@ -1,0 +1,3 @@
+#!/bin/sh
+# Armed by `npm install` (the prepare script points git at this folder).
+exec node scripts/ship-gate.mjs
