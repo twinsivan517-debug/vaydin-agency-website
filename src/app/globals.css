@@ -63,8 +63,7 @@ body {
 
 /* --xn is a spot's place across the whole 16:9 picture, 0 to 1. */
 .point,
-.card,
-.dive {
+.card {
   --px: calc(var(--xn) * 100%);
 }
 
@@ -90,8 +89,7 @@ body {
   }
 
   .point,
-  .card,
-  .dive {
+  .card {
     --px: calc((var(--xn) - var(--cx) + 0.2109) / 0.4219 * 100%);
   }
 
@@ -169,14 +167,6 @@ body {
       linear-gradient(to bottom, rgb(13 8 7 / 0.85), rgb(13 8 7 / 0) 34%),
       linear-gradient(to top, rgb(13 8 7 / 0.92), rgb(13 8 7 / 0) 58%);
   }
-}
-
-/* The dive: the stage grows toward one point. */
-.dive {
-  position: absolute;
-  inset: 0;
-  transform-origin: var(--px) var(--y);
-  scale: calc(1 + clamp(0, (var(--p) - var(--at)) / (1 - var(--at)), 1) * 1.4);
 }
 
 /* The beam: a bright line that crosses the stage top to bottom between
@@ -390,7 +380,6 @@ body {
     display: none;
   }
 
-  .dive,
   .ring {
     scale: 1;
   }

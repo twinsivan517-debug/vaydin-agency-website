@@ -7,6 +7,9 @@ const PHONE = "(max-width: 820px)";
 const REDUCE = "(prefers-reduced-motion: reduce)";
 const MAX_DPR = 1.5;
 const FIRST_PASS = 3;
+/* A sequence holds its frames only while the scene is within LEAD of the
+   part it plays in, so one long scene never keeps every clip decoded. */
+const LEAD = 0.1;
 
 /* Until the visitor scrolls, a sequence loads only a few frames: the page's
    first load stays light, and nothing is scrubbed before a scroll anyway. */
@@ -53,7 +56,15 @@ export function ScrubSequence({
   reverse?: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const state = useRef({ frames: [] as (HTMLImageElement | undefined)[], total: 0, want: 0, drawn: -1 });
+  const state = useRef({
+    frames: [] as (HTMLImageElement | undefined)[],
+    total: 0,
+    want: 0,
+    drawn: -1,
+    seen: false,
+    near: false,
+    sync: () => {},
+  });
 
   const draw = () => {
     const canvas = canvasRef.current;
@@ -74,6 +85,11 @@ export function ScrubSequence({
 
   useSceneProgress((p) => {
     const s = state.current;
+    const near = p >= from - LEAD && p <= to + LEAD;
+    if (near !== s.near) {
+      s.near = near;
+      s.sync();
+    }
     if (!s.total) return;
     const local = Math.min(1, Math.max(0, (p - from) / (to - from)));
     s.want = Math.round((reverse ? 1 - local : local) * (s.total - 1));
@@ -121,25 +137,35 @@ export function ScrubSequence({
         draw();
       }
     };
+    let held = false;
+    s.sync = () => {
+      const hold = s.seen && s.near;
+      if (hold === held) return;
+      held = hold;
+      run += 1;
+      if (hold) {
+        void load(run);
+      } else {
+        s.frames = [];
+        s.drawn = -1;
+        delete canvas.dataset.ready;
+      }
+    };
     const io = new IntersectionObserver(
       ([entry]) => {
-        run += 1;
-        if (entry.isIntersecting) {
-          void load(run);
-        } else {
-          s.frames = [];
-          s.drawn = -1;
-          delete canvas.dataset.ready;
-        }
+        s.seen = entry.isIntersecting;
+        s.sync();
       },
       { rootMargin: "150% 0px" },
     );
     io.observe(canvas);
+    s.sync();
 
     return () => {
       run += 1;
       io.disconnect();
       ro.disconnect();
+      s.sync = () => {};
       s.frames = [];
     };
   }, [name, count, phoneStep, reverse]);

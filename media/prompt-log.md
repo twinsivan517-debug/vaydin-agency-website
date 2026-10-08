@@ -152,3 +152,32 @@ Owner's brief, 2026-10-08: the camera goes from the map through the clinic's doo
 - Same model and settings · reference = S8 (`1cc9f968`) · job `f139229b-8937-4b76-90f6-38c00f48d68c` · 2.75 credits
 - Prompt core: "Change only the time of day and one detail… keep the camera position, framing… every object exactly the same", sunset sky, "the monitor is a plain blank back panel with no logo and no marking of any kind".
 - Gates: same door and framing yes · logo gone yes · matches S7's light yes.
+
+## S10 — reception, calm (end frame of the recovery)
+
+- Same model and settings · reference = S7 (`2366c42d`) · job `cb52ad6e-5af5-46cf-8e3e-eccfa72adb24` · 2.75 credits
+- Prompt core: "Change only what the people are doing and two small details… keep the camera position, framing… every object exactly the same"; handset down, a warm smile at the patient, the hurrying colleague now standing still; monitor pale green; phone screen dark.
+- Gates: same room, same people, same framing yes · faces clean yes.
+
+## Clip N — the descent, map to door
+
+- MiniMax H3 · 2K · 5 s · job `2dd32f32-e07c-4947-9bb1-2b221f2db2d2` · start = DXB-close · end = S9 · 10 credits
+- Prompt core: "One continuous fast aerial descent… dives straight forward and down… the view levelling out… settles at street level, eye height, facing the glass entrance door, perfectly centred"; "the sky brightens from dark night into a warm amber and violet sunset, and the glowing gold line-drawing look of the city turns smoothly into a real photographic street"; "The door… appear gradually out of the bright point… nothing pops in suddenly".
+- Gates (contact sheet): no cut PASS · lands on the end frame PASS · middle readable PASS (motion blur and a light flare carry the change of place).
+- The move is over at about 3.4 s and the rest stands still; the page uses only the first 3.4 s.
+- Learned: two stills that share nothing can still be joined if the prompt names a bridge between them (here: one bright point that grows into the door) and says the look itself changes over the move. A fast move hides the change better than a slow one.
+
+## Clip E — through the door
+
+- Same settings · job `e201ee77-0e05-4250-a5ba-aeb6c7fafce8` · start = S9 · end = S7 · 10 credits
+- Prompt core: "One continuous slow steadicam move… the two glass panels slide open sideways by themselves just before the camera reaches them… passes through the doorway… drifting slightly to the left"; "The people are already in the room as the camera enters and are revealed naturally".
+- Gates: no cut PASS · people stable PASS · ends on the end frame PASS. Stands still after about 3.9 s; trimmed.
+
+## Clip R — the desk calms, camera locked
+
+- Same settings · job `387f210c-41c0-4591-8e63-240bae2579fc` · start = S7 · end = S10 · 10 credits
+- Prompt core: "The camera is completely locked on a tripod"; each person's action in order; "The glow of the computer monitor shifts smoothly from pale red to pale green"; "Faces stay natural and stable; nobody looks at the camera".
+- Gates: camera locked PASS · faces stable PASS · monitor turns green PASS. The colleague walks out and back in before stopping; reads as natural.
+
+Second round credits: 4 stills x 2.75 = 11 and 3 clips x 10 = 30. Running total 108.5 (from the quotes).
+All three clips passed on the first take.
