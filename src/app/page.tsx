@@ -192,16 +192,18 @@ function Shot({
   from,
   to,
   reverse = false,
+  dissolve = 0.008,
   alt = "",
 }: {
   clip: keyof typeof FRAMES;
   from: number;
   to: number;
   reverse?: boolean;
+  dissolve?: number;
   alt?: string;
 }) {
   return (
-    <div className="fade-in absolute inset-0" style={vars({ "--at": from - 0.008, "--over": 0.008 })}>
+    <div className="fade-in absolute inset-0" style={vars({ "--at": from - dissolve, "--over": dissolve })}>
       <Poster clip={clip} end={reverse} alt="" />
       <Poster
         clip={clip}
@@ -350,8 +352,7 @@ export default function Home() {
           <div className="stage" style={vars({ "--cx": 0.72 })}>
             <Poster clip="r" alt="The same reception the next evening, just as busy" />
             <Shot clip="r" from={0.05} to={0.27} alt="The receptionist puts the phone down and smiles at her patient; the rush has calmed" />
-            <Shot clip="e" from={0.33} to={0.46} reverse />
-            <Shot clip="n" from={0.46} to={0.6} reverse alt="The city again, the clinic points turning from red to green" />
+            <Shot clip="n" from={0.42} to={0.6} reverse dissolve={0.06} alt="The city again, the clinic points turning from red to green" />
             <div className="beam" style={vars({ "--b0": RESWEEP.b0, "--b1": RESWEEP.b1 })} />
             <div className="fade-in absolute inset-0" style={vars({ "--at": 0.6, "--over": 0.01 })}>
               <div className="cut absolute inset-0" style={vars({ "--b0": -2, "--b1": -1, "--at": 0.875 })}>
@@ -363,7 +364,7 @@ export default function Home() {
           <div className="scrim" />
           <div className="shade fade-out" style={vars({ "--at": 0, "--over": 0.05 })} />
           <div className={TEXT}>
-            <div className={`${BLOCK} hide`} style={vars({ "--at": 0.33 })}>
+            <div className={`${BLOCK} hide`} style={vars({ "--at": 0.36 })}>
               <p className="label text-gold-bright">Step 02 · Fix &amp; run · The next evening</p>
               <h2 className={`${H} mt-4`}>Then we fix it, and run it.</h2>
               <p className={LEAD}>Same clinic, same rush. Your clinic&apos;s own voice and number.</p>
