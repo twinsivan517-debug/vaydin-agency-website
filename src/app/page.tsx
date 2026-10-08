@@ -11,61 +11,136 @@ export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const WHATSAPP = "https://wa.me/971505553148";
 
-/* Where each sample clinic sits on the last frame of the city flight,
-   as a fraction of the picture. Illustration only: no real clinic. */
-const POINTS = [
-  { x: 0.77, y: 0.59, text: "Replied after 3 hours", chosen: true, left: true },
-  { x: 0.62, y: 0.36, text: "No reply after 6 PM" },
-  { x: 0.675, y: 0.5, text: "Reviews unanswered" },
-  { x: 0.42, y: 0.47, text: "Booking link broken", left: true, wide: true },
-  { x: 0.895, y: 0.48, text: "Instagram DMs unread", left: true, wide: true },
-  { x: 0.295, y: 0.56, text: "Missed call, no call back", wide: true },
-  { x: 0.133, y: 0.43, text: "Closed on Google, open in fact", wide: true },
-];
-const CHOSEN = POINTS[0];
+/* What a patient can check about a clinic from outside. */
+const CHECKS = ["Website", "Replies", "Booking", "Prices", "Reviews", "Social media"];
 
-const SWEEP = { b0: 0.36, b1: 0.72 };
+/* Sample clinics on the last frame of the city flight, placed as a fraction
+   of the picture. Illustration only: no real clinic. `d` and `m` are the
+   clinic's turn in the scan on wide screens and on phones; a clinic without
+   one is not shown there. Each row is [fine, what was found], in CHECKS order. */
+type Clinic = {
+  x: number;
+  y: number;
+  leaks: boolean;
+  d?: number;
+  m?: number;
+  left?: boolean;
+  chosen?: boolean;
+  rows: [boolean, string][];
+};
+const CLINICS: Clinic[] = [
+  {
+    x: 0.133, y: 0.43, leaks: true, d: 0,
+    rows: [[false, "Down tonight"], [true, "Answers in minutes"], [false, "Link broken"],
+      [false, "Nowhere to find"], [true, "All answered"], [false, "Silent for months"]],
+  },
+  {
+    x: 0.62, y: 0.36, leaks: false, d: 1, m: 0,
+    rows: [[true, "Fast on phones"], [true, "Answers in minutes"], [true, "Books online"],
+      [true, "Shown clearly"], [true, "All answered"], [false, "Silent for weeks"]],
+  },
+  {
+    x: 0.42, y: 0.47, leaks: true, d: 2,
+    rows: [[true, "Fast on phones"], [false, "No reply after 6 PM"], [false, "Phone calls only"],
+      [true, "Shown clearly"], [false, "Bad ones unanswered"], [true, "Posted this week"]],
+  },
+  {
+    x: 0.675, y: 0.5, leaks: true, m: 1,
+    rows: [[true, "Fast on phones"], [false, "No reply after 6 PM"], [false, "Phone calls only"],
+      [true, "Shown clearly"], [false, "Bad ones unanswered"], [true, "Posted this week"]],
+  },
+  {
+    x: 0.895, y: 0.48, leaks: true, d: 3, m: 2, left: true,
+    rows: [[false, "Slow on phones"], [false, "Messages left unread"], [true, "Books online"],
+      [false, "Out of date"], [true, "All answered"], [false, "Silent for months"]],
+  },
+  {
+    x: 0.295, y: 0.56, leaks: false, d: 4,
+    rows: [[true, "Fast on phones"], [true, "Answers in minutes"], [true, "Books online"],
+      [false, "Nowhere to find"], [true, "All answered"], [true, "Posted this week"]],
+  },
+  {
+    x: 0.77, y: 0.59, leaks: true, d: 5, m: 3, left: true, chosen: true,
+    rows: [[false, "Slow on phones"], [false, "Replied after 3 hours"], [false, "Link broken"],
+      [true, "Shown clearly"], [false, "Bad ones unanswered"], [true, "Posted this week"]],
+  },
+];
+const CHOSEN = CLINICS.find((clinic) => clinic.chosen)!;
+
+const SWEEP = { b0: 0.24, b1: 0.4 };
+const SCAN = { from: 0.42, to: 0.84 };
+const TURN = {
+  d: (SCAN.to - SCAN.from) / CLINICS.filter((clinic) => clinic.d !== undefined).length,
+  m: (SCAN.to - SCAN.from) / CLINICS.filter((clinic) => clinic.m !== undefined).length,
+};
 const RESWEEP = { b0: 0.5, b1: 0.72 };
 const GOLD_AT = 0.32;
 const GREEN_AT = 0.42;
 
 const vars = (v: Record<string, string | number>) => v as CSSProperties;
 
+const only = (clinic: Clinic) =>
+  clinic.d === undefined ? "narrow-only" : clinic.m === undefined ? "wide-only" : "";
+
+const place = (clinic: Clinic) => ({
+  "--xn": clinic.x,
+  "--y": `${clinic.y * 100}%`,
+  ...(clinic.d === undefined ? {} : { "--t0d": SCAN.from + clinic.d * TURN.d, "--wd": TURN.d }),
+  ...(clinic.m === undefined ? {} : { "--t0m": SCAN.from + clinic.m * TURN.m, "--wm": TURN.m }),
+});
+
+/* The dots. In the scan each takes its colour when its turn ends; in the fix
+   they arrive already judged and the leaking ones turn green. */
 function Points({ fixing = false }: { fixing?: boolean }) {
-  return POINTS.map((point) => {
-    const green = point.chosen ? GREEN_AT : RESWEEP.b0 + (RESWEEP.b1 - RESWEEP.b0) * point.y;
-    const tag = `tag ${point.left ? "tag-left" : ""}`;
-    return (
-      <div
-        key={point.text}
-        className={`point ${point.wide ? "wide-only" : ""}`}
-        style={vars({
-          "--xn": point.x,
-          "--y": `${point.y * 100}%`,
-          "--yn": point.y,
-          ...(fixing ? { "--tn": green, ...(point.chosen ? { "--tg": GOLD_AT } : {}) } : {}),
-        })}
-      >
-        <span className="dot" />
-        {fixing && point.chosen ? (
-          <>
-            <span className={`${tag} until`} style={vars({ "--at": GOLD_AT })}>
-              {point.text}
+  return CLINICS.map((clinic) => (
+    <div
+      key={clinic.x}
+      className={`point ${only(clinic)}`}
+      style={vars({
+        ...(fixing ? { "--xn": clinic.x, "--y": `${clinic.y * 100}%`, "--judged": 1 } : place(clinic)),
+        "--yn": clinic.y,
+        "--verdict": clinic.leaks ? "var(--leak)" : "var(--proof)",
+        ...(fixing && clinic.leaks
+          ? { "--tn": clinic.chosen ? GREEN_AT : RESWEEP.b0 + (RESWEEP.b1 - RESWEEP.b0) * clinic.y }
+          : {}),
+        ...(fixing && clinic.chosen ? { "--tg": GOLD_AT } : {}),
+      })}
+    >
+      {!fixing && <span className="ring" />}
+      <span className="dot" />
+      {fixing && clinic.chosen && (
+        <span className="tag tag-left since" style={vars({ "--at": GOLD_AT })}>
+          Answered in minutes, booked
+        </span>
+      )}
+    </div>
+  ));
+}
+
+function Cards() {
+  return CLINICS.map((clinic) => (
+    <div
+      key={clinic.x}
+      className={`card ${clinic.left ? "card-left" : ""} ${only(clinic)}`}
+      style={vars(place(clinic))}
+    >
+      <p className="label text-gold-bright">Sample clinic · Illustration</p>
+      <ul className="mt-2">
+        {clinic.rows.map(([fine, found], i) => (
+          <li key={CHECKS[i]} className="row" style={vars({ "--ri": 0.08 + i * 0.1 })}>
+            <span className={`mark ${fine ? "ok" : "bad"}`} aria-hidden="true">
+              {fine ? "\u2713" : "\u2715"}
             </span>
-            <span className={`${tag} since`} style={vars({ "--at": GOLD_AT })}>
-              Answered in minutes, booked
+            <span>{CHECKS[i]}</span>
+            <span className="found">
+              <span className="sr-only">{fine ? "fine: " : "problem: "}</span>
+              {found}
             </span>
-          </>
-        ) : fixing ? (
-          <span className={`${tag} until`} style={vars({ "--at": green })}>
-            {point.text}
-          </span>
-        ) : (
-          <span className={tag}>{point.text}</span>
-        )}
-      </div>
-    );
-  });
+          </li>
+        ))}
+      </ul>
+    </div>
+  ));
 }
 
 /* A scene's still picture. Phones take the first or last frame of their own
@@ -124,36 +199,47 @@ export default function Home() {
       </header>
 
       <main className="flex-1">
-        <Scene id="city" length={520} label="Dubai tonight">
+        <Scene id="city" length={860} label="Dubai tonight">
           <div className="stage" style={vars({ "--cx": 0.72 })}>
             <div
               className="dive"
-              style={vars({ "--at": 0.8, "--xn": CHOSEN.x, "--y": `${CHOSEN.y * 100}%` })}
+              style={vars({ "--at": 0.87, "--xn": CHOSEN.x, "--y": `${CHOSEN.y * 100}%` })}
             >
               <Poster clip="m" alt="Dubai at night, seen from above, drawn in gold light" eager />
-              <Poster clip="m" end alt="" className="fade-in" style={vars({ "--at": 0.3, "--over": 0.02 })} />
-              <ScrubSequence name="m" count={FRAMES.m} from={0.02} to={0.32} />
+              <Poster clip="m" end alt="" className="fade-in" style={vars({ "--at": 0.19, "--over": 0.02 })} />
+              <ScrubSequence name="m" count={FRAMES.m} from={0.02} to={0.21} />
               <div className="beam" style={vars({ "--b0": SWEEP.b0, "--b1": SWEEP.b1 })} />
-              <div className="hide absolute inset-0" style={vars({ "--b0": SWEEP.b0, "--b1": SWEEP.b1, "--at": 0.79 })}>
+              <div className="cut absolute inset-0" style={vars({ "--b0": SWEEP.b0, "--b1": SWEEP.b1, "--at": 0.86 })}>
                 <Points />
               </div>
             </div>
           </div>
           <div className="scrim" />
-          <div className="shade fade-in" style={vars({ "--at": 0.84, "--over": 0.12 })} />
+          <div className="stage cut" style={vars({ "--cx": 0.72, "--at": 0.86 })}>
+            <Cards />
+          </div>
+          <div className="shade fade-in" style={vars({ "--at": 0.88, "--over": 0.09 })} />
           <div className={TEXT}>
-            <div className={`${BLOCK} hide`} style={vars({ "--at": 0.3 })}>
+            <div className={`${BLOCK} hide`} style={vars({ "--at": 0.2 })}>
               <p className="label text-gold-bright">Sample clinics · Illustration</p>
               <h1 className={`${H} mt-4`}>Somewhere in Dubai tonight, a patient is choosing a clinic.</h1>
               <p className={LEAD}>Your name is on the list.</p>
             </div>
-            <div className={`${BLOCK} hide`} style={vars({ "--at": 0.84 })}>
-              <div className="show" style={vars({ "--at": 0.34 })}>
+            <div className={`${BLOCK} hide`} style={vars({ "--at": SCAN.from })}>
+              <div className="show" style={vars({ "--at": 0.22 })}>
                 <p className="label text-leak">Step 01 · Diagnose</p>
                 <h2 className={`${H} mt-4`}>First, we see what your patients see.</h2>
                 <p className={LEAD}>
                   Everything a patient can find about a clinic from the outside: how it answers, how
                   it looks on Google and Instagram. What leaks shows up in red.
+                </p>
+              </div>
+            </div>
+            <div className={`${BLOCK} wide-only hide`} style={vars({ "--at": 0.86 })}>
+              <div className="show" style={vars({ "--at": SCAN.from + 0.01 })}>
+                <p className="label text-leak">Step 01 · Diagnose</p>
+                <p className="mt-2 text-lg text-foreground">
+                  Clinic by clinic. Green holds. Red leaks patients.
                 </p>
               </div>
             </div>
@@ -232,7 +318,7 @@ export default function Home() {
             <Poster clip="m" end alt="The city again, the clinic points turning from red to green" />
             <ScrubSequence name="m" count={FRAMES.m} from={0.82} to={1} reverse />
             <div className="beam" style={vars({ "--b0": RESWEEP.b0, "--b1": RESWEEP.b1 })} />
-            <div className="hide absolute inset-0" style={vars({ "--b0": -2, "--b1": -1, "--at": 0.8 })}>
+            <div className="cut absolute inset-0" style={vars({ "--b0": -2, "--b1": -1, "--at": 0.8 })}>
               <Points fixing />
             </div>
           </div>

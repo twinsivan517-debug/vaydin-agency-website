@@ -1,6 +1,6 @@
 // Turns each clip in media/clips/ into the image sequences the page scrubs.
 //   node scripts/frames.mjs
-// Writes public/frames/<clip>/d (the whole 16:9 picture, 1280 wide) and /m
+// Writes public/frames/<clip>/d (the whole 16:9 picture, 1920 wide) and /m
 // (a 3:4 cut around the clip's focus, 648 wide, for phones), 12 frames a
 // second, WebP, plus src/lib/frames.json with the frame count per clip.
 // The focus is the same number the page gives its stage as --cx.
@@ -11,7 +11,7 @@ import { mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 const CLIPS = { m: 0.72, a: 0.68, b: 0.68, c: 0.68 };
 // Clips are 2560x1440; the phone cut is 1080x1440, kept inside the picture.
 const cut = (cx) => `crop=1080:1440:${Math.round(Math.min(Math.max(2560 * cx - 540, 0), 1480))}:0,`;
-const SIZES = { d: () => "scale=1280:-2", m: (cx) => `${cut(cx)}scale=648:-2` };
+const SIZES = { d: () => "scale=1920:-2", m: (cx) => `${cut(cx)}scale=648:-2` };
 const FPS = 12;
 const QUALITY = { d: 62, m: 52 };
 

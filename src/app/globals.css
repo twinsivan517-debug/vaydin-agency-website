@@ -63,8 +63,21 @@ body {
 
 /* --xn is a spot's place across the whole 16:9 picture, 0 to 1. */
 .point,
+.card,
 .dive {
   --px: calc(var(--xn) * 100%);
+}
+
+/* A clinic is examined from --t0 for --w of the scene. Wide screens and
+   phones show different clinics, so each has its own timetable. */
+.point,
+.card {
+  --t0: var(--t0d, 9);
+  --w: var(--wd, 1);
+  --act: min(
+    clamp(0, (var(--p) - var(--t0)) * 1000, 1),
+    clamp(0, (var(--t0) + var(--w) - var(--p)) * 1000, 1)
+  );
 }
 
 /* Phones get a 3:4 cut of the picture, centred on --cx. The same spot is
@@ -77,8 +90,15 @@ body {
   }
 
   .point,
+  .card,
   .dive {
     --px: calc((var(--xn) - var(--cx) + 0.2109) / 0.4219 * 100%);
+  }
+
+  .point,
+  .card {
+    --t0: var(--t0m, 9);
+    --w: var(--wm, 1);
   }
 
 }
@@ -112,6 +132,11 @@ body {
   translate: 0 calc(clamp(0, (var(--p) - var(--at) + 0.07) * 14, 1) * -1.25rem);
 }
 
+/* cut: leaves at --at with no slide, for layers that must stay on the picture. */
+.cut {
+  opacity: clamp(0, (var(--at) - var(--p)) * 1000, 1);
+}
+
 /* fade: for pictures and shades only, never text. */
 .fade-in {
   opacity: clamp(0, (var(--p) - var(--at)) / var(--over, 0.1), 1);
@@ -134,7 +159,7 @@ body {
   pointer-events: none;
   background:
     linear-gradient(to bottom, rgb(13 8 7 / 0.7), rgb(13 8 7 / 0) 16%),
-    linear-gradient(to right, rgb(13 8 7 / 0.8), rgb(13 8 7 / 0) 62%),
+    radial-gradient(ellipse 75% 65% at 0% 100%, rgb(13 8 7 / 0.88), rgb(13 8 7 / 0) 70%),
     linear-gradient(to top, rgb(13 8 7 / 0.75), rgb(13 8 7 / 0) 45%);
 }
 
@@ -151,7 +176,7 @@ body {
   position: absolute;
   inset: 0;
   transform-origin: var(--px) var(--y);
-  scale: calc(1 + clamp(0, (var(--p) - var(--at)) / (1 - var(--at)), 1) * 4);
+  scale: calc(1 + clamp(0, (var(--p) - var(--at)) / (1 - var(--at)), 1) * 1.4);
 }
 
 /* The beam: a bright line that crosses the stage top to bottom between
@@ -177,16 +202,102 @@ body {
 
 .point {
   --lit: clamp(0, (var(--p) - (var(--b0) + (var(--b1) - var(--b0)) * var(--yn))) * 1000, 1);
+  --judged-on: max(
+    var(--judged, 0),
+    clamp(0, (var(--p) - (var(--t0) + var(--w) * 0.8)) * 1000, 1)
+  );
   --gold-on: clamp(0, (var(--p) - var(--tg, 9)) * 1000, 1);
   --green-on: clamp(0, (var(--p) - var(--tn, 9)) * 1000, 1);
   --c: color-mix(
     in srgb,
     var(--proof) calc(var(--green-on) * 100%),
-    color-mix(in srgb, var(--gold-bright) calc(var(--gold-on) * 100%), var(--leak))
+    color-mix(
+      in srgb,
+      var(--gold-bright) calc(var(--gold-on) * 100%),
+      color-mix(in srgb, var(--verdict) calc(var(--judged-on) * 100%), var(--foreground))
+    )
   );
   position: absolute;
   left: var(--px);
   top: var(--y);
+}
+
+/* The ring marks the clinic being examined. */
+.ring {
+  position: absolute;
+  left: -1.5rem;
+  top: -1.5rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 2px solid var(--gold-bright);
+  box-shadow: 0 0 1rem rgb(245 217 120 / 0.5);
+  opacity: var(--act);
+  scale: calc(1.7 - 0.7 * clamp(0, (var(--p) - var(--t0)) * 60, 1));
+}
+
+/* The card lists what a patient can check about that clinic from outside. */
+.card {
+  position: absolute;
+  left: calc(var(--px) + 2rem);
+  top: calc(var(--y) - 1.25rem);
+  width: 18rem;
+  border: 1px solid rgb(201 164 74 / 0.55);
+  border-radius: 0.6rem;
+  background: rgb(13 8 7 / 0.92);
+  padding: 0.8rem 0.9rem 0.7rem;
+  pointer-events: none;
+  opacity: var(--act);
+}
+
+.card-left {
+  left: calc(var(--px) - 2rem);
+  translate: -100% 0;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  opacity: clamp(0, (var(--p) - (var(--t0) + var(--w) * var(--ri))) * 1000, 1);
+}
+
+.row .found {
+  margin-left: auto;
+  text-align: right;
+  color: var(--muted);
+}
+
+.mark {
+  width: 1rem;
+  flex: none;
+  font-weight: 700;
+}
+
+.mark.ok {
+  color: var(--proof);
+}
+
+.mark.bad {
+  color: var(--leak);
+}
+
+@media (max-width: 820px) {
+  .card,
+  .card-left {
+    left: calc((var(--sw) - 100vw) / 2 + 1.25rem);
+    top: auto;
+    bottom: calc(50% - 50svh + 1.5rem);
+    width: calc(100vw - 2.5rem);
+    translate: none;
+  }
+
+  .row {
+    font-size: 1rem;
+  }
 }
 
 .dot {
@@ -237,6 +348,12 @@ body {
   }
 }
 
+@media (min-width: 821px) {
+  .narrow-only {
+    display: none;
+  }
+}
+
 .bubble {
   max-width: 21rem;
   border-radius: 1rem;
@@ -273,7 +390,8 @@ body {
     display: none;
   }
 
-  .dive {
+  .dive,
+  .ring {
     scale: 1;
   }
 
