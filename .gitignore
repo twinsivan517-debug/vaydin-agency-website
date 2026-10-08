@@ -43,3 +43,7 @@ next-env.d.ts
 # ship gate: the stamp is committed, the measurements are not
 .ship/*
 !.ship/stamp.json
+
+# generated source media: fetched again by job id from media/prompt-log.md
+/media/stills/
+/media/clips/
