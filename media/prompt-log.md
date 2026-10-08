@@ -129,3 +129,26 @@ Credits to date: 10 stills x 2.75 = 27.5 and 4 clips x 10 = 40. Total 67.5 (from
 - The first scene's frames load with the page. Left alone they put 3.3 MB on first load and broke the motion budget. Loading three frames first and the rest on the first scroll brought first load to 469 KB.
 - A 16:9 clip cropped on a tall phone lost the subject and was soft. Phones need their own 3:4 cut centred on the subject, and that cut's first frame doubles as the scene's still.
 - Anything drawn by code on top of a clip (points, tags) only stays put on a held frame. The sweep runs after the flight ends, not during it.
+
+# Second round: the door and the busy desk
+
+Owner's brief, 2026-10-08: the camera goes from the map through the clinic's door; inside, the team is confused and pulled in every direction (not untidy); one shot only of the light dying.
+
+## S7 — reception, team overwhelmed
+
+- GPT Image 2.5 · high · 2K · 16:9 · reference REF-RECEPTION · job `2366c42d-54e4-4e42-9ac4-04bcfda321ea` · 2.75 credits
+- Prompt core: the reference room seen from just inside the entrance, 28mm; "overwhelmed, not untidy"; receptionist on a landline reaching for the keyboard, a patient waiting with her back to the camera, a second staff member walking out of frame motion-blurred; an unattended smartphone on the marble; monitor a plain pale-red glow; nobody looks at the camera; left third dark.
+- Gates: room matches the brand photo yes · faces and hands clean yes · no text or logo yes · text zone on the left yes.
+- Learned: people held at mid distance, in side view or from behind, and "nobody looks at the camera" came back clean on the first try. Naming the mood as a contrast ("overwhelmed, not untidy") kept the room expensive.
+
+## S8 — the door at night (superseded by S9)
+
+- Same model and settings · reference REF-RECEPTION · job `1cc9f968-e3e9-4ebd-882d-5010426505fd` · 2.75 credits
+- Gates: door centred yes · interior matches yes · no logo NO (a maker's logo on the monitor) · time of day NO (night, the interior scene is sunset).
+- Learned: "no logos" does not stop a logo on a recognisable product. Describe the object as blank instead. Decide the time of day for every still in a sequence before the first prompt.
+
+## S9 — the door at sunset
+
+- Same model and settings · reference = S8 (`1cc9f968`) · job `f139229b-8937-4b76-90f6-38c00f48d68c` · 2.75 credits
+- Prompt core: "Change only the time of day and one detail… keep the camera position, framing… every object exactly the same", sunset sky, "the monitor is a plain blank back panel with no logo and no marking of any kind".
+- Gates: same door and framing yes · logo gone yes · matches S7's light yes.
