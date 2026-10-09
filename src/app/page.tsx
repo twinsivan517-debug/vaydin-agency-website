@@ -87,6 +87,38 @@ const INSIDE = [
 
 const vars = (v: Record<string, string | number>) => v as CSSProperties;
 
+/* The phone on the reception desk, as a fraction of the picture, and the
+   centre of that picture's phone cut. */
+const PHONE = { x: 0.7285, y: 0.545, cx: 0.56 };
+
+/* The call that phone gets. It rings from `at`; at `then` it is over. */
+function Call({ at, then, answered = false }: { at: number; then: number; answered?: boolean }) {
+  return (
+    <div
+      className="call"
+      style={vars({
+        "--xn": PHONE.x,
+        "--y": `${PHONE.y * 100}%`,
+        "--at": at,
+        "--then": then,
+        "--end": answered ? "var(--proof)" : "var(--leak)",
+      })}
+    >
+      <span className="call-ring" aria-hidden="true" />
+      <p className="call-tag">
+        <span className="ringing">
+          <span className="label">Incoming call</span>
+          New patient
+        </span>
+        <span className="ended">
+          <span className="label">{answered ? "Answered" : "Missed call"}</span>
+          New patient
+        </span>
+      </p>
+    </div>
+  );
+}
+
 const only = (clinic: Clinic) =>
   clinic.d === undefined ? "narrow-only" : clinic.m === undefined ? "wide-only" : "";
 
@@ -249,11 +281,14 @@ export default function Home() {
               <Points />
             </div>
             <Shot clip="n" from={0.52} to={0.66} alt="The entrance of a clinic at sunset, its reception glowing inside" />
-            <Shot clip="e" from={0.66} to={0.8} alt="Inside: a receptionist on the phone, a patient waiting, a colleague rushing past" />
+            <Shot clip="e" from={0.66} to={0.8} alt="Inside: a receptionist giving a patient her full attention while the phone on the desk lights up" />
           </div>
           <div className="scrim" />
           <div className="stage cut" style={vars({ "--cx": 0.72, "--at": 0.515 })}>
             <Cards />
+          </div>
+          <div className="stage" style={vars({ "--cx": PHONE.cx })}>
+            <Call at={0.81} then={0.9} />
           </div>
           <div className="shade fade-in" style={vars({ "--at": 0.96, "--over": 0.04 })} />
           <div className={TEXT}>
@@ -351,7 +386,7 @@ export default function Home() {
         <Scene id="fix" length={1100} label="The fix">
           <div className="stage" style={vars({ "--cx": 0.72 })}>
             <Poster clip="r" alt="The same reception the next evening, just as busy" />
-            <Shot clip="r" from={0.05} to={0.27} alt="The receptionist puts the phone down and smiles at her patient; the rush has calmed" />
+            <Shot clip="r" from={0.05} to={0.27} alt="The receptionist stays with her patient and smiles; the phone on the desk goes quiet and the screen turns green" />
             <Shot clip="n" from={0.42} to={0.6} reverse dissolve={0.06} alt="The city again, the clinic points turning from red to green" />
             <div className="beam" style={vars({ "--b0": RESWEEP.b0, "--b1": RESWEEP.b1 })} />
             <div className="fade-in absolute inset-0" style={vars({ "--at": 0.6, "--over": 0.01 })}>
@@ -362,6 +397,9 @@ export default function Home() {
             <Shot clip="m" from={0.88} to={1} reverse />
           </div>
           <div className="scrim" />
+          <div className="stage cut" style={vars({ "--cx": PHONE.cx, "--at": 0.36 })}>
+            <Call at={0} then={0.1} answered />
+          </div>
           <div className="shade fade-out" style={vars({ "--at": 0, "--over": 0.05 })} />
           <div className={TEXT}>
             <div className={`${BLOCK} hide`} style={vars({ "--at": 0.36 })}>

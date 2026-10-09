@@ -181,3 +181,31 @@ Owner's brief, 2026-10-08: the camera goes from the map through the clinic's doo
 
 Second round credits: 4 stills x 2.75 = 11 and 3 clips x 10 = 30. Running total 108.5 (from the quotes).
 All three clips passed on the first take.
+
+# Third round: the quiet busy desk
+
+Owner's brief, 2026-10-09: the busy desk was too much; show busy with little difference from the calm picture, and a call ringing on the phone.
+The first versions of clips E and R are kept as `media/clips/e-v1.mp4` and `r-v1.mp4`; S7 is no longer on the page.
+
+## S11 — reception, busy but quiet (replaces S7)
+
+- GPT Image 2.5 (flare) · high · 2K · 16:9 · reference = S10 (`cb52ad6e`) · job `9efd140f-d419-45b5-b7af-86490aa04b15` · 2.75 credits (balance 385.67 to 382.92)
+- Prompt core: "Change only three small details of the reference image; keep the camera position, framing… every object exactly the same"; the smartphone's screen lit, "nobody is looking at it"; the monitor pale red; the receptionist "giving her full attention… no broad smile"; the colleague "mid-step, walking at a normal unhurried pace… no motion blur".
+- Gates: same room, people and framing as S10 yes · faces and hands clean yes (judged at 1400 px) · no text or logo yes.
+- Learned: building the "before" from the "after" still, instead of the other way round, kept the two pictures a few details apart. The lit phone is small in the frame; the page carries the call with a drawn tag.
+
+## Clip E, second version — through the door
+
+- MiniMax H3 · 2K · 5 s · job `ef8cde11-9a35-4fa5-83c8-8460885b43bb` · start = S9 · end = S11 · 10 credits
+- Prompt core: the first version's move, then "As the camera settles, the screen of the smartphone… lights up with a plain cool-white glow; the receptionist glances down at it for a brief moment, then turns her eyes back to the patient. Nobody picks the phone up."
+- Gates (contact sheet, 9 frames): no cut PASS · people stable PASS · glance present PASS · ends on the end frame PASS.
+- The camera settles at about 3.9 s but the glance and the colleague's walk run to the end, so the page uses the whole clip (62 frames, was 47).
+
+## Clip R, second version — the fix, camera locked
+
+- Same settings · job `b613166c-77af-4585-a8fb-6287b9f7219e` · start = S11 · end = S10 · 10 credits
+- Prompt core: "The camera is completely locked on a tripod… A quiet, almost still shot"; in order: the phone screen dims and goes dark, the monitor shifts from pale red to pale green, the receptionist's expression eases into a smile, the colleague stops and looks up.
+- Gates (contact sheet): camera locked PASS · faces stable PASS · monitor turns green PASS · phone dark PASS.
+
+Third round credits: 2.75 + 20 = 22.75 (balance 385.67 to 362.92). Running total 131.25. All three passed on the first take.
+The preset suggestion came back again on both clips ("IN THE DARK"); declined and resubmitted.

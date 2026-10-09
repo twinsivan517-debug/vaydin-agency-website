@@ -14,7 +14,7 @@ import { mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 const CLIPS = {
   m: { focus: [0.72, 0.72] },
   n: { focus: [0.72, 0.5], secs: 3.4 },
-  e: { focus: [0.5, 0.56], secs: 3.9 },
+  e: { focus: [0.5, 0.56] },
   b: { focus: [0.68, 0.68] },
   r: { focus: [0.56, 0.56] },
 };
