@@ -224,3 +224,55 @@ Owner's brief, 2026-10-10: the reception looked frozen while the call rings; mak
 - Learned: the same still as start and end frame, with the actions named in order and "ends in exactly the same poses it began in", came back as a clean loop on the first take.
 
 Fourth round credits: 10. Running total 141.25.
+
+# Fifth round: the sofa, and through the phone instead of through the dark
+
+Owner's brief, 2026-10-10: the second woman at the desk looks like the receptionist, put a sofa with people waiting instead; the desk moves with the scroll, not by itself; no dark between the scenes, the phone carries the story to the fix and back.
+Clip L of the fourth round and the looping player are off the page (`l-v1.mp4` kept). Clips E and R of the third round are kept as `e-v2.mp4` and `r-v2.mp4`; S11 and S10 are no longer on the page.
+All stills: GPT Image 2.5 (flare) · high · 2K · 16:9 · 2.75 credits. All clips: MiniMax H3 · 2K · 5 s · 10 credits, each sent with the "IN THE DARK" preset declined.
+
+## S12 — reception, busy, with the sofa (replaces S11)
+
+- Reference = S11 (`9efd140f`) · job `e81476f7-1fc7-484c-84e7-cffc8ade3ae3` · file `13-reception-sofa-busy.png`
+- Prompt core: "Change only two things in the reference image; keep the camera position, framing… exactly the same"; remove the woman walking on the right, "She is completely gone"; add "a low, elegant cream boucle sofa with a small brass side table" by the windows with two seated patients, "at mid distance, small in the frame… They look nothing like the receptionist."
+- Gates: same room, receptionist and patient yes · second woman gone yes · two people seated, faces clean yes (judged on a crop) · no text or logo yes.
+
+## S13 — reception, calm, with the sofa (replaces S10)
+
+- Reference = S12 · job `f0e08d29-a90c-4928-ade0-d83f8d73a036` · file `14-reception-sofa-calm.png`
+- Prompt core: "Change only three small details": phone screen off, monitor pale green, the receptionist's warm smile.
+- Gates: same frame as S12 yes · three details changed, nothing else yes.
+
+## Clip E, third version — through the door
+
+- Job `aec738e6-b94b-4d9d-b0e3-b65f4592fadf` · start = S9 · end = S12
+- Prompt: the second version's move, with "two patients seated on a cream sofa by the windows on the right, waiting".
+- Gates: no cut PASS · people stable PASS · ends on the end frame PASS. The monitor is grey and the phone dark until the last half second, then both light at once; kept, it reads as the call arriving.
+
+## Clip L, second version — the living desk, camera locked
+
+- Job `360b592d-b1d8-48e4-bf1a-c87b2fea1529` · start = S12 · end = S12
+- Prompt: the first version's, without the colleague, plus "On the cream sofa by the windows, the seated man turns a page of his magazine and the seated woman turns her head from the window toward the desk and back again; both stay seated."
+- Gates: camera locked PASS · she looks down and types PASS · first and last frame match PASS. Scrubbed by scroll.
+
+## Clip P — from the desk to the phone
+
+- Job `497de06c-68c6-45df-9ed5-ce442ac3e708` · start = S12 · end = S3a (uploaded, media `dff4713b-95fd-4f5f-be3e-23bc57f9fb04`)
+- Prompt core: "the camera glides forward and to the right, past the patient, toward the smartphone… descends to just above the height of the desk"; "During the move the receptionist stands up, comes out from behind the desk and walks away with the patient out of the left side of the frame… so that by the end her cream chair stands empty and pushed back and the computer monitor has gone dark."
+- Gates (contact sheet, 12 frames): no cut PASS · people leave to the left PASS · phone stays put and lit PASS · ends on the end frame PASS. The move is over at about 3.4 s; the page uses the first 3.5 s.
+- Learned: a start with people and an end without them joined cleanly once the prompt said who leaves, where to, and what they leave behind.
+
+## Clip Z — into the phone
+
+- Job `f152e193-3df1-4b3a-ab62-77a03b649523` · start = S3b (uploaded, media `bb32a9f3-d689-44a2-b944-fd654ad805ec`) · end = a plain bright frame made here, `12-screen-fills-frame.png` (media `bb5818c5-f51b-43fb-b56c-5e9906d758bc`)
+- Prompt core: "the camera rises slightly and glides straight toward the smartphone… tilting down until it looks directly at the glowing screen, and keeps moving in until the plain cool-white screen grows to fill the entire frame edge to edge"; "no interface, no icons and no text at any moment".
+- Gates: no cut PASS · screen stays plain PASS · ends on a plain bright frame PASS.
+- Learned: an end frame need not be generated. A plain bright picture made on this machine gave the model a place to land, and the page draws the screen's content on top of it in code.
+
+## Clip R, third version — the fix, camera locked
+
+- Job `19d7584d-a160-4014-8c8a-b28a9866acec` · start = S12 · end = S13
+- Prompt: the second version's, with the two seated patients instead of the colleague.
+- Gates: camera locked PASS · faces stable PASS · phone dark PASS · monitor green PASS (it passes through a stronger green in the first second).
+
+Fifth round credits: 2 stills x 2.75 = 5.5 and 5 clips x 10 = 50. Total 55.5, no second takes (balance 328.92 to 273.42, read after). Running total 196.75.

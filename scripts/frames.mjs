@@ -1,5 +1,6 @@
 // Turns each clip in media/clips/ into the image sequences the page scrubs.
-//   node scripts/frames.mjs
+//   node scripts/frames.mjs            every clip
+//   node scripts/frames.mjs e l p      only the clips named
 // Writes public/frames/<clip>/d (the whole 16:9 picture, 1920 wide) and /m
 // (a 3:4 cut around the clip's focus, 648 wide, for phones), 12 frames a
 // second, WebP, plus src/lib/frames.json with the frame count per clip.
@@ -7,7 +8,7 @@
 // its first and its last frame; the cut slides between the two.
 // Needs ffmpeg on the PATH. Posters (first and last frame) go to public/img/.
 import { execFileSync } from "node:child_process";
-import { mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 
 // `secs` keeps only the start of a clip, for one whose move ends early and
 // then stands still.
@@ -15,7 +16,10 @@ const CLIPS = {
   m: { focus: [0.72, 0.72] },
   n: { focus: [0.72, 0.5], secs: 3.4 },
   e: { focus: [0.5, 0.56] },
+  l: { focus: [0.56, 0.56] },
+  p: { focus: [0.56, 0.68], secs: 3.5 },
   b: { focus: [0.68, 0.68] },
+  z: { focus: [0.68, 0.5] },
   r: { focus: [0.56, 0.56] },
 };
 const FPS = 12;
@@ -28,8 +32,10 @@ const QUALITY = { d: 62, m: 52 };
 
 const ff = (...args) => execFileSync("ffmpeg", ["-v", "error", "-y", ...args], { stdio: "inherit" });
 
-const counts = {};
+const only = process.argv.slice(2);
+const counts = existsSync("src/lib/frames.json") ? JSON.parse(readFileSync("src/lib/frames.json", "utf8")) : {};
 for (const [clip, { focus, secs = FULL }] of Object.entries(CLIPS)) {
+  if (only.length && !only.includes(clip)) continue;
   const last = Math.round(secs * FPS) - 1;
   const src = `media/clips/${clip}.mp4`;
   rmSync(`public/frames/${clip}`, { recursive: true, force: true });

@@ -7,6 +7,11 @@ type Bus = { p: number; subs: Set<(p: number) => void> };
 
 const SceneBus = createContext<Bus | null>(null);
 
+function tell(bus: Bus, p: number) {
+  bus.p = p;
+  bus.subs.forEach((fn) => fn(p));
+}
+
 export function useSceneProgress(fn: (p: number) => void) {
   const bus = useContext(SceneBus);
   const latest = useRef(fn);
@@ -22,6 +27,62 @@ export function useSceneProgress(fn: (p: number) => void) {
       bus.subs.delete(call);
     };
   }, [bus]);
+}
+
+/* An act is one stretch of a scene, from `from` to `to` of its progress, with
+   a progress of its own running 0 to 1. Acts share the scene's pinned screen,
+   so one follows the next with no join; `lead` shows an act a little early,
+   under the one before it. Outside its stretch an act is transparent, not
+   hidden, so its words stay readable to a screen reader. */
+export function Act({
+  from,
+  to,
+  lead = 0,
+  layer,
+  label,
+  children,
+}: {
+  from: number;
+  to: number;
+  lead?: number;
+  layer: number;
+  label: string;
+  children: ReactNode;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [bus] = useState<Bus>(() => ({ p: 0, subs: new Set() }));
+
+  const scene = useContext(SceneBus);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !scene) return;
+    const run = (at: number) => {
+      const shown = at >= from - lead && (at < to || to >= 1);
+      el.style.opacity = shown ? "1" : "0";
+      const p = (at - from) / (to - from);
+      if (p === bus.p) return;
+      el.style.setProperty("--p", Math.min(1, Math.max(0, p)).toFixed(4));
+      tell(bus, p);
+    };
+    scene.subs.add(run);
+    run(scene.p);
+    return () => {
+      scene.subs.delete(run);
+    };
+  }, [scene, bus, from, to, lead]);
+
+  return (
+    <div
+      ref={ref}
+      role="group"
+      aria-label={label}
+      className="act"
+      style={{ zIndex: layer, opacity: from === 0 ? 1 : 0 }}
+    >
+      <SceneBus.Provider value={bus}>{children}</SceneBus.Provider>
+    </div>
+  );
 }
 
 export function Scene({

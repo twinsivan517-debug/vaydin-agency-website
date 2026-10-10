@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import { LoopClip } from "@/components/LoopClip";
 import { NightClock } from "@/components/NightClock";
-import { Scene } from "@/components/Scene";
+import { Act, Scene } from "@/components/Scene";
 import { ScrubSequence } from "@/components/ScrubSequence";
 import FRAMES from "@/lib/frames.json";
 import { SITE } from "@/lib/site";
@@ -40,13 +39,26 @@ const PINS: Pin[] = [
 ];
 
 /* The city scene's timetable: its length, and moments along that length. */
-const CITY = 1270;
+const CITY = 1450;
 const at = (svh: number) => +(svh / CITY).toFixed(4);
 const SWEEP = { b0: at(210), b1: at(345) };
 const FOCUS = at(360);
 const OPEN = { from: at(370), to: at(545), row: 25 };
 const DIVE = { from: 550, to: 760 };
 const DESK = 970;
+const PUSH = { from: 1235, to: 1440 };
+
+/* The wait's timetable, the same way: the evening, then into the phone, the
+   answer on its screen, and the hand-over to the fix. */
+const WAIT = 880;
+const wt = (svh: number) => +(svh / WAIT).toFixed(4);
+const INTO = { from: 350, to: 520 };
+const HAND = { from: 810, to: 875 };
+
+/* The three acts share one pinned screen. Each ends at this share of it. */
+const FIX = 1100;
+const STORY = CITY + WAIT + FIX;
+const ACTS = { city: CITY / STORY, wait: (CITY + WAIT) / STORY };
 const RESWEEP = { b0: 0.7, b1: 0.84 };
 const GOLD_AT = 0.63;
 const GREEN_AT = 0.67;
@@ -177,6 +189,52 @@ function Brief() {
   ));
 }
 
+/* Inside the phone: the same message, answered. The screen opens over the
+   last frame of the move into the phone and, at the hand-over, shrinks back
+   onto the phone lying on the desk of the next act. */
+function Screen() {
+  const say = [
+    ["in", "Hi, I’d like to book a consultation for lip filler this week. Do you have Thursday evening?", "6:48 PM"],
+    ["out", "Good evening! Thursday evening is open: 6:30 PM or 7:15 PM. Which suits you?", "6:48 PM"],
+    ["in", "7:15 please.", "6:49 PM"],
+    ["out", "Booked: Thursday, 7:15 PM. You’ll get a reminder the day before.", "6:49 PM"],
+  ];
+  return (
+    <div
+      className="screen"
+      style={vars({
+        "--xn": PHONE.x,
+        "--yn": PHONE.y,
+        "--cx": PHONE.cx,
+        "--s0": wt(INTO.to - 25),
+        "--so": wt(20),
+        "--t0": wt(HAND.from),
+        "--t1": wt(HAND.to),
+      })}
+    >
+      <div className="screen-inner">
+        <div className="show" style={vars({ "--at": wt(INTO.to + 8) })}>
+          <p className="label">The same message · with Vaydin · Illustration</p>
+          <h2 className="mt-2 font-display text-2xl leading-tight sm:text-4xl">
+            Same evening. Same message. Answered in a minute.
+          </h2>
+        </div>
+        {say.map(([side, words, time], i) => (
+          <div key={words} className="show" style={vars({ "--at": wt(INTO.to + 45 + i * 48) })}>
+            <p className={`bubble bubble-${side}`}>
+              {words}
+              <time>{time}</time>
+            </p>
+          </div>
+        ))}
+        <p className="label screen-tag show" style={vars({ "--at": wt(INTO.to + 240) })}>
+          Patient booked · in 1 minute
+        </p>
+      </div>
+    </div>
+  );
+}
+
 /* A scene's still picture. Phones take the first or last frame of their own
    3:4 sequence, which the canvas then reuses from the cache. */
 function Poster({
@@ -212,7 +270,9 @@ function Poster({
 }
 
 /* One clip of a scene: it takes over the picture at `from`, plays to `to`,
-   and leaves its last (or, played backwards, its first) frame standing. */
+   and leaves its last (or, played backwards, its first) frame standing.
+   `bare` leaves out its two stills, for a clip that starts on the picture
+   already standing under it. */
 function Shot({
   clip,
   from,
@@ -220,6 +280,7 @@ function Shot({
   reverse = false,
   dissolve = 0.008,
   alt = "",
+  bare = false,
 }: {
   clip: keyof typeof FRAMES;
   from: number;
@@ -227,17 +288,20 @@ function Shot({
   reverse?: boolean;
   dissolve?: number;
   alt?: string;
+  bare?: boolean;
 }) {
   return (
     <div className="fade-in absolute inset-0" style={vars({ "--at": from - dissolve, "--over": dissolve })}>
-      <Poster clip={clip} end={reverse} alt="" />
-      <Poster
-        clip={clip}
-        end={!reverse}
-        alt={alt}
-        className="fade-in"
-        style={vars({ "--at": (from + to) / 2, "--over": 0.01 })}
-      />
+      {!bare && <Poster clip={clip} end={reverse} alt="" />}
+      {!bare && (
+        <Poster
+          clip={clip}
+          end={!reverse}
+          alt={alt}
+          className="fade-in"
+          style={vars({ "--at": (from + to) / 2, "--over": 0.01 })}
+        />
+      )}
       <ScrubSequence name={clip} count={FRAMES[clip]} from={from} to={to} reverse={reverse} />
     </div>
   );
@@ -251,7 +315,7 @@ const LEAD = "mt-4 max-w-lg text-lg leading-8 text-muted";
 export default function Home() {
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-20 flex items-center justify-between px-5 py-4 sm:px-12">
+      <header className="fixed inset-x-0 top-0 z-20 flex items-center justify-between bg-gradient-to-b from-background/80 to-transparent px-5 py-4 sm:px-12">
         <a href="#city" className="flex items-center gap-3">
           <Image src="/img/mark.png" alt="" width={36} height={31} />
           <span className="font-display text-xl tracking-[0.2em]">VAYDIN</span>
@@ -265,178 +329,192 @@ export default function Home() {
       </header>
 
       <main className="flex-1">
-        <Scene id="city" length={CITY} label="Dubai tonight">
-          <div className="stage" style={vars({ "--cx": 0.72 })}>
-            <Poster clip="m" alt="Dubai at night, seen from above, drawn in gold light" eager />
-            <Poster clip="m" end alt="" className="fade-in" style={vars({ "--at": at(165), "--over": 0.01 })} />
-            <ScrubSequence name="m" count={FRAMES.m} from={at(15)} to={at(180)} />
-            <div className="beam" style={vars({ "--b0": SWEEP.b0, "--b1": SWEEP.b1 })} />
-            <Shot clip="n" from={at(DIVE.from)} to={at(DIVE.to)} alt="The entrance of a clinic at sunset, its reception glowing inside" />
-            <Shot clip="e" from={at(DIVE.to)} to={at(DESK)} alt="Inside: a receptionist giving a patient her full attention while the phone on the desk lights up" />
-            <div className="fade-in absolute inset-0" style={vars({ "--at": at(DESK - 6), "--over": at(6) })}>
-              <LoopClip name="l" from={at(DESK - 6)} to={0.998} />
+        <Scene id="city" length={STORY} label="One clinic's evening, before and after">
+          <Act from={0} to={ACTS.city} layer={3} label="Dubai tonight">
+            <div className="stage" style={vars({ "--cx": 0.72 })}>
+              <Poster clip="m" alt="Dubai at night, seen from above, drawn in gold light" eager />
+              <Poster clip="m" end alt="" className="fade-in" style={vars({ "--at": at(165), "--over": 0.01 })} />
+              <ScrubSequence name="m" count={FRAMES.m} from={at(15)} to={at(180)} />
+              <div className="beam" style={vars({ "--b0": SWEEP.b0, "--b1": SWEEP.b1 })} />
+              <Shot clip="n" from={at(DIVE.from)} to={at(DIVE.to)} alt="The entrance of a clinic at sunset, its reception glowing inside" />
+              <Shot clip="e" from={at(DIVE.to)} to={at(DESK)} alt="Inside: a receptionist giving a patient her full attention while the phone on the desk lights up, and two more patients waiting on a sofa" />
+              <Shot clip="l" from={at(DESK + 5)} to={at(PUSH.from - 15)} bare />
+              <Shot clip="p" from={at(PUSH.from)} to={at(PUSH.to)} bare />
+              <div
+                className="absolute inset-0"
+                style={vars({
+                  "--b0": SWEEP.b0,
+                  "--b1": SWEEP.b1,
+                  "--f0": FOCUS,
+                  "--o0": at(DIVE.from - 14),
+                  "--oo": at(14),
+                })}
+              >
+                <Pins />
+              </div>
+            </div>
+            <div className="scrim" />
+            <div className="stage" style={vars({ "--cx": 0.72 })}>
+              <Brief />
+            </div>
+            <div className="stage cut" style={vars({ "--cx": PHONE.cx, "--at": at(PUSH.from - 10) })}>
+              <Call at={at(DESK + 15)} then={at(DESK + 150)} />
+            </div>
+            <div className={TEXT}>
+              <div className={`${BLOCK} hide`} style={vars({ "--at": at(172) })}>
+                <p className="label text-gold-bright">Sample clinics · Illustration</p>
+                <h1 className={`${H} mt-4`}>Somewhere in Dubai tonight, a patient is choosing a clinic.</h1>
+                <p className={LEAD}>Your name is on the list.</p>
+              </div>
+              <div className={`${BLOCK} hide`} style={vars({ "--at": FOCUS })}>
+                <div className="show" style={vars({ "--at": at(187) })}>
+                  <p className="label text-leak">Step 01 · Diagnose</p>
+                  <h2 className={`${H} mt-4`}>First, we see what your patients see.</h2>
+                  <p className={LEAD}>
+                    Everything a patient can find about a clinic from the outside: how it answers, how
+                    it looks on Google and Instagram. What leaks shows up in red.
+                  </p>
+                </div>
+              </div>
+              <div className={`${BLOCK} wide-only hide`} style={vars({ "--at": OPEN.to })}>
+                <div className="show" style={vars({ "--at": FOCUS + 0.004 })}>
+                  <p className="label text-leak">Step 01 · Diagnose</p>
+                  <p className="mt-2 text-lg text-foreground">
+                    Green clinics answer every patient. This one is losing them.
+                  </p>
+                </div>
+              </div>
+              <div className={`${BLOCK} hide`} style={vars({ "--at": at(DIVE.to - 30) })}>
+                <div className="show" style={vars({ "--at": at(DIVE.from + 12) })}>
+                  <p className="label text-gold-bright">Sample clinic · Illustration</p>
+                  <h2 className={`${H} mt-4`}>Then we go inside.</h2>
+                </div>
+              </div>
+              <div className={`${BLOCK} hide`} style={vars({ "--at": at(PUSH.from - 10) })}>
+                <div className="show" style={vars({ "--at": at(DESK) })}>
+                  <p className="label text-gold-bright">Sample clinic · 6:48 PM · Illustration</p>
+                  <h2 className={`${H} mt-4`}>Nobody here is doing anything wrong.</h2>
+                  <p className={LEAD}>The team is busy with the patient in front of them. Meanwhile:</p>
+                  <ul className="mt-4 flex flex-col gap-2">
+                    {INSIDE.map(([leak], i) => (
+                      <li key={leak} className="show flex gap-3 text-lg" style={vars({ "--at": at(DESK + 45 + i * 45) })}>
+                        <span className="mark bad" aria-hidden="true">{"✕"}</span>
+                        {leak}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div className={`${BLOCK} show`} style={vars({ "--at": at(PUSH.from + 20) })}>
+                <p className="label text-gold-bright">Sample clinic · 6:48 PM · Illustration</p>
+                <h2 className={`${H} mt-4`}>She takes her patient through. The phone stays.</h2>
+              </div>
+            </div>
+          </Act>
+
+          <Act from={ACTS.city} to={ACTS.wait} layer={2} label="The wait">
+            <div className="fade-out absolute inset-0" style={vars({ "--at": wt(HAND.from), "--over": wt(30) })}>
+              <div className="stage" style={vars({ "--cx": 0.68 })}>
+                <Poster clip="b" alt="The phone on the reception desk, still unanswered" />
+                <Poster clip="b" end alt="" className="fade-in" style={vars({ "--at": wt(190), "--over": 0.02 })} />
+                <ScrubSequence name="b" count={FRAMES.b} from={wt(30)} to={wt(296)} />
+                <Shot clip="z" from={wt(INTO.from)} to={wt(INTO.to)} alt="The camera moves into the phone until its bright screen fills the view" />
+              </div>
+              <div className="scrim" />
             </div>
             <div
-              className="absolute inset-0"
-              style={vars({
-                "--b0": SWEEP.b0,
-                "--b1": SWEEP.b1,
-                "--f0": FOCUS,
-                "--o0": at(DIVE.from - 14),
-                "--oo": at(14),
-              })}
+              className="hide absolute right-5 top-20 text-right sm:right-12 sm:top-24"
+              style={vars({ "--at": wt(INTO.from - 8) })}
             >
-              <Pins />
+              <NightClock start={18 * 60 + 48} end={21 * 60 + 55} from={wt(30)} to={wt(296)} />
+              <p className="label mt-1 text-muted">6:48 PM to 9:55 PM</p>
             </div>
-          </div>
-          <div className="scrim" />
-          <div className="stage" style={vars({ "--cx": 0.72 })}>
-            <Brief />
-          </div>
-          <div className="stage" style={vars({ "--cx": PHONE.cx })}>
-            <Call at={at(DESK + 15)} then={at(DESK + 150)} />
-          </div>
-          <div className="shade fade-in" style={vars({ "--at": at(CITY - 60), "--over": at(60) })} />
-          <div className={TEXT}>
-            <div className={`${BLOCK} hide`} style={vars({ "--at": at(172) })}>
-              <p className="label text-gold-bright">Sample clinics · Illustration</p>
-              <h1 className={`${H} mt-4`}>Somewhere in Dubai tonight, a patient is choosing a clinic.</h1>
-              <p className={LEAD}>Your name is on the list.</p>
+            <div
+              className="hide absolute inset-x-0 top-44 flex max-w-xl flex-col gap-3 px-5 sm:top-28 sm:px-12"
+              style={vars({ "--at": wt(INTO.from - 8) })}
+            >
+              <p className="label text-gold-bright">That one message · Illustration</p>
+              <h2 className="font-display text-2xl leading-tight sm:text-4xl">
+                She wanted to book. The phone lay on the desk all evening.
+              </h2>
+              <p className="bubble bubble-in mt-2">
+                Hi, I&apos;d like to book a consultation for lip filler this week. Do you have Thursday
+                evening?
+                <time>6:48 PM</time>
+              </p>
+              <p className="label show text-muted" style={vars({ "--at": wt(144) })}>
+                3 hours later, the team has gone home
+              </p>
+              <div className="show" style={vars({ "--at": wt(220) })}>
+                <p className="bubble bubble-out">
+                  Good evening, please call us tomorrow during working hours to book.
+                  <time>9:52 PM</time>
+                </p>
+              </div>
+              <div className="show" style={vars({ "--at": wt(281) })}>
+                <p className="bubble bubble-in">
+                  No worries, I found another clinic. Thanks.
+                  <time>9:55 PM</time>
+                </p>
+              </div>
+              <p
+                className="label show w-fit rounded-md border border-leak bg-background px-3 py-2 text-leak"
+                style={vars({ "--at": wt(318) })}
+              >
+                Patient lost · never seen
+              </p>
             </div>
-            <div className={`${BLOCK} hide`} style={vars({ "--at": FOCUS })}>
-              <div className="show" style={vars({ "--at": at(187) })}>
-                <p className="label text-leak">Step 01 · Diagnose</p>
-                <h2 className={`${H} mt-4`}>First, we see what your patients see.</h2>
+            <Screen />
+          </Act>
+
+          <Act from={ACTS.wait} to={1} lead={(WAIT - HAND.from) / STORY} layer={1} label="The fix">
+            <div className="stage" style={vars({ "--cx": 0.72 })}>
+              <Poster clip="r" alt="The same reception the next evening, just as busy" />
+              <Shot clip="r" from={0.05} to={0.27} alt="The receptionist stays with her patient and smiles; the phone on the desk goes quiet and the screen turns green" />
+              <Shot clip="n" from={0.42} to={0.6} reverse dissolve={0.06} alt="The city again, the chosen clinic turning from red to green" />
+              <div className="beam" style={vars({ "--b0": RESWEEP.b0, "--b1": RESWEEP.b1 })} />
+              <div
+                className="fixing cut absolute inset-0"
+                style={vars({
+                  "--b0": RESWEEP.b0,
+                  "--b1": RESWEEP.b1,
+                  "--f0": -1,
+                  "--i0": 0.6,
+                  "--io": 0.01,
+                  "--at": 0.875,
+                })}
+              >
+                <Pins fixing />
+              </div>
+              <Shot clip="m" from={0.88} to={1} reverse />
+            </div>
+            <div className="scrim" />
+            <div className="stage cut" style={vars({ "--cx": PHONE.cx, "--at": 0.36 })}>
+              <Call at={0.012} then={0.1} answered />
+            </div>
+            <div className={TEXT}>
+              <div className={`${BLOCK} hide`} style={vars({ "--at": 0.36 })}>
+                <p className="label text-gold-bright">Step 02 · Fix &amp; run · The next evening</p>
+                <h2 className={`${H} mt-4`}>Then we fix it, and run it.</h2>
+                <p className={LEAD}>Same clinic, same rush. Your clinic&apos;s own voice and number.</p>
+                <ul className="mt-4 flex flex-col gap-2">
+                  {INSIDE.map(([, fixed], i) => (
+                    <li key={fixed} className="show flex gap-3 text-lg" style={vars({ "--at": 0.1 + i * 0.045 })}>
+                      <span className="mark ok" aria-hidden="true">{"✓"}</span>
+                      {fixed}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className={`${BLOCK} show`} style={vars({ "--at": 0.62 })}>
+                <p className="label text-proof">The loop · measured, not promised</p>
+                <h2 className={`${H} mt-4`}>The diagnostic never stops.</h2>
                 <p className={LEAD}>
-                  Everything a patient can find about a clinic from the outside: how it answers, how
-                  it looks on Google and Instagram. What leaks shows up in red.
+                  Red finds the leak. Gold fixes and runs it. Green proves the gain.
                 </p>
               </div>
             </div>
-            <div className={`${BLOCK} wide-only hide`} style={vars({ "--at": OPEN.to })}>
-              <div className="show" style={vars({ "--at": FOCUS + 0.004 })}>
-                <p className="label text-leak">Step 01 · Diagnose</p>
-                <p className="mt-2 text-lg text-foreground">
-                  Green clinics answer every patient. This one is losing them.
-                </p>
-              </div>
-            </div>
-            <div className={`${BLOCK} hide`} style={vars({ "--at": at(DIVE.to - 30) })}>
-              <div className="show" style={vars({ "--at": at(DIVE.from + 12) })}>
-                <p className="label text-gold-bright">Sample clinic · Illustration</p>
-                <h2 className={`${H} mt-4`}>Then we go inside.</h2>
-              </div>
-            </div>
-            <div className={`${BLOCK} show`} style={vars({ "--at": at(DESK) })}>
-              <p className="label text-gold-bright">Sample clinic · 6:48 PM · Illustration</p>
-              <h2 className={`${H} mt-4`}>Nobody here is doing anything wrong.</h2>
-              <p className={LEAD}>The team is busy with the patient in front of them. Meanwhile:</p>
-              <ul className="mt-4 flex flex-col gap-2">
-                {INSIDE.map(([leak], i) => (
-                  <li key={leak} className="show flex gap-3 text-lg" style={vars({ "--at": at(DESK + 45 + i * 45) })}>
-                    <span className="mark bad" aria-hidden="true">{"✕"}</span>
-                    {leak}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </Scene>
-
-        <Scene id="wait" length={380} label="The wait">
-          <div className="stage" style={vars({ "--cx": 0.68 })}>
-            <Poster clip="b" alt="The phone on the reception desk, still unanswered" />
-            <Poster clip="b" end alt="" className="fade-in" style={vars({ "--at": 0.5, "--over": 0.02 })} />
-            <ScrubSequence name="b" count={FRAMES.b} from={0.08} to={0.78} />
-          </div>
-          <div className="scrim" />
-          <div className="shade fade-out" style={vars({ "--at": 0, "--over": 0.08 })} />
-          <div className="absolute right-5 top-20 text-right sm:right-12 sm:top-24">
-            <NightClock start={18 * 60 + 48} end={21 * 60 + 55} from={0.08} to={0.78} />
-            <p className="label mt-1 text-muted">6:48 PM to 9:55 PM</p>
-          </div>
-          <div className="absolute inset-x-0 top-44 flex max-w-xl flex-col gap-3 px-5 sm:top-28 sm:px-12">
-            <p className="label text-gold-bright">That one message · Illustration</p>
-            <h2 className="font-display text-2xl leading-tight sm:text-4xl">
-              She wanted to book. The phone lay on the desk all evening.
-            </h2>
-            <p className="bubble bubble-in mt-2">
-              Hi, I&apos;d like to book a consultation for lip filler this week. Do you have Thursday
-              evening?
-              <time>6:48 PM</time>
-            </p>
-            <p className="label show text-muted" style={vars({ "--at": 0.38 })}>
-              3 hours later, the team has gone home
-            </p>
-            <div className="show" style={vars({ "--at": 0.58 })}>
-              <p className="bubble bubble-out">
-                Good evening, please call us tomorrow during working hours to book.
-                <time>9:52 PM</time>
-              </p>
-            </div>
-            <div className="show" style={vars({ "--at": 0.74 })}>
-              <p className="bubble bubble-in">
-                No worries, I found another clinic. Thanks.
-                <time>9:55 PM</time>
-              </p>
-            </div>
-            <p
-              className="label show w-fit rounded-md border border-leak bg-background px-3 py-2 text-leak"
-              style={vars({ "--at": 0.86 })}
-            >
-              Patient lost · never seen
-            </p>
-          </div>
-        </Scene>
-
-        <Scene id="fix" length={1100} label="The fix">
-          <div className="stage" style={vars({ "--cx": 0.72 })}>
-            <Poster clip="r" alt="The same reception the next evening, just as busy" />
-            <Shot clip="r" from={0.05} to={0.27} alt="The receptionist stays with her patient and smiles; the phone on the desk goes quiet and the screen turns green" />
-            <Shot clip="n" from={0.42} to={0.6} reverse dissolve={0.06} alt="The city again, the chosen clinic turning from red to green" />
-            <div className="beam" style={vars({ "--b0": RESWEEP.b0, "--b1": RESWEEP.b1 })} />
-            <div
-              className="fixing cut absolute inset-0"
-              style={vars({
-                "--b0": RESWEEP.b0,
-                "--b1": RESWEEP.b1,
-                "--f0": -1,
-                "--i0": 0.6,
-                "--io": 0.01,
-                "--at": 0.875,
-              })}
-            >
-              <Pins fixing />
-            </div>
-            <Shot clip="m" from={0.88} to={1} reverse />
-          </div>
-          <div className="scrim" />
-          <div className="stage cut" style={vars({ "--cx": PHONE.cx, "--at": 0.36 })}>
-            <Call at={0} then={0.1} answered />
-          </div>
-          <div className="shade fade-out" style={vars({ "--at": 0, "--over": 0.05 })} />
-          <div className={TEXT}>
-            <div className={`${BLOCK} hide`} style={vars({ "--at": 0.36 })}>
-              <p className="label text-gold-bright">Step 02 · Fix &amp; run · The next evening</p>
-              <h2 className={`${H} mt-4`}>Then we fix it, and run it.</h2>
-              <p className={LEAD}>Same clinic, same rush. Your clinic&apos;s own voice and number.</p>
-              <ul className="mt-4 flex flex-col gap-2">
-                {INSIDE.map(([, fixed], i) => (
-                  <li key={fixed} className="show flex gap-3 text-lg" style={vars({ "--at": 0.1 + i * 0.045 })}>
-                    <span className="mark ok" aria-hidden="true">{"✓"}</span>
-                    {fixed}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className={`${BLOCK} show`} style={vars({ "--at": 0.62 })}>
-              <p className="label text-proof">The loop · measured, not promised</p>
-              <h2 className={`${H} mt-4`}>The diagnostic never stops.</h2>
-              <p className={LEAD}>
-                Red finds the leak. Gold fixes and runs it. Green proves the gain.
-              </p>
-            </div>
-          </div>
+          </Act>
         </Scene>
 
         <section id="contact" className="mx-auto w-full max-w-5xl px-5 py-24 sm:px-12 sm:py-32">
