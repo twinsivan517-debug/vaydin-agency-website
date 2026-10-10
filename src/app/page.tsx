@@ -56,8 +56,9 @@ const INTO = { from: 350, to: 520 };
 const HAND = { from: 890, to: 955 };
 
 /* The fix's timetable: the desk, then the owner and his app, then back out
-   over the city, where the second beam passes and the chosen pin turns. */
-const FIX = 1850;
+   over the city, where the second beam passes and the chosen pin turns. Its
+   last 110 hold the sky still while the closing page comes up over it. */
+const FIX = 1960;
 const fx = (svh: number) => +(svh / FIX).toFixed(4);
 const OWNER = { from: 410, to: 1160 };
 const APP = { from: 710, to: 975 };
@@ -585,7 +586,7 @@ export default function Home() {
               >
                 <Pins fixing />
               </div>
-              <Shot clip="m" from={fx(CITY_BACK + 308)} to={1} reverse />
+              <Shot clip="m" from={fx(CITY_BACK + 308)} to={fx(CITY_BACK + 440)} reverse />
             </div>
             <div className="scrim" />
             <div className="stage cut" style={vars({ "--cx": PHONE.cx, "--at": fx(396) })}>
@@ -619,63 +620,79 @@ export default function Home() {
                   <h2 className={`${H} mt-4`}>He knows where his clinic stands. Every day.</h2>
                 </div>
               </div>
-              <div className={`${BLOCK} show`} style={vars({ "--at": fx(CITY_BACK + 22) })}>
-                <p className="label text-proof">The loop · measured, not promised</p>
-                <h2 className={`${H} mt-4`}>The diagnostic never stops.</h2>
-                <p className={LEAD}>
-                  Red finds the leak. Gold fixes and runs it. Green proves the gain.
-                </p>
+              <div className={`${BLOCK} hide`} style={vars({ "--at": fx(CITY_BACK + 395) })}>
+                <div className="show" style={vars({ "--at": fx(CITY_BACK + 22) })}>
+                  <p className="label text-proof">The loop · measured, not promised</p>
+                  <h2 className={`${H} mt-4`}>The diagnostic never stops.</h2>
+                  <p className={LEAD}>
+                    Red finds the leak. Gold fixes and runs it. Green proves the gain.
+                  </p>
+                </div>
               </div>
             </div>
           </Act>
         </Scene>
 
-        <section id="contact" className="mx-auto w-full max-w-5xl px-5 py-24 sm:px-12 sm:py-32">
-          <h2 className={`${H} max-w-3xl`}>
-            Somewhere in Dubai tonight, a patient is choosing a clinic. Vaydin makes sure you
-            don&apos;t lose them.
-          </h2>
-          <div className="mt-14 grid gap-10 sm:grid-cols-3">
-            <div>
-              <p className="label text-leak">Diagnose</p>
-              <p className="mt-3 leading-7 text-muted">
-                An unannounced mystery shop of your own clinic, plus a monthly sweep of everything
-                a patient can find.
-              </p>
+        <section id="contact" className="closing">
+          <div className="closing-sky" aria-hidden="true">
+            <div className="stage" style={vars({ "--cx": 0.72 })}>
+              <Poster clip="m" alt="" />
             </div>
-            <div>
-              <p className="label text-gold-bright">Fix</p>
-              <p className="mt-3 leading-7 text-muted">
-                The Vaydin engine takes over your digital front door: one vendor, your clinic&apos;s
-                own voice and number.
-              </p>
-            </div>
-            <div>
-              <p className="label text-proof">Grow</p>
-              <p className="mt-3 leading-7 text-muted">
-                Once the engine runs your clinic, paid patient demand lands in a machine built to
-                convert it.
-              </p>
-            </div>
+            <div className="scrim" />
           </div>
-          <div className="mt-14 flex flex-wrap gap-4">
-            <a href={WHATSAPP} className="rounded-full bg-gold-bright px-7 py-3 text-base font-medium text-background">
-              WhatsApp · +971 50 555 3148
-            </a>
-            <a href={`mailto:${SITE.email}`} className="rounded-full border border-gold px-7 py-3 text-base text-gold-bright">
-              {SITE.email}
-            </a>
+          <div className="closing-frame">
+            <p className="label text-gold-bright">Vaydin · Dubai</p>
+            <h2 className={`${H} mt-4 max-w-3xl`}>
+              Somewhere in Dubai tonight, a patient is choosing a clinic. Vaydin makes sure you
+              don&apos;t lose them.
+            </h2>
+            <div className="closing-steps">
+              <div style={vars({ "--c": "var(--leak)" })}>
+                <p className="label text-leak">01 · Diagnose</p>
+                <p className="mt-3 leading-7 text-muted">
+                  An unannounced mystery shop of your own clinic, plus a monthly sweep of everything
+                  a patient can find.
+                </p>
+              </div>
+              <div style={vars({ "--c": "var(--gold-bright)" })}>
+                <p className="label text-gold-bright">02 · Fix</p>
+                <p className="mt-3 leading-7 text-muted">
+                  The Vaydin engine takes over your digital front door: one vendor, your clinic&apos;s
+                  own voice and number.
+                </p>
+              </div>
+              <div style={vars({ "--c": "var(--proof)" })}>
+                <p className="label text-proof">03 · Grow</p>
+                <p className="mt-3 leading-7 text-muted">
+                  Once the engine runs your clinic, paid patient demand lands in a machine built to
+                  convert it.
+                </p>
+              </div>
+            </div>
+            <div className="closing-reach">
+              <div>
+                <p className="label text-muted">Talk to us</p>
+                <p className="mt-2 font-display text-2xl">Start with the diagnostic.</p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <a href={WHATSAPP} className="rounded-full bg-gold-bright px-7 py-3 text-base font-medium text-background">
+                  WhatsApp · +971 50 555 3148
+                </a>
+                <a href={`mailto:${SITE.email}`} className="rounded-full border border-gold px-7 py-3 text-base text-gold-bright">
+                  {SITE.email}
+                </a>
+              </div>
+            </div>
+            <footer className="closing-foot">
+              <p>The diagnostic sells the engine. The engine earns the fuel.</p>
+              <p className="mt-1">
+                VAYDIN PARTNERS INVESTMENTS - FZCO · DSO-IFZA, IFZA Properties, Dubai Silicon Oasis,
+                Dubai, UAE · Licensed under IFZA
+              </p>
+            </footer>
           </div>
         </section>
       </main>
-
-      <footer className="mx-auto w-full max-w-5xl px-5 py-8 text-sm leading-6 text-muted sm:px-12">
-        <p>The diagnostic sells the engine. The engine earns the fuel.</p>
-        <p className="mt-2">
-          VAYDIN PARTNERS INVESTMENTS - FZCO · DSO-IFZA, IFZA Properties, Dubai Silicon Oasis,
-          Dubai, UAE · Licensed under IFZA
-        </p>
-      </footer>
     </>
   );
 }
