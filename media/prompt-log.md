@@ -209,3 +209,18 @@ The first versions of clips E and R are kept as `media/clips/e-v1.mp4` and `r-v1
 
 Third round credits: 2.75 + 20 = 22.75 (balance 385.67 to 362.92). Running total 131.25. All three passed on the first take.
 The preset suggestion came back again on both clips ("IN THE DARK"); declined and resubmitted.
+
+# Fourth round: the desk keeps living
+
+Owner's brief, 2026-10-10: the reception looked frozen while the call rings; make it live (she glances at the phone, types, the patient waits). A seated extra was left out: adding a person changes S11, which clips E and R start and end on.
+
+## Clip L — the living desk, camera locked, a loop
+
+- MiniMax H3 · 2K · 5 s · job `45f126d9-e9b0-4604-b64d-a167ae5c0d1a` · start = S11 · end = S11 (the same still twice) · 10 credits (balance 338.92 before)
+- Prompt:
+  > The camera is completely locked on a tripod: no camera movement at all, no zoom, no shake. A quiet, natural moment at a clinic reception at sunset, a seamless loop that ends in exactly the same poses it began in. In order: the receptionist behind the desk glances down at the smartphone glowing on the marble counter, then looks at her monitor and types a few keys with both hands, then lifts her eyes back to the patient and gives a small nod. The patient standing at the desk with her back to the camera shifts her weight slightly and adjusts the strap of her handbag, waiting. The colleague on the right stays where she is, looks down at the folder in her hands, turns one page and looks up again. The smartphone screen keeps glowing steadily the whole time and nobody picks it up. The monitor keeps its plain pale red glow. The plants, the lamp, the desk and the windows stay perfectly still; the sunset light stays constant. Faces stay natural and stable; nobody looks at the camera. No one enters or leaves, nothing appears or disappears, no cut. Silent.
+- Gates (contact sheet, 8 frames, and first against last frame): camera locked PASS · faces stable PASS (judged at 640 px a frame) · receptionist looks down and types PASS · first and last frame match PASS · colleague stays where she is NO (she walks to the desk reading her folder and back; kept, it reads as natural).
+- On the page it is not scrubbed: `scripts/loops.mjs` makes two silent videos (780 KB wide, 291 KB phone) that `LoopClip` plays round and round while the call rings. The same five seconds as scrubbed pictures weigh about 7 MB.
+- Learned: the same still as start and end frame, with the actions named in order and "ends in exactly the same poses it began in", came back as a clean loop on the first take.
+
+Fourth round credits: 10. Running total 141.25.

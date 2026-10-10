@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import Image from "next/image";
+import { LoopClip } from "@/components/LoopClip";
 import { NightClock } from "@/components/NightClock";
 import { Scene } from "@/components/Scene";
 import { ScrubSequence } from "@/components/ScrubSequence";
@@ -95,8 +96,8 @@ function Call({ at, then, answered = false }: { at: number; then: number; answer
           New patient
         </span>
         <span className="ended">
-          <span className="label">{answered ? "Answered" : "Missed call"}</span>
-          New patient
+          <span className="label">{answered ? "Answered for you" : "Missed call"}</span>
+          {answered ? "Booked for tomorrow" : "New patient"}
         </span>
       </p>
     </div>
@@ -272,6 +273,9 @@ export default function Home() {
             <div className="beam" style={vars({ "--b0": SWEEP.b0, "--b1": SWEEP.b1 })} />
             <Shot clip="n" from={at(DIVE.from)} to={at(DIVE.to)} alt="The entrance of a clinic at sunset, its reception glowing inside" />
             <Shot clip="e" from={at(DIVE.to)} to={at(DESK)} alt="Inside: a receptionist giving a patient her full attention while the phone on the desk lights up" />
+            <div className="fade-in absolute inset-0" style={vars({ "--at": at(DESK - 6), "--over": at(6) })}>
+              <LoopClip name="l" from={at(DESK - 6)} to={0.998} />
+            </div>
             <div
               className="absolute inset-0"
               style={vars({
