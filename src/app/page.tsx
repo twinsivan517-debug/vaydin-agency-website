@@ -50,10 +50,10 @@ const PUSH = { from: 1235, to: 1440 };
 
 /* The wait's timetable, the same way: the evening, then into the phone, the
    answer on its screen, and the hand-over to the fix. */
-const WAIT = 880;
+const WAIT = 960;
 const wt = (svh: number) => +(svh / WAIT).toFixed(4);
 const INTO = { from: 350, to: 520 };
-const HAND = { from: 810, to: 875 };
+const HAND = { from: 890, to: 955 };
 
 /* The three acts share one pinned screen. Each ends at this share of it. */
 const FIX = 1100;
@@ -189,16 +189,20 @@ function Brief() {
   ));
 }
 
-/* Inside the phone: the same message, answered. The screen opens over the
-   last frame of the move into the phone and, at the hand-over, shrinks back
-   onto the phone lying on the desk of the next act. */
+/* Inside the phone: the engine. Each leak from the reception comes in on
+   the left, passes the Vaydin mark, and leaves fixed on the right; under it,
+   the one message from the wait, answered. The screen opens over the last
+   frame of the move into the phone and, at the hand-over, shrinks back onto
+   the phone lying on the desk of the next act. */
+const ENGINE = [
+  ["Missed call", "Call answered"],
+  ["Unseen WhatsApp", "Replied in 1 minute"],
+  ["Booking error", "Booked, reminded"],
+  ["Unread Instagram", "Inquiry revived"],
+];
+
 function Screen() {
-  const say = [
-    ["in", "Hi, I’d like to book a consultation for lip filler this week. Do you have Thursday evening?", "6:48 PM"],
-    ["out", "Good evening! Thursday evening is open: 6:30 PM or 7:15 PM. Which suits you?", "6:48 PM"],
-    ["in", "7:15 please.", "6:49 PM"],
-    ["out", "Booked: Thursday, 7:15 PM. You’ll get a reminder the day before.", "6:49 PM"],
-  ];
+  const from = INTO.to + 40;
   return (
     <div
       className="screen"
@@ -214,20 +218,48 @@ function Screen() {
     >
       <div className="screen-inner">
         <div className="show" style={vars({ "--at": wt(INTO.to + 8) })}>
-          <p className="label">The same message · with Vaydin · Illustration</p>
+          <p className="label text-gold-bright">Inside the Vaydin engine · Illustration</p>
           <h2 className="mt-2 font-display text-2xl leading-tight sm:text-4xl">
             Same evening. Same message. Answered in a minute.
           </h2>
         </div>
-        {say.map(([side, words, time], i) => (
-          <div key={words} className="show" style={vars({ "--at": wt(INTO.to + 45 + i * 48) })}>
-            <p className={`bubble bubble-${side}`}>
-              {words}
-              <time>{time}</time>
-            </p>
+        <div className="engine">
+          <div className="engine-core" aria-hidden="true">
+            <span className="engine-ring" />
+            <Image src="/img/mark.png" alt="" width={72} height={64} />
           </div>
-        ))}
-        <p className="label screen-tag show" style={vars({ "--at": wt(INTO.to + 240) })}>
+          {ENGINE.map(([leak, fixed], i) => (
+            <div key={leak} className="engine-row" style={vars({ "--at": wt(from + i * 40), "--w": wt(26), "--row": i + 1 })}>
+              <p className="engine-in">
+                <span className="mark bad" aria-hidden="true">{"✕"}</span>
+                {leak}
+              </p>
+              <span className="engine-line in" aria-hidden="true" />
+              <span className="engine-line out" aria-hidden="true" />
+              <p className="engine-out">
+                <span className="mark ok" aria-hidden="true">{"✓"}</span>
+                {fixed}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className="show" style={vars({ "--at": wt(from + 185) })}>
+          <p className="bubble bubble-in">
+            Hi, I&apos;d like to book a consultation for lip filler this week. Do you have Thursday
+            evening?
+            <time>6:48 PM</time>
+          </p>
+        </div>
+        <div className="show" style={vars({ "--at": wt(from + 225) })}>
+          <p className="bubble bubble-out">
+            Good evening! Thursday at 7:15 PM is yours. You&apos;ll get a reminder the day before.
+            <time>6:49 PM</time>
+          </p>
+        </div>
+        <p
+          className="label show w-fit rounded-md border border-proof bg-background px-3 py-2 text-proof"
+          style={vars({ "--at": wt(from + 265) })}
+        >
           Patient booked · in 1 minute
         </p>
       </div>
