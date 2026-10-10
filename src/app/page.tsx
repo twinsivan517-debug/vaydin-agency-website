@@ -225,11 +225,10 @@ function Screen() {
       })}
     >
       <div className="screen-inner">
-        <div className="show" style={vars({ "--at": wt(INTO.to + 8) })}>
-          <p className="label text-gold-bright">Inside the Vaydin engine · Illustration</p>
-          <h2 className="mt-2 font-display text-2xl leading-tight sm:text-4xl">
-            Same evening. Same message. Answered in a minute.
-          </h2>
+        <div className="show" style={vars({ "--at": wt(INTO.to - 8) })}>
+          <p className="label text-gold-bright">Step 02 · Fix &amp; run · Inside the Vaydin engine · Illustration</p>
+          <h2 className="mt-2 font-display text-3xl leading-tight sm:text-5xl">Then we fix it, and run it.</h2>
+          <p className="mt-2 text-lg text-muted">Same evening, same message. This time it is answered in a minute.</p>
         </div>
         <div className="engine">
           <div className="engine-core" aria-hidden="true">
@@ -595,9 +594,9 @@ export default function Home() {
             <AppScreen />
             <div className={TEXT}>
               <div className={`${BLOCK} hide`} style={vars({ "--at": fx(396) })}>
-                <p className="label text-gold-bright">Step 02 · Fix &amp; run · The next evening</p>
-                <h2 className={`${H} mt-4`}>Then we fix it, and run it.</h2>
-                <p className={LEAD}>Same clinic, same rush. Your clinic&apos;s own voice and number.</p>
+                <p className="label text-gold-bright">The next evening · Illustration</p>
+                <h2 className={`${H} mt-4`}>Same clinic, same rush. Nothing missed.</h2>
+                <p className={LEAD}>Answered in your clinic&apos;s own voice, from its own number.</p>
                 <ul className="mt-4 flex flex-col gap-2">
                   {INSIDE.map(([, fixed], i) => (
                     <li key={fixed} className="show flex gap-3 text-lg" style={vars({ "--at": fx(110 + i * 50) })}>
