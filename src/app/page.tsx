@@ -11,70 +11,54 @@ export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const WHATSAPP = "https://wa.me/971505553148";
 
-/* What a patient can check about a clinic from outside. */
-const CHECKS = ["Website", "Replies", "Booking", "Prices", "Reviews", "Social media"];
-
-/* Sample clinics on the last frame of the city flight, placed as a fraction
-   of the picture. Illustration only: no real clinic. `d` and `m` are the
-   clinic's turn in the scan on wide screens and on phones; a clinic without
-   one is not shown there. Each row is [fine, what was found], in CHECKS order. */
-type Clinic = {
-  x: number;
-  y: number;
-  leaks: boolean;
-  d?: number;
-  m?: number;
-  left?: boolean;
-  chosen?: boolean;
-  rows: [boolean, string][];
-};
-const CLINICS: Clinic[] = [
-  {
-    x: 0.133, y: 0.43, leaks: true, d: 0,
-    rows: [[false, "Down tonight"], [true, "Answers in minutes"], [false, "Link broken"],
-      [false, "Nowhere to find"], [true, "All answered"], [false, "Silent for months"]],
-  },
-  {
-    x: 0.62, y: 0.36, leaks: false, d: 1, m: 0,
-    rows: [[true, "Fast on phones"], [true, "Answers in minutes"], [true, "Books online"],
-      [true, "Shown clearly"], [true, "All answered"], [false, "Silent for weeks"]],
-  },
-  {
-    x: 0.42, y: 0.47, leaks: true, d: 2,
-    rows: [[true, "Fast on phones"], [false, "No reply after 6 PM"], [false, "Phone calls only"],
-      [true, "Shown clearly"], [false, "Bad ones unanswered"], [true, "Posted this week"]],
-  },
-  {
-    x: 0.675, y: 0.5, leaks: true, m: 1,
-    rows: [[true, "Fast on phones"], [false, "No reply after 6 PM"], [false, "Phone calls only"],
-      [true, "Shown clearly"], [false, "Bad ones unanswered"], [true, "Posted this week"]],
-  },
-  {
-    x: 0.895, y: 0.48, leaks: true, d: 3, m: 2, left: true,
-    rows: [[false, "Slow on phones"], [false, "Messages left unread"], [true, "Books online"],
-      [false, "Out of date"], [true, "All answered"], [false, "Silent for months"]],
-  },
-  {
-    x: 0.295, y: 0.56, leaks: false, d: 4,
-    rows: [[true, "Fast on phones"], [true, "Answers in minutes"], [true, "Books online"],
-      [false, "Nowhere to find"], [true, "All answered"], [true, "Posted this week"]],
-  },
-  {
-    x: 0.77, y: 0.59, leaks: true, d: 5, m: 3, left: true, chosen: true,
-    rows: [[false, "Slow on phones"], [false, "Replied after 3 hours"], [false, "Link broken"],
-      [true, "Shown clearly"], [false, "Bad ones unanswered"], [true, "Posted this week"]],
-  },
+/* Sample clinics on the last frame of the city flight, each on a lit spot of
+   that picture, as a fraction of it. Illustration only: no real clinic.
+   `top` answers every patient; `chosen` is the one the story enters. Phones
+   see a narrow band of the picture, so some pins are for one screen only. The
+   wide chosen pin sits on the spot the descent clip keeps still. */
+type Pin = { x: number; y: number; top?: boolean; chosen?: boolean; on?: "wide" | "narrow" };
+const PINS: Pin[] = [
+  { x: 0.1, y: 0.245, on: "wide" },
+  { x: 0.33, y: 0.3, on: "wide" },
+  { x: 0.185, y: 0.4, on: "wide" },
+  { x: 0.225, y: 0.46, on: "wide" },
+  { x: 0.405, y: 0.33, top: true, on: "wide" },
+  { x: 0.503, y: 0.455, chosen: true, on: "wide" },
+  { x: 0.9, y: 0.27, on: "wide" },
+  { x: 0.845, y: 0.44, top: true, on: "wide" },
+  { x: 0.8, y: 0.4, top: true, on: "narrow" },
+  { x: 0.375, y: 0.545, on: "wide" },
+  { x: 0.585, y: 0.79, top: true, on: "wide" },
+  { x: 0.87, y: 0.64, on: "wide" },
+  { x: 0.78, y: 0.83, on: "wide" },
+  { x: 0.64, y: 0.43, chosen: true, on: "narrow" },
+  { x: 0.655, y: 0.29, on: "narrow" },
+  { x: 0.83, y: 0.275, on: "narrow" },
+  { x: 0.675, y: 0.525, top: true, on: "narrow" },
+  { x: 0.81, y: 0.51, on: "narrow" },
 ];
 
-const SWEEP = { b0: 0.14, b1: 0.23 };
-const SCAN = { from: 0.24, to: 0.5 };
-const TURN = {
-  d: (SCAN.to - SCAN.from) / CLINICS.filter((clinic) => clinic.d !== undefined).length,
-  m: (SCAN.to - SCAN.from) / CLINICS.filter((clinic) => clinic.m !== undefined).length,
-};
+/* The city scene's timetable: its length, and moments along that length. */
+const CITY = 1270;
+const at = (svh: number) => +(svh / CITY).toFixed(4);
+const SWEEP = { b0: at(210), b1: at(345) };
+const FOCUS = at(360);
+const OPEN = { from: at(370), to: at(545), row: 25 };
+const DIVE = { from: 550, to: 760 };
+const DESK = 970;
 const RESWEEP = { b0: 0.7, b1: 0.84 };
 const GOLD_AT = 0.63;
 const GREEN_AT = 0.67;
+
+/* What a patient meets at the chosen clinic, seen from outside. The last four
+   are the four things the reception scene then shows going wrong. */
+const MEETS = [
+  ["Website", "Slow on phones"],
+  ["Phone", "Rings out when busy"],
+  ["WhatsApp", "No reply after 6 PM"],
+  ["Booking", "The link is broken"],
+  ["Instagram", "Questions left unread"],
+];
 
 /* What is going wrong inside the chosen clinic, and what each line becomes
    once the engine runs it. */
@@ -119,61 +103,70 @@ function Call({ at, then, answered = false }: { at: number; then: number; answer
   );
 }
 
-const only = (clinic: Clinic) =>
-  clinic.d === undefined ? "narrow-only" : clinic.m === undefined ? "wide-only" : "";
+const only = (pin: Pin) => (pin.on ? `${pin.on}-only` : "");
 
-const place = (clinic: Clinic) => ({
-  "--xn": clinic.x,
-  "--y": `${clinic.y * 100}%`,
-  ...(clinic.d === undefined ? {} : { "--t0d": SCAN.from + clinic.d * TURN.d, "--wd": TURN.d }),
-  ...(clinic.m === undefined ? {} : { "--t0m": SCAN.from + clinic.m * TURN.m, "--wm": TURN.m }),
-});
+const spot = (pin: Pin) => ({ "--xn": pin.x, "--y": `${pin.y * 100}%`, "--yn": pin.y });
 
-/* The dots. In the scan each takes its colour when its turn ends; in the fix
-   they arrive already judged and the leaking ones turn green. */
-function Points({ fixing = false }: { fixing?: boolean }) {
-  return CLINICS.map((clinic) => (
-    <div
-      key={clinic.x}
-      className={`point ${only(clinic)}`}
-      style={vars({
-        ...(fixing ? { "--xn": clinic.x, "--y": `${clinic.y * 100}%`, "--judged": 1 } : place(clinic)),
-        "--yn": clinic.y,
-        "--verdict": clinic.leaks ? "var(--leak)" : "var(--proof)",
-        ...(fixing && clinic.leaks
-          ? { "--tn": clinic.chosen ? GREEN_AT : RESWEEP.b0 + (RESWEEP.b1 - RESWEEP.b0) * clinic.y }
-          : {}),
-        ...(fixing && clinic.chosen ? { "--tg": GOLD_AT } : {}),
-      })}
-    >
-      {!fixing && <span className="ring" />}
-      <span className="dot" />
-      {fixing && clinic.chosen && (
-        <span className="tag tag-left since" style={vars({ "--at": GOLD_AT })}>
-          Answered in minutes, booked
-        </span>
-      )}
-    </div>
-  ));
+/* The pins. In the city scene the beam lights them and the chosen one turns
+   red; on wide screens it stays through the first frames of the descent. In
+   the fix they arrive already lit and the chosen one turns gold, then green. */
+function Pins({ fixing = false }: { fixing?: boolean }) {
+  return PINS.map((pin) => {
+    const held = pin.chosen && pin.on === "wide";
+    return (
+      <div
+        key={`${pin.x}-${pin.y}`}
+        className={`pin ${pin.chosen ? "chosen" : ""} ${pin.top ? "top" : ""} ${only(pin)}`}
+        style={vars({
+          ...spot(pin),
+          "--base": pin.top ? "var(--proof)" : "var(--foreground)",
+          ...(fixing && pin.chosen ? { "--tg": GOLD_AT, "--tn": GREEN_AT } : {}),
+          ...(fixing && held ? { "--i0": 0.565, "--io": 0.035 } : {}),
+          ...(!fixing && held ? { "--o0": at(DIVE.from + 8), "--oo": at(42) } : {}),
+        })}
+      >
+        {!fixing && pin.chosen && <span className="pin-ring" aria-hidden="true" />}
+        <svg viewBox="0 0 24 32" aria-hidden="true">
+          <path
+            d="M12 31C12 31 2 19.5 2 11.5a10 10 0 1 1 20 0C22 19.5 12 31 12 31Z"
+            fill="rgb(13 8 7 / 0.9)"
+            stroke="currentColor"
+            strokeWidth="1.75"
+          />
+          <path
+            d="M12 5.5c.6 3.8 2.2 5.4 6 6-3.8.6-5.4 2.2-6 6-.6-3.8-2.2-5.4-6-6 3.8-.6 5.4-2.2 6-6Z"
+            fill="currentColor"
+          />
+        </svg>
+        {fixing && pin.chosen && (
+          <span className="tag since" style={vars({ "--at": GOLD_AT })}>
+            Answered in minutes, booked
+          </span>
+        )}
+      </div>
+    );
+  });
 }
 
-function Cards() {
-  return CLINICS.map((clinic) => (
+/* The one window: what a patient meets at the chosen clinic. */
+function Brief() {
+  return PINS.filter((pin) => pin.chosen).map((pin) => (
     <div
-      key={clinic.x}
-      className={`card ${clinic.left ? "card-left" : ""} ${only(clinic)}`}
-      style={vars(place(clinic))}
+      key={pin.x}
+      className={`brief ${only(pin)}`}
+      style={vars({ ...spot(pin), "--t0": OPEN.from, "--t1": OPEN.to })}
     >
-      <p className="label text-gold-bright">Sample clinic · Illustration</p>
-      <ul className="mt-2">
-        {clinic.rows.map(([fine, found], i) => (
-          <li key={CHECKS[i]} className="row" style={vars({ "--ri": 0.08 + i * 0.1 })}>
-            <span className={`mark ${fine ? "ok" : "bad"}`} aria-hidden="true">
-              {fine ? "\u2713" : "\u2715"}
+      <p className="label text-leak">Sample clinic · Illustration</p>
+      <p className="brief-title">Patients want this clinic. Here is what they meet.</p>
+      <ul>
+        {MEETS.map(([what, found], i) => (
+          <li key={what} className="row show" style={vars({ "--at": at(385 + i * OPEN.row) })}>
+            <span className="mark bad" aria-hidden="true">
+              {"✕"}
             </span>
-            <span>{CHECKS[i]}</span>
+            <span>{what}</span>
             <span className="found">
-              <span className="sr-only">{fine ? "fine: " : "problem: "}</span>
+              <span className="sr-only">problem: </span>
               {found}
             </span>
           </li>
@@ -271,34 +264,43 @@ export default function Home() {
       </header>
 
       <main className="flex-1">
-        <Scene id="city" length={1500} label="Dubai tonight">
+        <Scene id="city" length={CITY} label="Dubai tonight">
           <div className="stage" style={vars({ "--cx": 0.72 })}>
             <Poster clip="m" alt="Dubai at night, seen from above, drawn in gold light" eager />
-            <Poster clip="m" end alt="" className="fade-in" style={vars({ "--at": 0.11, "--over": 0.01 })} />
-            <ScrubSequence name="m" count={FRAMES.m} from={0.01} to={0.12} />
+            <Poster clip="m" end alt="" className="fade-in" style={vars({ "--at": at(165), "--over": 0.01 })} />
+            <ScrubSequence name="m" count={FRAMES.m} from={at(15)} to={at(180)} />
             <div className="beam" style={vars({ "--b0": SWEEP.b0, "--b1": SWEEP.b1 })} />
-            <div className="cut absolute inset-0" style={vars({ "--b0": SWEEP.b0, "--b1": SWEEP.b1, "--at": 0.515 })}>
-              <Points />
+            <Shot clip="n" from={at(DIVE.from)} to={at(DIVE.to)} alt="The entrance of a clinic at sunset, its reception glowing inside" />
+            <Shot clip="e" from={at(DIVE.to)} to={at(DESK)} alt="Inside: a receptionist giving a patient her full attention while the phone on the desk lights up" />
+            <div
+              className="absolute inset-0"
+              style={vars({
+                "--b0": SWEEP.b0,
+                "--b1": SWEEP.b1,
+                "--f0": FOCUS,
+                "--o0": at(DIVE.from - 14),
+                "--oo": at(14),
+              })}
+            >
+              <Pins />
             </div>
-            <Shot clip="n" from={0.52} to={0.66} alt="The entrance of a clinic at sunset, its reception glowing inside" />
-            <Shot clip="e" from={0.66} to={0.8} alt="Inside: a receptionist giving a patient her full attention while the phone on the desk lights up" />
           </div>
           <div className="scrim" />
-          <div className="stage cut" style={vars({ "--cx": 0.72, "--at": 0.515 })}>
-            <Cards />
+          <div className="stage" style={vars({ "--cx": 0.72 })}>
+            <Brief />
           </div>
           <div className="stage" style={vars({ "--cx": PHONE.cx })}>
-            <Call at={0.81} then={0.9} />
+            <Call at={at(DESK + 15)} then={at(DESK + 150)} />
           </div>
-          <div className="shade fade-in" style={vars({ "--at": 0.96, "--over": 0.04 })} />
+          <div className="shade fade-in" style={vars({ "--at": at(CITY - 60), "--over": at(60) })} />
           <div className={TEXT}>
-            <div className={`${BLOCK} hide`} style={vars({ "--at": 0.115 })}>
+            <div className={`${BLOCK} hide`} style={vars({ "--at": at(172) })}>
               <p className="label text-gold-bright">Sample clinics · Illustration</p>
               <h1 className={`${H} mt-4`}>Somewhere in Dubai tonight, a patient is choosing a clinic.</h1>
               <p className={LEAD}>Your name is on the list.</p>
             </div>
-            <div className={`${BLOCK} hide`} style={vars({ "--at": SCAN.from })}>
-              <div className="show" style={vars({ "--at": 0.125 })}>
+            <div className={`${BLOCK} hide`} style={vars({ "--at": FOCUS })}>
+              <div className="show" style={vars({ "--at": at(187) })}>
                 <p className="label text-leak">Step 01 · Diagnose</p>
                 <h2 className={`${H} mt-4`}>First, we see what your patients see.</h2>
                 <p className={LEAD}>
@@ -307,28 +309,28 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className={`${BLOCK} wide-only hide`} style={vars({ "--at": 0.515 })}>
-              <div className="show" style={vars({ "--at": SCAN.from + 0.005 })}>
+            <div className={`${BLOCK} wide-only hide`} style={vars({ "--at": OPEN.to })}>
+              <div className="show" style={vars({ "--at": FOCUS + 0.004 })}>
                 <p className="label text-leak">Step 01 · Diagnose</p>
                 <p className="mt-2 text-lg text-foreground">
-                  Clinic by clinic. Green holds. Red leaks patients.
+                  Green clinics answer every patient. This one is losing them.
                 </p>
               </div>
             </div>
-            <div className={`${BLOCK} hide`} style={vars({ "--at": 0.64 })}>
-              <div className="show" style={vars({ "--at": 0.53 })}>
+            <div className={`${BLOCK} hide`} style={vars({ "--at": at(DIVE.to - 30) })}>
+              <div className="show" style={vars({ "--at": at(DIVE.from + 12) })}>
                 <p className="label text-gold-bright">Sample clinic · Illustration</p>
-                <h2 className={`${H} mt-4`}>Then we go inside the one that leaks most.</h2>
+                <h2 className={`${H} mt-4`}>Then we go inside.</h2>
               </div>
             </div>
-            <div className={`${BLOCK} show`} style={vars({ "--at": 0.8 })}>
+            <div className={`${BLOCK} show`} style={vars({ "--at": at(DESK) })}>
               <p className="label text-gold-bright">Sample clinic · 6:48 PM · Illustration</p>
               <h2 className={`${H} mt-4`}>Nobody here is doing anything wrong.</h2>
               <p className={LEAD}>The team is busy with the patient in front of them. Meanwhile:</p>
               <ul className="mt-4 flex flex-col gap-2">
                 {INSIDE.map(([leak], i) => (
-                  <li key={leak} className="show flex gap-3 text-lg" style={vars({ "--at": 0.83 + i * 0.03 })}>
-                    <span className="mark bad" aria-hidden="true">{"\u2715"}</span>
+                  <li key={leak} className="show flex gap-3 text-lg" style={vars({ "--at": at(DESK + 45 + i * 45) })}>
+                    <span className="mark bad" aria-hidden="true">{"✕"}</span>
                     {leak}
                   </li>
                 ))}
@@ -387,12 +389,20 @@ export default function Home() {
           <div className="stage" style={vars({ "--cx": 0.72 })}>
             <Poster clip="r" alt="The same reception the next evening, just as busy" />
             <Shot clip="r" from={0.05} to={0.27} alt="The receptionist stays with her patient and smiles; the phone on the desk goes quiet and the screen turns green" />
-            <Shot clip="n" from={0.42} to={0.6} reverse dissolve={0.06} alt="The city again, the clinic points turning from red to green" />
+            <Shot clip="n" from={0.42} to={0.6} reverse dissolve={0.06} alt="The city again, the chosen clinic turning from red to green" />
             <div className="beam" style={vars({ "--b0": RESWEEP.b0, "--b1": RESWEEP.b1 })} />
-            <div className="fade-in absolute inset-0" style={vars({ "--at": 0.6, "--over": 0.01 })}>
-              <div className="cut absolute inset-0" style={vars({ "--b0": -2, "--b1": -1, "--at": 0.875 })}>
-                <Points fixing />
-              </div>
+            <div
+              className="fixing cut absolute inset-0"
+              style={vars({
+                "--b0": RESWEEP.b0,
+                "--b1": RESWEEP.b1,
+                "--f0": -1,
+                "--i0": 0.6,
+                "--io": 0.01,
+                "--at": 0.875,
+              })}
+            >
+              <Pins fixing />
             </div>
             <Shot clip="m" from={0.88} to={1} reverse />
           </div>
@@ -409,7 +419,7 @@ export default function Home() {
               <ul className="mt-4 flex flex-col gap-2">
                 {INSIDE.map(([, fixed], i) => (
                   <li key={fixed} className="show flex gap-3 text-lg" style={vars({ "--at": 0.1 + i * 0.045 })}>
-                    <span className="mark ok" aria-hidden="true">{"\u2713"}</span>
+                    <span className="mark ok" aria-hidden="true">{"✓"}</span>
                     {fixed}
                   </li>
                 ))}
