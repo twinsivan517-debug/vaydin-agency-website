@@ -21,6 +21,8 @@ const CLIPS = {
   b: { focus: [0.68, 0.68] },
   z: { focus: [0.68, 0.5] },
   r: { focus: [0.56, 0.56] },
+  o: { focus: [0.56, 0.73], secs: 4.3 },
+  q: { focus: [0.73, 0.5] },
 };
 const FPS = 12;
 const FULL = 124 / 24;

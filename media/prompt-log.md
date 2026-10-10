@@ -276,3 +276,37 @@ All stills: GPT Image 2.5 (flare) · high · 2K · 16:9 · 2.75 credits. All cli
 - Gates: camera locked PASS · faces stable PASS · phone dark PASS · monitor green PASS (it passes through a stronger green in the first second).
 
 Fifth round credits: 2 stills x 2.75 = 5.5 and 5 clips x 10 = 50. Total 55.5, no second takes (balance 328.92 to 273.42, read after). Running total 196.75.
+
+# Sixth round: the mark on the phone, and the owner with his app
+
+Owner's brief, 2026-10-10: on the way into the phone the screen shows the Vaydin icon, not white; inside it something like an engine; and a closing scene where the clinic's owner opens the Vaydin app and sees his clinic doing well. The app is real: its icon and its first page were read in the `vaydin-core` house (`system/dashboard/assets/vaydin-icon-512.png`, `templates/home.html`, `cards.py`).
+`15-app-splash.png` is that icon enlarged on its own black, made on this machine and uploaded (media `9792fd6f-e979-45ad-a2e3-9102216083a7`). It is the end frame of clips Z and Q and a reference for S14.
+Stills: GPT Image 2.5 (flare) · high · 2K · 16:9 · 2.75 credits. Clips: MiniMax H3 · 2K · 5 s · 10 credits, "IN THE DARK" preset declined.
+
+## Clip Z, second version — into the phone, the mark on its screen
+
+- Job `c68f32e2-bff1-4adc-8386-c7894c8d0677` · start = S3b · end = the splash · first version kept as `z-v1.mp4`
+- Prompt core: "At the very start the smartphone's plain white screen switches to deep black with a single flat gold geometric emblem in its centre, exactly the emblem of the last frame, like an app opening"; the first version's move; "The emblem keeps its exact shape the whole time: sharp straight edges, symmetric, never bending, melting or changing".
+- Gates (contact sheet, 12 frames): no cut PASS · the emblem keeps its shape in every frame PASS · ends on the splash PASS.
+- Learned: a real logo survived a camera move when it was the whole of the end frame and the prompt said the screen changes to it at the very start. The model had the true shape to aim at from the first second.
+
+## S14 — the owner by the window
+
+- References = S13 and the splash · job `ae1972b0-3e26-4ea9-a413-f2d62d75d7b7` · file `16-owner.png`
+- Prompt core: the same reception "seen from a new camera position… looks toward the tall windows, in a medium shot"; "a man in his mid forties with short dark hair and a neat short beard, wearing a tailored charcoal suit"; "holding a smartphone… looking down at its screen with a quiet, satisfied, genuine smile"; "the screen is deep black with one flat gold geometric emblem in its centre, exactly the emblem from the second reference image, copied faithfully".
+- Gates: same room (desk, lamp, sofa, light) yes · face and hand clean yes · emblem on the phone matches the icon yes · text zone on the left yes.
+- The owner is drawn as a man; the brief did not say.
+
+## Clip O — from the desk to the owner
+
+- Job `f86b998c-cd9d-468b-9eda-b09ae6adbd34` · start = S13 · end = S14
+- Prompt core: "the camera glides to the right and forward through the clinic reception, leaving the receptionist and her patient at the marble desk behind on the left… and settles in a medium shot on the clinic's owner… who has been standing by the windows the whole time"; "He is revealed naturally as the camera comes round; he does not walk in".
+- Gates: no cut PASS · faces stable PASS · ends on the end frame PASS. The camera passes a dark pillar on the way, which hides the change of angle; the two people on the sofa are gone after it. Over at about 4.1 s; the page uses 4.3 s.
+
+## Clip Q — into the owner's phone
+
+- Job `36459f98-5635-4811-9939-aefb82683e8a` · start = S14 · end = the splash
+- Prompt core: "the camera glides forward and slightly down, past the man's shoulder, straight toward the smartphone he holds… until its black screen with the single centred gold emblem fills the entire frame"; "Early in the move his thumb taps the gold emblem once and lifts away again."
+- Gates: no cut PASS · he taps the screen PASS (with a finger of his other hand) · the emblem keeps its shape PASS · ends on the splash PASS. Played backwards after the app screen to return to his face.
+
+Sixth round credits: 1 still x 2.75 and 3 clips x 10 = 32.75, no second takes (balance 273.42 to 240.67, read after). Running total 229.5.

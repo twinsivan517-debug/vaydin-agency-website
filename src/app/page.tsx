@@ -55,13 +55,20 @@ const wt = (svh: number) => +(svh / WAIT).toFixed(4);
 const INTO = { from: 350, to: 520 };
 const HAND = { from: 890, to: 955 };
 
+/* The fix's timetable: the desk, then the owner and his app, then back out
+   over the city, where the second beam passes and the chosen pin turns. */
+const FIX = 1850;
+const fx = (svh: number) => +(svh / FIX).toFixed(4);
+const OWNER = { from: 410, to: 1160 };
+const APP = { from: 710, to: 975 };
+const CITY_BACK = OWNER.to + 250;
+const RESWEEP = { b0: fx(CITY_BACK + 110), b1: fx(CITY_BACK + 264) };
+const GOLD_AT = fx(CITY_BACK + 33);
+const GREEN_AT = fx(CITY_BACK + 77);
+
 /* The three acts share one pinned screen. Each ends at this share of it. */
-const FIX = 1100;
 const STORY = CITY + WAIT + FIX;
 const ACTS = { city: CITY / STORY, wait: (CITY + WAIT) / STORY };
-const RESWEEP = { b0: 0.7, b1: 0.84 };
-const GOLD_AT = 0.63;
-const GREEN_AT = 0.67;
 
 /* What a patient meets at the chosen clinic, seen from outside. The last four
    are the four things the reception scene then shows going wrong. */
@@ -134,7 +141,7 @@ function Pins({ fixing = false }: { fixing?: boolean }) {
           ...spot(pin),
           "--base": pin.top ? "var(--proof)" : "var(--foreground)",
           ...(fixing && pin.chosen ? { "--tg": GOLD_AT, "--tn": GREEN_AT } : {}),
-          ...(fixing && held ? { "--i0": 0.565, "--io": 0.035 } : {}),
+          ...(fixing && held ? { "--i0": fx(CITY_BACK - 38), "--io": fx(38) } : {}),
           ...(!fixing && held ? { "--o0": at(DIVE.from + 8), "--oo": at(42) } : {}),
         })}
       >
@@ -262,6 +269,63 @@ function Screen() {
         >
           Patient booked · in 1 minute
         </p>
+      </div>
+    </div>
+  );
+}
+
+/* The owner's app, opened: a drawing of its real first page, the clinic's
+   standing and its six channels, with a sample clinic's numbers. It opens
+   over the app's icon and gives way to the icon again. */
+const CHANNELS = [
+  ["Google", "A", "Google rating", "4.8 stars"],
+  ["Website", "A", "on a phone", "works"],
+  ["Instagram", "A-", "last post", "today"],
+  ["WhatsApp", "A", "first reply", "1 min"],
+  ["Competitors", "A-", "clinics watched", "8"],
+  ["Ads", "A-", "active ads", "3"],
+];
+
+function AppScreen() {
+  return (
+    <div
+      className="screen app"
+      style={vars({ "--s0": fx(APP.from), "--so": fx(18), "--t0": fx(APP.to - 22), "--t1": fx(APP.to) })}
+    >
+      <div className="screen-inner">
+        <div className="show flex items-center gap-4" style={vars({ "--at": fx(APP.from + 22) })}>
+          <Image src="/img/mark.png" alt="" width={44} height={39} />
+          <div>
+            <p className="label text-gold-bright">Vaydin Intelligence · Sample clinic · Illustration</p>
+            <p className="font-display text-2xl leading-tight sm:text-3xl">Your clinic</p>
+          </div>
+        </div>
+        <div className="app-standing show" style={vars({ "--at": fx(APP.from + 45) })}>
+          <p className="label text-muted">your standing today</p>
+          <p className="app-score">
+            <span>91</span>
+            <small>/100</small>
+            <b>A</b>
+          </p>
+          <p className="label text-muted">Vaydin score</p>
+        </div>
+        <ul className="app-cards">
+          {CHANNELS.map(([name, grade, what, value], i) => (
+            <li key={name} className="show" style={vars({ "--at": fx(APP.from + 75 + i * 22) })}>
+              <p className="app-card-head">
+                <span>{name}</span>
+                <b>
+                  <span className="sr-only">grade </span>
+                  {grade}
+                </b>
+              </p>
+              <p className="app-card-fact">
+                <span>{what}</span>
+                <span>{value}</span>
+              </p>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
@@ -502,8 +566,11 @@ export default function Home() {
           <Act from={ACTS.wait} to={1} lead={(WAIT - HAND.from) / STORY} layer={1} label="The fix">
             <div className="stage" style={vars({ "--cx": 0.72 })}>
               <Poster clip="r" alt="The same reception the next evening, just as busy" />
-              <Shot clip="r" from={0.05} to={0.27} alt="The receptionist stays with her patient and smiles; the phone on the desk goes quiet and the screen turns green" />
-              <Shot clip="n" from={0.42} to={0.6} reverse dissolve={0.06} alt="The city again, the chosen clinic turning from red to green" />
+              <Shot clip="r" from={fx(55)} to={fx(297)} alt="The receptionist stays with her patient and smiles; the phone on the desk goes quiet and the screen turns green" />
+              <Shot clip="o" from={fx(OWNER.from)} to={fx(OWNER.from + 150)} alt="By the window the clinic's owner stands with his phone, smiling at what he reads" />
+              <Shot clip="q" from={fx(OWNER.from + 160)} to={fx(APP.from + 10)} bare />
+              <Shot clip="q" from={fx(APP.to)} to={fx(OWNER.to - 60)} reverse bare />
+              <Shot clip="n" from={fx(OWNER.to + 52)} to={fx(CITY_BACK)} reverse dissolve={fx(66)} alt="The city again, the chosen clinic turning from red to green" />
               <div className="beam" style={vars({ "--b0": RESWEEP.b0, "--b1": RESWEEP.b1 })} />
               <div
                 className="fixing cut absolute inset-0"
@@ -511,34 +578,48 @@ export default function Home() {
                   "--b0": RESWEEP.b0,
                   "--b1": RESWEEP.b1,
                   "--f0": -1,
-                  "--i0": 0.6,
-                  "--io": 0.01,
-                  "--at": 0.875,
+                  "--i0": fx(CITY_BACK),
+                  "--io": fx(11),
+                  "--at": fx(CITY_BACK + 302),
                 })}
               >
                 <Pins fixing />
               </div>
-              <Shot clip="m" from={0.88} to={1} reverse />
+              <Shot clip="m" from={fx(CITY_BACK + 308)} to={1} reverse />
             </div>
             <div className="scrim" />
-            <div className="stage cut" style={vars({ "--cx": PHONE.cx, "--at": 0.36 })}>
-              <Call at={0.012} then={0.1} answered />
+            <div className="stage cut" style={vars({ "--cx": PHONE.cx, "--at": fx(396) })}>
+              <Call at={fx(13)} then={fx(110)} answered />
             </div>
+            <AppScreen />
             <div className={TEXT}>
-              <div className={`${BLOCK} hide`} style={vars({ "--at": 0.36 })}>
+              <div className={`${BLOCK} hide`} style={vars({ "--at": fx(396) })}>
                 <p className="label text-gold-bright">Step 02 · Fix &amp; run · The next evening</p>
                 <h2 className={`${H} mt-4`}>Then we fix it, and run it.</h2>
                 <p className={LEAD}>Same clinic, same rush. Your clinic&apos;s own voice and number.</p>
                 <ul className="mt-4 flex flex-col gap-2">
                   {INSIDE.map(([, fixed], i) => (
-                    <li key={fixed} className="show flex gap-3 text-lg" style={vars({ "--at": 0.1 + i * 0.045 })}>
+                    <li key={fixed} className="show flex gap-3 text-lg" style={vars({ "--at": fx(110 + i * 50) })}>
                       <span className="mark ok" aria-hidden="true">{"✓"}</span>
                       {fixed}
                     </li>
                   ))}
                 </ul>
               </div>
-              <div className={`${BLOCK} show`} style={vars({ "--at": 0.62 })}>
+              <div className={`${BLOCK} hide`} style={vars({ "--at": fx(APP.from - 30) })}>
+                <div className="show" style={vars({ "--at": fx(OWNER.from + 25) })}>
+                  <p className="label text-gold-bright">The owner · Illustration</p>
+                  <h2 className={`${H} mt-4`}>And the owner sees all of it.</h2>
+                  <p className={LEAD}>One app, on the phone already in his hand.</p>
+                </div>
+              </div>
+              <div className={`${BLOCK} hide`} style={vars({ "--at": fx(OWNER.to + 40) })}>
+                <div className="show" style={vars({ "--at": fx(OWNER.to - 60) })}>
+                  <p className="label text-proof">The owner · Illustration</p>
+                  <h2 className={`${H} mt-4`}>He knows where his clinic stands. Every day.</h2>
+                </div>
+              </div>
+              <div className={`${BLOCK} show`} style={vars({ "--at": fx(CITY_BACK + 22) })}>
                 <p className="label text-proof">The loop · measured, not promised</p>
                 <h2 className={`${H} mt-4`}>The diagnostic never stops.</h2>
                 <p className={LEAD}>
