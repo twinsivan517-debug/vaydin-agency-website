@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "http-server out -s",
+    "postbuild": "node scripts/gzip-out.mjs",
+    "start": "http-server out -s -g",
     "lint": "eslint",
     "prepare": "node scripts/arm-hooks.mjs"
   },
