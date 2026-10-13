@@ -1,0 +1,23 @@
+# Vaydin
+
+> Vaydin finds the patients a clinic never saw, and books them. Dubai aesthetic clinics. Measured, not promised.
+
+Vaydin (VAYDIN PARTNERS INVESTMENTS - FZCO, Dubai Silicon Oasis, UAE) works with aesthetic clinics in Dubai and the MENA region in three steps:
+
+1. Diagnose: an unannounced mystery shop of the clinic, the way a patient meets it (WhatsApp, Google, Instagram, the website, the booking link), scored across six dimensions, plus a recurring sweep of everything a patient can find.
+2. Fix and run: the Vaydin engine takes over the clinic's digital front door, under the clinic's own name and number: WhatsApp messages answered in minutes, reviews answered, bookings made and reminded, old inquiries revived.
+3. Grow: once the engine runs the clinic, paid patient demand lands in a machine built to convert it.
+
+## Pages
+
+- https://vaydin.agency/ : the story of one clinic's evening, before and after Vaydin
+- https://vaydin.agency/diagnose.html : the diagnostic, what is measured and how
+- https://vaydin.agency/fix.html : the engine and the estate, what Vaydin runs for a clinic
+- https://vaydin.agency/engine.html : inside the engine
+- https://vaydin.agency/grow.html : growth once the engine runs
+- https://vaydin.agency/pricing.html : plans and pricing
+
+## Contact
+
+- WhatsApp: +971 50 555 3148
+- Email: hello@vaydin.agency

@@ -47,11 +47,24 @@ const ORGANISATION = {
   email: SITE.email,
 };
 
+/* The site as an entity of its own, so a search engine ties the name to
+   this address. */
+const WEBSITE = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE.name,
+  alternateName: ["Vaydin Agency", "vaydin.agency"],
+  url: `${SITE.url}/`,
+  publisher: { "@type": "Organization", name: SITE.name, url: `${SITE.url}/` },
+  inLanguage: "en",
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${sans.variable} ${display.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANISATION) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE) }} />
         {children}
       </body>
     </html>
