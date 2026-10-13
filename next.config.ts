@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  /* Plain files for GitHub Pages: no server, so no image resizing either. */
+  output: "export",
+  images: { unoptimized: true },
 };
 
 export default nextConfig;
