@@ -17,7 +17,7 @@ const LEAD = 0.1;
 /* Until the visitor scrolls, a sequence loads only a few frames: the page's
    first load stays light, and nothing is scrubbed before a scroll anyway. */
 let scrolled: Promise<void> | undefined;
-function firstScroll() {
+export function firstScroll() {
   scrolled ??= new Promise((resolve) => {
     if (scrollY > 0) resolve();
     else addEventListener("scroll", () => resolve(), { once: true, passive: true });

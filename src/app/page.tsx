@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import { NightClock } from "@/components/NightClock";
+import { LatePicture } from "@/components/LatePicture";
 import { Act, Scene } from "@/components/Scene";
 import { ScrubSequence } from "@/components/ScrubSequence";
 import FRAMES from "@/lib/frames.json";
@@ -332,7 +333,8 @@ function AppScreen() {
 }
 
 /* A scene's still picture. Phones take the first or last frame of their own
-   3:4 sequence, which the canvas then reuses from the cache. */
+   3:4 sequence, which the canvas then reuses from the cache. Only the eager
+   one loads before the first scroll. */
 function Poster({
   clip,
   end = false,
@@ -349,18 +351,13 @@ function Poster({
   style?: CSSProperties;
 }) {
   const frame = String(end ? FRAMES[clip] : 1).padStart(3, "0");
+  const phoneSrc = `/frames/${clip}/m/${frame}.webp`;
+  const src = `/img/${clip}-${end ? "last" : "first"}.webp`;
+  if (!eager) return <LatePicture phoneSrc={phoneSrc} src={src} alt={alt} className={className} style={style} />;
   return (
     <picture>
-      <source media="(max-width: 820px)" srcSet={`/frames/${clip}/m/${frame}.webp`} />
-      <img
-        src={`/img/${clip}-${end ? "last" : "first"}.webp`}
-        alt={alt}
-        loading={eager ? "eager" : "lazy"}
-        fetchPriority={eager ? "high" : "auto"}
-        decoding="async"
-        className={className}
-        style={style}
-      />
+      <source media="(max-width: 820px)" srcSet={phoneSrc} />
+      <img src={src} alt={alt} loading="eager" fetchPriority="high" decoding="async" className={className} style={style} />
     </picture>
   );
 }
