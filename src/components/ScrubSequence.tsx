@@ -10,7 +10,6 @@ const MAX_DPR = 1.5;
    already shows every pixel the frame has; a desktop frame is 1920 wide, so
    1.5x is all it can show there. */
 const PHONE_DPR = 2;
-const FIRST_PASS = 3;
 /* A sequence holds its frames only while the scene is within LEAD of the
    part it plays in, so one long scene never keeps every clip decoded. */
 const LEAD = 0.1;
@@ -23,8 +22,7 @@ const LEAD = 0.1;
    decode it replaced. */
 const RING = 4;
 
-/* Until the visitor scrolls, a sequence loads only a few frames: the page's
-   first load stays light, and nothing is scrubbed before a scroll anyway. */
+/* Resolves at the first scroll; the posters deep in the story wait for it. */
 let scrolled: Promise<void> | undefined;
 export function firstScroll() {
   scrolled ??= new Promise((resolve) => {
@@ -34,10 +32,12 @@ export function firstScroll() {
   return scrolled;
 }
 
-/* Every mounted sequence, so the one on stage can start the download of
-   the next one in page order: one clip ahead, never more, so the first pass
-   through the story meets its pictures already there without pulling the
-   whole story onto a phone that may leave after one screen. */
+/* Every mounted sequence, so each one can start the download of the next
+   in page order. The first clip starts the moment the page is up; the story
+   then downloads itself in order while the visitor reads, so the first pass
+   meets its pictures already there. The owner's rule, 2026-10-13: a new
+   visitor gets one first pass and never comes back for a second. The cost
+   is the whole story's pictures per visit, 19.5 MB on a phone, 28 MB wide. */
 type Entry = { canvas: HTMLCanvasElement; fetchBytes: () => void };
 const mounted = new Set<Entry>();
 function following(canvas: HTMLCanvasElement): Entry | undefined {
@@ -205,23 +205,21 @@ export function ScrubSequence({
     const ro = new ResizeObserver(size);
     ro.observe(canvas);
 
-    /* The bytes are fetched once and kept: a clip is a few MB compressed,
-       and keeping them is what makes a second pass smooth. Only unmounting
-       stops the loop. */
+    /* The bytes are fetched once and kept, one request at a time at low
+       priority so the page's own files always go first. Only unmounting
+       stops the loop; when it ends, the next sequence in page order starts. */
     let alive = true;
     let fetching = false;
     let fetched = false;
     const load = async () => {
       if (fetching || fetched) return;
       fetching = true;
-      let done = 0;
       for (const slot of loadOrder(s.total)) {
-        if (done++ === FIRST_PASS) await firstScroll();
         if (!alive) return;
         if (s.bytes[slot]) continue;
         try {
           const file = String(indexes[slot] + 1).padStart(3, "0");
-          const res = await fetch(`/frames/${name}/${phone ? "m" : "d"}/${file}.webp`);
+          const res = await fetch(`/frames/${name}/${phone ? "m" : "d"}/${file}.webp`, { priority: "low" });
           if (!res.ok) continue;
           const blob = await res.blob();
           if (!alive) return;
@@ -233,7 +231,7 @@ export function ScrubSequence({
       }
       fetching = false;
       fetched = true;
-      if (held) following(canvas)?.fetchBytes();
+      following(canvas)?.fetchBytes();
     };
     const entry: Entry = { canvas, fetchBytes: () => void load() };
     mounted.add(entry);
@@ -246,7 +244,6 @@ export function ScrubSequence({
       if (hold) {
         void load();
         s.fill();
-        if (fetched) following(canvas)?.fetchBytes();
       } else {
         drop();
         delete canvas.dataset.ready;
