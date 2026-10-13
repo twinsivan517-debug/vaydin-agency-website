@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vaydin — Inside the engine</title>
+<meta name="description" content="The Vaydin engine, live on one screen: every channel a patient can reach your clinic on, flowing into one system that answers, books, reminds, revives, and counts.">
+<link rel="icon" href="vaydin-icon-48.png">
+<link rel="apple-touch-icon" href="vaydin-icon-192.png">
+<link rel="canonical" href="https://vaydin.agency/engine.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vaydin">
+<meta property="og:title" content="Vaydin — Inside the engine">
+<meta property="og:description" content="The Vaydin engine, live on one screen: every channel a patient can reach your clinic on, flowing into one system that answers, books, reminds, revives, and counts.">
+<meta property="og:url" content="https://vaydin.agency/engine.html">
+<meta property="og:image" content="https://vaydin.agency/vaydin-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Vaydin — Inside the engine">
+<meta name="twitter:description" content="The Vaydin engine, live on one screen: every channel a patient can reach your clinic on, flowing into one system that answers, books, reminds, revives, and counts.">
+<meta name="twitter:image" content="https://vaydin.agency/vaydin-og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#070b0d; --bg-card:#0c1418; --bg-elevated:#10191d; --border:#1b2b30;
+    --tx:#f0f4f5; --tx-muted:#9db4b8; --tx-faint:#5f767b;
+    --gold:#c9a44a; --gold-light:#e8d48b; --gold-deep:#8a6d1b; --gold-bright:#f5d978;
+    --ok:#4ade80; --warn:#fbbf24; --critical:#f87171;
+    --volt:#34e3f0; --volt-deep:#19a7b8;
+    --display:'Marcellus', Georgia, serif;
+    --serif:'Cormorant Garamond', Georgia, serif;
+    --sans:'DM Sans', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', Consolas, monospace;
+    --ease:cubic-bezier(0.16,1,0.3,1);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;color:var(--tx);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(1100px 750px at 82% 14%, rgba(20,64,72,0.20), transparent 62%),
+      radial-gradient(950px 700px at 8% 88%, rgba(14,48,54,0.18), transparent 60%),
+      radial-gradient(700px 520px at 50% 50%, rgba(35,26,10,0.10), transparent 65%),
+      var(--bg);
+    background-attachment:fixed}
+  a{color:var(--gold);text-decoration:none}
+  a:hover{color:var(--gold-light)}
+  img{max-width:100%;display:block}
+  button{font-family:inherit}
+
+  /* ---------- nav (canonical bar) ---------- */
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:34px;
+      padding:13px 40px;background:rgba(19,13,8,0.93);backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(201,164,74,0.30)}
+  .brand{display:flex;align-items:center;gap:13px}
+  .brand img{width:32px;height:32px}
+  .wordmark{font-family:var(--display);font-size:20px;letter-spacing:0.32em;color:var(--gold-light)}
+  .nav-links{display:flex;gap:36px;align-items:center;font-size:15px}
+  .nav-links a{position:relative;padding:8px 1px;color:var(--chip-hi);letter-spacing:0.05em;font-weight:500;opacity:0.84;
+    transition:opacity .3s, color .3s}
+  .nav-links a::after{content:'';position:absolute;left:0;right:0;bottom:1px;height:1.5px;background:var(--chip-hi);
+    transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease)}
+  .nav-links a:hover{opacity:1}
+  .nav-links a:hover::after{transform:scaleX(1)}
+  .nav-links a.nav-here{opacity:1;color:#f5f1e8}
+  .nav-links a.nav-here::after{transform:scaleX(1)}
+  .nav-right{margin-left:auto;display:flex;align-items:center;gap:26px}
+  .nav-contact{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.08em;line-height:1}
+  .nav-contact a{color:#8f8672;transition:color .3s}
+  .nav-contact a:hover{color:#f5f1e8}
+  .nav-cta{background:var(--gold);color:#0b0906 !important;font-weight:700;padding:11px 24px;font-size:13px;letter-spacing:0.02em;transition:background .3s var(--ease)}
+  .nav-cta:hover{background:var(--gold-light)}
+  .nav-here{color:#f5f1e8}
+  .nav-burger{display:none;width:40px;height:40px;align-items:center;justify-content:center;cursor:pointer;background:none;border:0;
+    color:var(--gold-light);box-shadow:inset 0 0 0 1px rgba(201,164,74,0.45);margin-left:6px;padding:0}
+  .nav-burger svg{width:18px;height:14px;display:block}
+
+  /* ---------- the stage ---------- */
+  .stage{position:relative;height:100vh;min-height:680px;overflow:hidden}
+  #field{position:absolute;top:50%;left:58%;transform:translate(-50%,-50%)}
+  .stage-shade{position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(90deg, rgba(7,11,13,0.92) 0%, rgba(7,11,13,0.55) 34%, transparent 55%)}
+
+  /* ---------- console ---------- */
+  .console{position:absolute;left:48px;top:96px;bottom:70px;z-index:5;max-width:430px;padding-right:16px;
+    display:flex;flex-direction:column;justify-content:center}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.26em;color:var(--volt);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+  .pulse{width:8px;height:8px;border-radius:50%;background:var(--volt);animation:pulse 2.2s infinite}
+  @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(52,227,240,0.4)}50%{opacity:.45;box-shadow:0 0 0 6px rgba(52,227,240,0)}}
+  h1{font-family:var(--display);font-weight:400;font-size:clamp(24px,2.5vw,34px);line-height:1.14;margin:0 0 12px;text-wrap:balance}
+  .grad-text{background:linear-gradient(100deg, #f0f4f5 0%, #f0f4f5 30%, #f5d978 50%, #c9a44a 62%, #e8d48b 72%, #f0f4f5 100%);
+    background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:sheen 8s ease-in-out infinite}
+  @keyframes sheen{0%,100%{background-position:0% 0}50%{background-position:100% 0}}
+  .console > p{font-size:13.5px;color:var(--tx-muted);max-width:400px;margin:0 0 20px}
+  .console > p b{color:var(--tx);font-weight:600}
+
+  .fgroup{margin-bottom:12px}
+  .fgroup .gh{font-family:var(--mono);font-size:10px;letter-spacing:0.24em;color:var(--tx-faint);margin-bottom:4px}
+  .frow{display:flex;align-items:center;gap:12px;padding:4px 12px 4px 10px;margin-left:-10px;color:var(--tx-muted);width:100%;
+    background:none;border:0;cursor:pointer;text-align:left;
+    font-size:13px;transition:background .35s var(--ease), color .35s, transform .35s var(--ease)}
+  .frow .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;animation:breathe 3.2s ease-in-out infinite}
+  @keyframes breathe{0%,100%{opacity:.45}50%{opacity:1}}
+  .frow .fn{flex:1}
+  .frow .arr{color:var(--volt-deep);opacity:0;transform:translateX(-6px);transition:opacity .35s, transform .35s var(--ease);font-size:14px}
+  .frow:hover, .frow.live{background:rgba(52,227,240,0.06);color:var(--tx);transform:translateX(3px)}
+  .frow:hover .arr, .frow.live .arr{opacity:1;transform:none}
+
+  /* ---------- HUD panel (appears after the engine absorbs a field) ---------- */
+  .hud{position:absolute;right:56px;top:50%;transform:translateY(-50%) translateX(26px);z-index:8;width:350px;
+    background:rgba(9,15,18,0.90);backdrop-filter:blur(10px);padding:28px 30px 24px;
+    opacity:0;pointer-events:none;transition:opacity .55s var(--ease), transform .55s var(--ease)}
+  .hud.on{opacity:1;pointer-events:auto;transform:translateY(-50%) translateX(0)}
+  .hud .bk{position:absolute;width:18px;height:18px;border:1.5px solid var(--volt-deep)}
+  .hud .bk.tl{top:0;left:0;border-right:0;border-bottom:0}
+  .hud .bk.tr{top:0;right:0;border-left:0;border-bottom:0}
+  .hud .bk.bl{bottom:0;left:0;border-right:0;border-top:0}
+  .hud .bk.br{bottom:0;right:0;border-left:0;border-top:0}
+  .hud .hh{font-family:var(--mono);font-size:9.5px;letter-spacing:0.22em;color:var(--volt);margin-bottom:12px}
+  .hud h3{font-family:var(--display);font-weight:400;font-size:22px;margin:0 0 10px;color:var(--tx)}
+  .hud .hp{font-size:13.5px;color:var(--tx-muted);margin:0 0 16px}
+  .hud .chs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+  .hud .chs span{font-family:var(--mono);font-size:8.5px;letter-spacing:0.12em;padding:4px 8px;box-shadow:0 0 0 1px var(--border);color:var(--tx-faint)}
+  .hud .hlinks{display:flex;gap:18px;align-items:center;font-size:12.5px}
+  .hud .hlinks a{color:var(--volt)}
+  .hud .hlinks a:hover{color:var(--tx)}
+  .hud .hx{position:absolute;top:12px;right:14px;background:none;border:0;color:var(--tx-faint);font-size:16px;cursor:pointer;line-height:1;padding:4px}
+  .hud .hx:hover{color:var(--tx)}
+
+  /* ---------- ticker ---------- */
+  .ticker{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:5;text-align:center;pointer-events:none}
+  .ticker .tl{font-family:var(--mono);font-size:8.5px;letter-spacing:0.22em;color:var(--tx-faint);margin-bottom:7px}
+  .ticker .tf{font-family:var(--mono);font-size:12px;letter-spacing:0.14em;color:var(--volt);opacity:0;transition:opacity .8s var(--ease);white-space:nowrap}
+  .ticker .tf.on{opacity:1}
+  .ticker .tf .hop{color:var(--tx-faint);padding:0 6px}
+  .ticker .tf .done{color:var(--ok)}
+
+  /* ---------- the comparison frame ---------- */
+  #compare{max-width:1240px;margin:0 auto;padding:120px 48px 0}
+  .sec-eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:0.26em;color:var(--volt);margin-bottom:14px}
+  #compare h2{font-family:var(--display);font-weight:400;font-size:clamp(28px,3.3vw,44px);line-height:1.15;margin:0 0 14px;max-width:720px;text-wrap:balance}
+  .section-sub{color:var(--tx-muted);max-width:620px;margin:0 0 52px;font-size:16px}
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease), transform 1s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+
+  .cmp-frame{position:relative;background:rgba(10,17,20,0.75);box-shadow:0 30px 70px rgba(0,0,0,0.45), 0 0 0 1px var(--border);
+    display:grid;grid-template-columns:300px 1fr}
+  .cmp-frame .bk{position:absolute;width:20px;height:20px;border:1.5px solid var(--volt-deep);z-index:3}
+  .cmp-frame .bk.tl{top:-1px;left:-1px;border-right:0;border-bottom:0}
+  .cmp-frame .bk.tr{top:-1px;right:-1px;border-left:0;border-bottom:0}
+  .cmp-frame .bk.bl{bottom:-1px;left:-1px;border-right:0;border-top:0}
+  .cmp-frame .bk.br{bottom:-1px;right:-1px;border-left:0;border-top:0}
+  .cmp-counter{position:absolute;top:16px;right:22px;font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:var(--volt)}
+
+  .cmp-sel{border-right:1px solid var(--border);padding:24px 0 20px}
+  .cmp-sel .gh{font-family:var(--mono);font-size:9.5px;letter-spacing:0.24em;color:var(--tx-faint);padding:10px 26px 5px}
+  .srow{display:flex;align-items:center;gap:11px;width:100%;padding:7px 26px;background:none;border:0;cursor:pointer;
+    color:var(--tx-muted);font-size:13px;text-align:left;transition:background .3s, color .3s}
+  .srow .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+  .srow:hover{color:var(--tx)}
+  .srow.on{background:rgba(52,227,240,0.07);color:var(--tx);box-shadow:inset 2px 0 0 var(--volt)}
+
+  .cmp-body{padding:36px 40px 34px}
+  .cmp-title{font-family:var(--display);font-weight:400;font-size:26px;margin:0 0 6px;color:var(--tx)}
+  .cmp-exp{font-size:14px;color:var(--tx-muted);max-width:640px;margin:0 0 26px}
+  .cmp-cols{display:grid;grid-template-columns:1fr 1fr;gap:36px;transition:opacity .35s var(--ease)}
+  .cmp-cols.swap{opacity:0}
+  .cmp-col .ch{font-family:var(--mono);font-size:10px;letter-spacing:0.22em;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .cmp-col.off .ch{color:var(--critical)}
+  .cmp-col.onn .ch{color:var(--ok)}
+  .crow{display:flex;gap:12px;padding:11px 0;border-top:1px solid rgba(27,43,48,0.7);font-size:14px;color:var(--tx-muted);align-items:flex-start}
+  .crow .ic{flex-shrink:0;width:18px;text-align:center;line-height:1.5}
+  .cmp-col.off .ic{color:var(--critical)}
+  .cmp-col.onn .ic{color:var(--ok)}
+  .cmp-col.onn .crow{color:var(--tx-muted)}
+  .cmp-col.onn .crow b{color:var(--tx);font-weight:600}
+  .cmp-foot{margin-top:26px;padding-top:18px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+  .cmp-foot .fl{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;color:var(--tx-faint)}
+  .cmp-foot a{font-size:13px;color:var(--volt)}
+  .cmp-foot a:hover{color:var(--tx)}
+
+  /* ---------- cta band ---------- */
+  .band{margin-top:130px;background:linear-gradient(180deg, transparent 0%, rgba(10,18,21,0.8) 50%, transparent 100%);
+    border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:96px 48px;text-align:center}
+  .band h2{font-family:var(--display);font-weight:400;font-size:clamp(28px,3.3vw,44px);line-height:1.15;margin:0 auto 14px;text-wrap:balance}
+  .band p{color:var(--tx-muted);max-width:540px;margin:0 auto 36px}
+  .btn{display:inline-block;background:var(--gold);color:var(--bg);font-weight:700;font-size:15px;padding:16px 32px;letter-spacing:0.02em;transition:transform .4s var(--ease), background .3s}
+  .btn:hover{background:var(--gold-light);color:var(--bg);transform:translateY(-2px)}
+
+  footer{max-width:1240px;margin:0 auto;padding:56px 48px 48px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--tx-faint);letter-spacing:0.05em}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important}
+    .reveal{opacity:1 !important;transform:none !important}
+  }
+  @media (max-height: 760px){
+    h1{font-size:clamp(22px,2.2vw,28px)}
+    .console > p{margin-bottom:14px}
+  }
+  @media (max-width: 1150px){
+    .console{max-width:360px}
+    #field{left:62%}
+    .hud{right:24px;width:320px}
+  }
+  @media (max-width: 900px){
+    nav{padding:14px 22px}
+    .nav-contact{display:none}
+    .nav-burger{display:flex}
+    .nav-cta{white-space:nowrap;padding:10px 15px;font-size:12.5px}
+    nav{gap:14px}
+    .wordmark{font-size:16px;letter-spacing:0.2em}
+    .brand{gap:9px}
+    .brand img{width:28px;height:28px}
+    .nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;
+      background:rgba(17,12,8,0.995);border-bottom:1px solid rgba(201,164,74,0.30);padding:6px 22px 12px;box-shadow:0 24px 40px rgba(0,0,0,0.5)}
+    .nav-links.open{display:flex}
+    .nav-links a{padding:13px 2px;font-size:17px;border-bottom:1px solid rgba(255,255,255,0.05)}
+    .nav-links a:last-child{border-bottom:0}
+    .nav-links a::after{bottom:8px;right:auto;width:28px}
+    .stage{height:auto;min-height:0;padding:110px 22px 40px}
+    #field, .stage-shade, .ticker{display:none}
+    .console{position:static;transform:none;max-width:none;padding:0}
+    .hud{position:fixed;left:22px;right:22px;top:auto;bottom:22px;width:auto;transform:translateY(12px)}
+    .hud.on{transform:none}
+    #compare{padding:80px 22px 0}
+    .cmp-frame{grid-template-columns:1fr}
+    .cmp-sel{border-right:0;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;padding:14px 10px}
+    .cmp-sel .gh{display:none}
+    .srow{width:auto;white-space:nowrap;padding:7px 14px}
+    .srow.on{box-shadow:inset 0 -2px 0 var(--volt)}
+    .cmp-body{padding:26px 22px}
+    .cmp-cols{grid-template-columns:1fr}
+    .band{padding:72px 22px}
+  }
+  @media (max-width: 380px){
+    .wordmark{display:none}
+    .nav-right{gap:12px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="/">
+    <img src="vaydin-icon-mark.png" alt="Vaydin mark">
+    <div class="wordmark">VAYDIN</div>
+  </a>
+  <div class="nav-links">
+    <a href="diagnose.html" style="--chip:rgba(248,113,113,0.35);--chip-hi:#f87171;--chip-bg:rgba(248,113,113,0.08)">Diagnose</a>
+    <a href="fix.html" style="--chip:rgba(232,212,139,0.30);--chip-hi:#e8d48b;--chip-bg:rgba(232,212,139,0.07)">Fix</a>
+    <a href="grow.html" style="--chip:rgba(167,139,250,0.32);--chip-hi:#a78bfa;--chip-bg:rgba(167,139,250,0.08)">Grow</a>
+    <a href="engine.html" class="nav-here" style="--chip:rgba(52,227,240,0.30);--chip-hi:#34e3f0;--chip-bg:rgba(52,227,240,0.07)">Engine</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-contact">
+      <a href="tel:+971505553148">+971 50 555 3148</a>
+      <a href="mailto:hello@vaydin.agency">hello@vaydin.agency</a>
+    </div>
+    <a href="pricing.html" class="nav-cta">Build your plan</a>
+    <button class="nav-burger" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 1h18M0 7h18M0 13h18"/></svg></button>
+  </div>
+</nav>
+<script>(function(){var b=document.querySelector(".nav-burger"),l=document.querySelector(".nav-links");if(b&&l){b.addEventListener("click",function(){var o=l.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false");});l.addEventListener("click",function(e){if(e.target.tagName==="A"){l.classList.remove("open");b.setAttribute("aria-expanded","false");}});}})();</script>
+
+<div class="stage">
+  <canvas id="field" width="900" height="900" aria-label="The Vaydin engine: ten channels, three layers, one core — signals flowing through one system"></canvas>
+  <div class="stage-shade"></div>
+
+  <div class="console">
+    <div class="eyebrow"><span class="pulse"></span>INSIDE THE VAYDIN ENGINE</div>
+    <h1 class="grad-text">One engine.<br>Thirteen jobs.<br>Working while you sleep.</h1>
+    <p>Every channel a patient can reach you on flows into <b>one system</b> that answers, books, reminds, revives, and counts. <b>Press a field</b> — watch the engine pull it in, then read what it does for you.</p>
+
+    <div class="fgroup">
+      <div class="gh">THE ENGINE — 7 FIELDS</div>
+      <button class="frow" data-field="intake"><span class="dot" style="background:#25D366"></span><span class="fn">Every inquiry answered &amp; qualified</span><span class="arr">→</span></button>
+      <button class="frow" data-field="booking"><span class="dot" style="background:#e8d48b"></span><span class="fn">Bookings that actually happen</span><span class="arr">→</span></button>
+      <button class="frow" data-field="consult"><span class="dot" style="background:#34e3f0"></span><span class="fn">Consultations framed to convert</span><span class="arr">→</span></button>
+      <button class="frow" data-field="showup"><span class="dot" style="background:#4ade80"></span><span class="fn">Show-up care that lands</span><span class="arr">→</span></button>
+      <button class="frow" data-field="dormant"><span class="dot" style="background:#fb923c"></span><span class="fn">Dormant patients, revived</span><span class="arr">→</span></button>
+      <button class="frow" data-field="crosssell"><span class="dot" style="background:#a78bfa"></span><span class="fn">The right next treatment, offered</span><span class="arr">→</span></button>
+      <button class="frow" data-field="kpi"><span class="dot" style="background:#f5d978"></span><span class="fn">Everything counted, live</span><span class="arr">→</span></button>
+    </div>
+    <div class="fgroup">
+      <div class="gh">THE ESTATE — 6 FIELDS</div>
+      <button class="frow" data-field="google"><span class="dot" style="background:#4285F4"></span><span class="fn">Google, managed</span><span class="arr">→</span></button>
+      <button class="frow" data-field="reviews"><span class="dot" style="background:#fbbf24"></span><span class="fn">Every review answered</span><span class="arr">→</span></button>
+      <button class="frow" data-field="review-growth"><span class="dot" style="background:#fbbf24"></span><span class="fn">Reviews that grow</span><span class="arr">→</span></button>
+      <button class="frow" data-field="email"><span class="dot" style="background:#60a5fa"></span><span class="fn">Email, connected</span><span class="arr">→</span></button>
+      <button class="frow" data-field="instagram"><span class="dot" style="background:#E1306C"></span><span class="fn">Instagram DMs, booked like inquiries</span><span class="arr">→</span></button>
+      <button class="frow" data-field="website"><span class="dot" style="background:#34e3f0"></span><span class="fn">Website concierge</span><span class="arr">→</span></button>
+    </div>
+  </div>
+
+  <div class="hud" id="hud">
+    <span class="bk tl"></span><span class="bk tr"></span><span class="bk bl"></span><span class="bk br"></span>
+    <button class="hx" id="hudclose" aria-label="Close">×</button>
+    <div class="hh" id="hud-count">FIELD 01/13</div>
+    <h3 id="hud-title"></h3>
+    <p class="hp" id="hud-exp"></p>
+    <div class="chs" id="hud-chs"></div>
+    <div class="hlinks">
+      <a href="#compare" id="hud-compare">Engine off vs on ↓</a>
+    </div>
+  </div>
+
+  <div class="ticker">
+    <div class="tl">ILLUSTRATION — HOW A SIGNAL MOVES THROUGH THE ENGINE</div>
+    <div class="tf" id="tickerline"></div>
+  </div>
+</div>
+
+<section id="compare">
+  <div class="reveal">
+    <div class="sec-eyebrow">OWNER'S VIEW · ENGINE OFF VS ON</div>
+    <h2 class="grad-text">The same clinic. The same patients.<br>A different machine underneath.</h2>
+    <p class="section-sub">Pick the field you're curious about. The left side is what quietly happens in most clinics today. The right side is the same moment with the engine running. Illustrative scenes — your own numbers come from your diagnostic.</p>
+  </div>
+
+  <div class="cmp-frame reveal">
+    <span class="bk tl"></span><span class="bk tr"></span><span class="bk bl"></span><span class="bk br"></span>
+    <div class="cmp-counter" id="cmp-count">01/13</div>
+    <div class="cmp-sel" id="cmp-sel">
+      <div class="gh">THE ENGINE</div>
+      <div class="gh" data-after="7" style="display:none">THE ESTATE</div>
+    </div>
+    <div class="cmp-body">
+      <div class="cmp-title" id="cmp-title"></div>
+      <p class="cmp-exp" id="cmp-exp"></p>
+      <div class="cmp-cols" id="cmp-cols">
+        <div class="cmp-col off">
+          <div class="ch">⚠ ENGINE OFF — WHAT LEAKS</div>
+          <div id="cmp-off"></div>
+        </div>
+        <div class="cmp-col onn">
+          <div class="ch">✓ WITH VAYDIN</div>
+          <div id="cmp-on"></div>
+        </div>
+      </div>
+      <div class="cmp-foot">
+        <div class="fl">ILLUSTRATIVE SCENES — YOUR OWN NUMBERS COME FROM YOUR DIAGNOSTIC</div>
+        <a href="pricing.html" id="cmp-detail">Build your plan →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="band">
+  <h2 class="grad-text">This engine runs on your clinic's own numbers.</h2>
+  <p>It starts with the diagnostic — an unannounced measurement of how your clinic answers, books, and follows through. The engine is Step 02 of your plan.</p>
+  <a class="btn" href="pricing.html">Build your plan →</a>
+</div>
+
+<footer>
+  <div>VAYDIN PARTNERS INVESTMENTS - FZCO · DSO-IFZA, IFZA Properties, Dubai Silicon Oasis, Dubai, UAE · Licensed under IFZA</div>
+  <div>The diagnostic sells the engine. The engine earns the fuel.</div>
+  <div><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/data-deletion/">Data deletion</a></div>
+</footer>
+
+<script>
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ================= FIELD DATA — one object drives console, HUD, comparison ================= */
+  var FIELDS = {
+    'intake': {
+      name:'Every inquiry answered & qualified', group:'engine', ch:['WHATSAPP','INSTAGRAM','EMAIL'],
+      exp:'A patient who writes at 9pm is answered at 9pm — in your clinic\'s voice, in their language. The engine asks what your best receptionist would ask, and hands your team a qualified patient, not a cold message.',
+      off:['An evening WhatsApp inquiry sits unread until morning',
+           'The patient messages three clinics — the fastest reply wins',
+           'Your team types the same five answers, all day, between patients'],
+      on:['Answered <b>within minutes</b>, day and night, in the patient\'s language',
+          'Qualified before your staff joins: treatment, timing, expectations',
+          'Escalated to a human the moment a human matters']
+    },
+    'booking': {
+      name:'Bookings that actually happen', group:'engine', ch:['BOOKING','WHATSAPP'],
+      exp:'Interest is not a booking. The engine walks the patient from "how much is it?" to a confirmed slot — and never lets a conversation end without a next step.',
+      off:['"I\'ll think about it" is where conversations go to die',
+           'Patients are asked to call back during working hours',
+           'Nobody knows who almost booked last week'],
+      on:['Every conversation driven to <b>a slot, a consult, or a follow-up</b>',
+          'The booking happens inside the chat — no phone tag',
+          'Every almost-booking is remembered and gently revisited']
+    },
+    'consult': {
+      name:'Consultations framed to convert', group:'engine', ch:['WHATSAPP','BOOKING'],
+      exp:'The consultation is where treatment plans are accepted or lost. The engine prepares the patient before they arrive — what to expect, what to ask — so your doctor talks to someone ready to decide.',
+      off:['The patient arrives cold — the first fifteen minutes are spent selling',
+           'A no-decision consult leaves with a brochure and is never heard from again',
+           'Follow-up depends on whoever happened to remember'],
+      on:['The patient arrives <b>prepared</b> — briefed on the treatment and the process',
+          'A structured follow-up lands after every consultation',
+          'The quiet ones get a well-timed, well-worded nudge']
+    },
+    'showup': {
+      name:'Show-up care that lands', group:'engine', ch:['SHOW-UP','WHATSAPP'],
+      exp:'An empty chair is the most expensive hour of your day. The engine runs a reminder cadence that feels like care, not spam — confirmation, day-before, morning-of — with rescheduling one tap away.',
+      off:['A no-show costs the slot, the prep, and the treatment revenue',
+           'One generic reminder SMS, if any',
+           'When a patient doesn\'t show, nobody follows up'],
+      on:['A cadence that feels like <b>care</b> — in the patient\'s language',
+          'Rescheduling is one tap, so silence becomes a new time',
+          'A no-show turns into a rebooking conversation, automatically']
+    },
+    'dormant': {
+      name:'Dormant patients, revived', group:'engine', ch:['RECOVERY','WHATSAPP','EMAIL'],
+      exp:'Your patient list is an asset that goes cold silently. The engine notices who hasn\'t returned when they should have, and writes to them like your clinic remembers them — because now it does.',
+      off:['Patients quietly drift away after their treatment ends',
+           'Nobody notices an absence — there is no list of who went quiet',
+           'Reactivation is an occasional blast that reads like advertising'],
+      on:['Silence is <b>noticed on time</b> — the engine tracks who should be back',
+          'A personal revival message at the right moment, not a campaign',
+          'The comeback is booked in the same conversation']
+    },
+    'crosssell': {
+      name:'The right next treatment, offered', group:'engine', ch:['WHATSAPP','BOOKING'],
+      exp:'After the first treatment comes the aftercare plan; after the consultation, the natural next step. The engine knows what follows and offers it at the right moment — as advice from your clinic, not as a pitch.',
+      off:['The next treatment is mentioned only if the doctor remembers',
+           'A patient\'s value ends at one visit',
+           'When it is offered, it sounds like upselling'],
+      on:['A <b>relevant next step</b>, timed to the treatment cycle',
+          'Framed as care and aftercare, in your clinic\'s voice',
+          'Patient lifetime grows without anyone pushing']
+    },
+    'kpi': {
+      name:'Everything counted, live', group:'engine', ch:['ALL'],
+      exp:'Every conversation, booking, review and reply lands on one dashboard you can open any morning. Not our claims — counts. And the same diagnostic that found your leaks keeps scoring us after we fix them.',
+      off:['"How is the front desk doing?" is answered by feel',
+           'No number connects inquiries to bookings to revenue',
+           'Vendors grade their own homework'],
+      on:['One dashboard, <b>live counts</b> — open it any morning',
+          'Inquiry to booking, visible end to end',
+          'We are scored by the same diagnostic that found the leaks']
+    },
+    'google': {
+      name:'Google, managed', group:'estate', ch:['GOOGLE'],
+      exp:'For most new patients, your Google profile is your front door. The engine keeps it accurate, active and working the map ranking — checked every week, without you asking.',
+      off:['Old hours, old prices, unanswered questions on the profile',
+           'The clinic below you posts weekly — and sits above you on the map',
+           'Nobody owns it, so nobody touches it'],
+      on:['A <b>weekly sweep</b> — info accuracy, posts, photos, Q&A',
+          'The profile works the ranking instead of embarrassing it',
+          'One owner: us — you never think about it again']
+    },
+    'reviews': {
+      name:'Every review answered', group:'estate', ch:['REVIEWS'],
+      exp:'Every review answered within 24 hours, in your voice — drafted by the engine, approved by a human, and compliant with patient-privacy rules most front desks have never read.',
+      off:['A bad review sits unanswered for weeks, in public',
+           'A well-meaning reply confirms a patient visited — a privacy breach',
+           'The tone changes with whoever happens to reply'],
+      on:['Every review answered <b>within 24 hours</b>',
+          'Privacy-safe wording, every time — the rules are built in',
+          'One consistent voice: yours']
+    },
+    'review-growth': {
+      name:'Reviews that grow', group:'estate', ch:['REVIEWS','WHATSAPP'],
+      exp:'Happy patients rarely review on their own. The engine asks them at the right moment — after a confirmed visit, never spammed — so your rating compounds month after month.',
+      off:['Mostly the unhappy ones write reviews',
+           'The rating has not moved in a year',
+           'Staff is told to ask — and forgets by Tuesday'],
+      on:['Asked at the <b>right moment</b>, after a confirmed visit',
+          'A steady stream of real reviews from real patients',
+          'The rating compounds, month after month']
+    },
+    'email': {
+      name:'Email, connected', group:'estate', ch:['EMAIL'],
+      exp:'The inbox stops being a graveyard. The same brain that answers your WhatsApp answers your email — same knowledge, same qualification, same escalation to your team.',
+      off:['Email inquiries answered days later, or never',
+           'The inbox gives different answers than the front desk',
+           'Nothing connects the inbox to the booking calendar'],
+      on:['The <b>same brain</b>, the same speed, on email',
+          'One knowledge base — every channel says the same thing',
+          'Escalated to your team the moment a human matters']
+    },
+    'instagram': {
+      name:'Instagram DMs, booked like inquiries', group:'estate', ch:['INSTAGRAM'],
+      exp:'A DM at midnight is a patient at noon. Story replies and DMs get answered, qualified and booked exactly like WhatsApp inquiries — because for your patients, Instagram is the clinic.',
+      off:['DMs sit behind whoever holds the account password',
+           'Story replies scroll away and vanish',
+           'A "check DM please" comment is a patient nobody claims'],
+      on:['Answered <b>in minutes</b>, like every other channel',
+          'Qualified and booked inside the conversation',
+          'Nothing scrolls away — every DM is an inquiry on the dashboard']
+    },
+    'website': {
+      name:'Website concierge', group:'estate', ch:['WEBSITE'],
+      exp:'Hours, prices, a new treatment, a new doctor — one WhatsApp message to us, changed within 48 hours. Your site stops drifting out of date.',
+      off:['Last year\'s prices are live right now',
+           'The old agency charges per change and takes weeks',
+           'So nobody asks, and the site quietly rots'],
+      on:['One message → <b>done within 48 hours</b>',
+          'Hours, prices, treatments — always current',
+          'No tickets, no chasing, no invoices per comma']
+    }
+  };
+  var ORDER = ['intake','booking','consult','showup','dormant','crosssell','kpi','google','reviews','review-growth','email','instagram','website'];
+  var DOTS = {'intake':'#25D366','booking':'#e8d48b','consult':'#34e3f0','showup':'#4ade80','dormant':'#fb923c','crosssell':'#a78bfa','kpi':'#f5d978','google':'#4285F4','reviews':'#fbbf24','review-growth':'#fbbf24','email':'#60a5fa','instagram':'#E1306C','website':'#34e3f0'};
+
+  /* ================= ticker (labeled illustration) ================= */
+  var flows = [
+    ['WHATSAPP 21:14', 'INTAKE', 'QUALIFIED', '<span class="done">BOOKED</span>'],
+    ['INSTAGRAM DM', 'INTAKE', 'CONSULT FRAMED', '<span class="done">BOOKED</span>'],
+    ['NEW REVIEW', 'REPLY DRAFTED', 'OWNER APPROVED', '<span class="done">POSTED</span>'],
+    ['SILENT 90 DAYS', 'REVIVAL MESSAGE', '<span class="done">RE-BOOKED</span>'],
+    ['NO-SHOW RISK', 'REMINDER CADENCE', '<span class="done">SHOWED UP</span>'],
+    ['GOOGLE PROFILE', 'WEEKLY SWEEP', '<span class="done">CURRENT</span>'],
+    ['EMAIL INQUIRY', 'SAME BRAIN', '<span class="done">ANSWERED</span>']
+  ];
+  var tEl = document.getElementById('tickerline'), fi = 0;
+  function nextFlow(){
+    tEl.classList.remove('on');
+    setTimeout(function(){
+      tEl.innerHTML = flows[fi].join('<span class="hop">→</span>');
+      tEl.classList.add('on');
+      fi = (fi + 1) % flows.length;
+    }, 800);
+  }
+  if(tEl){
+    if(reduced){ tEl.innerHTML = flows[0].join('<span class="hop">→</span>'); tEl.classList.add('on'); }
+    else { nextFlow(); setInterval(nextFlow, 4200); }
+  }
+
+  /* ================= reveal on scroll ================= */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold: 0.12});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  /* ================= comparison frame ================= */
+  var sel = document.getElementById('cmp-sel');
+  var cmpTitle = document.getElementById('cmp-title'), cmpExp = document.getElementById('cmp-exp');
+  var cmpOff = document.getElementById('cmp-off'), cmpOn = document.getElementById('cmp-on');
+  var cmpCols = document.getElementById('cmp-cols'), cmpCount = document.getElementById('cmp-count');
+  var current = 'intake';
+
+  /* build selector rows (after the ENGINE header; ESTATE header before index 7) */
+  ORDER.forEach(function(id, i){
+    if(i === 7){
+      var gh = document.createElement('div');
+      gh.className = 'gh'; gh.textContent = 'THE ESTATE';
+      sel.appendChild(gh);
+    }
+    var b = document.createElement('button');
+    b.className = 'srow'; b.setAttribute('data-field', id);
+    b.innerHTML = '<span class="dot" style="background:' + DOTS[id] + '"></span><span>' + FIELDS[id].name + '</span>';
+    b.addEventListener('click', function(){ selectField(id, true); });
+    sel.appendChild(b);
+  });
+  sel.querySelector('.gh[data-after]') && sel.removeChild(sel.querySelector('.gh[data-after]'));
+
+  function fillCompare(id){
+    var F = FIELDS[id];
+    cmpTitle.textContent = F.name;
+    cmpExp.textContent = F.exp;
+    cmpOff.innerHTML = F.off.map(function(r){ return '<div class="crow"><span class="ic">⚠</span><span>' + r + '</span></div>'; }).join('');
+    cmpOn.innerHTML  = F.on.map(function(r){ return '<div class="crow"><span class="ic">✓</span><span>' + r + '</span></div>'; }).join('');
+    cmpCount.textContent = (('0' + (ORDER.indexOf(id) + 1)).slice(-2)) + '/13';
+    sel.querySelectorAll('.srow').forEach(function(b){
+      b.classList.toggle('on', b.getAttribute('data-field') === id);
+    });
+  }
+  function selectField(id, animate){
+    current = id;
+    if(animate && !reduced){
+      cmpCols.classList.add('swap');
+      setTimeout(function(){ fillCompare(id); cmpCols.classList.remove('swap'); }, 320);
+    } else {
+      fillCompare(id);
+    }
+  }
+  fillCompare(current);
+
+  /* ================= HUD ================= */
+  var hud = document.getElementById('hud');
+  var hudTitle = document.getElementById('hud-title'), hudExp = document.getElementById('hud-exp');
+  var hudChs = document.getElementById('hud-chs'), hudCount = document.getElementById('hud-count');
+  var hudCompare = document.getElementById('hud-compare');
+  var hudTimer = null;
+
+  function showHud(id){
+    var F = FIELDS[id];
+    hudTitle.textContent = F.name;
+    hudExp.textContent = F.exp;
+    hudCount.textContent = 'FIELD ' + ('0' + (ORDER.indexOf(id) + 1)).slice(-2) + '/13 — ' + (F.group === 'engine' ? 'THE ENGINE' : 'THE ESTATE');
+    hudChs.innerHTML = (F.ch[0] === 'ALL' ? ['EVERY CHANNEL'] : F.ch).map(function(c){ return '<span>' + c + '</span>'; }).join('');
+    hud.classList.add('on');
+  }
+  document.getElementById('hudclose').addEventListener('click', function(){ hud.classList.remove('on'); });
+  hudCompare.addEventListener('click', function(){ selectField(current, false); });
+
+  /* ================= the engine field ================= */
+  var canvas = document.getElementById('field');
+  var canvasLive = false;
+  if(canvas && canvas.getContext && canvas.offsetParent !== null){ canvasLive = true; }
+
+  var hl = null;        /* hover highlight: Set of channel labels */
+  var absorb = null;    /* click absorb: {ch:Set, p:0..1} */
+
+  /* console rows: hover highlights, click absorbs then shows HUD */
+  document.querySelectorAll('.frow').forEach(function(row){
+    var id = row.getAttribute('data-field');
+    var chs = FIELDS[id].ch;
+    function chSet(){
+      if(chs[0] === 'ALL') return new Set(['WHATSAPP','INSTAGRAM','GOOGLE','REVIEWS','EMAIL','BOOKING','SHOW-UP','RECOVERY','WEBSITE','ADS']);
+      return new Set(chs);
+    }
+    row.addEventListener('mouseenter', function(){ hl = chSet(); });
+    row.addEventListener('mouseleave', function(){ hl = null; });
+    row.addEventListener('click', function(){
+      current = id;
+      document.querySelectorAll('.frow').forEach(function(r){ r.classList.toggle('live', r === row); });
+      selectField(id, false);
+      if(!canvasLive || reduced){
+        /* no canvas (mobile) or reduced motion: open the HUD immediately */
+        showHud(id);
+        return;
+      }
+      hud.classList.remove('on');
+      absorb = {ch: chSet(), p: 0};
+      if(hudTimer) clearTimeout(hudTimer);
+      hudTimer = setTimeout(function(){ showHud(id); }, 950);
+    });
+  });
+
+  if(!canvasLive){ var relight = function(){ if(canvas && canvas.offsetParent !== null){ window.removeEventListener('resize', relight); location.reload(); } }; window.addEventListener('resize', relight); return; }
+  var ctx = canvas.getContext('2d');
+  var W, H, cx, cy, R;
+  function size(){
+    var s = Math.min(window.innerHeight * 1.0, window.innerWidth * 0.62, 980);
+    W = canvas.width = s; H = canvas.height = s;
+    canvas.style.width = s + 'px'; canvas.style.height = s + 'px';
+    cx = W/2; cy = H/2; R = s/2;
+  }
+  size(); window.addEventListener('resize', size);
+
+  var VOLT = '#34e3f0';
+  var layers = [
+    {label:'DIAGNOSE', color:'#f87171', a:0},
+    {label:'FIX',      color:'#e8d48b', a:2*Math.PI/3},
+    {label:'GROW',     color:'#a78bfa', a:4*Math.PI/3}
+  ];
+  var sats = [
+    {label:'WHATSAPP',  color:'#25D366', icon:'chat'},
+    {label:'INSTAGRAM', color:'#E1306C', icon:'camera'},
+    {label:'GOOGLE',    color:'#4285F4', icon:'pin'},
+    {label:'REVIEWS',   color:'#fbbf24', icon:'star'},
+    {label:'EMAIL',     color:'#60a5fa', icon:'mail'},
+    {label:'BOOKING',   color:'#e8d48b', icon:'cal'},
+    {label:'SHOW-UP',   color:'#4ade80', icon:'check'},
+    {label:'RECOVERY',  color:'#fb923c', icon:'refresh'},
+    {label:'WEBSITE',   color:'#34e3f0', icon:'globe'},
+    {label:'ADS',       color:'#a78bfa', icon:'mega'}
+  ];
+  var sparks = [], bolts = [];
+  var t = 0;
+
+  function drawIcon(type, x, y, color, s){
+    ctx.save();
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 1.1;
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.translate(x, y);
+    switch(type){
+      case 'chat':
+        ctx.beginPath(); ctx.arc(0, 0, s*0.55, 0.6, 6.1); ctx.lineTo(-s*0.55, s*0.62); ctx.closePath(); ctx.stroke(); break;
+      case 'camera':
+        ctx.strokeRect(-s*0.55, -s*0.45, s*1.1, s*0.9);
+        ctx.beginPath(); ctx.arc(0, 0, s*0.22, 0, 7); ctx.stroke();
+        ctx.beginPath(); ctx.arc(s*0.32, -s*0.24, s*0.06, 0, 7); ctx.fill(); break;
+      case 'pin':
+        ctx.beginPath(); ctx.arc(0, -s*0.15, s*0.38, Math.PI*0.9, Math.PI*2.1); ctx.lineTo(0, s*0.55); ctx.closePath(); ctx.stroke();
+        ctx.beginPath(); ctx.arc(0, -s*0.15, s*0.12, 0, 7); ctx.fill(); break;
+      case 'star':
+        ctx.beginPath();
+        for(var k=0;k<5;k++){
+          var a1 = -Math.PI/2 + k*2*Math.PI/5, a2 = a1 + Math.PI/5;
+          ctx.lineTo(Math.cos(a1)*s*0.55, Math.sin(a1)*s*0.55);
+          ctx.lineTo(Math.cos(a2)*s*0.24, Math.sin(a2)*s*0.24);
+        }
+        ctx.closePath(); ctx.fill(); break;
+      case 'mail':
+        ctx.strokeRect(-s*0.55, -s*0.38, s*1.1, s*0.76);
+        ctx.beginPath(); ctx.moveTo(-s*0.55, -s*0.38); ctx.lineTo(0, s*0.08); ctx.lineTo(s*0.55, -s*0.38); ctx.stroke(); break;
+      case 'cal':
+        ctx.strokeRect(-s*0.5, -s*0.4, s*1.0, s*0.85);
+        ctx.beginPath(); ctx.moveTo(-s*0.5, -s*0.12); ctx.lineTo(s*0.5, -s*0.12); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(-s*0.22, -s*0.55); ctx.lineTo(-s*0.22, -s*0.28); ctx.moveTo(s*0.22, -s*0.55); ctx.lineTo(s*0.22, -s*0.28); ctx.stroke(); break;
+      case 'check':
+        ctx.beginPath(); ctx.moveTo(-s*0.45, 0.05*s); ctx.lineTo(-s*0.1, s*0.4); ctx.lineTo(s*0.5, -s*0.4); ctx.stroke(); break;
+      case 'refresh':
+        ctx.beginPath(); ctx.arc(0, 0, s*0.45, -0.4, 4.6); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(s*0.55, -s*0.35); ctx.lineTo(s*0.42, -s*0.05); ctx.lineTo(s*0.15, -s*0.32); ctx.closePath(); ctx.fill(); break;
+      case 'globe':
+        ctx.beginPath(); ctx.arc(0, 0, s*0.5, 0, 7); ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(0, 0, s*0.22, s*0.5, 0, 0, 7); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(-s*0.5, 0); ctx.lineTo(s*0.5, 0); ctx.stroke(); break;
+      case 'mega':
+        ctx.beginPath();
+        ctx.moveTo(-s*0.5, -s*0.15); ctx.lineTo(s*0.15, -s*0.45); ctx.lineTo(s*0.15, s*0.45); ctx.lineTo(-s*0.5, s*0.15);
+        ctx.closePath(); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(s*0.28, -s*0.2); ctx.arc(s*0.28, 0, s*0.28, -0.9, 0.9); ctx.stroke(); break;
+    }
+    ctx.restore();
+  }
+
+  function jag(x1,y1,x2,y2,jit,segs){
+    var pts = [[x1,y1]];
+    var dx = x2-x1, dy = y2-y1, len = Math.sqrt(dx*dx+dy*dy);
+    var nx = -dy/len, ny = dx/len;
+    for(var i=1;i<segs;i++){
+      var f = i/segs;
+      var off = (Math.random()-0.5) * jit;
+      pts.push([x1+dx*f+nx*off, y1+dy*f+ny*off]);
+    }
+    pts.push([x2,y2]);
+    return pts;
+  }
+  function strokePts(pts){
+    ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+    for(var i=1;i<pts.length;i++) ctx.lineTo(pts[i][0], pts[i][1]);
+    ctx.stroke();
+  }
+
+  function draw(){
+    t += 0.004;
+    ctx.clearRect(0,0,W,H);
+
+    /* absorb progress */
+    var ab = null;
+    if(absorb){
+      absorb.p += 0.022;
+      if(absorb.p >= 1){ absorb = null; }
+      else ab = absorb;
+    }
+    var lit_set = ab ? ab.ch : hl;
+
+    var satR = R*0.84, layR = R*0.40;
+    var satPts = [], layPts = [];
+    for(var i=0;i<sats.length;i++){
+      var a = t*0.35 + i * 2*Math.PI/sats.length;
+      satPts.push([cx + Math.cos(a)*satR, cy + Math.sin(a)*satR, a]);
+    }
+    for(var i=0;i<3;i++){
+      var a = -t*0.55 + layers[i].a;
+      layPts.push([cx + Math.cos(a)*layR, cy + Math.sin(a)*layR]);
+    }
+
+    /* electric web */
+    for(var i=0;i<satPts.length;i++){
+      var L = layPts[i % 3];
+      var lit = lit_set && lit_set.has(sats[i].label);
+      ctx.strokeStyle = lit ? 'rgba(52,227,240,0.55)' : 'rgba(25,167,184,' + (lit_set ? 0.05 : 0.16) + ')';
+      ctx.lineWidth = lit ? 1.2 : 0.7;
+      strokePts(jag(satPts[i][0], satPts[i][1], L[0], L[1], 7, 6));
+    }
+    for(var i=0;i<3;i++){
+      ctx.strokeStyle = 'rgba(52,227,240,0.30)';
+      ctx.lineWidth = 0.9;
+      strokePts(jag(layPts[i][0], layPts[i][1], cx, cy, 5, 5));
+    }
+
+    /* discharges — the absorb burst fires hard from the pressed field's channels */
+    var boltChance = ab ? 0.30 : (hl ? 0.05 : 0.012);
+    var boltMax = ab ? 5 : (hl ? 3 : 2);
+    if(Math.random() < boltChance && bolts.length < boltMax){
+      var from;
+      if(lit_set){
+        var pool = [];
+        for(var i=0;i<sats.length;i++){ if(lit_set.has(sats[i].label)) pool.push(i); }
+        from = pool.length ? pool[Math.floor(Math.random()*pool.length)] : Math.floor(Math.random()*satPts.length);
+      } else {
+        from = Math.floor(Math.random()*satPts.length);
+      }
+      bolts.push({from: from, life: 1});
+    }
+    bolts.forEach(function(b){
+      b.life -= 0.05;
+      var S = satPts[b.from];
+      ctx.save();
+      ctx.shadowColor = VOLT; ctx.shadowBlur = 12;
+      ctx.strokeStyle = 'rgba(52,227,240,' + Math.max(b.life,0) * 0.85 + ')';
+      ctx.lineWidth = 1.6;
+      strokePts(jag(S[0], S[1], cx, cy, 14, 9));
+      ctx.restore();
+    });
+    for(var i=bolts.length-1;i>=0;i--){ if(bolts[i].life <= 0) bolts.splice(i,1); }
+
+    /* travelling sparks — heavy stream while absorbing */
+    var sparkChance = ab ? 0.55 : 0.06, sparkMax = ab ? 26 : 8, sparkSpeed = ab ? 0.034 : 0.018;
+    if(Math.random() < sparkChance && sparks.length < sparkMax){
+      var from2;
+      if(lit_set){
+        var pool2 = [];
+        for(var i=0;i<sats.length;i++){ if(lit_set.has(sats[i].label)) pool2.push(i); }
+        from2 = pool2.length ? pool2[Math.floor(Math.random()*pool2.length)] : Math.floor(Math.random()*satPts.length);
+      } else {
+        from2 = Math.floor(Math.random()*satPts.length);
+      }
+      sparks.push({from: from2, p:0});
+    }
+    sparks.forEach(function(sp){
+      sp.p += sparkSpeed;
+      var S = satPts[sp.from], L = layPts[sp.from % 3];
+      var x, y;
+      if(sp.p < 0.5){ var q = sp.p*2; x = S[0]+(L[0]-S[0])*q; y = S[1]+(L[1]-S[1])*q; }
+      else { var q = (sp.p-0.5)*2; x = L[0]+(cx-L[0])*q; y = L[1]+(cy-L[1])*q; }
+      ctx.save();
+      ctx.shadowColor = VOLT; ctx.shadowBlur = 8;
+      ctx.fillStyle = 'rgba(52,227,240,' + (1 - sp.p*0.5) + ')';
+      ctx.beginPath(); ctx.arc(x, y, 2.2, 0, 7); ctx.fill();
+      ctx.restore();
+    });
+    for(var i=sparks.length-1;i>=0;i--){ if(sparks[i].p >= 1) sparks.splice(i,1); }
+
+    /* satellites */
+    ctx.textAlign = 'center';
+    for(var i=0;i<satPts.length;i++){
+      var col = sats[i].color;
+      var lit = lit_set && lit_set.has(sats[i].label);
+      var dim = lit_set && !lit;
+      var flick = (lit ? 1 : 0.72 + Math.abs(Math.sin(t*3 + i*1.7)) * 0.28) * (dim ? 0.22 : 1);
+      var lx = satPts[i][0], ly = satPts[i][1];
+      ctx.save(); ctx.globalAlpha = flick;
+      ctx.shadowColor = col; ctx.shadowBlur = lit ? 16 : 7;
+      ctx.font = '600 11px IBM Plex Mono, monospace';
+      var tw = ctx.measureText(sats[i].label).width;
+      drawIcon(sats[i].icon, lx - tw/2 - 11, ly - 1, col, 11);
+      ctx.fillStyle = col;
+      ctx.fillText(sats[i].label, lx + 5, ly + 3);
+      ctx.restore();
+    }
+
+    /* layer nodes */
+    for(var i=0;i<3;i++){
+      var P = layPts[i];
+      ctx.save();
+      ctx.shadowColor = layers[i].color; ctx.shadowBlur = 16;
+      ctx.fillStyle = '#0b1114';
+      ctx.strokeStyle = layers[i].color; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(P[0], P[1], R*0.095, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.restore();
+      ctx.strokeStyle = 'rgba(52,227,240,0.35)'; ctx.lineWidth = 0.8;
+      ctx.beginPath(); ctx.arc(P[0], P[1], R*0.115, t*2 + i, t*2 + i + 1.4); ctx.stroke();
+      ctx.fillStyle = layers[i].color; ctx.font = '9.5px IBM Plex Mono, monospace';
+      ctx.fillText(layers[i].label, P[0], P[1] + 3);
+    }
+
+    /* breathing gold core — flares while absorbing */
+    var flare = ab ? Math.sin(ab.p * Math.PI) : 0;
+    var breath = (1 + Math.sin(t*2.2) * 0.06) * (1 + flare * 0.30);
+    var coreR = R*0.115;
+    var g2 = ctx.createRadialGradient(cx, cy, 4, cx, cy, coreR*2.4*breath);
+    g2.addColorStop(0, 'rgba(245,217,120,' + (0.9 + flare*0.1) + ')');
+    g2.addColorStop(0.35, 'rgba(201,164,74,' + (0.35 + flare*0.3) + ')');
+    g2.addColorStop(1, 'rgba(201,164,74,0)');
+    ctx.fillStyle = g2;
+    ctx.beginPath(); ctx.arc(cx, cy, coreR*2.4*breath, 0, 7); ctx.fill();
+    if(flare > 0){
+      ctx.strokeStyle = 'rgba(245,217,120,' + (1 - ab.p) * 0.5 + ')';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(cx, cy, coreR * (1 + ab.p * 2.6), 0, 7); ctx.stroke();
+    }
+    ctx.fillStyle = '#070b0d';
+    ctx.beginPath(); ctx.arc(cx, cy, coreR*breath, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#e8d48b'; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.arc(cx, cy, coreR*breath, 0, 7); ctx.stroke();
+    ctx.save();
+    ctx.shadowColor = VOLT; ctx.shadowBlur = 10;
+    ctx.strokeStyle = 'rgba(52,227,240,0.85)'; ctx.lineWidth = 1.8;
+    ctx.beginPath(); ctx.arc(cx, cy, coreR*1.35, t*1.6, t*1.6 + 1.3); ctx.stroke();
+    ctx.strokeStyle = 'rgba(52,227,240,0.35)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx, cy, coreR*1.65, -t*1.1, -t*1.1 + 0.9); ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = '#e8d48b'; ctx.font = '11px IBM Plex Mono, monospace';
+    ctx.fillText('VAYDIN', cx, cy + 3.5);
+
+    if(!reduced) requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

@@ -936,3 +936,10 @@ body {
     translate: none;
   }
 }
+
+/* The phone menu is a plain <details>: no script, no marker. The closing
+   page's step labels are links; they underline on hover. */
+.menu summary { list-style: none; cursor: pointer; }
+.menu summary::-webkit-details-marker { display: none; }
+.closing-steps a.label { border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+.closing-steps a.label:hover { border-bottom-color: currentColor; }

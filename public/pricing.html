@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build your plan — Vaydin</title>
+<meta name="description" content="Build your Vaydin plan step by step — start with the diagnostic, add the engine when the numbers convince you. The plan arrives on your WhatsApp.">
+<link rel="icon" href="vaydin-icon-48.png">
+<link rel="apple-touch-icon" href="vaydin-icon-192.png">
+<link rel="canonical" href="https://vaydin.agency/pricing.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vaydin">
+<meta property="og:title" content="Build your plan — Vaydin">
+<meta property="og:description" content="Build your Vaydin plan step by step — start with the diagnostic, add the engine when the numbers convince you. The plan arrives on your WhatsApp.">
+<meta property="og:url" content="https://vaydin.agency/pricing.html">
+<meta property="og:image" content="https://vaydin.agency/vaydin-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Build your plan — Vaydin">
+<meta name="twitter:description" content="Build your Vaydin plan step by step — start with the diagnostic, add the engine when the numbers convince you. The plan arrives on your WhatsApp.">
+<meta name="twitter:image" content="https://vaydin.agency/vaydin-og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#0b0a10; --panel:rgba(18,16,24,0.72); --card:#10141c;
+    --tx:#f2f4f8; --tx-muted:#a8adbd; --tx-faint:#767d92;
+    --gold:#c9a44a; --gold-light:#e8d48b;
+    --ok:#34d97b; --warn:#fbbf24; --critical:#f87171;
+    --volt:#2fd8ea; --volt-bright:#5ee8f7; --volt-deep:#178fa0; --volt-soft:rgba(47,216,234,0.10);
+    --display:'Marcellus', Georgia, serif;
+    --serif:'Cormorant Garamond', Georgia, serif;
+    --sans:'DM Sans', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', Consolas, monospace;
+    --ease:cubic-bezier(0.16,1,0.3,1);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;color:var(--tx);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(1100px 750px at 85% 5%, rgba(25,60,80,0.20), transparent 60%),
+      radial-gradient(950px 700px at 8% 92%, rgba(70,22,30,0.18), transparent 60%),
+      var(--bg)}
+  a{color:var(--volt);text-decoration:none}
+  a:hover{color:var(--tx)}
+  #bgvid{position:fixed;inset:0;width:100vw;height:100vh;object-fit:cover;z-index:0;opacity:0.9;pointer-events:none;
+    filter:brightness(2.1) saturate(1.3) contrast(1.05)}
+  .bgshade{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:linear-gradient(180deg, rgba(11,10,16,0.55) 0%, rgba(11,10,16,0.42) 40%, rgba(11,10,16,0.78) 100%)}
+  nav, main, footer, .mobilebar, section{position:relative;z-index:2}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:34px;
+      padding:13px 40px;background:rgba(19,13,8,0.93);backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(201,164,74,0.30)}
+  .brand{display:flex;align-items:center;gap:13px}
+  .brand img{width:32px;height:32px}
+  .wordmark{font-family:var(--display);font-size:20px;letter-spacing:0.32em;color:var(--gold-light)}
+  .nav-links{display:flex;gap:36px;align-items:center;font-size:15px}
+  .nav-links a{position:relative;padding:8px 1px;color:var(--chip-hi);letter-spacing:0.05em;font-weight:500;opacity:0.84;
+    transition:opacity .3s, color .3s}
+  .nav-links a::after{content:'';position:absolute;left:0;right:0;bottom:1px;height:1.5px;background:var(--chip-hi);
+    transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease)}
+  .nav-links a:hover{opacity:1}
+  .nav-links a:hover::after{transform:scaleX(1)}
+  .nav-links a.nav-here{opacity:1;color:#f5f1e8}
+  .nav-links a.nav-here::after{transform:scaleX(1)}
+  .nav-right{margin-left:auto;display:flex;align-items:center;gap:26px}
+  .nav-contact{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.08em;line-height:1}
+  .nav-contact a{color:#8f8672;transition:color .3s}
+  .nav-contact a:hover{color:#f5f1e8}
+  .nav-cta{background:var(--gold);color:#0b0906 !important;font-weight:700;padding:11px 24px;font-size:13px;letter-spacing:0.02em;transition:background .3s var(--ease)}
+  .nav-cta:hover{background:var(--gold-light)}
+  .nav-here{color:#f5f1e8}
+  .nav-burger{display:none;width:40px;height:40px;align-items:center;justify-content:center;cursor:pointer;background:none;border:0;
+    color:var(--gold-light);box-shadow:inset 0 0 0 1px rgba(201,164,74,0.45);margin-left:6px;padding:0}
+  .nav-burger svg{width:18px;height:14px;display:block}
+
+  main{max-width:1160px;margin:0 auto;padding:122px 44px 90px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:0.26em;color:var(--volt);margin-bottom:14px}
+  h1{font-family:var(--display);font-weight:400;font-size:clamp(32px,3.8vw,50px);line-height:1.12;margin:0 0 12px;color:var(--tx)}
+  .sub{color:var(--tx-muted);max-width:560px;margin:0 0 42px;font-size:16px}
+
+  /* ---------- THE BOARD ---------- */
+  .board{display:grid;grid-template-columns:1fr 344px;gap:24px;align-items:start}
+  .wizard{background:var(--panel);backdrop-filter:blur(14px);box-shadow:0 40px 100px rgba(0,0,0,0.55);
+    border-radius:14px;padding:28px 32px 26px;display:flex;flex-direction:column;min-height:540px}
+
+  .progress{display:flex;gap:8px;margin-bottom:26px}
+  .seg{height:4px;border-radius:2px;background:rgba(255,255,255,0.10);flex:1;cursor:pointer;transition:background .4s}
+  .seg.done{background:var(--volt);box-shadow:0 0 10px rgba(47,216,234,0.5)}
+
+  .stephead h2{font-family:var(--sans);font-weight:800;font-size:23px;margin:0 0 4px;color:var(--tx);letter-spacing:-0.01em}
+  .stephead .shsub{color:var(--tx-muted);font-size:14px;margin:0 0 20px}
+
+  .pane{display:none;flex-grow:1;flex-direction:column;animation:fadein .5s var(--ease)}
+  .pane.active{display:flex}
+  @keyframes fadein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  /* location stepper */
+  .locbox{display:flex;flex-direction:column;align-items:center;gap:14px;margin:26px 0}
+  .stepper{display:flex;align-items:center;gap:26px}
+  .sbtn{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:22px;font-weight:700;cursor:pointer;user-select:none;transition:all .3s var(--ease);
+    background:rgba(63,134,255,0.08);box-shadow:inset 0 0 0 1.5px rgba(63,134,255,0.35);color:#8fb8ff}
+  .sbtn:hover{box-shadow:inset 0 0 0 1.5px #5aa0ff;color:#fff;background:rgba(63,134,255,0.22)}
+  .sbtn.minus:hover{box-shadow:inset 0 0 0 1.5px var(--critical);color:var(--critical);background:rgba(248,113,113,0.10)}
+  .locnum{font-family:var(--sans);font-weight:800;font-size:62px;line-height:1;min-width:92px;text-align:center;
+    background:linear-gradient(160deg,#9cc6ff 0%,#4f94ff 48%,#2b6cf0 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 22px rgba(63,134,255,0.45))}
+  .loclbl{font-family:var(--mono);font-size:10.5px;letter-spacing:0.22em;color:#6f9be0}
+  .locmoney{font-size:14.5px;color:var(--tx-muted)}
+  .locmoney b{color:#8fb8ff;font-weight:700}
+
+  /* tier card (reference style) */
+  .tiercard{position:relative;background:var(--card);border:1.5px solid rgba(255,255,255,0.10);border-radius:12px;
+    padding:26px 30px 24px;transition:all .5s var(--ease)}
+  .tiercard.selected{border-color:var(--volt);box-shadow:0 0 30px rgba(47,216,234,0.18), inset 0 0 30px rgba(47,216,234,0.03)}
+  .tiercard .tick{position:absolute;top:22px;right:24px;font-size:19px;color:var(--volt);font-weight:700;opacity:0;transition:opacity .4s}
+  .tiercard.selected .tick{opacity:1}
+  .tiername{font-family:var(--sans);font-weight:800;font-size:23px;color:var(--volt-bright);margin:0 0 8px;letter-spacing:-0.01em}
+  .pricepill{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:0.08em;color:var(--volt-bright);
+    background:var(--volt-soft);border:1px solid rgba(47,216,234,0.35);border-radius:5px;padding:4px 11px;margin-bottom:14px}
+  .tierdesc{font-size:14.5px;color:var(--tx-muted);margin:0 0 18px;max-width:560px}
+  .pricereveal{display:flex;align-items:baseline;gap:14px;margin:2px 0 10px;font-family:var(--sans);font-weight:800;line-height:1}
+  .pricereveal .p-list{position:relative;font-size:34px;color:var(--tx);transition:color .5s var(--ease) .35s}
+  .pricereveal .p-list::after{content:'';position:absolute;left:-2px;right:-2px;top:54%;height:2.5px;background:var(--critical);
+    transform:scaleX(0);transform-origin:left;transition:transform .55s var(--ease) .3s}
+  .pricereveal .p-found{font-size:34px;color:var(--gold-light);opacity:0;transform:translateY(10px);
+    transition:opacity .5s var(--ease) .85s, transform .5s var(--ease) .85s;filter:drop-shadow(0 0 18px rgba(232,212,139,0.35))}
+  .pricereveal .p-per{font-size:13px;font-weight:500;color:var(--tx-faint)}
+  .revealed .pricereveal .p-list{color:var(--tx-faint)}
+  .revealed .pricereveal .p-list::after{transform:scaleX(1)}
+  .revealed .pricereveal .p-found{opacity:1;transform:none}
+  .termrow{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+  .term{font-family:var(--mono);font-size:9.5px;letter-spacing:0.12em;padding:7px 11px;cursor:pointer;color:var(--tx-faint);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,0.14);transition:color .3s, box-shadow .3s, background .3s}
+  .term:hover{color:var(--tx)}
+  .term.on{color:var(--volt-bright);box-shadow:inset 0 0 0 1.5px var(--volt);background:var(--volt-soft)}
+  .kits{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+  .kit{font-family:var(--mono);font-size:9.5px;letter-spacing:0.1em;padding:6px 9px;cursor:pointer;color:var(--tx-faint);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,0.14);transition:color .3s, box-shadow .3s, background .3s}
+  .kit.on{color:var(--volt-bright);box-shadow:inset 0 0 0 1.5px var(--volt);background:var(--volt-soft)}
+  .feats{border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;display:flex;flex-direction:column;gap:13px;margin-bottom:16px}
+  .feat{display:flex;gap:12px}
+  .feat .fchk{flex-shrink:0;width:19px;height:19px;border-radius:5px;background:rgba(52,217,123,0.15);display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .feat .fbody b{display:block;font-weight:700;font-size:14.5px;color:var(--tx)}
+  .feat .fbody span{font-size:12.5px;color:var(--tx-faint)}
+  .minilist{border-top:1px solid rgba(255,255,255,0.08);padding-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:7px 24px}
+  .minilist div{font-size:12.5px;color:var(--tx-muted);display:flex;gap:8px;align-items:baseline}
+  .minilist div::before{content:'•';color:var(--volt)}
+  .addbtn{display:inline-block;background:var(--volt);color:#06232b;font-weight:800;font-size:13.5px;letter-spacing:0.05em;
+    border-radius:8px;padding:14px 30px;cursor:pointer;transition:all .35s var(--ease);user-select:none;margin-top:18px}
+  .addbtn:hover{background:var(--volt-bright);transform:translateY(-1px)}
+  .addbtn.on{background:transparent;color:var(--critical);box-shadow:inset 0 0 0 1.5px var(--critical)}
+  .inclbadge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.16em;
+    color:var(--ok);background:rgba(52,217,123,0.10);border:1px solid rgba(52,217,123,0.3);border-radius:5px;padding:5px 12px;margin-top:18px}
+
+  .swapnote{display:flex;gap:10px;align-items:baseline;font-size:13px;color:var(--tx-muted);margin-top:14px}
+  .swapnote .x{color:var(--critical);font-weight:800}
+  .swapnote b{color:var(--tx)}
+
+  /* grow fields */
+  .growfields{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .gfield{background:var(--card);border:1.5px solid rgba(255,255,255,0.10);border-radius:12px;padding:24px 26px;cursor:pointer;transition:all .4s var(--ease);user-select:none;position:relative}
+  .gfield:hover{border-color:var(--volt-deep)}
+  .gfield.on{border-color:var(--volt);box-shadow:0 0 24px rgba(47,216,234,0.15)}
+  .gfield .tick{position:absolute;top:18px;right:20px;font-size:16px;color:var(--volt);font-weight:700;opacity:0;transition:opacity .4s}
+  .gfield.on .tick{opacity:1}
+  .gfield h5{font-family:var(--sans);font-weight:800;font-size:18px;margin:0 0 6px;color:var(--volt-bright)}
+  .gfield .gp{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:0.08em;color:var(--volt-bright);
+    background:var(--volt-soft);border:1px solid rgba(47,216,234,0.35);border-radius:5px;padding:3px 9px;margin-bottom:10px}
+  .gfield p{font-size:13px;color:var(--tx-muted);margin:0 0 12px}
+  .gfield .tag{font-family:var(--mono);font-size:9.5px;letter-spacing:0.1em;color:var(--tx-faint)}
+  .gfield.on .tag{color:var(--critical)}
+  .lockmsg{display:flex;align-items:center;gap:12px;color:var(--tx-muted);font-size:14px;background:rgba(248,113,113,0.06);
+    border:1px dashed rgba(248,113,113,0.35);border-radius:10px;padding:18px 20px}
+  .lockmsg .lk{color:var(--critical);font-weight:800}
+
+  .wiznav{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:26px;border-top:1px solid rgba(255,255,255,0.07)}
+  .wbtn{font-size:14px;font-weight:700;border-radius:9px;padding:14px 28px;cursor:pointer;user-select:none;transition:all .3s var(--ease)}
+  .wbtn.back{color:var(--tx-muted);background:rgba(255,255,255,0.05)}
+  .wbtn.back:hover{color:var(--tx)}
+  .wbtn.next{background:var(--volt);color:#06232b;box-shadow:0 6px 24px rgba(47,216,234,0.25)}
+  .wbtn.next:hover{background:var(--volt-bright);transform:translateY(-1px)}
+
+  /* ---------- rail ---------- */
+  .rail{position:sticky;top:96px;display:flex;flex-direction:column;gap:0}
+  .railcard{background:var(--panel);backdrop-filter:blur(14px);border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,0.5);overflow:hidden}
+  .rail-top{padding:26px 28px 20px}
+  .rl{font-family:var(--mono);font-size:10.5px;letter-spacing:0.22em;color:var(--tx-faint);margin-bottom:8px}
+  .total{display:flex;align-items:baseline;gap:8px}
+  .total .amt{font-family:var(--sans);font-weight:800;font-size:42px;color:var(--tx);line-height:1;font-variant-numeric:tabular-nums;transition:transform .3s var(--ease)}
+  .total .amt.bump{transform:scale(1.06)}
+  .total .per{font-size:13px;color:var(--tx-faint)}
+  .mtm{font-size:11.5px;color:var(--tx-faint);margin-top:4px}
+  .suffix{font-size:12.5px;color:var(--volt-bright);white-space:pre-line;line-height:1.7;margin-top:8px}
+  .onetime{font-size:12.5px;color:var(--tx-muted);margin-top:4px}
+  .lines{display:flex;flex-direction:column;gap:10px;border-top:1px solid rgba(255,255,255,0.07);padding:18px 28px}
+  .line{display:flex;justify-content:space-between;gap:14px;font-size:13px}
+  .line .l{color:var(--tx-muted)} .line .l small{display:block;font-size:11px;color:var(--tx-faint)}
+  .line .v{color:var(--volt-bright);white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:700}
+  .line .v.inc{color:var(--ok)}
+  .line.sum{border-top:1px solid rgba(255,255,255,0.07);padding-top:12px;margin-top:2px}
+  .line.sum .l{color:var(--tx);font-weight:700} .line.sum .v{color:var(--tx);font-weight:800}
+  .assure{display:flex;flex-direction:column;gap:8px;border-top:1px solid rgba(255,255,255,0.07);padding:18px 28px}
+  .assure div{display:flex;gap:9px;align-items:baseline;font-size:11.5px;color:var(--tx-muted)}
+  .assure svg{flex-shrink:0}
+  .railcta{padding:18px 28px 24px;display:flex;flex-direction:column;gap:10px}
+  .btn{display:block;text-align:center;background:var(--gold);color:#181104;font-weight:800;font-size:15px;padding:16px 20px;
+    border-radius:9px;letter-spacing:0.02em;transition:background .3s, transform .3s var(--ease);cursor:pointer;border:none;width:100%}
+  .btn:hover{background:var(--gold-light);transform:translateY(-2px)}
+  .btn-sub{font-size:10.5px;color:var(--tx-faint);text-align:center}
+  .preview-badge{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;color:var(--tx-faint);text-align:center}
+
+  /* ---------- better together ---------- */
+  section{max-width:1240px;margin:0 auto;padding:110px 44px 0}
+  h3.secline{font-family:var(--display);font-weight:400;font-size:clamp(26px,3vw,40px);margin:0 0 12px;color:var(--tx)}
+  .section-sub{color:var(--tx-muted);max-width:600px;margin:0 0 44px;font-size:15.5px}
+  .versus{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+  .vcol{background:var(--panel);backdrop-filter:blur(10px);border-radius:14px;padding:34px 36px}
+  .vcol h4{font-family:var(--sans);font-weight:800;font-size:21px;margin:0 0 4px;color:var(--tx)}
+  .vcol .vt{font-family:var(--mono);font-size:10.5px;letter-spacing:0.18em;margin-bottom:20px}
+  .vcol.alone .vt{color:var(--tx-faint)} .vcol.together .vt{color:var(--volt)}
+  .vcol.together{border:1.5px solid rgba(47,216,234,0.35);box-shadow:0 0 30px rgba(47,216,234,0.10)}
+  .vrow{display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13.5px;color:var(--tx-muted)}
+  .vrow:last-child{border-bottom:none}
+  .vrow .mark{flex-shrink:0;font-weight:800;font-size:13px;width:16px}
+  .vrow .mark.no{color:var(--critical)} .vrow .mark.yes{color:var(--ok)}
+  .vrow b{color:var(--tx);font-weight:700}
+
+  .math{margin-top:26px;background:var(--panel);backdrop-filter:blur(10px);border-radius:14px;padding:40px 44px;
+    display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+  .math h4{font-family:var(--sans);font-weight:800;font-size:22px;margin:0 0 10px;color:var(--tx)}
+  .math p{font-size:14px;color:var(--tx-muted);margin:0 0 12px;max-width:460px}
+  .fragrow{display:flex;justify-content:space-between;gap:14px;font-size:13px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+  .fragrow .f{color:var(--tx-muted)} .fragrow .c{font-family:var(--mono);font-size:11px;color:var(--critical);font-weight:500}
+  .fragrow.sum .f{color:var(--tx);font-weight:700} .fragrow.sum .c{color:var(--ok)}
+  .fragrow:last-child{border-bottom:none}
+
+  footer{max-width:1240px;margin:0 auto;padding:80px 44px 44px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--tx-faint);letter-spacing:0.05em;position:relative;z-index:2}
+  .mobilebar{display:none}
+
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important;transition:none !important} #bgvid{display:none} }
+  @media (max-width: 1020px){
+    main{padding:112px 20px 80px}
+    nav{padding:14px 22px}
+    .nav-contact{display:none}
+    .nav-burger{display:flex}
+    .nav-cta{white-space:nowrap;padding:10px 15px;font-size:12.5px}
+    nav{gap:14px}
+    .wordmark{font-size:16px;letter-spacing:0.2em}
+    .brand{gap:9px}
+    .brand img{width:28px;height:28px}
+    .nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;
+      background:rgba(17,12,8,0.995);border-bottom:1px solid rgba(201,164,74,0.30);padding:6px 22px 12px;box-shadow:0 24px 40px rgba(0,0,0,0.5)}
+    .nav-links.open{display:flex}
+    .nav-links a{padding:13px 2px;font-size:17px;border-bottom:1px solid rgba(255,255,255,0.05)}
+    .nav-links a:last-child{border-bottom:0}
+    .nav-links a::after{bottom:8px;right:auto;width:28px}
+    .board{grid-template-columns:1fr}
+    .rail{position:static}
+    .wizard{padding:26px 20px 22px;min-height:0}
+    .growfields{grid-template-columns:1fr}
+    .minilist{grid-template-columns:1fr}
+    .versus{grid-template-columns:1fr}
+    .math{grid-template-columns:1fr;padding:28px 24px}
+    section{padding:80px 20px 0}
+    .locnum{font-size:50px}
+    .pricereveal{gap:10px}
+    .pricereveal span{white-space:nowrap}
+    .pricereveal .p-list,.pricereveal .p-found{font-size:26px}
+    .mobilebar{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:60;background:rgba(11,10,16,0.96);
+      backdrop-filter:blur(8px);border-top:1px solid rgba(255,255,255,0.08);padding:12px 18px;justify-content:space-between;align-items:center;gap:14px}
+    .mobilebar .mt{font-weight:800;font-size:22px;color:var(--tx);font-variant-numeric:tabular-nums}
+    .mobilebar .ml{font-size:10px;color:var(--tx-faint);font-family:var(--mono);letter-spacing:0.1em}
+    .mobilebar .btn{width:auto;padding:12px 20px;font-size:13px}
+  }
+  @media (max-width: 380px){
+    .wordmark{display:none}
+    .nav-right{gap:12px}
+  }
+</style>
+</head>
+<body>
+<video id="bgvid" autoplay muted loop playsinline><source src="assets/video/ambient.mp4" type="video/mp4"></video>
+<div class="bgshade"></div>
+
+<nav>
+  <a class="brand" href="/">
+    <img src="vaydin-icon-mark.png" alt="Vaydin mark">
+    <div class="wordmark">VAYDIN</div>
+  </a>
+  <div class="nav-links">
+    <a href="diagnose.html" style="--chip:rgba(248,113,113,0.35);--chip-hi:#f87171;--chip-bg:rgba(248,113,113,0.08)">Diagnose</a>
+    <a href="fix.html" style="--chip:rgba(232,212,139,0.30);--chip-hi:#e8d48b;--chip-bg:rgba(232,212,139,0.07)">Fix</a>
+    <a href="grow.html" style="--chip:rgba(167,139,250,0.32);--chip-hi:#a78bfa;--chip-bg:rgba(167,139,250,0.08)">Grow</a>
+    <a href="engine.html" style="--chip:rgba(52,227,240,0.30);--chip-hi:#34e3f0;--chip-bg:rgba(52,227,240,0.07)">Engine</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-contact">
+      <a href="tel:+971505553148">+971 50 555 3148</a>
+      <a href="mailto:hello@vaydin.agency">hello@vaydin.agency</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 1h18M0 7h18M0 13h18"/></svg></button>
+  </div>
+</nav>
+<script>(function(){var b=document.querySelector(".nav-burger"),l=document.querySelector(".nav-links");if(b&&l){b.addEventListener("click",function(){var o=l.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false");});l.addEventListener("click",function(e){if(e.target.tagName==="A"){l.classList.remove("open");b.setAttribute("aria-expanded","false");}});}})();</script>
+
+<main>
+  <div class="eyebrow">BUILD YOUR PLAN</div>
+  <h1>Choose the depth. The price builds itself.</h1>
+  <p class="sub">Every plan starts with the measurement. Add the engine when you want it fixed and run for you. Your plan arrives on WhatsApp — no forms.</p>
+
+  <div class="board">
+    <div class="wizard">
+      <div class="progress" id="progress">
+        <div class="seg done" data-step="0"></div>
+        <div class="seg" data-step="1"></div>
+        <div class="seg" data-step="2"></div>
+        <div class="seg" data-step="3"></div>
+        <div class="seg" data-step="4"></div>
+      </div>
+
+      <div class="pane active" data-pane="0">
+        <div class="stephead"><h2>Step 1: Locations</h2><p class="shsub">How many branches should we measure and run? The price updates as you choose.</p></div>
+        <div class="tiercard selected" style="display:flex;justify-content:center">
+          <div class="locbox" style="margin:14px 0">
+            <div class="stepper">
+              <div class="sbtn minus" id="locMinus">−</div>
+              <div class="locnum" id="locNum">1</div>
+              <div class="sbtn plus" id="locPlus">+</div>
+            </div>
+            <div class="loclbl" id="locLbl">LOCATION</div>
+            <div class="locmoney" id="locMoney">Intelligence runs at <b>AED 2,500 / month per location</b></div>
+          </div>
+        </div>
+        <div class="wiznav"><span></span><span class="wbtn next" data-go="1">Next Step</span></div>
+      </div>
+
+      <div class="pane" data-pane="1">
+        <div class="stephead"><h2>Step 2: Intelligence</h2><p class="shsub">Layer 1 — every plan starts here. Already selected.</p></div>
+        <div class="tiercard selected">
+          <span class="tick">✓</span>
+          <div class="tiername">Vaydin Intelligence</div>
+          <div class="pricereveal" id="priceReveal">
+            <span class="p-list">AED 2,500</span><span class="p-found">AED 1,800</span><span class="p-per">/ month</span>
+          </div>
+          <div class="pricepill" id="diagPill">LIST PRICE · PER LOCATION</div>
+          <p class="tierdesc">An unannounced mystery shop of your own clinic — measured from the outside, exactly the way a patient meets you. The truth, scored and delivered.</p>
+          <div class="feats">
+            <div class="feat"><span class="fchk"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg></span>
+              <span class="fbody"><b>Unannounced mystery shop</b><span>Your WhatsApp approached like a real patient, every 30 to 60 days — Google and Instagram read the way a patient sees them</span></span></div>
+            <div class="feat"><span class="fchk"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg></span>
+              <span class="fbody"><b>Every leak found &amp; scored</b><span>Response speed, booking behaviour, follow-up — nothing hides</span></span></div>
+            <div class="feat"><span class="fchk"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg></span>
+              <span class="fbody"><b>Your Vaydin Score</b><span>One number a month — is your clinic healthier than last month?</span></span></div>
+            <div class="feat"><span class="fchk"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg></span>
+              <span class="fbody"><b>Recommended fixes, ranked</b><span>What to fix first, and why it ranks first</span></span></div>
+          </div>
+          <div class="minilist">
+            <div>Google &amp; Instagram presence audit</div>
+            <div>Competitor watch</div>
+            <div>No setup fee</div>
+            <div>Cancel with 30-day notice</div>
+          </div>
+          <div class="inclbadge">✓ INCLUDED IN EVERY PLAN</div>
+        </div>
+        <div class="wiznav"><span class="wbtn back" data-go="0">Back</span><span class="wbtn next" data-go="2">Next Step</span></div>
+      </div>
+
+      <div class="pane" data-pane="2">
+        <div class="stephead"><h2>Step 3: The Engine &amp; The Estate</h2><p class="shsub">Layer 2 — we stop reporting the leaks and start running the machine.</p></div>
+        <div class="tiercard" id="fixCard">
+          <span class="tick">✓</span>
+          <div class="tiername">Revenue Engine + Estate</div>
+          <div class="pricepill" id="fixPill">AED 20,000/MO + AED 5,000 ONE-TIME INSTALL</div>
+          <p class="tierdesc">Your entire digital front door, installed and operated by Vaydin. Every inquiry answered, booked, reminded, revived — on your own WhatsApp number. Your reception just taps ✓.</p>
+          <div class="feats">
+            <div class="feat"><span class="fchk"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg></span>
+              <span class="fbody"><b>Every inquiry answered — day and night</b><span>WhatsApp, Instagram DMs and email, answered in minutes and booked</span></span></div>
+            <div class="feat"><span class="fchk"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg></span>
+              <span class="fbody"><b>Bookings that actually happen</b><span>The offered slot becomes a visit — reminders, reschedules, show-up care</span></span></div>
+            <div class="feat"><span class="fchk"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg></span>
+              <span class="fbody"><b>Google &amp; reviews, managed</b><span>Profile kept winning the map — every review answered within 24 hours</span></span></div>
+            <div class="feat"><span class="fchk"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg></span>
+              <span class="fbody"><b>Dormant patients, revived</b><span>The quiet list re-invited at the right moment — never spammed</span></span></div>
+            <div class="feat"><span class="fchk"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg></span>
+              <span class="fbody"><b>Everything counted, live</b><span>Inquiries → bookings → visits on your dashboard — and the next unannounced shop scores us too</span></span></div>
+          </div>
+          <div class="minilist">
+            <div>Consultation framing that converts</div>
+            <div>The right next treatment, offered</div>
+            <div>Website concierge — changes &lt;48h</div>
+            <div>Reviews that grow monthly</div>
+          </div>
+          <div class="swapnote" id="swapNote" style="display:none"><span class="x">✗</span><span>Intelligence fee <b>cancelled automatically</b> — Layer 1 is included in the engine. Never stacked.</span></div>
+          <div class="termrow" id="termRow">
+            <span class="term on" data-term="m" id="termM">MONTHLY · AED 20,000 + 5,000 INSTALL · 3-MONTH MINIMUM</span>
+            <span class="term" data-term="a" id="termA">ANNUAL · AED 18,000/MO · INSTALL WAIVED</span>
+          </div>
+          <div class="addbtn" id="fixBtn">ADD THE ENGINE</div>
+        </div>
+        <div class="wiznav"><span class="wbtn back" data-go="1">Back</span><span class="wbtn next" data-go="3">Next Step</span></div>
+      </div>
+
+      <div class="pane" data-pane="3">
+        <div class="stephead"><h2>Step 4: Grow</h2><p class="shsub">Layer 3 — paid patient demand and Instagram presence. Fuel, only into an engine we run.</p></div>
+        <div class="lockmsg" id="growLockMsg"><span class="lk">✗ LOCKED</span><span>This step unlocks with the engine. We only pour fuel into a machine we operate and measure — <b style="color:var(--tx)">agencies sell posts and hope; we count</b>.</span></div>
+        <div class="growfields" id="growFields" style="display:none">
+          <div class="gfield" id="gDemand">
+            <span class="tick">✓</span>
+            <h5>Performance Marketing</h5>
+            <div class="gp">15% OF AD SPEND · MIN AED 2,500/MO</div>
+            <p>Paid patient demand on <b style="color:var(--tx)">Instagram, Facebook and Google</b> — aimed into the fixed funnel, with cost per <b style="color:var(--tx)">booked patient</b> on your dashboard. Spend paid direct, never marked up.</p>
+            <div class="tag">TAP TO ADD</div>
+          </div>
+          <div class="gfield" id="gPresence">
+            <span class="tick">✓</span>
+            <h5>Instagram Presence</h5>
+            <div class="kits" id="kits">
+              <span class="kit on" data-kit="1">2 REELS · AED 3,000</span>
+              <span class="kit" data-kit="2">4 REELS · AED 4,500</span>
+              <span class="kit" data-kit="3">8 REELS · AED 7,500</span>
+            </div>
+            <p>Reels, statics and stories to our brief, <b style="color:var(--tx)">Instagram-first</b>, captions reviewed against UAE healthcare advertising rules — with the inquiries every post produced counted next to it. Your phone footage, our edit. 3-month minimum.</p>
+            <div class="tag">TAP TO ADD</div>
+          </div>
+        </div>
+        <div class="wiznav"><span class="wbtn back" data-go="2">Back</span><span class="wbtn next" data-go="4">See your plan</span></div>
+      </div>
+
+      <div class="pane" data-pane="4">
+        <div class="stephead"><h2>Step 5: Your Plan</h2><p class="shsub" id="planSummary"></p></div>
+        <div class="tiercard selected">
+          <div class="tiername" style="font-size:19px">Ready when you are.</div>
+          <p class="tierdesc" id="planDetail" style="white-space:pre-line"></p>
+        </div>
+        <div class="wiznav"><span class="wbtn back" data-go="3">Back</span><span></span></div>
+      </div>
+    </div>
+
+    <div class="rail">
+      <div class="railcard">
+        <div class="rail-top">
+          <div class="rl">YOUR MONTHLY COST</div>
+          <div class="total"><div class="amt" id="totalAmt">2,500</div><div class="per">AED /mo</div></div>
+          <div class="mtm" id="mtm">month-to-month</div>
+          <div class="suffix" id="suffix"></div>
+          <div class="onetime" id="onetime"></div>
+        </div>
+        <div class="lines" id="lines"></div>
+        <div class="assure">
+          <div><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg><span id="assure1">No setup fee on the diagnostic · cancel monthly</span></div>
+          <div><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg>Every number measured, never promised</div>
+          <div><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg>Your patient records never leave your clinic</div>
+          <div><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg>Cancel with 30-day written notice</div>
+        </div>
+        <div class="railcta">
+          <button class="btn" id="waBtn">Get this plan on WhatsApp</button>
+          <div class="btn-sub">Opens WhatsApp with your plan written out. No forms.</div>
+          <div class="preview-badge">PRICING PREVIEW — CONFIRMED IN WRITING BEFORE ANY ENGAGEMENT</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<section>
+  <div class="eyebrow">WHY THE ENGINE, NOT JUST THE MEASUREMENT</div>
+  <h3 class="secline">Better together — see what actually changes.</h3>
+  <p class="section-sub">The diagnostic alone tells you the truth. The engine makes the truth change. Sample comparison — your own numbers replace these on the diagnostic.</p>
+  <div class="versus">
+    <div class="vcol alone">
+      <h4>Intelligence alone</h4>
+      <div class="vt">THE TRUTH, MONTHLY</div>
+      <div class="vrow"><span class="mark yes">✓</span><span>Every leak <b>found and scored</b>, month after month</span></div>
+      <div class="vrow"><span class="mark yes">✓</span><span>You see exactly where patients are lost</span></div>
+      <div class="vrow"><span class="mark no">✗</span><span>The 2am WhatsApp still goes <b>unanswered</b></span></div>
+      <div class="vrow"><span class="mark no">✗</span><span>Reviews still wait on a busy reception</span></div>
+      <div class="vrow"><span class="mark no">✗</span><span>Fixing it all stays <b>your job</b></span></div>
+    </div>
+    <div class="vcol together">
+      <h4>Intelligence + Engine</h4>
+      <div class="vt">THE TRUTH — AND THE MACHINE THAT MOVES IT</div>
+      <div class="vrow"><span class="mark yes">✓</span><span>Every leak found — <b>then closed and operated</b></span></div>
+      <div class="vrow"><span class="mark yes">✓</span><span>Every inquiry answered <b>in minutes, day and night</b></span></div>
+      <div class="vrow"><span class="mark yes">✓</span><span>Reviews answered &lt;24h — rating <b>compounds</b></span></div>
+      <div class="vrow"><span class="mark yes">✓</span><span>The next shop <b>scores us too</b> — proof, not reporting</span></div>
+      <div class="vrow"><span class="mark yes">✓</span><span>One vendor, one number — <b>your team just taps ✓</b></span></div>
+    </div>
+  </div>
+
+  <div class="math">
+    <div>
+      <h4>The honest math of the full plan.</h4>
+      <p>A typical clinic already pays for the fragments: an agency retainer, tools nobody opens, reception hours spent chasing messages, and the invisible cost — patients lost while everyone is busy.</p>
+      <p>The full plan replaces the fragments with one operated engine, and the same outside measurement that found your leaks proves, shop after shop, what came back. We do this math <b style="color:var(--tx)">on your numbers</b> in the diagnostic call.</p>
+    </div>
+    <div>
+      <div class="fragrow"><span class="f">Agency retainer (posts, no bookings counted)</span><span class="c">STILL LEAKING</span></div>
+      <div class="fragrow"><span class="f">Tools &amp; subscriptions nobody operates</span><span class="c">STILL LEAKING</span></div>
+      <div class="fragrow"><span class="f">Reception answering after-hours — never</span><span class="c">STILL LEAKING</span></div>
+      <div class="fragrow"><span class="f">Reviews &amp; Google left to chance</span><span class="c">STILL LEAKING</span></div>
+      <div class="fragrow sum"><span class="f">One engine, operated and measured</span><span class="c">COUNTED, MONTHLY</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>VAYDIN PARTNERS INVESTMENTS - FZCO · DSO-IFZA, IFZA Properties, Dubai Silicon Oasis, Dubai, UAE · Licensed under IFZA</div>
+  <div>The diagnostic sells the engine. The engine earns the fuel.</div>
+  <div><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/data-deletion/">Data deletion</a></div>
+</footer>
+
+<div class="mobilebar">
+  <div>
+    <div class="mt" id="mTotal">2,500</div>
+    <div class="ml" id="mLabel">INTELLIGENCE</div>
+  </div>
+  <button class="btn" id="waBtnM">Get this plan</button>
+</div>
+
+<script>
+(function(){
+  /* Numbers mirror CLAUDE_BUSINESS.md (locked 2026-09-02). Founding Intelligence rate shown as the price;
+     list 2,500 shown beside it. Engine: monthly 20,000 + 5,000 install, or annual 18,000 with install waived.
+     Presence kits: 2 / 4 / 8 reels = 3,000 / 4,500 / 7,500. Demand: 15% of spend, min 2,500 (not in the total).
+
+     MULTI-LOCATION (2026-09-06). The two layers scale differently ON PURPOSE, and the reason is the
+     delivery cost, not the price list:
+       - Intelligence is PER LOCATION at full rate. Each branch is its own unannounced shop, its own
+         Google read, its own Instagram read. The work genuinely multiplies, so the price does.
+       - The Engine does NOT multiply. CLAUDE_BUSINESS locks the L2 install as per-clinic DATA isolation
+         on a SHARED control plane (~$45-70 marginal per clinic-month), so a second branch costs a
+         fraction of the first. Charging 20,000 again is a number we could not defend when the owner
+         asks why - so it is base + fixExtraLoc per additional branch.
+       - Presence kits are FLAT: content is produced for the brand, not per branch.
+       - Demand is FLAT at 15%: it already scales with the ad spend itself. */
+  var P = { diagFounding: 1800, diagList: 2500, fixMonthly: 20000, fixAnnual: 18000, install: 5000,
+            fixExtraLoc: 5000, installExtraLoc: 2500, presence: [0, 3000, 4500, 7500] };
+  var state = { loc: 1, fix: false, annual: false, demand: false, presence: false, kit: 1, step: 0, revealed: false };
+  var fmt = function(n){ return Math.round(n).toLocaleString('en-US'); };
+  var el = function(id){ return document.getElementById(id); };
+
+  function prices(){
+    var extra    = state.loc - 1;                                  /* branches beyond the first */
+    var diagUnit = state.revealed ? P.diagFounding : P.diagList;   /* per LOCATION */
+    var fixBase  = state.annual ? P.fixAnnual : P.fixMonthly;      /* first location */
+    return {
+      /* unit prices - what one location costs, shown on the tier cards */
+      diagUnit: diagUnit,
+      diagList: P.diagList,
+      fixBase:  fixBase,
+      /* billed amounts - what state.loc locations cost, shown in the total */
+      diag:          diagUnit * state.loc,
+      diagListTotal: P.diagList * state.loc,
+      fixExtra:      P.fixExtraLoc * extra,
+      fixM:          fixBase + P.fixExtraLoc * extra,
+      fixSetup:      state.annual ? 0 : (P.install + P.installExtraLoc * extra),
+      pres:          P.presence[state.kit],
+      extra:         extra
+    };
+  }
+
+  function goStep(n){
+    state.step = n;
+    if(n === 1 && !state.revealed){
+      setTimeout(function(){ state.revealed = true; var c = el('priceReveal').closest('.tiercard'); if(c) c.classList.add('revealed'); render(); }, 420);
+    }
+    document.querySelectorAll('.pane').forEach(function(p){
+      p.classList.toggle('active', parseInt(p.getAttribute('data-pane')) === n);
+    });
+    document.querySelectorAll('.seg').forEach(function(s){
+      s.classList.toggle('done', parseInt(s.getAttribute('data-step')) <= n);
+    });
+    render();
+  }
+
+  function render(){
+    var p = prices();
+
+    var locWord = state.loc === 1 ? 'location' : 'locations';
+
+    el('locNum').textContent = state.loc;
+    el('locLbl').textContent = state.loc === 1 ? 'LOCATION' : 'LOCATIONS';
+    el('locMoney').innerHTML = 'Intelligence runs at <b>AED ' + fmt(p.diagUnit) + ' / month per location</b>'
+      + (p.extra ? ' &mdash; ' + state.loc + ' locations = <b>AED ' + fmt(p.diag) + ' / month</b>' : '');
+    el('diagPill').textContent = state.revealed ? 'FOUNDING · 5 PLACES · FIRST 3 MONTHS, THEN AED ' + fmt(p.diagList) + ' · PER LOCATION · WRITTEN INTO YOUR AGREEMENT' : 'LIST PRICE · PER LOCATION';
+    el('fixPill').textContent = state.annual
+      ? 'AED ' + fmt(p.fixM) + '/MO · ANNUAL · INSTALL WAIVED'
+      : 'AED ' + fmt(p.fixM) + '/MO + AED ' + fmt(p.fixSetup) + ' ONE-TIME INSTALL';
+    /* The term toggles quote the engine for the CHOSEN number of branches, not a stale single-site rate. */
+    el('termM').textContent = 'MONTHLY · AED ' + fmt(P.fixMonthly + p.fixExtra) + ' + ' + fmt(P.install + P.installExtraLoc * p.extra) + ' INSTALL · 3-MONTH MINIMUM';
+    el('termA').textContent = 'ANNUAL · AED ' + fmt(P.fixAnnual + p.fixExtra) + '/MO · INSTALL WAIVED';
+    document.querySelectorAll('.term').forEach(function(t){ t.classList.toggle('on', (t.getAttribute('data-term') === 'a') === state.annual); });
+    document.querySelectorAll('.kit').forEach(function(k){ k.classList.toggle('on', parseInt(k.getAttribute('data-kit')) === state.kit); });
+
+    el('fixCard').classList.toggle('selected', state.fix);
+    el('fixBtn').textContent = state.fix ? '✗ REMOVE THE ENGINE' : 'ADD THE ENGINE';
+    el('fixBtn').classList.toggle('on', state.fix);
+    el('swapNote').style.display = state.fix ? 'flex' : 'none';
+
+    if(!state.fix){ state.demand = false; state.presence = false; }
+    el('growLockMsg').style.display = state.fix ? 'none' : 'flex';
+    el('growFields').style.display = state.fix ? 'grid' : 'none';
+    el('gDemand').classList.toggle('on', state.demand);
+    el('gPresence').classList.toggle('on', state.presence);
+    el('gDemand').querySelector('.tag').textContent = state.demand ? '✗ TAP TO REMOVE' : 'TAP TO ADD';
+    el('gPresence').querySelector('.tag').textContent = state.presence ? '✗ TAP TO REMOVE' : 'TAP TO ADD';
+
+    var total = (state.fix ? p.fixM : p.diag) + (state.presence ? p.pres : 0);
+    var amtEl = el('totalAmt');
+    if(amtEl.textContent !== fmt(total)){
+      amtEl.textContent = fmt(total);
+      amtEl.classList.add('bump');
+      setTimeout(function(){ amtEl.classList.remove('bump'); }, 320);
+    }
+    var sfx = [];
+    if(!state.fix && state.revealed) sfx.push('founding rate · first 3 months, then AED ' + fmt(p.diagList));
+    if(state.demand) sfx.push('+ 15% of ad spend (min AED 2,500)');
+    if(p.extra) sfx.push(state.fix
+      ? state.loc + ' branches · AED ' + fmt(p.fixBase) + ' base + AED ' + fmt(P.fixExtraLoc) + ' per additional branch'
+      : state.loc + ' branches · AED ' + fmt(p.diagUnit) + ' × ' + state.loc + ' locations');
+    el('mtm').textContent = state.fix ? (state.annual ? '12-month plan' : '3-month minimum, then monthly') : 'month-to-month';
+    el('assure1').textContent = (state.fix || state.presence) ? '3-month minimum on the engine and presence, then monthly' : 'No setup fee on the diagnostic · cancel monthly';
+    el('suffix').textContent = sfx.join('\n');
+    el('onetime').textContent = state.fix ? (state.annual ? 'install waived · 12-month plan' : '+ AED ' + fmt(p.fixSetup) + ' one-time install') : 'no setup fee';
+
+    var kitName = ['', '2 reels · 6 statics · 8 stories', '4 reels · 10 statics · 12 stories', '8 reels · 16 statics · 20 stories'][state.kit];
+    var lines = [];
+    if(state.fix){
+      lines.push({l:'Vaydin Intelligence', s:'included in the engine', v:'INCLUDED', inc:true});
+      lines.push({l:'Revenue Engine + Estate',
+        s: (p.extra ? 'AED ' + fmt(p.fixBase) + ' + AED ' + fmt(P.fixExtraLoc) + ' × ' + p.extra + ' extra ' + (p.extra === 1 ? 'branch' : 'branches') : 'one location')
+           + (state.annual ? ' · annual' : ' · monthly'),
+        v:'AED ' + fmt(p.fixM) + '/mo'});
+    } else {
+      lines.push({l:'Vaydin Intelligence',
+        s: (p.extra ? 'AED ' + fmt(p.diagUnit) + ' × ' + state.loc + ' locations' : 'one location')
+           + (state.revealed ? ' · founding rate' : ' · list price'),
+        v:'AED ' + fmt(p.diag) + '/mo'});
+    }
+    if(state.demand) lines.push({l:'Performance Marketing', s:'IG · FB · Google · min 2,500', v:'15% of spend'});
+    if(state.presence) lines.push({l:'Instagram Presence', s: kitName, v:'AED ' + fmt(p.pres) + '/mo'});
+    lines.push({l:'Monthly total', v:'AED ' + fmt(total) + '/mo', sum:true});
+    el('lines').innerHTML = lines.map(function(x){
+      return '<div class="line' + (x.sum ? ' sum' : '') + '"><div class="l">' + x.l + (x.s ? '<small>' + x.s + '</small>' : '') + '</div><div class="v' + (x.inc ? ' inc' : '') + '">' + x.v + '</div></div>';
+    }).join('');
+
+    var picks = ['the monthly measurement'];
+    if(state.fix) picks.push('the engine & estate, operated for you');
+    if(state.demand) picks.push('performance marketing');
+    if(state.presence) picks.push('Instagram presence');
+    el('planSummary').textContent = 'You chose ' + picks.join(', ') + (state.loc > 1 ? ', across ' + state.loc + ' locations' : '') + '.';
+    el('planDetail').textContent = 'Monthly: AED ' + fmt(total)
+      + (state.fix ? (state.annual ? '\n12-month plan, install waived' : '\nOne-time install: AED ' + fmt(p.fixSetup)) : '')
+      + (sfx.length ? '\n' + sfx.join('\n') : '')
+      + '\n\nSend it to us on WhatsApp — we reply with your diagnostic start date. No forms, no obligation.';
+
+    el('mTotal').textContent = fmt(total);
+    el('mLabel').textContent = state.fix
+      ? (state.demand || state.presence ? 'INTELLIGENCE + ENGINE + GROW' : 'INTELLIGENCE + ENGINE')
+      : 'INTELLIGENCE';
+  }
+
+  function waLink(){
+    var p = prices();
+    var parts = ['Hello Vaydin, I built my plan:'];
+    /* No em dashes in client-facing message text (CLAUDE.md, Code Style & Rules). */
+    parts.push('• Locations: ' + state.loc);
+    parts.push('• Vaydin Intelligence' + (state.fix ? ' (included)' : (state.revealed
+      ? ' - AED ' + fmt(p.diag) + '/mo founding, then ' + fmt(p.diagListTotal)
+      : ' - AED ' + fmt(p.diag) + '/mo'))
+      + (p.extra && !state.fix ? ' (AED ' + fmt(p.diagUnit) + ' x ' + state.loc + ' locations)' : ''));
+    if(state.fix) parts.push('• Revenue Engine + Estate - AED ' + fmt(p.fixM) + '/mo'
+      + (p.extra ? ' (AED ' + fmt(p.fixBase) + ' base + AED ' + fmt(P.fixExtraLoc) + ' x ' + p.extra + ' extra)' : '')
+      + (state.annual ? ' (annual, install waived)' : ' + AED ' + fmt(p.fixSetup) + ' install'));
+    if(state.demand) parts.push('• Performance Marketing (15% of ad spend, min AED 2,500)');
+    if(state.presence) parts.push('• Instagram Presence - ' + ['', '2', '4', '8'][state.kit] + ' reels kit, AED ' + fmt(p.pres) + '/mo');
+    parts.push('Monthly: AED ' + fmt((state.fix ? p.fixM : p.diag) + (state.presence ? p.pres : 0)) + (state.demand ? ' + ad spend fee' : ''));
+    return 'https://wa.me/971505553148?text=' + encodeURIComponent(parts.join('\n'));
+  }
+
+  document.querySelectorAll('.term').forEach(function(t){
+    t.addEventListener('click', function(e){ e.stopPropagation(); state.annual = t.getAttribute('data-term') === 'a'; render(); });
+  });
+  document.querySelectorAll('.kit').forEach(function(k){
+    k.addEventListener('click', function(e){ e.stopPropagation(); state.kit = parseInt(k.getAttribute('data-kit')); state.presence = true; render(); });
+  });
+  el('locMinus').addEventListener('click', function(){ if(state.loc > 1){ state.loc--; render(); } });
+  el('locPlus').addEventListener('click', function(){ if(state.loc < 9){ state.loc++; render(); } });
+  el('fixBtn').addEventListener('click', function(){ state.fix = !state.fix; render(); });
+  el('gDemand').addEventListener('click', function(){ if(state.fix){ state.demand = !state.demand; render(); } });
+  el('gPresence').addEventListener('click', function(){ if(state.fix){ state.presence = !state.presence; render(); } });
+  el('waBtn').addEventListener('click', function(){ window.open(waLink(), '_blank'); });
+  el('waBtnM').addEventListener('click', function(){ window.open(waLink(), '_blank'); });
+  document.querySelectorAll('[data-go]').forEach(function(b){
+    b.addEventListener('click', function(){ goStep(parseInt(b.getAttribute('data-go'))); });
+  });
+  document.querySelectorAll('.seg').forEach(function(s){
+    s.addEventListener('click', function(){ goStep(parseInt(s.getAttribute('data-step'))); });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

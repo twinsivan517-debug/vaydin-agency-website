@@ -12,6 +12,16 @@ export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const WHATSAPP = "https://wa.me/971505553148";
 
+/* The five pages behind the story, at the addresses they have had since the
+   first site, so no link on the web breaks. */
+const PAGES: [string, string][] = [
+  ["Diagnose", "/diagnose.html"],
+  ["Fix", "/fix.html"],
+  ["Grow", "/grow.html"],
+  ["Engine", "/engine.html"],
+  ["Pricing", "/pricing.html"],
+];
+
 /* Sample clinics on the last frame of the city flight, each on a lit spot of
    that picture, as a fraction of it. Illustration only: no real clinic.
    `top` answers every patient; `chosen` is the one the story enters. Phones
@@ -412,14 +422,38 @@ export default function Home() {
       <header className="fixed inset-x-0 top-0 z-20 flex items-center justify-between bg-gradient-to-b from-background/80 to-transparent px-5 py-4 sm:px-12">
         <a href="#city" className="flex items-center gap-3">
           <Image src="/img/mark.png" alt="" width={36} height={31} />
-          <span className="font-display text-xl tracking-[0.2em]">VAYDIN</span>
+          <span className="hidden font-display text-xl tracking-[0.2em] sm:inline">VAYDIN</span>
         </a>
-        <a
-          href={WHATSAPP}
-          className="rounded-full border border-gold bg-background/70 px-4 py-2 text-base text-gold-bright"
-        >
-          WhatsApp
-        </a>
+        <nav className="hidden items-center gap-7 text-base text-muted md:flex" aria-label="Pages">
+          {PAGES.map(([word, href]) => (
+            <a key={href} href={href} className="transition-colors hover:text-gold-bright">
+              {word}
+            </a>
+          ))}
+        </nav>
+        <div className="flex items-center gap-2">
+          <a
+            href={WHATSAPP}
+            className="rounded-full border border-gold bg-background/70 px-4 py-2 text-base text-gold-bright"
+          >
+            WhatsApp
+          </a>
+          <details className="menu relative md:hidden">
+            <summary className="rounded-full border border-gold/50 bg-background/70 px-4 py-2 text-base text-muted">
+              Menu
+            </summary>
+            <nav
+              className="absolute right-0 top-12 grid min-w-40 gap-3 rounded-2xl border border-gold/40 bg-background px-5 py-4 text-base"
+              aria-label="Pages"
+            >
+              {PAGES.map(([word, href]) => (
+                <a key={href} href={href} className="text-muted hover:text-gold-bright">
+                  {word}
+                </a>
+              ))}
+            </nav>
+          </details>
+        </div>
       </header>
 
       <main className="flex-1">
@@ -645,21 +679,24 @@ export default function Home() {
             </h2>
             <div className="closing-steps">
               <div style={vars({ "--c": "var(--leak)" })}>
-                <p className="label text-leak">01 · Diagnose</p>
+                <a href="/diagnose.html" className="label text-leak">01 · Diagnose</a>
                 <p className="mt-3 leading-7 text-muted">
                   An unannounced mystery shop of your own clinic, plus a monthly sweep of everything
                   a patient can find.
                 </p>
               </div>
               <div style={vars({ "--c": "var(--gold-bright)" })}>
-                <p className="label text-gold-bright">02 · Fix &amp; run</p>
+                <a href="/fix.html" className="label text-gold-bright">02 · Fix &amp; run</a>
                 <p className="mt-3 leading-7 text-muted">
                   The Vaydin engine takes over your digital front door: one vendor, your clinic&apos;s
                   own voice and number.
                 </p>
+                <a href="/engine.html" className="label mt-3 inline-block text-gold-bright">
+                  Inside the engine
+                </a>
               </div>
               <div style={vars({ "--c": "var(--proof)" })}>
-                <p className="label text-proof">03 · Grow</p>
+                <a href="/grow.html" className="label text-proof">03 · Grow</a>
                 <p className="mt-3 leading-7 text-muted">
                   Once the engine runs your clinic, paid patient demand lands in a machine built to
                   convert it.
@@ -677,6 +714,9 @@ export default function Home() {
                 </a>
                 <a href={`mailto:${SITE.email}`} className="rounded-full border border-gold px-7 py-3 text-base text-gold-bright">
                   {SITE.email}
+                </a>
+                <a href="/pricing.html" className="rounded-full border border-gold px-7 py-3 text-base text-gold-bright">
+                  See the plans
                 </a>
               </div>
             </div>

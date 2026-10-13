@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vaydin — Grow</title>
+<meta name="description" content="Step 03: once the engine runs your clinic, we pour fuel on it — paid patient demand and an Instagram presence run like a channel. Every dirham counted on the same dashboard.">
+<link rel="icon" href="vaydin-icon-48.png">
+<link rel="apple-touch-icon" href="vaydin-icon-192.png">
+<link rel="canonical" href="https://vaydin.agency/grow.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vaydin">
+<meta property="og:title" content="Vaydin — Grow">
+<meta property="og:description" content="Step 03: once the engine runs your clinic, we pour fuel on it — paid patient demand and an Instagram presence run like a channel. Every dirham counted on the same dashboard.">
+<meta property="og:url" content="https://vaydin.agency/grow.html">
+<meta property="og:image" content="https://vaydin.agency/vaydin-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Vaydin — Grow">
+<meta name="twitter:description" content="Step 03: once the engine runs your clinic, we pour fuel on it — paid patient demand and an Instagram presence run like a channel. Every dirham counted on the same dashboard.">
+<meta name="twitter:image" content="https://vaydin.agency/vaydin-og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#0b0810; --bg-card:#130e1a; --bg-elevated:#181222; --border:#251c33;
+    --tx:#f4f0f9; --tx-muted:#aca3bc; --tx-faint:#776d8a;
+    --gold:#c9a44a; --gold-light:#e8d48b; --gold-deep:#8a6d1b;
+    --ok:#4ade80; --warn:#fbbf24; --critical:#f87171;
+    --violet:#a78bfa; --violet-deep:#7c5fd1; --ig:#E1306C;
+    --volt:#34e3f0;
+    --display:'Marcellus', Georgia, serif;
+    --serif:'Cormorant Garamond', Georgia, serif;
+    --sans:'DM Sans', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', Consolas, monospace;
+    --ease:cubic-bezier(0.16,1,0.3,1);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;color:var(--tx);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(1100px 750px at 84% 8%, rgba(88,60,160,0.20), transparent 62%),
+      radial-gradient(950px 700px at 6% 88%, rgba(120,40,90,0.14), transparent 60%),
+      var(--bg);
+    background-attachment:fixed}
+  a{color:var(--gold);text-decoration:none}
+  a:hover{color:var(--gold-light)}
+  img{max-width:100%;display:block}
+
+  /* ---------- nav (canonical bar) ---------- */
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:34px;
+      padding:13px 40px;background:rgba(19,13,8,0.93);backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(201,164,74,0.30)}
+  .brand{display:flex;align-items:center;gap:13px}
+  .brand img{width:32px;height:32px}
+  .wordmark{font-family:var(--display);font-size:20px;letter-spacing:0.32em;color:var(--gold-light)}
+  .nav-links{display:flex;gap:36px;align-items:center;font-size:15px}
+  .nav-links a{position:relative;padding:8px 1px;color:var(--chip-hi);letter-spacing:0.05em;font-weight:500;opacity:0.84;
+    transition:opacity .3s, color .3s}
+  .nav-links a::after{content:'';position:absolute;left:0;right:0;bottom:1px;height:1.5px;background:var(--chip-hi);
+    transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease)}
+  .nav-links a:hover{opacity:1}
+  .nav-links a:hover::after{transform:scaleX(1)}
+  .nav-links a.nav-here{opacity:1;color:#f5f1e8}
+  .nav-links a.nav-here::after{transform:scaleX(1)}
+  .nav-right{margin-left:auto;display:flex;align-items:center;gap:26px}
+  .nav-contact{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.08em;line-height:1}
+  .nav-contact a{color:#8f8672;transition:color .3s}
+  .nav-contact a:hover{color:#f5f1e8}
+  .nav-cta{background:var(--gold);color:#0b0906 !important;font-weight:700;padding:11px 24px;font-size:13px;letter-spacing:0.02em;transition:background .3s var(--ease)}
+  .nav-cta:hover{background:var(--gold-light)}
+  .nav-burger{display:none;width:40px;height:40px;align-items:center;justify-content:center;cursor:pointer;background:none;border:0;
+    color:var(--gold-light);box-shadow:inset 0 0 0 1px rgba(201,164,74,0.45);margin-left:6px;padding:0}
+  .nav-burger svg{width:18px;height:14px;display:block}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;min-height:66vh;display:flex;align-items:center;overflow:hidden}
+  .hero-inner{position:relative;z-index:2;width:100%;max-width:1240px;margin:0 auto;padding:150px 48px 60px;
+    display:grid;grid-template-columns:1.05fr 0.95fr;gap:56px;align-items:center}
+  .gduo{position:relative;height:400px}
+  .gduo img{position:absolute;width:80%;box-shadow:0 30px 70px rgba(0,0,0,0.55), 0 0 0 1px var(--border);
+    transition:transform .8s var(--ease)}
+  .gduo .g1{top:0;left:0;transform:rotate(-3.5deg)}
+  .gduo .g2{bottom:0;right:0;transform:rotate(2.5deg);box-shadow:0 34px 80px rgba(0,0,0,0.62), 0 0 0 1px rgba(225,48,108,0.35)}
+  .gduo:hover .g1{transform:rotate(-1.5deg) translateY(-4px)}
+  .gduo:hover .g2{transform:rotate(1deg) translateY(4px)}
+  .gduo .gtag{position:absolute;z-index:3;font-family:var(--mono);font-size:8.5px;letter-spacing:0.18em;padding:6px 12px;background:rgba(11,8,16,0.88)}
+  .gduo .t1{top:14px;left:14px;color:var(--violet);box-shadow:inset 0 0 0 1px rgba(167,139,250,0.5)}
+  .gduo .t2{bottom:14px;right:14px;color:var(--ig);box-shadow:inset 0 0 0 1px rgba(225,48,108,0.5)}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:0.26em;color:var(--violet);margin-bottom:16px}
+  h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,4vw,56px);line-height:1.12;margin:0 0 22px;max-width:800px;text-wrap:balance}
+  .vio-text{background:linear-gradient(96deg,#e8d48b 0%,#d9c3ba 30%,#c9b0e8 62%,#a78bfa 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero-sub{font-size:16.5px;color:var(--tx-muted);max-width:600px;margin:0}
+  .hero-sub b{color:var(--tx);font-weight:600}
+
+  /* ---------- shared ---------- */
+  section{max-width:1240px;margin:0 auto;padding:96px 48px 0;position:relative}
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease), transform 1s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- frames (home v2 anatomy) ---------- */
+  .lframes{display:flex;flex-direction:column;gap:60px}
+  .lframe{position:relative;background:rgba(15,11,22,0.78);backdrop-filter:blur(6px);
+    box-shadow:0 34px 80px rgba(0,0,0,0.5), 0 0 0 1px var(--border);
+    opacity:0;transform:translateY(34px);transition:opacity 1s var(--ease), transform 1s var(--ease)}
+  .lframe.in{opacity:1;transform:none}
+  .lframe .bk{position:absolute;width:20px;height:20px;border:1.5px solid var(--lc);opacity:0.8;z-index:3}
+  .lframe .bk.tl{top:-1px;left:-1px;border-right:0;border-bottom:0}
+  .lframe .bk.tr{top:-1px;right:-1px;border-left:0;border-bottom:0}
+  .lframe .bk.bl{bottom:-1px;left:-1px;border-right:0;border-top:0}
+  .lframe .bk.br{bottom:-1px;right:-1px;border-left:0;border-top:0}
+  .lthunder{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.5}
+  .fhead,.fbody{position:relative;z-index:1}
+  .fhead{display:flex;align-items:center;gap:16px;padding:13px 24px;border-bottom:1px solid var(--border);font-family:var(--mono)}
+  .fhead .fh-step{font-size:10px;letter-spacing:0.24em;color:var(--lc);border:1px solid var(--lc);padding:5px 10px}
+  .fhead .fh-name{font-size:10px;letter-spacing:0.22em;color:var(--tx-muted)}
+  .fhead .fh-live{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:8.5px;letter-spacing:0.18em;color:var(--tx-faint)}
+  .fhead .dotp{width:6px;height:6px;border-radius:50%;background:var(--lc);animation:pulse 2.2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .fbody{display:grid;grid-template-columns:1.02fr 1fr}
+  .lframe:nth-child(even) .fbody .lcopy{order:2}
+  .lframe:nth-child(even) .fbody .linstr{order:1;border-left:0;border-right:1px solid var(--border)}
+  .lcopy{padding:36px 40px 34px;display:flex;flex-direction:column;justify-content:center;gap:20px}
+  .hpanel{border-left:3px solid var(--lc);background:rgba(255,255,255,0.02);padding:14px 20px}
+  .hpanel h3{font-family:var(--display);font-weight:400;font-size:clamp(23px,2.2vw,29px);margin:0;color:var(--tx)}
+  .lp{color:var(--tx-muted);font-size:14.5px;max-width:470px;margin:0}
+  .lp b{color:var(--tx);font-weight:600}
+  .enter-field{display:inline-flex;align-items:center;gap:12px;border:1px solid var(--lc);padding:14px 22px;
+    font-size:14px;color:var(--tx);transition:background .4s, transform .4s var(--ease);align-self:flex-start}
+  .enter-field:hover{background:rgba(255,255,255,0.045);transform:translateX(4px);color:var(--tx)}
+  .enter-field .arr{color:var(--lc);transition:transform .4s var(--ease)}
+  .enter-field:hover .arr{transform:translateX(4px)}
+  .linstr{position:relative;display:flex;flex-direction:column;justify-content:center;gap:14px;
+    border-left:1px solid var(--border);padding:26px;overflow:hidden}
+  .linstr .iglow{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%, var(--lg), transparent 72%);pointer-events:none}
+  .ipanel{position:relative;box-shadow:0 0 0 1px rgba(255,255,255,0.08);background:rgba(10,7,14,0.55)}
+  .pnl-h{display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.07);
+    font-family:var(--mono);font-size:8.5px;letter-spacing:0.2em;color:var(--pc)}
+  .pnl-h .pnl-tag{margin-left:auto;color:var(--tx-faint);letter-spacing:0.12em}
+
+  /* demand funnel */
+  .funnel{display:flex;flex-direction:column;gap:9px;padding:16px}
+  .fstage{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:9.5px;letter-spacing:0.12em;color:var(--tx-muted)}
+  .fstage .fl2{width:86px;flex-shrink:0;color:var(--tx-faint)}
+  .fstage .fbar{height:9px;background:linear-gradient(90deg, rgba(167,139,250,0.9), rgba(167,139,250,0.25));width:0;transition:width 1.3s var(--ease)}
+  .fstage .fv{color:var(--violet)}
+  .fnote{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;color:var(--tx-faint);padding:0 16px 14px}
+  .fnote b{color:var(--ok);font-weight:500}
+
+  /* instagram cadence */
+  #igspark2{display:block;margin:12px 16px 2px}
+  .cadence{display:flex;flex-direction:column;gap:7px;padding:10px 16px 14px;min-height:66px}
+  .cad{display:flex;align-items:baseline;gap:10px;font-family:var(--mono);font-size:9.5px;letter-spacing:0.08em;color:var(--tx-muted);
+    opacity:0;transform:translateY(7px);transition:opacity .45s var(--ease), transform .45s var(--ease)}
+  .cad.on{opacity:1;transform:none}
+  .cad .cc{font-size:8px;letter-spacing:0.14em;padding:2px 7px;box-shadow:inset 0 0 0 1px var(--cc2);color:var(--cc2);flex-shrink:0}
+  .cad .ctm{margin-left:auto;color:var(--tx-faint);font-size:8.5px}
+
+  /* the order */
+  .order-wrap{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-top:20px}
+  .order-copy .kill{font-family:var(--serif);font-style:italic;font-size:clamp(24px,2.4vw,32px);line-height:1.45;color:var(--tx);margin:0 0 24px;max-width:520px}
+  .order-copy .kill em{color:var(--violet)}
+  .order-copy p{color:var(--tx-muted);font-size:15px;max-width:480px;margin:0 0 18px}
+  .order-copy p b{color:var(--tx);font-weight:600}
+  .chain{display:flex;flex-direction:column;gap:0;font-family:var(--mono)}
+  .chainrow{display:flex;align-items:center;gap:16px;padding:18px 22px;box-shadow:0 0 0 1px var(--border);background:rgba(15,11,22,0.6)}
+  .chainrow + .chainrow{margin-top:-1px}
+  .chainrow .cn{font-size:10px;letter-spacing:0.22em;width:70px;flex-shrink:0}
+  .chainrow .ct{font-size:11px;letter-spacing:0.1em;color:var(--tx-muted)}
+  .chainrow.c1 .cn{color:var(--critical)} .chainrow.c2 .cn{color:var(--gold-light)} .chainrow.c3 .cn{color:var(--violet)}
+  .chainrow.dim{opacity:0.85}
+
+  /* finale */
+  .finale{margin:120px auto 0;border-top:1px solid var(--border);padding:100px 48px 40px;text-align:center;
+    background:linear-gradient(180deg, transparent 0%, rgba(19,13,26,0.75) 100%)}
+  .fin-line{font-family:var(--serif);font-size:clamp(23px,2.5vw,34px);line-height:1.5;color:var(--tx);max-width:800px;margin:0 auto 40px}
+  .fin-line em{color:var(--violet)}
+  .fin-contacts{display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
+  .fchip{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:0.08em;
+    padding:14px 24px;color:var(--tx-muted);box-shadow:inset 0 0 0 1px var(--fc);transition:color .3s, background .3s, transform .3s var(--ease)}
+  .fchip:hover{color:var(--tx);background:rgba(255,255,255,0.04);transform:translateY(-2px)}
+
+  footer{max-width:1240px;margin:0 auto;padding:56px 48px 48px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--tx-faint);letter-spacing:0.05em}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important}
+    .reveal,.lframe,.cad{opacity:1 !important;transform:none !important}
+  }
+  @media (max-width: 1060px){
+    .order-wrap{grid-template-columns:1fr;gap:40px}
+  }
+  @media (max-width: 900px){
+    nav{padding:14px 22px}
+    .nav-contact{display:none}
+    .nav-burger{display:flex}
+    .nav-cta{white-space:nowrap;padding:10px 15px;font-size:12.5px}
+    nav{gap:14px}
+    .wordmark{font-size:16px;letter-spacing:0.2em}
+    .brand{gap:9px}
+    .brand img{width:28px;height:28px}
+    .nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;
+      background:rgba(17,12,8,0.995);border-bottom:1px solid rgba(201,164,74,0.30);padding:6px 22px 12px;box-shadow:0 24px 40px rgba(0,0,0,0.5)}
+    .nav-links.open{display:flex}
+    .nav-links a{padding:13px 2px;font-size:17px;border-bottom:1px solid rgba(255,255,255,0.05)}
+    .nav-links a:last-child{border-bottom:0}
+    .nav-links a::after{bottom:8px;right:auto;width:28px}
+    section{padding:80px 22px 0}
+    .hero-inner{padding:130px 22px 48px;grid-template-columns:1fr}
+    .gduo{height:300px;margin-top:10px}
+    .fbody{grid-template-columns:1fr}
+    .lframe:nth-child(even) .fbody .lcopy{order:0}
+    .lframe:nth-child(even) .fbody .linstr{order:1;border-right:0}
+    .linstr{border-left:0;border-top:1px solid var(--border)}
+    .finale{padding:80px 22px 40px}
+  }
+  @media (max-width: 380px){
+    .wordmark{display:none}
+    .nav-right{gap:12px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="/">
+    <img src="vaydin-icon-mark.png" alt="Vaydin mark">
+    <div class="wordmark">VAYDIN</div>
+  </a>
+  <div class="nav-links">
+    <a href="diagnose.html" style="--chip:rgba(248,113,113,0.35);--chip-hi:#f87171;--chip-bg:rgba(248,113,113,0.08)">Diagnose</a>
+    <a href="fix.html" style="--chip:rgba(232,212,139,0.30);--chip-hi:#e8d48b;--chip-bg:rgba(232,212,139,0.07)">Fix</a>
+    <a href="grow.html" class="nav-here" style="--chip:rgba(167,139,250,0.32);--chip-hi:#a78bfa;--chip-bg:rgba(167,139,250,0.08)">Grow</a>
+    <a href="engine.html" style="--chip:rgba(52,227,240,0.30);--chip-hi:#34e3f0;--chip-bg:rgba(52,227,240,0.07)">Engine</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-contact">
+      <a href="tel:+971505553148">+971 50 555 3148</a>
+      <a href="mailto:hello@vaydin.agency">hello@vaydin.agency</a>
+    </div>
+    <a href="pricing.html" class="nav-cta">Build your plan</a>
+    <button class="nav-burger" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 1h18M0 7h18M0 13h18"/></svg></button>
+  </div>
+</nav>
+<script>(function(){var b=document.querySelector(".nav-burger"),l=document.querySelector(".nav-links");if(b&&l){b.addEventListener("click",function(){var o=l.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false");});l.addEventListener("click",function(e){if(e.target.tagName==="A"){l.classList.remove("open");b.setAttribute("aria-expanded","false");}});}})();</script>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+    <div class="eyebrow">STEP 03 — GROW · DEMAND &amp; PRESENCE</div>
+    <h1 class="vio-text">Everything fixed?<br>Time to spread.</h1>
+    <p class="hero-sub">Most clinics buy marketing first and wonder where the money went. We do it in the only order that works: <b>fix the machine, then pour in the fuel</b> — and count every dirham on the same dashboard that runs your clinic.</p>
+    </div>
+    <div class="gduo" aria-hidden="true">
+      <img class="g1" src="assets/img/layer-grow.webp" alt="" loading="eager">
+      <span class="gtag t1">PATIENT DEMAND</span>
+      <img class="g2" src="assets/img/grow-ig.webp" alt="" loading="eager">
+      <span class="gtag t2">INSTAGRAM PRESENCE</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="lframes">
+
+    <div class="lframe" style="--lc:#a78bfa;--lg:rgba(167,139,250,0.09)">
+      <canvas class="lthunder" id="gth-1" width="920" height="430" aria-hidden="true"></canvas>
+      <span class="bk tl"></span><span class="bk tr"></span><span class="bk bl"></span><span class="bk br"></span>
+      <div class="fhead"><span class="fh-step">GROW 01</span><span class="fh-name">PATIENT DEMAND — PAID ACQUISITION</span><span class="fh-live"><span class="dotp"></span>ILLUSTRATION</span></div>
+      <div class="fbody">
+        <div class="lcopy">
+          <div class="hpanel"><h3>Demand that lands in a machine built to convert it.</h3></div>
+          <p class="lp">Paid campaigns that put your clinic in front of the right patients — and every inquiry they produce lands in <b>the engine that already answers, qualifies, and books</b>. Your ad spend is paid direct and never marked up; the results are counted from campaign to consultation, end to end.</p>
+          <p class="lp"><b>No vanity metrics.</b> Not clicks — booked patients, on the same dashboard the diagnostic started.</p>
+          <a class="enter-field" href="pricing.html">Add growth to your plan <span class="arr">→</span></a>
+        </div>
+        <div class="linstr"><div class="iglow"></div>
+          <div class="ipanel" style="--pc:#a78bfa">
+            <div class="pnl-h">THE FUNNEL — COUNTED END TO END<span class="pnl-tag">SAMPLE</span></div>
+            <div class="funnel" id="funnel">
+              <div class="fstage"><span class="fl2">CAMPAIGN</span><div class="fbar" data-w="92"></div><span class="fv">REACHED</span></div>
+              <div class="fstage"><span class="fl2">INQUIRY</span><div class="fbar" data-w="58"></div><span class="fv">ANSWERED IN MIN</span></div>
+              <div class="fstage"><span class="fl2">CONSULT</span><div class="fbar" data-w="34"></div><span class="fv">FRAMED</span></div>
+              <div class="fstage"><span class="fl2">BOOKED</span><div class="fbar" data-w="22"></div><span class="fv">COUNTED</span></div>
+            </div>
+            <div class="fnote">EVERY STAGE VISIBLE — <b>NOTHING VANISHES BETWEEN CLICK AND CHAIR</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lframe" style="--lc:#E1306C;--lg:rgba(225,48,108,0.08)">
+      <canvas class="lthunder" id="gth-2" width="920" height="430" aria-hidden="true"></canvas>
+      <span class="bk tl"></span><span class="bk tr"></span><span class="bk bl"></span><span class="bk br"></span>
+      <div class="fhead"><span class="fh-step">GROW 02</span><span class="fh-name">INSTAGRAM PRESENCE — RUN LIKE A CHANNEL</span><span class="fh-live"><span class="dotp"></span>ILLUSTRATION</span></div>
+      <div class="fbody">
+        <div class="lcopy">
+          <div class="hpanel"><h3>Presence where your patients actually look.</h3></div>
+          <p class="lp">In this market, a clinic's Instagram <b>is</b> the clinic. We run it like a channel, not a diary: a steady cadence in your clinic's voice, built to be found — and <b>every DM it produces is answered and booked by the engine</b>, in minutes, at midnight.</p>
+          <p class="lp">Reach grows. DMs become consultations. <b>The same dashboard counts both.</b></p>
+          <a class="enter-field" href="pricing.html">Add presence to your plan <span class="arr">→</span></a>
+        </div>
+        <div class="linstr"><div class="iglow"></div>
+          <div class="ipanel" style="--pc:#E1306C">
+            <div class="pnl-h">THE CHANNEL AT WORK<span class="pnl-tag">SAMPLE</span></div>
+            <canvas id="igspark2" width="360" height="96" aria-label="Reach growing, sample"></canvas>
+            <div class="cadence" id="cadence"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="order">
+  <div class="order-wrap">
+    <div class="order-copy reveal">
+      <p class="kill">Fuel poured into a broken engine<br>just makes a <em>more expensive leak</em>.</p>
+      <p>That's why Grow is Step 03, not Step 01. The diagnostic finds where patients are lost; the engine fixes how they're answered and booked; <b>only then</b> does it make sense to send more of them your way.</p>
+      <p>When they arrive — from a campaign at noon or a story reply at midnight — <b>the machine that catches them is already running.</b></p>
+    </div>
+    <div class="chain reveal">
+      <div class="chainrow c1 dim"><span class="cn">STEP 01</span><span class="ct">DIAGNOSE — find where patients are lost</span></div>
+      <div class="chainrow c2 dim"><span class="cn">STEP 02</span><span class="ct">FIX &amp; RUN — the engine answers, books, revives</span></div>
+      <div class="chainrow c3"><span class="cn">STEP 03</span><span class="ct">GROW — demand + presence, counted on the same dashboard</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="finale">
+  <p class="fin-line">Your clinic, fixed and running, in front of the patients<br>who were always looking for it. <em>That's growth that compounds.</em></p>
+  <div class="fin-contacts">
+    <a class="fchip" style="--fc:#a78bfa" href="pricing.html">Build your plan</a>
+    <a class="fchip" style="--fc:#25D366" href="https://wa.me/971505553148">WhatsApp · +971 50 555 3148</a>
+  </div>
+</div>
+
+<footer>
+  <div>VAYDIN PARTNERS INVESTMENTS - FZCO · DSO-IFZA, IFZA Properties, Dubai Silicon Oasis, Dubai, UAE · Licensed under IFZA</div>
+  <div>The diagnostic sells the engine. The engine earns the fuel.</div>
+  <div><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/data-deletion/">Data deletion</a></div>
+</footer>
+
+<script>
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold: 0.12});
+  document.querySelectorAll('.reveal, .lframe').forEach(function(el){ io.observe(el); });
+
+  /* every canvas loop runs ONLY while its canvas is on screen: start at 30% visible, pause the
+     moment it leaves, resume where it stopped when it comes back */
+  function watchVis(el, onFirst){
+    if(!el) return;
+    var started = !onFirst;
+    new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        el.__vis = e.isIntersecting;
+        if(!e.isIntersecting) return;
+        if(!started && e.intersectionRatio >= 0.3){ started = true; onFirst(); }
+        else if(el.__resume){ var r = el.__resume; el.__resume = null; requestAnimationFrame(r); }
+      });
+    }, {threshold: [0, 0.3]}).observe(el);
+  }
+  function startWhenVisible(el, fn){ watchVis(el, fn); }
+  function tick(el, fr){ if(el.__vis !== false) requestAnimationFrame(fr); else el.__resume = fr; }
+
+  /* funnel bars */
+  var fn = document.getElementById('funnel');
+  if(fn){
+    startWhenVisible(fn, function(){
+      var bars = fn.querySelectorAll('.fbar');
+      function set(scale){
+        bars.forEach(function(b){ b.style.width = (parseInt(b.getAttribute('data-w')) * scale) + '%'; });
+      }
+      if(reduced){ set(1); return; }
+      set(1);
+      var up = true;
+      setInterval(function(){ up = !up; set(up ? 1 : 0.72); }, 3800);
+    });
+  }
+
+  /* instagram spark + cadence feed */
+  var ig = document.getElementById('igspark2');
+  if(ig && ig.getContext){
+    startWhenVisible(ig, function(){
+      var ctx = ig.getContext('2d'), W = 360, H = 96;
+      var base = [72, 69, 70, 63, 60, 54, 50, 44, 40, 33, 27, 20, 14];
+      var t = 0, prog = reduced ? 1 : 0;
+      (function fr(){
+        t += 0.02; if(prog < 1) prog = Math.min(1, prog + 0.008);
+        ctx.clearRect(0,0,W,H);
+        var count = Math.max(2, Math.floor(base.length * prog));
+        ctx.beginPath();
+        for(var i=0;i<count;i++){
+          var x = 14 + i*(W-28)/(base.length-1);
+          var y = 12 + base[i] * (H-24)/80 + Math.sin(t+i)*1.1;
+          i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+        }
+        ctx.save(); ctx.shadowColor='#E1306C'; ctx.shadowBlur=8;
+        ctx.strokeStyle='#E1306C'; ctx.lineWidth=1.6; ctx.stroke(); ctx.restore();
+        if(count >= 2){
+          var lx = 14 + (count-1)*(W-28)/(base.length-1);
+          var ly = 12 + base[count-1]*(H-24)/80 + Math.sin(t+count-1)*1.1;
+          var pu = 1 + Math.sin(t*3)*0.4;
+          ctx.save(); ctx.shadowColor='#E1306C'; ctx.shadowBlur=10;
+          ctx.fillStyle='#E1306C'; ctx.beginPath(); ctx.arc(lx,ly,2.6*pu,0,7); ctx.fill(); ctx.restore();
+        }
+        if(!reduced) tick(ig, fr);
+      })();
+    });
+  }
+  var cad = document.getElementById('cadence');
+  if(cad){
+    var CFEED = [
+      ['#E1306C','POST','treatment story published — your voice','10:00'],
+      ['#E1306C','DM','story reply — answered by the engine','23:12'],
+      ['#e8d48b','CAL','that DM — consult booked Friday','23:19'],
+      ['#a78bfa','REACH','profile visits climbing this week','—'],
+      ['#4ade80','YOU','growth digest — DMs → bookings, counted','18:00']
+    ];
+    startWhenVisible(cad, function(){
+      var idx = 0;
+      function render(){
+        cad.innerHTML = '';
+        for(var k=0;k<3;k++){
+          var e = CFEED[(idx+k) % CFEED.length];
+          var d = document.createElement('div');
+          d.className = 'cad';
+          d.innerHTML = '<span class="cc" style="--cc2:' + e[0] + '">' + e[1] + '</span><span>' + e[2] + '</span><span class="ctm">' + e[3] + '</span>';
+          cad.appendChild(d);
+        }
+        var els = cad.querySelectorAll('.cad');
+        els.forEach(function(el,i){ setTimeout(function(){ el.classList.add('on'); }, 60 + i*220); });
+        idx = (idx + 1) % CFEED.length;
+      }
+      render();
+      if(!reduced) setInterval(render, 4200);
+    });
+  }
+
+  /* thunder veils (violet + pink) */
+  function thunder(id, color, rgb){
+    var cv = document.getElementById(id);
+    if(!cv || !cv.getContext) return;
+    startWhenVisible(cv, function(){
+      var ctx = cv.getContext('2d'), W = 920, H = 430;
+      var bolts = [], t = Math.random()*7;
+      var blobs = [
+        {x:0.22, y:0.3, r:170, sp:0.13},
+        {x:0.7, y:0.7, r:200, sp:0.09}
+      ];
+      function mkbolt(){
+        var x = 60 + Math.random()*(W-120), y = 20 + Math.random()*60;
+        var pts = [[x, y]];
+        var segs = 7 + Math.floor(Math.random()*5);
+        for(var i=0;i<segs;i++){
+          x += (Math.random()-0.5)*90; y += (H-80)/segs * (0.7+Math.random()*0.6);
+          pts.push([x, y]);
+        }
+        return {pts: pts, life: 1};
+      }
+      (function fr(){
+        t += 0.008;
+        ctx.clearRect(0,0,W,H);
+        blobs.forEach(function(b, i){
+          var bx = (b.x + Math.sin(t*b.sp*6 + i*2)*0.08) * W;
+          var by = (b.y + Math.cos(t*b.sp*5 + i)*0.07) * H;
+          var g = ctx.createRadialGradient(bx, by, 8, bx, by, b.r);
+          g.addColorStop(0, 'rgba(' + rgb + ',' + (0.10 + Math.sin(t*2+i)*0.03) + ')');
+          g.addColorStop(1, 'rgba(' + rgb + ',0)');
+          ctx.fillStyle = g;
+          ctx.beginPath(); ctx.arc(bx, by, b.r, 0, 7); ctx.fill();
+        });
+        if(Math.random() < 0.012 && bolts.length < 2) bolts.push(mkbolt());
+        bolts.forEach(function(b){
+          b.life -= 0.045;
+          var a = Math.max(b.life, 0);
+          ctx.save();
+          ctx.shadowColor = color; ctx.shadowBlur = 14;
+          ctx.strokeStyle = 'rgba(' + rgb + ',' + a*0.5 + ')';
+          ctx.lineWidth = 1.4;
+          ctx.beginPath(); ctx.moveTo(b.pts[0][0], b.pts[0][1]);
+          for(var i=1;i<b.pts.length;i++) ctx.lineTo(b.pts[i][0], b.pts[i][1]);
+          ctx.stroke();
+          ctx.restore();
+        });
+        for(var i=bolts.length-1;i>=0;i--){ if(bolts[i].life <= 0) bolts.splice(i,1); }
+        if(!reduced) tick(cv, fr);
+      })();
+    });
+  }
+  thunder('gth-1', '#a78bfa', '167,139,250');
+  thunder('gth-2', '#E1306C', '225,48,108');
+})();
+</script>
+</body>
+</html>
