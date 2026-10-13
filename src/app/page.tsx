@@ -76,8 +76,8 @@ const ACTS = { city: CITY / STORY, wait: (CITY + WAIT) / STORY };
    are the four things the reception scene then shows going wrong. */
 const MEETS = [
   ["Website", "Slow on phones"],
-  ["Phone", "Rings out when busy"],
   ["WhatsApp", "No reply after 6 PM"],
+  ["Google", "Last review unanswered"],
   ["Booking", "The link is broken"],
   ["Instagram", "Questions left unread"],
 ];
@@ -85,8 +85,8 @@ const MEETS = [
 /* What is going wrong inside the chosen clinic, and what each line becomes
    once the engine runs it. */
 const INSIDE = [
-  ["The phone rings while she serves a patient", "Every call answered, in the clinic's own voice"],
-  ["A WhatsApp message nobody has seen", "Every message answered in minutes"],
+  ["A WhatsApp message lights up the phone while she serves a patient", "Every message answered in minutes"],
+  ["A Google review from last week, still unanswered", "Every review answered"],
   ["The booking page shows an error", "Booked on the spot, and reminded"],
   ["Instagram questions left unread", "Old inquiries revived"],
 ];
@@ -97,11 +97,12 @@ const vars = (v: Record<string, string | number>) => v as CSSProperties;
    centre of that picture's phone cut. */
 const PHONE = { x: 0.7285, y: 0.545, cx: 0.56 };
 
-/* The call that phone gets. It rings from `at`; at `then` it is over. */
-function Call({ at, then, answered = false }: { at: number; then: number; answered?: boolean }) {
+/* The WhatsApp message that phone gets. It waits from `at`; at `then` it is
+   over, answered or not. The engine answers messages, never calls. */
+function Ping({ at, then, answered = false }: { at: number; then: number; answered?: boolean }) {
   return (
     <div
-      className="call"
+      className="ping"
       style={vars({
         "--xn": PHONE.x,
         "--y": `${PHONE.y * 100}%`,
@@ -110,15 +111,15 @@ function Call({ at, then, answered = false }: { at: number; then: number; answer
         "--end": answered ? "var(--proof)" : "var(--leak)",
       })}
     >
-      <span className="call-ring" aria-hidden="true" />
-      <p className="call-tag">
-        <span className="ringing">
-          <span className="label">Incoming call</span>
+      <span className="ping-ring" aria-hidden="true" />
+      <p className="ping-tag">
+        <span className="waiting">
+          <span className="label">New WhatsApp message</span>
           New patient
         </span>
         <span className="ended">
-          <span className="label">{answered ? "Answered for you" : "Missed call"}</span>
-          {answered ? "Booked for tomorrow" : "New patient"}
+          <span className="label">{answered ? "Answered for you" : "No reply"}</span>
+          {answered ? "Booked for Thursday" : "New patient"}
         </span>
       </p>
     </div>
@@ -204,8 +205,8 @@ function Brief() {
    frame of the move into the phone and, at the hand-over, shrinks back onto
    the phone lying on the desk of the next act. */
 const ENGINE = [
-  ["Missed call", "Call answered"],
   ["Unseen WhatsApp", "Replied in 2 minutes"],
+  ["Unanswered review", "Review answered"],
   ["Booking error", "Booked, reminded"],
   ["Unread Instagram", "Inquiry revived"],
 ];
@@ -451,7 +452,7 @@ export default function Home() {
               <Brief />
             </div>
             <div className="stage cut" style={vars({ "--cx": PHONE.cx, "--at": at(PUSH.from - 10) })}>
-              <Call at={at(DESK + 15)} then={at(DESK + 150)} />
+              <Ping at={at(DESK + 15)} then={at(DESK + 150)} />
             </div>
             <div className={TEXT}>
               <div className={`${BLOCK} hide`} style={vars({ "--at": at(172) })}>
@@ -586,7 +587,7 @@ export default function Home() {
             </div>
             <div className="scrim" />
             <div className="stage cut" style={vars({ "--cx": PHONE.cx, "--at": fx(396) })}>
-              <Call at={fx(13)} then={fx(110)} answered />
+              <Ping at={fx(13)} then={fx(110)} answered />
             </div>
             <AppScreen />
             <div className={TEXT}>
