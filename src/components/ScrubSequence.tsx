@@ -34,6 +34,21 @@ export function firstScroll() {
   return scrolled;
 }
 
+/* Every mounted sequence, so the one on stage can start the download of
+   the next one in page order: one clip ahead, never more, so the first pass
+   through the story meets its pictures already there without pulling the
+   whole story onto a phone that may leave after one screen. */
+type Entry = { canvas: HTMLCanvasElement; fetchBytes: () => void };
+const mounted = new Set<Entry>();
+function following(canvas: HTMLCanvasElement): Entry | undefined {
+  let next: Entry | undefined;
+  for (const e of mounted) {
+    if (e.canvas === canvas || !(canvas.compareDocumentPosition(e.canvas) & Node.DOCUMENT_POSITION_FOLLOWING)) continue;
+    if (!next || e.canvas.compareDocumentPosition(next.canvas) & Node.DOCUMENT_POSITION_FOLLOWING) next = e;
+  }
+  return next;
+}
+
 function loadOrder(count: number): number[] {
   const seen = new Set<number>();
   const order: number[] = [];
@@ -188,25 +203,38 @@ export function ScrubSequence({
     const ro = new ResizeObserver(size);
     ro.observe(canvas);
 
-    const load = async (mine: number) => {
+    /* The bytes are fetched once and kept: a clip is a few MB compressed,
+       and keeping them is what makes a second pass smooth. Only unmounting
+       stops the loop. */
+    let alive = true;
+    let fetching = false;
+    let fetched = false;
+    const load = async () => {
+      if (fetching || fetched) return;
+      fetching = true;
       let done = 0;
       for (const slot of loadOrder(s.total)) {
         if (done++ === FIRST_PASS) await firstScroll();
-        if (mine !== run) return;
+        if (!alive) return;
         if (s.bytes[slot]) continue;
         try {
           const file = String(indexes[slot] + 1).padStart(3, "0");
           const res = await fetch(`/frames/${name}/${phone ? "m" : "d"}/${file}.webp`);
           if (!res.ok) continue;
           const blob = await res.blob();
-          if (mine !== run) return;
+          if (!alive) return;
           s.bytes[slot] = blob;
         } catch {
           continue;
         }
-        void make(slot, mine);
+        if (held) void make(slot, run);
       }
+      fetching = false;
+      fetched = true;
+      if (held) following(canvas)?.fetchBytes();
     };
+    const entry: Entry = { canvas, fetchBytes: () => void load() };
+    mounted.add(entry);
 
     s.sync = () => {
       const hold = s.seen && s.near;
@@ -214,8 +242,9 @@ export function ScrubSequence({
       held = hold;
       run += 1;
       if (hold) {
-        void load(run);
+        void load();
         s.fill();
+        if (fetched) following(canvas)?.fetchBytes();
       } else {
         drop();
         delete canvas.dataset.ready;
@@ -234,6 +263,8 @@ export function ScrubSequence({
     return () => {
       run += 1;
       held = false;
+      alive = false;
+      mounted.delete(entry);
       io.disconnect();
       ro.disconnect();
       s.sync = () => {};
