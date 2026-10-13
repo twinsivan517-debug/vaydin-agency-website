@@ -204,7 +204,7 @@ function Brief() {
    the phone lying on the desk of the next act. */
 const ENGINE = [
   ["Missed call", "Call answered"],
-  ["Unseen WhatsApp", "Replied in 1 minute"],
+  ["Unseen WhatsApp", "Replied in 2 minutes"],
   ["Booking error", "Booked, reminded"],
   ["Unread Instagram", "Inquiry revived"],
 ];
@@ -228,7 +228,7 @@ function Screen() {
         <div className="show" style={vars({ "--at": wt(INTO.to - 8) })}>
           <p className="label text-gold-bright">Step 02 · Fix &amp; run · Inside the Vaydin engine · Illustration</p>
           <h2 className="mt-2 font-display text-3xl leading-tight sm:text-5xl">Then we fix it, and run it.</h2>
-          <p className="mt-2 text-lg text-muted">Same evening, same message. This time it is answered in a minute.</p>
+          <p className="mt-2 text-lg text-muted">Same evening, same message. This time it is answered in two minutes.</p>
         </div>
         <div className="engine">
           <div className="engine-core" aria-hidden="true">
@@ -260,14 +260,14 @@ function Screen() {
         <div className="show" style={vars({ "--at": wt(from + 225) })}>
           <p className="bubble bubble-out">
             Good evening! Thursday at 7:15 PM is yours. You&apos;ll get a reminder the day before.
-            <time>6:49 PM</time>
+            <time>6:50 PM</time>
           </p>
         </div>
         <p
           className="label show w-fit rounded-md border border-proof bg-background px-3 py-2 text-proof"
           style={vars({ "--at": wt(from + 265) })}
         >
-          Patient booked · in 1 minute
+          Patient booked · in 2 minutes
         </p>
       </div>
     </div>
@@ -654,7 +654,7 @@ export default function Home() {
                 </p>
               </div>
               <div style={vars({ "--c": "var(--gold-bright)" })}>
-                <p className="label text-gold-bright">02 · Fix</p>
+                <p className="label text-gold-bright">02 · Fix &amp; run</p>
                 <p className="mt-3 leading-7 text-muted">
                   The Vaydin engine takes over your digital front door: one vendor, your clinic&apos;s
                   own voice and number.

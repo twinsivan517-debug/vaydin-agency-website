@@ -2,7 +2,7 @@
 //   node scripts/frames.mjs            every clip
 //   node scripts/frames.mjs e l p      only the clips named
 // Writes public/frames/<clip>/d (the whole 16:9 picture, 1920 wide) and /m
-// (a 3:4 cut around the clip's focus, 648 wide, for phones), 12 frames a
+// (a 3:4 cut around the clip's focus, 1080 wide, for phones), 12 frames a
 // second, WebP, plus src/lib/frames.json with the frame count per clip.
 // A clip's focus is where the phone cut is centred across the picture, at
 // its first and its last frame; the cut slides between the two.
@@ -29,8 +29,8 @@ const FULL = 124 / 24;
 // Clips are 2560x1440; the phone cut is 1080x1440, kept inside the picture.
 const left = (cx) => Math.round(Math.min(Math.max(2560 * cx - 540, 0), 1480));
 const cut = ([from, to], last) => `crop=1080:1440:${left(from)}+(${left(to) - left(from)})*n/${last}:0,`;
-const SIZES = { d: () => "scale=1920:-2", m: (focus, last) => `${cut(focus, last)}scale=648:-2` };
-const QUALITY = { d: 62, m: 52 };
+const SIZES = { d: () => "scale=1920:-2", m: (focus, last) => `${cut(focus, last)}scale=1080:-2` };
+const QUALITY = { d: 62, m: 60 };
 
 const ff = (...args) => execFileSync("ffmpeg", ["-v", "error", "-y", ...args], { stdio: "inherit" });
 

@@ -6,6 +6,9 @@ import { useSceneProgress } from "./Scene";
 const PHONE = "(max-width: 820px)";
 const REDUCE = "(prefers-reduced-motion: reduce)";
 const MAX_DPR = 1.5;
+/* A phone screen is 3x and its frames are cut at native width, so the canvas
+   may match it; a desktop frame is 1920 wide, so 1.5x is all it can show. */
+const PHONE_DPR = 3;
 const FIRST_PASS = 3;
 /* A sequence holds its frames only while the scene is within LEAD of the
    part it plays in, so one long scene never keeps every clip decoded. */
@@ -109,7 +112,7 @@ export function ScrubSequence({
     if (reverse) s.want = s.total - 1;
 
     const size = () => {
-      const dpr = Math.min(devicePixelRatio || 1, MAX_DPR);
+      const dpr = Math.min(devicePixelRatio || 1, phone ? PHONE_DPR : MAX_DPR);
       canvas.width = Math.round(canvas.clientWidth * dpr);
       canvas.height = Math.round(canvas.clientHeight * dpr);
       s.drawn = -1;
