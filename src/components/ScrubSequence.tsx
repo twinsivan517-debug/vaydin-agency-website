@@ -14,6 +14,14 @@ const FIRST_PASS = 3;
 /* A sequence holds its frames only while the scene is within LEAD of the
    part it plays in, so one long scene never keeps every clip decoded. */
 const LEAD = 0.1;
+/* Decoded pictures are kept only for the frames around the one wanted. A
+   decoded frame is 6 MB and more; left to the browser, those decodes are
+   thrown away under memory pressure and made again on the main thread at
+   every draw, which is what stuttered on phones. The ring is decoded off the
+   main thread; the GPU scales it to the canvas at draw time. Resizing in
+   createImageBitmap would run on the main thread and cost more than the
+   decode it replaced. */
+const RING = 4;
 
 /* Until the visitor scrolls, a sequence loads only a few frames: the page's
    first load stays light, and nothing is scrubbed before a scroll anyway. */
@@ -61,28 +69,35 @@ export function ScrubSequence({
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const state = useRef({
-    frames: [] as (HTMLImageElement | undefined)[],
+    bytes: [] as (Blob | undefined)[],
+    ready: new Map<number, ImageBitmap>(),
+    making: new Set<number>(),
     total: 0,
     want: 0,
     drawn: -1,
     seen: false,
     near: false,
     sync: () => {},
+    fill: () => {},
   });
 
   const draw = () => {
     const canvas = canvasRef.current;
     const s = state.current;
-    if (!canvas || !s.total) return;
+    if (!canvas || !s.total || !s.ready.size) return;
     let best = -1;
-    for (let d = 0; d < s.total && best < 0; d++) {
-      if (s.frames[s.want - d]) best = s.want - d;
-      else if (s.frames[s.want + d]) best = s.want + d;
+    let dist = Infinity;
+    for (const i of s.ready.keys()) {
+      const d = Math.abs(i - s.want);
+      if (d < dist) {
+        dist = d;
+        best = i;
+      }
     }
-    if (best < 0 || best === s.drawn) return;
+    if (best === s.drawn) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    ctx.drawImage(s.frames[best]!, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(s.ready.get(best)!, 0, 0, canvas.width, canvas.height);
     s.drawn = best;
     canvas.dataset.ready = "1";
   };
@@ -97,6 +112,7 @@ export function ScrubSequence({
     if (!s.total) return;
     const local = Math.min(1, Math.max(0, (p - from) / (to - from)));
     s.want = Math.round((reverse ? 1 - local : local) * (s.total - 1));
+    s.fill();
     draw();
   });
 
@@ -112,36 +128,86 @@ export function ScrubSequence({
     s.total = indexes.length;
     if (reverse) s.want = s.total - 1;
 
+    let run = 0;
+    let held = false;
+
+    const drop = () => {
+      for (const b of s.ready.values()) b.close();
+      s.ready.clear();
+      s.making.clear();
+      s.drawn = -1;
+    };
+
+    /* A frame outside the ring is wanted only while nothing is ready yet. */
+    const wanted = (slot: number) => !s.ready.size || Math.abs(slot - s.want) <= RING;
+
+    const make = async (slot: number, mine: number) => {
+      const blob = s.bytes[slot];
+      if (!blob || s.ready.has(slot) || s.making.has(slot) || !wanted(slot)) return;
+      s.making.add(slot);
+      let bmp: ImageBitmap;
+      try {
+        bmp = await createImageBitmap(blob);
+      } catch {
+        s.making.delete(slot);
+        return;
+      }
+      s.making.delete(slot);
+      if (mine !== run || !held || !wanted(slot)) {
+        bmp.close();
+        return;
+      }
+      s.ready.set(slot, bmp);
+      draw();
+    };
+
+    s.fill = () => {
+      if (!held) return;
+      for (const [i, b] of s.ready) {
+        if (Math.abs(i - s.want) > RING && s.ready.size > 1) {
+          b.close();
+          s.ready.delete(i);
+        }
+      }
+      for (let d = 0; d <= RING; d++) {
+        void make(s.want + d, run);
+        if (d) void make(s.want - d, run);
+      }
+    };
+
     const size = () => {
       const dpr = Math.min(devicePixelRatio || 1, phone ? PHONE_DPR : MAX_DPR);
-      canvas.width = Math.round(canvas.clientWidth * dpr);
-      canvas.height = Math.round(canvas.clientHeight * dpr);
+      const width = Math.round(canvas.clientWidth * dpr);
+      const height = Math.round(canvas.clientHeight * dpr);
+      if (width === canvas.width && height === canvas.height) return;
+      canvas.width = width;
+      canvas.height = height;
       s.drawn = -1;
       draw();
     };
     const ro = new ResizeObserver(size);
     ro.observe(canvas);
 
-    let run = 0;
     const load = async (mine: number) => {
       let done = 0;
       for (const slot of loadOrder(s.total)) {
         if (done++ === FIRST_PASS) await firstScroll();
         if (mine !== run) return;
-        if (s.frames[slot]) continue;
-        const img = new Image();
-        img.src = `/frames/${name}/${phone ? "m" : "d"}/${String(indexes[slot] + 1).padStart(3, "0")}.webp`;
+        if (s.bytes[slot]) continue;
         try {
-          await img.decode();
+          const file = String(indexes[slot] + 1).padStart(3, "0");
+          const res = await fetch(`/frames/${name}/${phone ? "m" : "d"}/${file}.webp`);
+          if (!res.ok) continue;
+          const blob = await res.blob();
+          if (mine !== run) return;
+          s.bytes[slot] = blob;
         } catch {
           continue;
         }
-        if (mine !== run) return;
-        s.frames[slot] = img;
-        draw();
+        void make(slot, mine);
       }
     };
-    let held = false;
+
     s.sync = () => {
       const hold = s.seen && s.near;
       if (hold === held) return;
@@ -149,9 +215,9 @@ export function ScrubSequence({
       run += 1;
       if (hold) {
         void load(run);
+        s.fill();
       } else {
-        s.frames = [];
-        s.drawn = -1;
+        drop();
         delete canvas.dataset.ready;
       }
     };
@@ -167,10 +233,13 @@ export function ScrubSequence({
 
     return () => {
       run += 1;
+      held = false;
       io.disconnect();
       ro.disconnect();
       s.sync = () => {};
-      s.frames = [];
+      s.fill = () => {};
+      drop();
+      s.bytes = [];
     };
   }, [name, count, phoneStep, reverse]);
 

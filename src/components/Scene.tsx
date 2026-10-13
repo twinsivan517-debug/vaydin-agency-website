@@ -57,12 +57,24 @@ export function Act({
   useEffect(() => {
     const el = ref.current;
     if (!el || !scene) return;
+    /* Only a changed value is written: a write with the same value still
+       makes every element under the act recompute its style, and the two
+       acts not on stage would pay that on every scroll tick. */
+    let shownNow = "";
+    let pNow = "";
     const run = (at: number) => {
-      const shown = at >= from - lead && (at < to || to >= 1);
-      el.style.opacity = shown ? "1" : "0";
+      const shown = at >= from - lead && (at < to || to >= 1) ? "1" : "0";
+      if (shown !== shownNow) {
+        shownNow = shown;
+        el.style.opacity = shown;
+      }
       const p = (at - from) / (to - from);
       if (p === bus.p) return;
-      el.style.setProperty("--p", Math.min(1, Math.max(0, p)).toFixed(4));
+      const value = Math.min(1, Math.max(0, p)).toFixed(4);
+      if (value !== pNow) {
+        pNow = value;
+        el.style.setProperty("--p", value);
+      }
       tell(bus, p);
     };
     scene.subs.add(run);
@@ -110,7 +122,6 @@ export function Scene({
       const p = span > 0 ? Math.min(1, Math.max(0, -el.getBoundingClientRect().top / span)) : 0;
       if (p === bus.p) return;
       bus.p = p;
-      el.style.setProperty("--p", p.toFixed(4));
       bus.subs.forEach((fn) => fn(p));
     };
     const tick = () => {
