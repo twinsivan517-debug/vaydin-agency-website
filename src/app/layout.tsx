@@ -23,6 +23,10 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#0d0807" };
 
+/* GitHub Pages sets no security headers on a custom domain; the referrer
+   policy is the one that works as a meta tag. */
+const REFERRER = "strict-origin-when-cross-origin";
+
 /* The organisation record the live home page carries, word for word. */
 const ORGANISATION = {
   "@context": "https://schema.org",
@@ -62,6 +66,9 @@ const WEBSITE = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${sans.variable} ${display.variable} h-full antialiased`}>
+      <head>
+        <meta name="referrer" content={REFERRER} />
+      </head>
       <body className="flex min-h-full flex-col">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANISATION) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE) }} />

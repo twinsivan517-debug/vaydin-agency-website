@@ -1,0 +1,13 @@
+# Dependabot proposes bumps for the pinned actions and for npm packages,
+# one pull request each, so a pin never goes stale in silence.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
