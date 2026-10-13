@@ -420,7 +420,7 @@ export default function Home() {
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-20 flex items-center justify-between bg-gradient-to-b from-background/80 to-transparent px-5 py-4 sm:px-12">
-        <a href="#city" className="flex items-center gap-3">
+        <a href="#city" className="flex items-center gap-3" aria-label="Vaydin, back to the top">
           <Image src="/img/mark.png" alt="" width={36} height={31} />
           <span className="hidden font-display text-xl tracking-[0.2em] sm:inline">VAYDIN</span>
         </a>
