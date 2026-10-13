@@ -70,14 +70,14 @@ function loadOrder(count: number): number[] {
 export function ScrubSequence({
   name,
   count,
-  phoneStep = 2,
+  step = 2,
   from = 0,
   to = 1,
   reverse = false,
 }: {
   name: string;
   count: number;
-  phoneStep?: number;
+  step?: number;
   from?: number;
   to?: number;
   reverse?: boolean;
@@ -136,7 +136,9 @@ export function ScrubSequence({
     if (!canvas || matchMedia(REDUCE).matches) return;
     const s = state.current;
     const phone = matchMedia(PHONE).matches;
-    const step = phone ? phoneStep : 1;
+    /* Every second frame on every screen: a frame then changes about every
+       88 px of scroll, which no wheel or trackpad shows, and the download
+       halves. A laptop's first pass through the city clip was 14 MB. */
     const indexes: number[] = [];
     for (let i = 0; i < count; i += step) indexes.push(i);
     if (indexes[indexes.length - 1] !== count - 1) indexes.push(count - 1);
@@ -272,7 +274,7 @@ export function ScrubSequence({
       drop();
       s.bytes = [];
     };
-  }, [name, count, phoneStep, reverse]);
+  }, [name, count, step, reverse]);
 
   return <canvas ref={canvasRef} className="scrub" aria-hidden="true" />;
 }
