@@ -32,6 +32,27 @@ export function firstScroll() {
   return scrolled;
 }
 
+/* One download per frame for the whole page. The city, the dive and the app
+   clips are each mounted twice (played forward, then back), and each mount
+   used to fetch its own copy: one cold first scroll carried 71 duplicate
+   frames on a wide screen, 87 on a phone. A second mount now awaits the
+   first one's bytes. A failed fetch is forgotten so a later pass can retry. */
+const frameBytes = new Map<string, Promise<Blob | undefined>>();
+function frameBlob(url: string): Promise<Blob | undefined> {
+  let p = frameBytes.get(url);
+  if (!p) {
+    p = fetch(url, { priority: "low" })
+      .then((res) => (res.ok ? res.blob() : undefined))
+      .catch(() => undefined)
+      .then((blob) => {
+        if (!blob) frameBytes.delete(url);
+        return blob;
+      });
+    frameBytes.set(url, p);
+  }
+  return p;
+}
+
 /* Every mounted sequence, so each one can start the download of the next
    in page order. The first clip starts the moment the page is up; the story
    then downloads itself in order while the visitor reads, so the first pass
@@ -217,16 +238,11 @@ export function ScrubSequence({
       for (const slot of loadOrder(s.total)) {
         if (!alive) return;
         if (s.bytes[slot]) continue;
-        try {
-          const file = String(indexes[slot] + 1).padStart(3, "0");
-          const res = await fetch(`/frames/${name}/${phone ? "m" : "d"}/${file}.webp`, { priority: "low" });
-          if (!res.ok) continue;
-          const blob = await res.blob();
-          if (!alive) return;
-          s.bytes[slot] = blob;
-        } catch {
-          continue;
-        }
+        const file = String(indexes[slot] + 1).padStart(3, "0");
+        const blob = await frameBlob(`/frames/${name}/${phone ? "m" : "d"}/${file}.webp`);
+        if (!alive) return;
+        if (!blob) continue;
+        s.bytes[slot] = blob;
         if (held) void make(slot, run);
       }
       fetching = false;
