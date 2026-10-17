@@ -30,8 +30,10 @@ export function Stage() {
   const [draft, setDraft] = useState("");
   /* True when the greeting clip could not play and her recording speaks instead. */
   const [spoken, setSpoken] = useState(false);
-  /* The bulb in flight: where it starts and where it lands, in page pixels. */
-  const [bulb, setBulb] = useState<{ x0: number; y0: number; x1: number; y1: number } | null>(null);
+  /* The bulb in flight, in page pixels: where it starts, where the clip's bulb
+     would be once it has left her frame (the page's bulb rides with it that
+     far, covering it as it crosses the edge), where it lands, and its width. */
+  const [bulb, setBulb] = useState<{ x0: number; y0: number; xm: number; ym: number; x1: number; y1: number; w: number } | null>(null);
   const thrown = useRef(false);
   const guide = useRef<GuideHandle>(null);
   const voice = useRef<Speaker | null>(null);
@@ -92,14 +94,24 @@ export function Stage() {
     guide.current?.opener().then((ok) => setSpoken(!ok));
   }
 
-  /* Her right hand throws the bulb at the mark; when it lands, the page lights. */
+  /* The bulb she tossed leaves her frame and flies on to the mark; when it lands, the page lights. */
   function throwBulb() {
     if (thrown.current) return;
     thrown.current = true;
-    const from = guide.current?.hand();
+    const from = guide.current?.exit();
     const mark = document.querySelector(".mark img")?.getBoundingClientRect();
     if (from && mark && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setBulb({ x0: from.x, y0: from.y, x1: mark.left + mark.width / 2, y1: mark.top + mark.height / 2 });
+      /* The clip's bulb drifts 0.03 widths left and 0.085 heights up in the 0.4 s it takes to leave the frame. */
+      const h = (from.width * 16) / 9;
+      setBulb({
+        x0: from.x,
+        y0: from.y,
+        xm: from.x - from.width * 0.03,
+        ym: from.y - h * 0.085,
+        x1: mark.left + mark.width / 2,
+        y1: mark.top + mark.height / 2,
+        w: from.width * 0.13,
+      });
       window.setTimeout(() => setBulb(null), BULB_FLIGHT * 1000 + 600);
       window.setTimeout(lightUp, BULB_FLIGHT * 1000);
     } else lightUp();
@@ -241,7 +253,17 @@ export function Stage() {
           aria-hidden="true"
           className="bulb"
           viewBox="0 0 24 34"
-          style={{ "--x0": `${bulb.x0}px`, "--y0": `${bulb.y0}px`, "--x1": `${bulb.x1}px`, "--y1": `${bulb.y1}px` } as React.CSSProperties}
+          style={
+            {
+              "--x0": `${bulb.x0}px`,
+              "--y0": `${bulb.y0}px`,
+              "--xm": `${bulb.xm}px`,
+              "--ym": `${bulb.ym}px`,
+              "--x1": `${bulb.x1}px`,
+              "--y1": `${bulb.y1}px`,
+              "--w": `${bulb.w}px`,
+            } as React.CSSProperties
+          }
         >
           <path d="M12 2a9 9 0 0 0-5 16.5V23h10v-4.5A9 9 0 0 0 12 2Z" fill="#f5d978" />
           <rect x="8" y="24" width="8" height="3" rx="1" fill="#c9a44a" />

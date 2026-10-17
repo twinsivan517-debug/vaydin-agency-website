@@ -73,6 +73,13 @@ body {
   filter: blur(3px);
 }
 
+/* The top band of her frame fades out, so the bulb she tosses leaves it
+   without a hard cut; her head stays below the band in every clip. */
+.guide-figure canvas {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 7%);
+  mask-image: linear-gradient(to bottom, transparent, #000 7%);
+}
+
 /* Her words, in a cloud by her head: a navy body, two bumps on its top
    edge, and a tail of two small puffs toward her. */
 .cloud {
@@ -116,24 +123,29 @@ body.site-asleep header {
   transition: filter 1.1s ease;
 }
 
-/* The bulb flies from her hand to the mark; then the mark burns, and stays lit. */
+/* The bulb flies on from the top of her frame to the mark, full size from the
+   first frame so it reads as the same bulb; then the mark burns, and stays lit. */
 .bulb {
   position: fixed;
   left: 0;
   top: 0;
   z-index: 40;
-  width: 30px;
-  height: 42px;
-  margin: -21px 0 0 -15px;
+  /* The glass is the top third of the drawing: that is what sits on the point. */
+  width: var(--w, 30px);
+  height: calc(var(--w, 30px) * 1.4);
+  margin: calc(var(--w, 30px) * -0.46) 0 0 calc(var(--w, 30px) * -0.5);
   pointer-events: none;
-  filter: drop-shadow(0 0 8px rgb(245 217 120 / 0.9));
-  animation: bulb-fly 0.9s cubic-bezier(0.25, 0.6, 0.35, 1) forwards;
+  filter: drop-shadow(0 0 12px rgb(245 217 120 / 0.95)) drop-shadow(0 0 28px rgb(245 217 120 / 0.6));
+  animation: bulb-fly 1s forwards;
 }
 
+/* The first 40%: with the clip's bulb, at its own pace, until it has left her
+   frame. The rest: a swing to the mark. */
 @keyframes bulb-fly {
-  0% { transform: translate(var(--x0), var(--y0)) scale(0.5) rotate(-40deg); opacity: 0.3; }
-  20% { opacity: 1; }
-  100% { transform: translate(var(--x1), var(--y1)) scale(1.1) rotate(15deg); opacity: 0; }
+  0% { transform: translate(var(--x0), var(--y0)) scale(1) rotate(-6deg); opacity: 1; animation-timing-function: linear; }
+  40% { transform: translate(var(--xm), var(--ym)) scale(1) rotate(-6deg); opacity: 1; animation-timing-function: cubic-bezier(0.4, 0, 0.5, 1); }
+  85% { opacity: 1; }
+  100% { transform: translate(var(--x1), var(--y1)) scale(1.1) rotate(12deg); opacity: 0; }
 }
 
 body.site-awake .mark img {

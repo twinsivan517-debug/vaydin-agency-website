@@ -15,11 +15,12 @@ export type Chapter = { id: ChapterId; label: string; clip: "opener" | "talk"; l
 export const OPENER_VIDEO = "/guide/opener.mp4";
 /* The same greeting as sound alone, for when the clip cannot play. */
 export const OPENER_AUDIO = "/voice/opener.mp3";
-/* The second of the waking clip at which her hand throws the bulb; it lands
-   on the mark `BULB_FLIGHT` later and the page lights up. Measured on the
-   recording. */
-export const THROW_AT = 9.4;
-export const BULB_FLIGHT = 0.9;
+/* The second of the waking clip at which the page's own bulb takes over from
+   the one she tossed (in her hand from 9.4, released at 10.4, out of the frame
+   by 11.2, measured on the frames and the keyed canvas); it lands on the mark
+   `BULB_FLIGHT` later, when the page lights up. */
+export const THROW_AT = 10.8;
+export const BULB_FLIGHT = 1;
 
 /* In the cloud while she sleeps. Not spoken: no sound may start before a tap. */
 export const SLEEPING: Line = { id: "00", text: "Zzz… Tap me to wake me up." };

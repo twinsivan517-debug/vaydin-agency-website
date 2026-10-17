@@ -13,8 +13,10 @@ import { OPENER_VIDEO, type Mood } from "@/lib/pitch";
 
 export type Mode = "sleep" | "idle" | "talk" | "opener";
 /* `opener()` resolves true once the clip is playing, false if it cannot;
-   `hand()` is where her right hand is on screen, for the bulb she throws. */
-export type GuideHandle = { opener(): Promise<boolean>; hand(): { x: number; y: number } | null };
+   `exit()` is where the bulb she tossed is at `THROW_AT` (read off the keyed
+   canvas), in page pixels, with her frame's width so the page's bulb can match
+   the clip's in size. */
+export type GuideHandle = { opener(): Promise<boolean>; exit(): { x: number; y: number; width: number } | null };
 type Clip = Mode;
 type Props = {
   mode: Mode;
@@ -83,7 +85,18 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         video.muted = false;
         video.currentTime = 0;
         const started = video.play().then(
-          () => true,
+          () => {
+            /* The clip's time once per shown frame, where the browser has it;
+               `timeupdate` alone ticks every quarter second, too coarse for
+               the bulb to leave her frame on the frame it does. */
+            const tick = (_now: number, frame: { mediaTime: number }) => {
+              if (video.paused || video.ended) return;
+              latest.current.onOpenerTime(frame.mediaTime);
+              video.requestVideoFrameCallback(tick);
+            };
+            if ("requestVideoFrameCallback" in video) video.requestVideoFrameCallback(tick);
+            return true;
+          },
           () => false,
         );
         if (!stillRef.current && current.current) swap("opener");
@@ -92,9 +105,9 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
           return ok;
         });
       },
-      hand() {
+      exit() {
         const box = figure.current?.getBoundingClientRect();
-        return box ? { x: box.left + box.width * 0.72, y: box.top + box.height * 0.42 } : null;
+        return box ? { x: box.left + box.width * 0.18, y: box.top + box.height * 0.07, width: box.width } : null;
       },
     }),
     [make, swap],
