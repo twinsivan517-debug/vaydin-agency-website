@@ -60,6 +60,22 @@ def stale(ids: list[str], manifest: dict, base_sha: str) -> list[str]:
     return out
 
 
+LOCK = LAB / "running.lock"
+
+
+def hold_lock() -> None:
+    """One run at a time: Wav2Lip writes one shared temp/result.avi in its checkout."""
+    while True:
+        try:
+            fd = os.open(LOCK, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            os.write(fd, str(os.getpid()).encode())
+            os.close(fd)
+            return
+        except FileExistsError:
+            print(f"waiting: another run holds {LOCK}", flush=True)
+            time.sleep(20)
+
+
 def run_one(i: str, work: Path) -> float:
     wav = work / f"{i}.wav"
     raw = work / f"{i}.raw.mp4"
@@ -95,13 +111,17 @@ def main(argv: list[str]) -> int:
         print("\n".join(ids) if ids else "nothing stale")
         return 0
     print(f"{len(ids)} line(s) to make", flush=True)
-    with tempfile.TemporaryDirectory() as tmp:
-        for n, i in enumerate(ids, 1):
-            took = run_one(i, Path(tmp))
-            manifest[i] = {"audio": sha(VOICE / f"{i}.mp3"), "base": base_sha, "model": MODEL}
-            MANIFEST.write_text(json.dumps(manifest, indent=1, sort_keys=True) + "\n")
-            size = (OUT / f"{i}.mp4").stat().st_size // 1024
-            print(f"[{n}/{len(ids)}] {i}: {took:.0f} s, {size} KB", flush=True)
+    hold_lock()
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            for n, i in enumerate(ids, 1):
+                took = run_one(i, Path(tmp))
+                manifest[i] = {"audio": sha(VOICE / f"{i}.mp3"), "base": base_sha, "model": MODEL}
+                MANIFEST.write_text(json.dumps(manifest, indent=1, sort_keys=True) + "\n")
+                size = (OUT / f"{i}.mp4").stat().st_size // 1024
+                print(f"[{n}/{len(ids)}] {i}: {took:.0f} s, {size} KB", flush=True)
+    finally:
+        LOCK.unlink(missing_ok=True)
     return 0
 
 
