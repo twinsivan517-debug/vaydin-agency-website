@@ -141,6 +141,29 @@ body.site-awake .mark img {
   transition: filter 0.6s ease;
 }
 
+/* A wide pool of light behind the mark once she has lit it. */
+.mark {
+  position: relative;
+}
+
+.mark::before {
+  content: "";
+  position: absolute;
+  left: -2.5rem;
+  top: -3rem;
+  width: 8rem;
+  height: 7rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(245 217 120 / 0.45), rgb(245 217 120 / 0.12) 45%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.9s ease;
+  pointer-events: none;
+}
+
+body.site-awake .mark::before {
+  opacity: 1;
+}
+
 @keyframes mark-glow {
   0% { filter: drop-shadow(0 0 0 rgb(245 217 120 / 0)); }
   30% { filter: drop-shadow(0 0 26px rgb(245 217 120 / 1)) drop-shadow(0 0 60px rgb(245 217 120 / 0.8)) brightness(2); }
