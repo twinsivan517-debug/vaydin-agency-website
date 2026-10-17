@@ -18,7 +18,7 @@ export const OPENER_AUDIO = "/voice/opener.mp3";
 /* The second of the waking clip at which her hand throws the bulb; it lands
    on the mark `BULB_FLIGHT` later and the page lights up. Measured on the
    recording. */
-export const THROW_AT = 7.0;
+export const THROW_AT = 9.4;
 export const BULB_FLIGHT = 0.9;
 
 /* In the cloud while she sleeps. Not spoken: no sound may start before a tap. */

@@ -404,3 +404,16 @@ Source files live in `media/stills/guide-*` and `media/clips/guide-*` and `media
 - Measured: the throw at 7.0 s, "There." at 8.2 s. These are `THROW_AT` and line 01's `at`.
 - Web files: `public/voice/opener.mp3` (the fallback when the clip cannot play), `02.mp3`,
   `w1.mp3`, `g1.mp3`.
+
+## C2 — the slow waking clip
+
+- Date 2026-10-17 · Seedance 2.0 mini · 9:16 · 720p · 15 s · 15 credits · job `6c7e1942`
+- Start = G2 (asleep), end = G1 option 2 (standing), audio reference = the assembled greeting
+  (`b03a8c88`), preset "IN THE DARK" declined
+- What came back (sheet `media/clips/guide-opener2-sheet.jpg`): asleep; stirs; a long yawn with
+  both arms up; sits, rubs her eyes; rises; a glowing bulb in her right hand at 9 s, thrown up
+  at about 9.4 s; speaks; settles into the standing pose.
+- The throw landed later than the recording's pause (7.0 s), so the page's bulb and the chime
+  moved to her hand: `THROW_AT` 9.4, chime at 10.3 s mixed softly under her words.
+- Web file `public/guide/opener.mp4`: 720x1280, crf 25, with the greeting as AAC mono.
+- Verdict: OWED, the owner's eye on the page.
