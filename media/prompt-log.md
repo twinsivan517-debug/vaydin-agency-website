@@ -319,3 +319,20 @@ Stills: GPT Image 2.5 (flare) · high · 2K · 16:9 · 2.75 credits. Clips: Mini
 - Gates: no cut PASS · he taps the screen PASS (with a finger of his other hand) · the emblem keeps its shape PASS · ends on the splash PASS. Played backwards after the app screen to return to his face.
 
 Sixth round credits: 1 still x 2.75 and 3 clips x 10 = 32.75, no second takes (balance 273.42 to 240.67, read after). Running total 229.5.
+
+---
+
+# The guide
+
+Source files live in `media/stills/guide-*` and `media/clips/guide-*` and `media/voice/`
+(not in git). The look is the Promed demo's illustrated 3D style, the owner's pick
+2026-10-17 from two references; the voice is Helena (ElevenLabs v4 through Higgsfield).
+
+## G1 — her still, three variants
+
+- Date 2026-10-17 · GPT Image 2.5 · high · 2K · 2:3 · no reference
+- Jobs `2cab41d5` (option 1), `0b25996f` (option 2), `5209b8a9` (option 3) · 2.75 credits each, 8.25 in all
+- Prompt:
+  > A polished stylised 3D-rendered character, in the look of a modern animated film or high-end game cinematic: smooth soft skin shading, slightly enlarged friendly eyes, realistic proportions. A warm, confident woman in her early thirties with Middle Eastern features, long dark glossy hair with soft waves falling past her shoulders, a gentle welcoming smile, small gold stud earrings. She wears an elegant tailored charcoal-black blazer over a simple cream top, tailored black trousers, a thin gold necklace and dark low-heeled shoes: the look of a premium concierge in Dubai, not a doctor, no uniform, no badge. Full body visible from head to feet, standing upright facing the camera, relaxed and welcoming, one hand slightly open at her side as if about to explain something, both arms clearly away from the body. Soft studio lighting from the front with a faint warm gold rim light. The background is one perfectly flat, uniform pure chroma-key green (#00FF00) with no floor, no shadow, no gradient and no objects. No text, no logos, no name tag.
+- Gates: flat green PASS/FAIL per option · full body, feet visible · arms off the body · no text
+- Verdict: OWED, the owner's pick.

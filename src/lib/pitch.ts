@@ -13,7 +13,7 @@ export type Chapter = { id: ChapterId; label: string; clip: "opener" | "talk"; l
 export const OPENER_VIDEO = "/guide/opener.mp4";
 
 /* In the cloud while she sleeps. Not spoken: no sound may start before a tap. */
-export const SLEEPING: Line = { id: "00", text: "Tap me to wake me up." };
+export const SLEEPING: Line = { id: "00", text: "Zzz… Tap me to wake me up." };
 
 export const CHAPTERS: Chapter[] = [
   {

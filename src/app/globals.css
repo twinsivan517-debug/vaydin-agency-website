@@ -95,6 +95,22 @@ body {
   100% { transform: scale(1); }
 }
 
+/* The letters over her while she sleeps rise and fade, one after another. */
+@keyframes zzz {
+  0% { opacity: 0; transform: translate(0, 0.4rem) scale(0.8); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translate(0.6rem, -1.6rem) scale(1.15); }
+}
+
+.guide-zzz i {
+  display: inline-block;
+  opacity: 0;
+  margin-left: 0.1rem;
+}
+
+.guide-zzz i:nth-child(2) { font-size: 1.15em; }
+.guide-zzz i:nth-child(3) { font-size: 1.35em; }
+
 @keyframes cta-lit {
   0%, 100% { box-shadow: 0 0 0 0 rgb(245 217 120 / 0); }
   50% { box-shadow: 0 0 0 0.5rem rgb(245 217 120 / 0.35); }
@@ -119,11 +135,22 @@ body {
   .cta-lit > a {
     animation: cta-lit 1.2s ease-in-out 3;
   }
+
+  .guide-zzz i {
+    animation: zzz 2.4s ease-out infinite;
+  }
+
+  .guide-zzz i:nth-child(2) { animation-delay: 0.8s; }
+  .guide-zzz i:nth-child(3) { animation-delay: 1.6s; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .guide-zzz i {
+    opacity: 0.8;
   }
 }
 
