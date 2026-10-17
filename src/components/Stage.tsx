@@ -11,7 +11,7 @@ import { Card } from "@/components/Card";
 import { Guide, type GuideHandle } from "@/components/Guide";
 import { type Answer } from "@/lib/answers";
 import { match } from "@/lib/match";
-import { OPENER_AUDIO, POKES, QUESTIONS, STANDS_AT, chapter, talkTime, type ChapterId } from "@/lib/pitch";
+import { BULB_FLIGHT, OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, chapter, talkTime, type ChapterId } from "@/lib/pitch";
 import { START, mode, pokeable, reduce, speaking } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
 import { WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
@@ -30,6 +30,9 @@ export function Stage() {
   const [draft, setDraft] = useState("");
   /* True when the greeting clip could not play and her recording speaks instead. */
   const [spoken, setSpoken] = useState(false);
+  /* The bulb in flight: where it starts and where it lands, in page pixels. */
+  const [bulb, setBulb] = useState<{ x0: number; y0: number; x1: number; y1: number } | null>(null);
+  const thrown = useRef(false);
   const guide = useRef<GuideHandle>(null);
   const voice = useRef<Speaker | null>(null);
   const pokes = useRef({ count: 0, at: 0 });
@@ -40,22 +43,6 @@ export function Stage() {
     document.body.classList.add("site-asleep");
     return () => document.body.classList.remove("site-asleep", "site-awake");
   }, []);
-
-  /* The greeting as sound alone, when its clip is missing or refused. */
-  useEffect(() => {
-    if (state.phase !== "opener" || !spoken) return;
-    const sound = voice.current;
-    if (!sound) return;
-    let live = true;
-    lightUp();
-    sound
-      .say(OPENER_AUDIO, (seconds) => live && dispatch({ type: "cloud_at", seconds }))
-      .then((outcome) => live && outcome !== "stopped" && dispatch({ type: "line_ended" }));
-    return () => {
-      live = false;
-      sound.stop();
-    };
-  }, [state.phase, state.run, spoken]);
 
   /* A line's sound; when it cannot play, the words stay up for reading time. */
   const { phase, run, cloud, lines, line: lineAt } = state;
@@ -100,8 +87,22 @@ export function Stage() {
 
   function wake() {
     unlock();
+    thrown.current = false;
     dispatch({ type: "tap", chapter: "meet" });
     guide.current?.opener().then((ok) => setSpoken(!ok));
+  }
+
+  /* Her right hand throws the bulb at the mark; when it lands, the page lights. */
+  function throwBulb() {
+    if (thrown.current) return;
+    thrown.current = true;
+    const from = guide.current?.hand();
+    const mark = document.querySelector(".mark img")?.getBoundingClientRect();
+    if (from && mark && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setBulb({ x0: from.x, y0: from.y, x1: mark.left + mark.width / 2, y1: mark.top + mark.height / 2 });
+      window.setTimeout(() => setBulb(null), BULB_FLIGHT * 1000 + 600);
+      window.setTimeout(lightUp, BULB_FLIGHT * 1000);
+    } else lightUp();
   }
 
   function tap(id: ChapterId) {
@@ -132,6 +133,25 @@ export function Stage() {
     dispatch({ type: "poke", index: count });
   }
 
+  /* The greeting as sound alone, when its clip is missing or refused. */
+  useEffect(() => {
+    if (state.phase !== "opener" || !spoken) return;
+    const sound = voice.current;
+    if (!sound) return;
+    let live = true;
+    sound
+      .say(OPENER_AUDIO, (seconds) => {
+        if (!live) return;
+        if (seconds >= THROW_AT) throwBulb();
+        dispatch({ type: "cloud_at", seconds });
+      })
+      .then((outcome) => live && outcome !== "stopped" && dispatch({ type: "line_ended" }));
+    return () => {
+      live = false;
+      sound.stop();
+    };
+  }, [state.phase, state.run, spoken]);
+
   function submit(event: FormEvent) {
     event.preventDefault();
     const text = draft.trim();
@@ -151,7 +171,7 @@ export function Stage() {
             mood={state.phase === "quip" ? (state.cloud.mood ?? null) : null}
             pokeable={pokeable(state)}
             onOpenerTime={(seconds) => {
-              if (seconds >= STANDS_AT) lightUp();
+              if (seconds >= THROW_AT) throwBulb();
               dispatch({ type: "cloud_at", seconds });
             }}
             onOpenerEnd={() => dispatch({ type: "line_ended" })}
@@ -215,6 +235,19 @@ export function Stage() {
           </p>
         </div>
       </div>
+
+      {bulb && (
+        <svg
+          aria-hidden="true"
+          className="bulb"
+          viewBox="0 0 24 34"
+          style={{ "--x0": `${bulb.x0}px`, "--y0": `${bulb.y0}px`, "--x1": `${bulb.x1}px`, "--y1": `${bulb.y1}px` } as React.CSSProperties}
+        >
+          <path d="M12 2a9 9 0 0 0-5 16.5V23h10v-4.5A9 9 0 0 0 12 2Z" fill="#f5d978" />
+          <rect x="8" y="24" width="8" height="3" rx="1" fill="#c9a44a" />
+          <rect x="9" y="28" width="6" height="3" rx="1" fill="#c9a44a" />
+        </svg>
+      )}
 
       <div className={`hero-bar wakes sticky bottom-0 -mx-5 mt-6 flex flex-wrap gap-3 border-t border-gold/15 bg-background/95 px-5 py-3 backdrop-blur sm:-mx-12 sm:px-12 ${state.lit ? "cta-lit" : ""}`}>
         <a href={WHATSAPP} className="rounded-full bg-gold-bright px-6 py-3 text-base font-medium text-background">

@@ -7,7 +7,8 @@ import { CHAPTERS, POKES, SLEEPING } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
 
 const run = (events: Event[], from: State = START) => events.reduce(reduce, from);
-const awake = run([{ type: "wake" }, { type: "line_ended" }]);
+/* The greeting: the clip (two timed lines), then its spoken third line, then rest. */
+const awake = run([{ type: "wake" }, { type: "line_ended" }, { type: "line_ended" }]);
 
 let cases = 0;
 const check = (name: string, test: () => void) => {
@@ -24,7 +25,7 @@ check("she sleeps as the page opens, and a tap on her wakes her into the greetin
   const woken = run([{ type: "wake" }]);
   assert.equal(woken.phase, "opener");
   assert.equal(mode(woken), "opener");
-  assert.equal(woken.cloud.id, "01");
+  assert.equal(woken.cloud.id, "00b");
   assert.deepEqual(woken.shown, { kind: "chapter", id: "meet" });
   assert.equal(run([{ type: "poke", index: 0 }]).phase, "opener");
   assert.equal(run([{ type: "wake" }], awake), awake);
@@ -39,7 +40,11 @@ check("a chapter chip or a question also wakes her, straight into the answer", (
   assert.equal(price.cloud.id, "a-price");
 });
 
-check("the greeting's end means she is met; the Hello chip replays it", () => {
+check("the clip's end hands over to the greeting's spoken line; its end means she is met", () => {
+  const clipDone = run([{ type: "wake" }, { type: "line_ended" }]);
+  assert.equal(clipDone.phase, "talking");
+  assert.equal(clipDone.cloud.id, "02");
+  assert.equal(clipDone.met, true);
   assert.equal(awake.phase, "done");
   assert.equal(awake.met, true);
   const again = run([{ type: "tap", chapter: "meet" }], awake);
@@ -47,12 +52,13 @@ check("the greeting's end means she is met; the Hello chip replays it", () => {
   assert.equal(again.run, awake.run + 1);
 });
 
-check("the opener's clock moves the cloud to line 2, never back", () => {
+check("the opener's clock moves the cloud through its three lines, never back", () => {
   const woken = run([{ type: "wake" }]);
-  assert.equal(run([{ type: "cloud_at", seconds: 1 }], woken).cloud.id, "01");
-  const second = run([{ type: "cloud_at", seconds: 5 }], woken);
-  assert.equal(second.cloud.id, "02");
-  assert.equal(run([{ type: "cloud_at", seconds: 5.1 }], second), second);
+  assert.equal(run([{ type: "cloud_at", seconds: 1 }], woken).cloud.id, "00b");
+  const second = run([{ type: "cloud_at", seconds: 9 }], woken);
+  assert.equal(second.cloud.id, "01");
+  assert.equal(run([{ type: "cloud_at", seconds: 9.1 }], second), second);
+  assert.equal(run([{ type: "cloud_at", seconds: 40 }], second).cloud.id, "01");
 });
 
 check("a chapter plays its lines in order, shows its card, then rests", () => {
@@ -131,6 +137,7 @@ check("stop returns to rest; stopping the greeting still counts as met", () => {
   assert.equal(run([{ type: "stop" }], see).phase, "done");
   const stopped = run([{ type: "wake" }, { type: "stop" }]);
   assert.equal(stopped.phase, "done");
+  assert.equal(stopped.phase, "done");
   assert.equal(stopped.met, true);
   assert.equal(run([{ type: "stop" }], awake), awake);
   assert.equal(run([{ type: "stop" }]), START);
@@ -138,9 +145,9 @@ check("stop returns to rest; stopping the greeting still counts as met", () => {
 
 check("every line has a sound or a time, the five questions cover eleven lines, every card links somewhere", () => {
   const ids = CHAPTERS.flatMap((c) => c.lines.map((l) => l.id));
-  assert.deepEqual(ids, ["01", "02", "w1", "07", "08", "g1", "10", "a-need", "a-time", "a-price", "a-cancel"]);
+  assert.deepEqual(ids, ["00b", "01", "02", "w1", "07", "08", "g1", "10", "a-need", "a-time", "a-price", "a-cancel"]);
   for (const c of CHAPTERS) {
-    for (const l of c.lines) assert.ok(c.clip === "opener" ? l.at !== undefined : l.audio, l.id);
+    for (const l of c.lines) assert.ok(l.at !== undefined || l.audio, l.id);
     assert.ok(c.card.links.length > 0 && c.card.facts.length > 0, c.id);
   }
   for (const p of POKES) assert.ok(p.audio && p.mood, p.id);

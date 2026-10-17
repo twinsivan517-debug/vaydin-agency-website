@@ -391,3 +391,16 @@ Source files live in `media/stills/guide-*` and `media/clips/guide-*` and `media
 - Gates: flat green · first frame = last frame on each loop · lips on the words · she ends
   standing in option 2's pose
 - Verdict: **kept, all four, the owner's word 2026-10-17** ("keep all for now"); he asked for a slower waking (yawn, "it's so dark", a clap, the logo lights) as a new clip, and for her to look sharper: the web files were re-encoded at the clips' full 720x1280.
+
+## V3 — the slow waking greeting, and the two new question lines
+
+- Date 2026-10-17 · Eleven v4 · Helena · jobs: greeting `f4882355` (three turns, 1.15),
+  w1 `1c4396b5` (0.92), g1 `de71d4d9` (0.92)
+- The greeting as the clip hears it (`media/voice/opener2.mp3`, 14.45 s): 2.5 s of silence
+  for her stretch, "Mmm... hi. It's so dark in here.", a 1.4 s pause for the throw with a
+  soft chime synthesised in ffmpeg at its landing (7.9 s), then "There. Thank you for waking
+  me. I'm Vaydin's voice." The third turn, "Pick a question or ask me anything...", is cut
+  out as its own line (`public/voice/02.mp3`) and spoken on the talk loop after the clip.
+- Measured: the throw at 7.0 s, "There." at 8.2 s. These are `THROW_AT` and line 01's `at`.
+- Web files: `public/voice/opener.mp3` (the fallback when the clip cannot play), `02.mp3`,
+  `w1.mp3`, `g1.mp3`.

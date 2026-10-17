@@ -15,8 +15,11 @@ export type Chapter = { id: ChapterId; label: string; clip: "opener" | "talk"; l
 export const OPENER_VIDEO = "/guide/opener.mp4";
 /* The same greeting as sound alone, for when the clip cannot play. */
 export const OPENER_AUDIO = "/voice/opener.mp3";
-/* The second of the waking clip at which she stands: the page lights up then. */
-export const STANDS_AT = 5.5;
+/* The second of the waking clip at which her hand throws the bulb; it lands
+   on the mark `BULB_FLIGHT` later and the page lights up. Measured on the
+   recording. */
+export const THROW_AT = 7.0;
+export const BULB_FLIGHT = 0.9;
 
 /* In the cloud while she sleeps. Not spoken: no sound may start before a tap. */
 export const SLEEPING: Line = { id: "00", text: "Zzz… Tap me to wake me up." };
@@ -27,8 +30,13 @@ export const CHAPTERS: Chapter[] = [
     label: "Hello",
     clip: "opener",
     lines: [
-      { id: "01", text: "Thank you for waking me. I'm Vaydin's voice.", at: 0 },
-      { id: "02", text: "Pick a question or ask me anything, and I'll show you how patients find a clinic, and how a clinic loses them without ever knowing.", at: 3.25 },
+      { id: "00b", text: "Mmm… hi. It's so dark in here.", at: 0 },
+      { id: "01", text: "There. Thank you for waking me. I'm Vaydin's voice.", at: 8.2 },
+      {
+        id: "02",
+        text: "Pick a question or ask me anything, and I'll show you how patients find a clinic, and how a clinic loses them without ever knowing.",
+        audio: "/voice/02.mp3",
+      },
     ],
     card: {
       title: "Vaydin · Dubai",

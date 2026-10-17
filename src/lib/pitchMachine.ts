@@ -80,7 +80,12 @@ export function reduce(s: State, e: Event): State {
       return speak(s, [UNKNOWN], { kind: "unknown" }, null);
     }
     case "line_ended": {
-      if (s.phase === "opener") return { ...s, phase: "done", met: true };
+      if (s.phase === "opener") {
+        /* The clip carries the lines with a time; any line with a sound of its own follows it. */
+        const next = s.lines.findIndex((l) => l.audio);
+        if (next >= 0) return { ...s, phase: "talking", line: next, cloud: s.lines[next], met: true };
+        return { ...s, phase: "done", met: true };
+      }
       if (s.phase === "quip") return { ...s, phase: s.met ? "done" : "idle" };
       if (s.phase !== "talking") return s;
       const next = s.line + 1;
@@ -90,7 +95,7 @@ export function reduce(s: State, e: Event): State {
     case "cloud_at": {
       if (s.phase !== "opener") return s;
       let i = 0;
-      for (let k = 0; k < s.lines.length; k++) if ((s.lines[k].at ?? 0) <= e.seconds) i = k;
+      for (let k = 0; k < s.lines.length; k++) if (s.lines[k].at !== undefined && s.lines[k].at! <= e.seconds) i = k;
       return i === s.line ? s : { ...s, line: i, cloud: s.lines[i] };
     }
     case "poke": {

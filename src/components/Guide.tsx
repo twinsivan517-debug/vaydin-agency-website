@@ -12,8 +12,9 @@ import { painter, type Layer } from "@/lib/chroma";
 import { OPENER_VIDEO, type Mood } from "@/lib/pitch";
 
 export type Mode = "sleep" | "idle" | "talk" | "opener";
-/* `opener()` resolves true once the clip is playing, false if it cannot. */
-export type GuideHandle = { opener(): Promise<boolean> };
+/* `opener()` resolves true once the clip is playing, false if it cannot;
+   `hand()` is where her right hand is on screen, for the bulb she throws. */
+export type GuideHandle = { opener(): Promise<boolean>; hand(): { x: number; y: number } | null };
 type Clip = Mode;
 type Props = {
   mode: Mode;
@@ -90,6 +91,10 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
           if (!ok && !stillRef.current) swap("talk");
           return ok;
         });
+      },
+      hand() {
+        const box = figure.current?.getBoundingClientRect();
+        return box ? { x: box.left + box.width * 0.72, y: box.top + box.height * 0.42 } : null;
       },
     }),
     [make, swap],
