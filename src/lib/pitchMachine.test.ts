@@ -31,7 +31,7 @@ check("she sleeps as the page opens, and a tap on her wakes her into the greetin
 });
 
 check("a chapter chip or a question also wakes her, straight into the answer", () => {
-  const see = run([{ type: "tap", chapter: "see" }]);
+  const see = run([{ type: "tap", chapter: "found" }]);
   assert.equal(see.phase, "talking");
   assert.equal(see.cloud.id, "03");
   const price = run([{ type: "ask", reply: match("price") }]);
@@ -56,34 +56,34 @@ check("the opener's clock moves the cloud to line 2, never back", () => {
 });
 
 check("a chapter plays its lines in order, shows its card, then rests", () => {
-  const see = run([{ type: "tap", chapter: "see" }], awake);
+  const see = run([{ type: "tap", chapter: "found" }], awake);
   assert.equal(see.phase, "talking");
   assert.equal(mode(see), "talk");
-  assert.deepEqual(see.shown, { kind: "chapter", id: "see" });
+  assert.deepEqual(see.shown, { kind: "chapter", id: "found" });
   const second = run([{ type: "line_ended" }], see);
   assert.equal(second.cloud.id, "04");
   assert.equal(second.run, see.run);
   const rest = run([{ type: "line_ended" }], second);
   assert.equal(rest.phase, "done");
-  assert.equal(rest.chapter, "see");
+  assert.equal(rest.chapter, "found");
   assert.equal(rest.lit, false);
 });
 
 check("tapping another chip mid-line restarts with a new run; the same chip replays", () => {
-  const see = run([{ type: "tap", chapter: "see" }, { type: "line_ended" }], awake);
-  const fix = run([{ type: "tap", chapter: "fix" }], see);
-  assert.equal(fix.chapter, "fix");
+  const see = run([{ type: "tap", chapter: "found" }, { type: "line_ended" }], awake);
+  const fix = run([{ type: "tap", chapter: "fixed" }], see);
+  assert.equal(fix.chapter, "fixed");
   assert.equal(fix.line, 0);
   assert.equal(fix.run, see.run + 1);
-  const again = run([{ type: "tap", chapter: "fix" }], fix);
+  const again = run([{ type: "tap", chapter: "fixed" }], fix);
   assert.equal(again.run, fix.run + 1);
-  assert.equal(again.cloud.id, "05");
+  assert.equal(again.cloud.id, "07");
 });
 
 check("the last chapter lights the buttons; the next tap puts them out", () => {
   const lit = run([{ type: "tap", chapter: "start" }, { type: "line_ended" }], awake);
   assert.equal(lit.lit, true);
-  assert.equal(run([{ type: "tap", chapter: "see" }], lit).lit, false);
+  assert.equal(run([{ type: "tap", chapter: "found" }], lit).lit, false);
 });
 
 check("a question is answered aloud and on the card; a tie asks; a miss hands over", () => {
@@ -105,6 +105,8 @@ check("the matcher finds the obvious ones and keeps a greeting apart", () => {
     return r.kind === "answer" ? r.answer.id : r.kind;
   };
   assert.equal(hit("What is the diagnostic?"), "diagnostic");
+  assert.equal(hit("can I cancel the contract"), "cancel");
+  assert.equal(hit("why not just use chatgpt"), "chatgpt");
   assert.equal(hit("do you run instagram ads"), "ads");
   assert.equal(hit("where are you based"), "where");
   assert.equal(hit("is this a chatbot"), "bot");
@@ -121,11 +123,11 @@ check("pokes only while she rests awake, and they escalate to the last quip", ()
   assert.equal(run([{ type: "poke", index: 1 }], quip), quip);
   assert.equal(run([{ type: "line_ended" }], quip).phase, "done");
   assert.equal(run([{ type: "poke", index: 9 }], awake).cloud.id, POKES[POKES.length - 1].id);
-  assert.equal(run([{ type: "poke", index: 0 }], run([{ type: "tap", chapter: "see" }], awake)).phase, "talking");
+  assert.equal(run([{ type: "poke", index: 0 }], run([{ type: "tap", chapter: "found" }], awake)).phase, "talking");
 });
 
 check("stop returns to rest; stopping the greeting still counts as met", () => {
-  const see = run([{ type: "tap", chapter: "see" }], awake);
+  const see = run([{ type: "tap", chapter: "found" }], awake);
   assert.equal(run([{ type: "stop" }], see).phase, "done");
   const stopped = run([{ type: "wake" }, { type: "stop" }]);
   assert.equal(stopped.phase, "done");
@@ -134,9 +136,9 @@ check("stop returns to rest; stopping the greeting still counts as met", () => {
   assert.equal(run([{ type: "stop" }]), START);
 });
 
-check("every line has a sound or a time, chapters cover all ten, every card links somewhere", () => {
+check("every line has a sound or a time, chapters cover all eleven, every card links somewhere", () => {
   const ids = CHAPTERS.flatMap((c) => c.lines.map((l) => l.id));
-  assert.deepEqual(ids, ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"]);
+  assert.deepEqual(ids, ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"]);
   for (const c of CHAPTERS) {
     for (const l of c.lines) assert.ok(c.clip === "opener" ? l.at !== undefined : l.audio, l.id);
     assert.ok(c.card.links.length > 0 && c.card.facts.length > 0, c.id);

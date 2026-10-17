@@ -52,7 +52,6 @@ export function Card({ shown, onPick }: { shown: Shown; onPick: (a: Answer) => v
         <a href={a.link.href} className={`${LINK} mt-4`}>
           {a.link.label}
         </a>
-        <p className="mt-4 text-xs text-muted">From vaydin.agency{a.source}</p>
       </div>
     );
   }

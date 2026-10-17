@@ -336,3 +336,43 @@ Source files live in `media/stills/guide-*` and `media/clips/guide-*` and `media
   > A polished stylised 3D-rendered character, in the look of a modern animated film or high-end game cinematic: smooth soft skin shading, slightly enlarged friendly eyes, realistic proportions. A warm, confident woman in her early thirties with Middle Eastern features, long dark glossy hair with soft waves falling past her shoulders, a gentle welcoming smile, small gold stud earrings. She wears an elegant tailored charcoal-black blazer over a simple cream top, tailored black trousers, a thin gold necklace and dark low-heeled shoes: the look of a premium concierge in Dubai, not a doctor, no uniform, no badge. Full body visible from head to feet, standing upright facing the camera, relaxed and welcoming, one hand slightly open at her side as if about to explain something, both arms clearly away from the body. Soft studio lighting from the front with a faint warm gold rim light. The background is one perfectly flat, uniform pure chroma-key green (#00FF00) with no floor, no shadow, no gradient and no objects. No text, no logos, no name tag.
 - Gates: flat green PASS/FAIL per option · full body, feet visible · arms off the body · no text
 - Verdict: OWED, the owner's pick.
+
+- Verdict: **option 2 (`0b25996f`) chosen by the owner, 2026-10-17.** Options 1 and 3 kept in `media/stills/` as alternates.
+
+## G2 — her sleeping picture
+
+- Date 2026-10-17 · GPT Image 2.5 · high · 2K · 2:3 · reference = G1 option 2 (`0b25996f`)
+- Job `2413a14f` · 2.75 credits
+- Prompt:
+  > The exact same character as the reference image: the same face, the same long dark wavy hair, the same charcoal-black blazer, cream top, black trousers, thin gold necklace, gold stud earrings and dark heeled shoes, in the same polished stylised 3D animated-film render style. She is now fast asleep, lying on her side on the floor, curled up comfortably, knees drawn up a little, her head resting on her folded arm, eyes closed, a peaceful soft smile, hair spread loosely. She lies along the bottom third of the frame, seen from slightly above and in front, her whole body visible from head to shoes, nothing cropped. There is no pillow, no blanket, no floor drawn, no shadow and no object: the entire background, including under and around her, is one perfectly flat, uniform pure chroma-key green (#00FF00). No text, no logos.
+- Gates: same person PASS · flat green PASS · nothing cropped PASS · eyes closed PASS
+- Verdict: **approved by the owner, 2026-10-17.** Her name on the page: "Vaydin's voice"; prices are spoken aloud, his word the same day.
+
+## V1 — the voice sample
+
+- Date 2026-10-17 · Eleven v4 (ElevenLabs through Higgsfield) · voice Helena, preset `3c2b83c0`
+- Job `1518f92d` · 0.46 credits · line 01: "Thank you for waking me. I'm Vaydin's voice."
+- File `media/voice/sample-01-helena.mp3`
+- Verdict: OWED, the owner's ear. The two greeting lines as one take were quoted at 0.92.
+
+- Verdict: **Helena approved by the owner's ear, 2026-10-17.**
+
+## V2 — every line, draft 3
+
+- Date 2026-10-17 · Eleven v4 · Helena, preset `3c2b83c0` · 34 recordings: the two greeting
+  lines as one take (`opener.mp3`, 11.4 s, the lip-sync reference), lines 03 to 11, six
+  pokes, fifteen answers, three fixed replies
+- Jobs: 04 `71cda473` · 05 `d967e6c4` · 06 `27c8b74b` · 07 `bbc847dc` · 11 `9197d7e3` ·
+  opener `ab4751fb` · 03 `ac0e3696` · 08 `709ccdc2` · 09 `4ebb6200` · 10 `a32d61e1` ·
+  poke-1 `18664ae8` · poke-2 `391be1d2` · poke-3 `7d36f1d1` · poke-4 `c7403514` ·
+  poke-5 `f34b77b2` · poke-6 `8b997797` · a-price `c4bb7b65` · a-diagnostic `9ebef9e0` ·
+  a-engine `f7734847` · a-bot `3e02423f` · a-time `7fffa538` · a-where `bf412fcf` ·
+  a-who `80bf295f` · a-ads `ee4656cb` · a-proof `815b32a1` · a-need `8378eaa7` ·
+  a-branches `e3c37abf` · a-contact `aa984204` · a-cancel `d069496b` · a-clients `bc1045dd` ·
+  a-chatgpt `8a0e83e6` · x-choose `def97ad9` · x-unknown `96ea64e4` · x-hello `dedba9db`
+- ElevenLabs refused 18 of the first 34 with a rate limit (429); they were resent in
+  groups of six, four and two until every one was made. Nothing was charged twice: a
+  refused submission makes no job.
+- Web files: `public/voice/*.mp3`, mono, 32 kHz, 40 kbps, silence trimmed, 150 ms tail,
+  loudness -16 LUFS. The opener stays a source file: it goes into the waking clip.
+- Verdict: OWED, the owner's ear on the page.

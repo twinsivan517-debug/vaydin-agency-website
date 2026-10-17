@@ -1,12 +1,13 @@
-/* What the guide says and shows, chapter by chapter. Words are draft 1 of
-   2026-10-17, awaiting the owner's approval word by word; every spoken line
-   is one mp3 under /voice. The opener is one lip-synced clip carrying its
-   own sound, so its lines have no mp3: `at` is the second at which each
-   line starts in that clip, measured on the recording. */
+/* What the guide says and shows, chapter by chapter: draft 3 of 2026-10-17,
+   corrected on the clinic-growth-bot house's product truth and approved by
+   the owner for recording. Every spoken line is one mp3 under /voice. The
+   opener is one lip-synced clip carrying its own sound, so its lines have
+   no mp3: `at` is the second at which each line starts in that clip,
+   measured on the recording. No statistic anywhere: none stands behind one. */
 
 export type Mood = "hop" | "shake";
 export type Line = { id: string; text: string; audio?: string; at?: number; mood?: Mood };
-export type ChapterId = "meet" | "see" | "fix" | "grow" | "proof" | "start";
+export type ChapterId = "meet" | "found" | "lost" | "fixed" | "grow" | "proof" | "start";
 export type Card = { title: string; body: string; facts: string[]; links: { href: string; label: string }[] };
 export type Chapter = { id: ChapterId; label: string; clip: "opener" | "talk"; lines: Line[]; card: Card };
 
@@ -22,57 +23,88 @@ export const CHAPTERS: Chapter[] = [
     clip: "opener",
     lines: [
       { id: "01", text: "Thank you for waking me. I'm Vaydin's voice.", at: 0 },
-      { id: "02", text: "Tell me what you need, or pick a chapter, and I'll show you how patients find a clinic, and how they lose it.", at: 3.8 },
+      {
+        id: "02",
+        text: "Pick a chapter or ask me anything, and I'll show you how patients find a clinic, and how a clinic loses them without ever knowing.",
+        at: 3.4,
+      },
     ],
     card: {
       title: "Vaydin · Dubai",
-      body: "An operations partner for aesthetic clinics. We find the patients your clinic never saw, then run the front door that keeps them.",
-      facts: ["Three steps: Diagnose, Fix & run, Grow", "Dubai Silicon Oasis, licensed under IFZA", "Measured, not promised"],
+      body: "An operations partner for aesthetic and wellness clinics in Dubai and the GCC. We find the patients your clinic never saw, then run the front door that keeps them.",
+      facts: ["Three steps: Intelligence, the Engine, Grow", "A Dubai free-zone company, licensed under IFZA", "Measured, not promised"],
       links: [{ href: "/diagnose.html", label: "Start with the diagnostic" }],
     },
   },
   {
-    id: "see",
-    label: "See",
+    id: "found",
+    label: "Found",
     clip: "talk",
     lines: [
       {
         id: "03",
-        text: "First, we see what your patients see. An unannounced visit to your own clinic, measured from the outside, scored, and delivered to you.",
+        text: "Every new patient meets your clinic before anyone greets them: your Google profile, your rating, your latest reviews, your Instagram, your website. Then they write on WhatsApp.",
         audio: "/voice/03.mp3",
       },
-      {
-        id: "04",
-        text: "Nobody there is doing anything wrong. The team is busy with the patient in front of them. Meanwhile, one message waits. Then it leaves.",
-        audio: "/voice/04.mp3",
-      },
+      { id: "04", text: "We believe they book with whoever answers first and best. That game is played in public, every day.", audio: "/voice/04.mp3" },
     ],
     card: {
-      title: "01 · Diagnose",
-      body: "An unannounced mystery shop of your own clinic, the way a patient meets it: scored and delivered.",
-      facts: ["WhatsApp, Google, Instagram, the website, the booking link", "Scored across six dimensions", "A recurring sweep of everything a patient can find"],
-      links: [{ href: "/diagnose.html", label: "How the diagnostic works" }],
+      title: "How patients find you",
+      body: "Every new patient meets your clinic before anyone greets them.",
+      facts: ["Your Google profile, your rating, your latest reviews", "Your Instagram and your website", "Then WhatsApp: whoever answers first and best"],
+      links: [{ href: "/diagnose.html", label: "The six rooms we score" }],
     },
   },
   {
-    id: "fix",
-    label: "Fix",
+    id: "lost",
+    label: "Lost",
     clip: "talk",
     lines: [
       {
         id: "05",
-        text: "Then we fix it, and run it. Every inquiry answered in minutes, in your clinic's own voice, from your own WhatsApp number. Your reception just taps a tick.",
+        text: "Picture a clinic. A review sits unanswered for nine days. Instagram shows three posts this month. A WhatsApp inquiry gets no price, no booking, and “please call us”.",
         audio: "/voice/05.mp3",
       },
-      { id: "06", text: "Booked, reminded, revived. No double booking. No “someone will call you back”.", audio: "/voice/06.mp3" },
+      {
+        id: "06",
+        text: "Nobody did anything wrong. The team was busy with the patient in front of them. Meanwhile, the patient on the phone booked somewhere else.",
+        audio: "/voice/06.mp3",
+      },
     ],
     card: {
-      title: "02 · Fix & run",
-      body: "The Vaydin engine takes over your digital front door, on your own number and in your own voice.",
-      facts: ["Every message answered in minutes, around the clock", "Real slots offered; your reception confirms with one tap", "Reminders, easy reschedules, and the quiet list revived"],
+      title: "How a clinic loses them",
+      body: "Picture a clinic: nobody doing anything wrong, and a patient gone.",
+      facts: ["A review unanswered for days", "A WhatsApp inquiry with no price and no booking offered", "Silence after the patient goes quiet"],
+      links: [{ href: "/diagnose.html", label: "What the diagnostic finds" }],
+    },
+  },
+  {
+    id: "fixed",
+    label: "Fixed",
+    clip: "talk",
+    lines: [
+      {
+        id: "07",
+        text: "Layer one, Intelligence: every thirty to sixty days a real person messages your clinic on WhatsApp like a new patient. Between shops we read your Google profile and your rivals every week, your Instagram and website every month. Six rooms, one score, and what to fix first.",
+        audio: "/voice/07.mp3",
+      },
+      {
+        id: "08",
+        text: "Layer two, the Revenue Engine: we answer, book, remind and revive every inquiry on your own WhatsApp number, and run your Google profile, your reviews, your Instagram messages and your website. Your reception approves with a tap, and the Intelligence keeps scoring us.",
+        audio: "/voice/08.mp3",
+      },
+    ],
+    card: {
+      title: "Layer 1 and Layer 2",
+      body: "Intelligence sees it. The Revenue Engine fixes it, and runs it.",
+      facts: [
+        "A real person shops your clinic every thirty to sixty days",
+        "Google and rivals read weekly; Instagram and website monthly",
+        "Answer, book, remind, revive: on your own number, your reception approving by a tap",
+      ],
       links: [
-        { href: "/fix.html", label: "What the engine runs" },
-        { href: "/engine.html", label: "Inside the engine" },
+        { href: "/diagnose.html", label: "Intelligence" },
+        { href: "/fix.html", label: "The Engine" },
       ],
     },
   },
@@ -80,17 +112,11 @@ export const CHAPTERS: Chapter[] = [
     id: "grow",
     label: "Grow",
     clip: "talk",
-    lines: [
-      {
-        id: "07",
-        text: "Only then, fuel. Paid demand and Instagram, poured into an engine we already run. Fuel into a broken engine is the mistake most clinics pay for first.",
-        audio: "/voice/07.mp3",
-      },
-    ],
+    lines: [{ id: "09", text: "Only then, fuel: paid demand and Instagram, and only on a running engine. Never on its own.", audio: "/voice/09.mp3" }],
     card: {
-      title: "03 · Grow",
-      body: "Paid patient demand and Instagram, only into an engine we already run.",
-      facts: ["Campaigns whose every inquiry lands in the engine", "Reels, statics and stories to a brief", "Step three, never step one"],
+      title: "Grow",
+      body: "Paid demand and Instagram, only on a running engine.",
+      facts: ["Campaigns whose every inquiry lands in the engine", "Reels, statics and stories to a brief", "No AI patients, no before-and-afters, ever"],
       links: [{ href: "/grow.html", label: "Growth once the engine runs" }],
     },
   },
@@ -99,17 +125,16 @@ export const CHAPTERS: Chapter[] = [
     label: "Proof",
     clip: "talk",
     lines: [
-      { id: "08", text: "And you see all of it. One app, on the phone already in your hand.", audio: "/voice/08.mp3" },
       {
-        id: "09",
-        text: "The diagnostic never stops. The next unannounced visit scores us too. You never take our word for it.",
-        audio: "/voice/09.mp3",
+        id: "10",
+        text: "Everything we measure is evidence a patient could find themselves, scored and explained, counted on one dashboard. And the next unannounced shop scores us too. Measured, not promised.",
+        audio: "/voice/10.mp3",
       },
     ],
     card: {
       title: "Measured, not promised",
-      body: "Inquiries, bookings and visits on your dashboard as they happen. The next unannounced shop scores the engine too.",
-      facts: ["One app, on the phone already in your hand", "Every shop scores us as well as you", "You never take our word for it"],
+      body: "Evidence a patient could find themselves, scored and explained, on one dashboard.",
+      facts: ["Every room scored, every month", "The next unannounced shop scores us too", "No case study invented, ever"],
       links: [{ href: "/engine.html", label: "Inside the engine" }],
     },
   },
@@ -117,11 +142,11 @@ export const CHAPTERS: Chapter[] = [
     id: "start",
     label: "Start",
     clip: "talk",
-    lines: [{ id: "10", text: "Start with the diagnostic. Your plan arrives on WhatsApp. No forms.", audio: "/voice/10.mp3" }],
+    lines: [{ id: "11", text: "Start with the diagnostic. Your plan arrives on WhatsApp. No forms.", audio: "/voice/11.mp3" }],
     card: {
       title: "Your plan",
-      body: "Every plan starts with the measurement. Add the engine when you want it fixed and run for you.",
-      facts: ["Your plan arrives on WhatsApp, no forms", "The diagnostic alone tells you the truth", "The engine makes the truth change"],
+      body: "Start with the diagnostic. Add the Engine when you want it fixed and run for you.",
+      facts: ["Your plan arrives on WhatsApp, no forms", "Intelligence month to month, thirty days' notice", "The Engine, three months minimum"],
       links: [{ href: "/pricing.html", label: "See the plans" }],
     },
   },
@@ -135,7 +160,7 @@ export const POKES: Line[] = [
   { id: "p3", text: "Careful, I'm working.", audio: "/voice/poke-3.mp3", mood: "hop" },
   { id: "p4", text: "Okay, okay. What would you like to know?", audio: "/voice/poke-4.mp3", mood: "hop" },
   { id: "p5", text: "I'm a guide, not a button.", audio: "/voice/poke-5.mp3", mood: "shake" },
-  { id: "p6", text: "Fine. I'll just stand here, then.", audio: "/voice/poke-6.mp3", mood: "shake" },
+  { id: "p6", text: "Fine. I'll just lie back down, then.", audio: "/voice/poke-6.mp3", mood: "shake" },
 ];
 
 export const chapter = (id: ChapterId) => CHAPTERS.find((c) => c.id === id)!;
