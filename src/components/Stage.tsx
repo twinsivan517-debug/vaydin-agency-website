@@ -154,7 +154,11 @@ export function Stage() {
     sound
       .say(OPENER_AUDIO, (seconds) => {
         if (!live) return;
-        if (seconds >= THROW_AT) throwBulb();
+        /* No clip, so no bulb to take over from: the page simply lights at the same second. */
+        if (seconds >= THROW_AT && !thrown.current) {
+          thrown.current = true;
+          lightUp();
+        }
         dispatch({ type: "cloud_at", seconds });
       })
       .then((outcome) => live && outcome !== "stopped" && dispatch({ type: "line_ended" }));

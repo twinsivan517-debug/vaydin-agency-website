@@ -44,6 +44,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   const previous = useRef<Layer | null>(null);
   const fadeAt = useRef(0);
   const stillRef = useRef(false);
+  const openerRun = useRef(0);
   const [still, setStill] = useState(false);
   const [shown, setShown] = useState(false);
 
@@ -70,6 +71,10 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
     if (name === "talk") layer.video.currentTime = 0;
     if (layer === current.current) return;
     if (!stillRef.current) layer.video.play().catch(() => {});
+    /* The opener carries her voice: it stops the moment she is asked for
+       something else, not when the fade has painted it out (a hidden tab
+       never paints). The fade still shows its last frame. */
+    if (current.current === layers.current.opener) current.current.video.pause();
     previous.current = current.current;
     current.current = layer;
     fadeAt.current = performance.now();
@@ -84,13 +89,16 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         const video = layer.video;
         video.muted = false;
         video.currentTime = 0;
+        const mine = ++openerRun.current;
         const started = video.play().then(
           () => {
             /* The clip's time once per shown frame, where the browser has it;
                `timeupdate` alone ticks every quarter second, too coarse for
-               the bulb to leave her frame on the frame it does. */
+               the bulb to leave her frame on the frame it does. A callback
+               left pending at the clip's end would wake on the next play, so
+               each play owns its chain by number. */
             const tick = (_now: number, frame: { mediaTime: number }) => {
-              if (video.paused || video.ended) return;
+              if (mine !== openerRun.current || video.paused || video.ended) return;
               latest.current.onOpenerTime(frame.mediaTime);
               video.requestVideoFrameCallback(tick);
             };
