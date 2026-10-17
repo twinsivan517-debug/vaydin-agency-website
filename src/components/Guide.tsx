@@ -25,10 +25,9 @@ type Props = {
   onPoke: (at: number) => void;
 };
 
-const LOOPS: Clip[] = ["sleep", "idle", "talk"];
 const STILL = "/guide/still.webp";
-const WIDTH = 540;
-const HEIGHT = 960;
+const WIDTH = 720;
+const HEIGHT = 1280;
 const FADE_MS = 200;
 
 export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
@@ -61,9 +60,10 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
     return layer;
   }, []);
 
+  /* Only the sleep loop loads with the page; the others arrive when she wakes. */
   const swap = useCallback((name: Clip) => {
-    const layer = layers.current[name];
-    if (!layer) return;
+    if (!current.current && name !== "sleep") return;
+    const layer = layers.current[name] ?? make(name);
     if (name === "talk") layer.video.currentTime = 0;
     if (layer === current.current) return;
     if (!stillRef.current) layer.video.play().catch(() => {});
@@ -77,6 +77,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
     () => ({
       opener() {
         const layer = layers.current.opener ?? make("opener");
+        for (const name of ["idle", "talk"] as const) if (!layers.current[name]) make(name);
         const video = layer.video;
         video.muted = false;
         video.currentTime = 0;
@@ -108,7 +109,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
     const begin = () => {
       setShown(true);
       if (!paint) return;
-      for (const name of LOOPS) make(name);
+      make("sleep");
       let lastTime = -1;
       let lastLayer: Layer | null = null;
       const draw = () => {

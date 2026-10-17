@@ -376,3 +376,18 @@ Source files live in `media/stills/guide-*` and `media/clips/guide-*` and `media
 - Web files: `public/voice/*.mp3`, mono, 32 kHz, 40 kbps, silence trimmed, 150 ms tail,
   loudness -16 LUFS. The opener stays a source file: it goes into the waking clip.
 - Verdict: OWED, the owner's ear on the page.
+
+## C1 — her four clips
+
+- Date 2026-10-17 · Seedance 2.0 mini · 9:16 · 720p · 24 fps · 27 credits in all
+- Jobs: waking greeting `b9e926ff` (12 s, 12 credits; start = G2, end = G1 option 2, audio
+  reference = the greeting recording `d51b7144`, no generated audio) · sleep `05d70356` ·
+  idle `641019b3` · talk `950dc87a` (5 s, 5 credits each; start = end = their still)
+- Submission was first refused in favour of a preset ("IN THE DARK"); resent with it declined.
+- Sources `media/clips/guide-*-src.mp4` (720x1280, 121 or 289 frames); sheets beside them.
+- Web files `public/guide/*.mp4`: scaled to 540x960, H.264 main, crf 29 (greeting 27),
+  loops silent, the greeting carrying `media/voice/opener.mp3` as AAC 48 kbps mono.
+  `still.webp` is G1 option 2 keyed, for reduced motion and canvases that cannot key.
+- Gates: flat green · first frame = last frame on each loop · lips on the words · she ends
+  standing in option 2's pose
+- Verdict: **kept, all four, the owner's word 2026-10-17** ("keep all for now"); he asked for a slower waking (yawn, "it's so dark", a clap, the logo lights) as a new clip, and for her to look sharper: the web files were re-encoded at the clips' full 720x1280.
