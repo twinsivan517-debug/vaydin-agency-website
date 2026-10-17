@@ -1,34 +1,35 @@
 "use client";
 
-/* The stage around the guide: her speech cloud, the gold button that meets
-   her, the chapter chips, Stop, the two buttons she lights at the end, and
-   the transcript for anyone without script or sound. Sound starts only from
-   a tap; one tap unlocks the page for every line after it. */
+/* Around the guide: her speech cloud, the card beside her, the chapter chips,
+   a question box, Stop, and the two buttons she lights at the end. Sound
+   starts only from a tap; one tap unlocks the page for every line after it. */
 
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer, useRef, useState, type FormEvent } from "react";
+import { Card } from "@/components/Card";
 import { Guide, type GuideHandle } from "@/components/Guide";
+import { type Answer } from "@/lib/answers";
+import { match } from "@/lib/match";
 import { CHAPTERS, POKES, chapter, talkTime, type ChapterId } from "@/lib/pitch";
 import { START, mode, pokeable, reduce, speaking } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
 import { WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
 
 const CHIP =
-  "rounded-full border border-gold/50 px-4 py-2 text-base text-gold-bright transition-colors aria-pressed:border-gold-bright aria-pressed:bg-gold-bright aria-pressed:text-background disabled:opacity-50";
+  "rounded-full border border-gold/50 px-4 py-2 text-base text-gold-bright transition-colors aria-pressed:border-gold-bright aria-pressed:bg-gold-bright aria-pressed:text-background";
 
 export function Stage() {
   const [state, dispatch] = useReducer(reduce, START);
+  const [draft, setDraft] = useState("");
   const guide = useRef<GuideHandle>(null);
   const voice = useRef<Speaker | null>(null);
   const pokes = useRef({ count: 0, at: 0 });
-  const chips = useRef<HTMLUListElement>(null);
   const busy = speaking(state);
-  const arrived = state.phase !== "away";
 
   /* A line's sound; when it cannot play, the words stay up for reading time. */
   useEffect(() => {
     if (state.phase !== "talking" && state.phase !== "quip") return;
     const line = state.cloud;
-    const next = state.phase === "talking" && state.chapter ? chapter(state.chapter).lines[state.line + 1] : undefined;
+    const next = state.phase === "talking" ? state.lines[state.line + 1] : undefined;
     const sound = voice.current;
     let live = true;
     let timer = 0;
@@ -60,32 +61,44 @@ export function Stage() {
     };
   }, []);
 
-  useEffect(() => {
-    const row = chips.current;
-    const chip = row?.querySelector<HTMLElement>("[aria-pressed=true]");
-    if (row && chip)
-      row.scrollTo({
-        left: chip.offsetLeft - row.offsetLeft - 20,
-        behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-      });
-  }, [state.chapter]);
+  function unlock() {
+    (voice.current ??= speaker()).arm();
+  }
 
   function tap(id: ChapterId) {
     if (chapter(id).clip === "opener") guide.current?.opener();
-    else (voice.current ??= speaker()).arm();
+    else unlock();
     dispatch({ type: "tap", chapter: id });
+  }
+
+  function ask(text: string) {
+    unlock();
+    dispatch({ type: "ask", reply: match(text) });
+  }
+
+  function pick(a: Answer) {
+    unlock();
+    dispatch({ type: "ask", reply: { kind: "answer", answer: a } });
   }
 
   function poke() {
     const now = Date.now();
     const count = now - pokes.current.at > 8000 ? 0 : Math.min(pokes.current.count + 1, POKES.length - 1);
     pokes.current = { count, at: now };
-    (voice.current ??= speaker()).arm();
+    unlock();
     dispatch({ type: "poke", index: count });
   }
 
+  function submit(event: FormEvent) {
+    event.preventDefault();
+    const text = draft.trim();
+    if (!text) return;
+    setDraft("");
+    ask(text);
+  }
+
   return (
-    <section aria-label="The guide" className="w-full">
+    <section aria-label="The guide">
       <div aria-live="polite" className="speech-row">
         <div key={state.cloud.id} className="speech">
           <p className="text-[1.05rem] leading-snug">{state.cloud.text}</p>
@@ -93,50 +106,68 @@ export function Stage() {
         </div>
       </div>
 
-      <div className="stage mt-5">
-        <div className="stage-floor" aria-hidden="true" />
-        <Guide
-          ref={guide}
-          mode={mode(state)}
-          run={state.run}
-          mood={state.phase === "quip" ? (state.cloud.mood ?? null) : null}
-          pokeable={pokeable(state)}
-          onArrive={() => dispatch({ type: "arrived" })}
-          onOpenerTime={(seconds) => dispatch({ type: "cloud_at", seconds })}
-          onOpenerEnd={() => dispatch({ type: "line_ended" })}
-          onPoke={poke}
-        />
+      <div className="mt-5 grid grid-cols-[42%_1fr] items-start gap-4 md:grid-cols-[minmax(0,22rem)_1fr] md:gap-10">
+        <div className="sticky top-20">
+          <div className="guide-floor relative h-[min(46vh,380px)] md:h-[560px]">
+            <Guide
+              ref={guide}
+              mode={mode(state)}
+              run={state.run}
+              mood={state.phase === "quip" ? (state.cloud.mood ?? null) : null}
+              pokeable={pokeable(state)}
+              onArrive={() => dispatch({ type: "arrived" })}
+              onOpenerTime={(seconds) => dispatch({ type: "cloud_at", seconds })}
+              onOpenerEnd={() => dispatch({ type: "line_ended" })}
+              onPoke={poke}
+            />
+          </div>
+        </div>
+
+        <div className="min-w-0">
+          <Card shown={state.shown} onPick={pick} />
+
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <ul className="flex flex-wrap gap-2" aria-label="Chapters">
+              {CHAPTERS.map((c) => (
+                <li key={c.id}>
+                  <button type="button" onClick={() => tap(c.id)} aria-pressed={c.id === state.chapter} className={CHIP}>
+                    {c.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+            {busy && (
+              <button type="button" onClick={() => dispatch({ type: "stop" })} className="rounded-full border border-gold/30 px-4 py-2 text-base text-muted">
+                Stop
+              </button>
+            )}
+          </div>
+
+          <form onSubmit={submit} className="mt-4 flex gap-2">
+            <label htmlFor="ask" className="sr-only">
+              Your question
+            </label>
+            <input
+              id="ask"
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              placeholder="Ask her about Vaydin…"
+              autoComplete="off"
+              enterKeyHint="send"
+              maxLength={200}
+              className="min-w-0 flex-1 rounded-full border border-gold/40 bg-background px-4 py-3 text-base text-foreground placeholder:text-muted"
+            />
+            <button type="submit" className="rounded-full bg-gold-bright px-5 py-3 text-base font-medium text-background">
+              Ask
+            </button>
+          </form>
+          <p className="mt-2 text-xs leading-relaxed text-muted">
+            She answers only from Vaydin&apos;s own pages. Nothing you type is saved or sent.
+          </p>
+        </div>
       </div>
 
-      <div className="mt-4 flex items-center gap-2">
-        {state.met ? (
-          <ul ref={chips} className="-mx-5 flex min-w-0 flex-1 gap-2 overflow-x-auto px-5 py-1" aria-label="Chapters">
-            {CHAPTERS.map((c) => (
-              <li key={c.id} className="shrink-0">
-                <button type="button" onClick={() => tap(c.id)} aria-pressed={c.id === state.chapter} className={CHIP}>
-                  {c.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <button
-            type="button"
-            onClick={() => tap("meet")}
-            disabled={!arrived}
-            className="rounded-full bg-gold-bright px-7 py-3 text-base font-medium text-background disabled:opacity-50"
-          >
-            Meet her
-          </button>
-        )}
-        {busy && (
-          <button type="button" onClick={() => dispatch({ type: "stop" })} className="shrink-0 rounded-full border border-gold/50 px-4 py-2 text-base text-muted">
-            Stop
-          </button>
-        )}
-      </div>
-
-      <div className={`mt-5 flex flex-wrap gap-3 ${state.lit ? "cta-lit" : ""}`}>
+      <div className={`sticky bottom-0 -mx-5 mt-8 flex flex-wrap gap-3 border-t border-gold/15 bg-background/95 px-5 py-3 backdrop-blur sm:-mx-12 sm:px-12 ${state.lit ? "cta-lit" : ""}`}>
         <a href={WHATSAPP} className="rounded-full bg-gold-bright px-6 py-3 text-base font-medium text-background">
           WhatsApp · {WHATSAPP_SHOWN}
         </a>
