@@ -7,7 +7,9 @@ import { chapter } from "@/lib/pitch";
 import type { Shown } from "@/lib/pitchMachine";
 import { WHATSAPP } from "@/lib/site";
 
-const CARD = "rounded-3xl border border-gold/20 bg-[#161009] p-5";
+/* Each card is a folder she pulls out: it swings in from her side, and its
+   lines drop out one after another while she speaks. */
+const CARD = "folder relative rounded-3xl border border-gold/20 bg-[#161009] p-5";
 const LINK = "label inline-block border-b border-transparent text-gold-bright transition-colors hover:border-gold-bright";
 
 function Chips({ answers, onPick }: { answers: Answer[]; onPick: (a: Answer) => void }) {
@@ -61,8 +63,8 @@ export function Card({ shown, onPick }: { shown: Shown; onPick: (a: Answer) => v
       <p className="font-display text-xl text-gold-bright">{card.title}</p>
       <p className="mt-2 leading-7">{card.body}</p>
       <ul className="mt-4 space-y-2 text-muted">
-        {card.facts.map((fact) => (
-          <li key={fact} className="flex gap-3">
+        {card.facts.map((fact, index) => (
+          <li key={fact} className="folder-line flex gap-3" style={{ animationDelay: `${0.9 + index * 0.7}s` }}>
             <span aria-hidden="true" className="mt-[0.7rem] size-1.5 shrink-0 rounded-full bg-gold" />
             {fact}
           </li>

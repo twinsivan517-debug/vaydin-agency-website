@@ -12,7 +12,8 @@ import { painter, type Layer } from "@/lib/chroma";
 import { OPENER_VIDEO, type Mood } from "@/lib/pitch";
 
 export type Mode = "sleep" | "idle" | "talk" | "opener";
-export type GuideHandle = { opener(): void };
+/* `opener()` resolves true once the clip is playing, false if it cannot. */
+export type GuideHandle = { opener(): Promise<boolean> };
 type Clip = Mode;
 type Props = {
   mode: Mode;
@@ -21,12 +22,12 @@ type Props = {
   pokeable: boolean;
   onOpenerTime: (seconds: number) => void;
   onOpenerEnd: () => void;
-  onPoke: () => void;
+  onPoke: (at: number) => void;
 };
 
 const LOOPS: Clip[] = ["sleep", "idle", "talk"];
 const STILL = "/guide/still.webp";
-const WIDTH = 516;
+const WIDTH = 540;
 const HEIGHT = 960;
 const FADE_MS = 200;
 
@@ -79,8 +80,15 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         const video = layer.video;
         video.muted = false;
         video.currentTime = 0;
-        video.play().catch(() => latest.current.onOpenerEnd());
+        const started = video.play().then(
+          () => true,
+          () => false,
+        );
         if (!stillRef.current && current.current) swap("opener");
+        return started.then((ok) => {
+          if (!ok && !stillRef.current) swap("talk");
+          return ok;
+        });
       },
     }),
     [make, swap],
@@ -167,7 +175,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       <div
         ref={figure}
         aria-hidden="true"
-        className="guide-figure absolute bottom-0 left-1/2 z-10 aspect-[516/960] h-full -translate-x-1/2 transition-opacity duration-700"
+        className="guide-figure absolute bottom-0 left-1/2 z-10 aspect-[9/16] h-full -translate-x-1/2 transition-opacity duration-700"
         style={{ opacity: shown ? 1 : 0 }}
       >
         {still ? (
@@ -185,10 +193,10 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       </div>
       <button
         type="button"
-        onClick={onPoke}
+        onClick={(event) => onPoke(event.timeStamp)}
         disabled={!pokeable || !shown}
         aria-label={mode === "sleep" ? "Wake her up" : "Poke her"}
-        className="absolute bottom-0 left-1/2 z-20 aspect-[516/960] h-full -translate-x-1/2 cursor-pointer rounded-full disabled:cursor-default"
+        className="absolute bottom-0 left-1/2 z-20 aspect-[9/16] h-full -translate-x-1/2 cursor-pointer rounded-full disabled:cursor-default"
       />
     </div>
   );

@@ -9,7 +9,7 @@ import { Card } from "@/components/Card";
 import { Guide, type GuideHandle } from "@/components/Guide";
 import { type Answer } from "@/lib/answers";
 import { match } from "@/lib/match";
-import { CHAPTERS, POKES, chapter, talkTime, type ChapterId } from "@/lib/pitch";
+import { CHAPTERS, OPENER_AUDIO, POKES, chapter, talkTime, type ChapterId } from "@/lib/pitch";
 import { START, mode, pokeable, reduce, speaking } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
 import { WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
@@ -20,16 +20,34 @@ const CHIP =
 export function Stage() {
   const [state, dispatch] = useReducer(reduce, START);
   const [draft, setDraft] = useState("");
+  /* True when the greeting clip could not play and her recording speaks instead. */
+  const [spoken, setSpoken] = useState(false);
   const guide = useRef<GuideHandle>(null);
   const voice = useRef<Speaker | null>(null);
   const pokes = useRef({ count: 0, at: 0 });
   const busy = speaking(state);
 
-  /* A line's sound; when it cannot play, the words stay up for reading time. */
+  /* The greeting as sound alone, when its clip is missing or refused. */
   useEffect(() => {
-    if (state.phase !== "talking" && state.phase !== "quip") return;
-    const line = state.cloud;
-    const next = state.phase === "talking" ? state.lines[state.line + 1] : undefined;
+    if (state.phase !== "opener" || !spoken) return;
+    const sound = voice.current;
+    if (!sound) return;
+    let live = true;
+    sound
+      .say(OPENER_AUDIO, (seconds) => live && dispatch({ type: "cloud_at", seconds }))
+      .then((outcome) => live && outcome !== "stopped" && dispatch({ type: "line_ended" }));
+    return () => {
+      live = false;
+      sound.stop();
+    };
+  }, [state.phase, state.run, spoken]);
+
+  /* A line's sound; when it cannot play, the words stay up for reading time. */
+  const { phase, run, cloud, lines, line: lineAt } = state;
+  useEffect(() => {
+    if (phase !== "talking" && phase !== "quip") return;
+    const line = cloud;
+    const next = phase === "talking" ? lines[lineAt + 1] : undefined;
     const sound = voice.current;
     let live = true;
     let timer = 0;
@@ -49,7 +67,7 @@ export function Stage() {
       window.clearTimeout(timer);
       sound?.stop();
     };
-  }, [state]);
+  }, [phase, run, lineAt, cloud, lines]);
 
   useEffect(() => {
     const hide = () => document.hidden && dispatch({ type: "stop" });
@@ -65,9 +83,15 @@ export function Stage() {
     (voice.current ??= speaker()).arm();
   }
 
+  function wake() {
+    unlock();
+    dispatch({ type: "tap", chapter: "meet" });
+    guide.current?.opener().then((ok) => setSpoken(!ok));
+  }
+
   function tap(id: ChapterId) {
-    if (chapter(id).clip === "opener") guide.current?.opener();
-    else unlock();
+    if (chapter(id).clip === "opener") return wake();
+    unlock();
     dispatch({ type: "tap", chapter: id });
   }
 
@@ -81,15 +105,11 @@ export function Stage() {
     dispatch({ type: "ask", reply: { kind: "answer", answer: a } });
   }
 
-  function poke() {
-    if (state.phase === "asleep") {
-      guide.current?.opener();
-      dispatch({ type: "wake" });
-      return;
-    }
-    const now = Date.now();
-    const count = now - pokes.current.at > 8000 ? 0 : Math.min(pokes.current.count + 1, POKES.length - 1);
-    pokes.current = { count, at: now };
+  /* `at` is the tap's own timestamp: pokes within eight seconds escalate. */
+  function poke(at: number) {
+    if (state.phase === "asleep") return wake();
+    const count = at - pokes.current.at > 8000 ? 0 : Math.min(pokes.current.count + 1, POKES.length - 1);
+    pokes.current = { count, at };
     unlock();
     dispatch({ type: "poke", index: count });
   }
@@ -128,7 +148,8 @@ export function Stage() {
         </div>
 
         <div className="min-w-0">
-          <Card shown={state.shown} onPick={pick} />
+          {/* The key remounts the card, so each chapter's folder is pulled out afresh. */}
+          <Card key={state.run} shown={state.shown} onPick={pick} />
 
           <div className="mt-4 flex flex-wrap items-center gap-2">
             <ul className="flex flex-wrap gap-2" aria-label="Chapters">

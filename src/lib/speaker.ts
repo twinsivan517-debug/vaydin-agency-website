@@ -1,12 +1,13 @@
 /* One audio element for the whole page. Phones allow sound only from an
    element that first played inside a tap, so `arm()` is called in the tap
    handler with a silent clip; every later line may then start on its own.
-   `say()` settles when the line ends, fails to load, or is stopped. */
+   `say()` settles when the line ends, fails to load, or is stopped, and
+   reports the playhead while it runs for lines that carry several clouds. */
 
 export type Outcome = "ended" | "failed" | "stopped";
 export type Speaker = {
   arm(): void;
-  say(src: string): Promise<Outcome>;
+  say(src: string, onTime?: (seconds: number) => void): Promise<Outcome>;
   prefetch(src: string): void;
   stop(): void;
 };
@@ -18,6 +19,8 @@ const SILENCE =
 export function speaker(): Speaker {
   const el = new Audio();
   el.preload = "auto";
+  el.hidden = true;
+  document.body.append(el);
   let armed = false;
   let settle: ((outcome: Outcome) => void) | null = null;
 
@@ -26,6 +29,7 @@ export function speaker(): Speaker {
     settle = null;
     el.onended = null;
     el.onerror = null;
+    el.ontimeupdate = null;
     done?.(outcome);
   };
 
@@ -36,14 +40,14 @@ export function speaker(): Speaker {
       el.src = SILENCE;
       el.play().catch(() => {});
     },
-    say(src) {
+    say(src, onTime) {
       finish("stopped");
       el.src = src;
-      el.currentTime = 0;
       return new Promise<Outcome>((resolve) => {
         settle = resolve;
         el.onended = () => finish("ended");
         el.onerror = () => finish("failed");
+        if (onTime) el.ontimeupdate = () => onTime(el.currentTime);
         el.play().catch(() => finish("failed"));
       });
     },

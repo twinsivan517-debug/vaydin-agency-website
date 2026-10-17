@@ -12,6 +12,8 @@ export type Card = { title: string; body: string; facts: string[]; links: { href
 export type Chapter = { id: ChapterId; label: string; clip: "opener" | "talk"; lines: Line[]; card: Card };
 
 export const OPENER_VIDEO = "/guide/opener.mp4";
+/* The same greeting as sound alone, for when the clip cannot play. */
+export const OPENER_AUDIO = "/voice/opener.mp3";
 
 /* In the cloud while she sleeps. Not spoken: no sound may start before a tap. */
 export const SLEEPING: Line = { id: "00", text: "Zzz… Tap me to wake me up." };
@@ -26,7 +28,7 @@ export const CHAPTERS: Chapter[] = [
       {
         id: "02",
         text: "Pick a chapter or ask me anything, and I'll show you how patients find a clinic, and how a clinic loses them without ever knowing.",
-        at: 3.4,
+        at: 3.25,
       },
     ],
     card: {
