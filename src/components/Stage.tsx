@@ -113,7 +113,7 @@ export function Stage() {
 
       <div className="mt-5 grid grid-cols-[42%_1fr] items-start gap-4 md:grid-cols-[minmax(0,22rem)_1fr] md:gap-10">
         <div className="sticky top-20">
-          <div className="guide-floor relative h-[min(46vh,380px)] md:h-[min(62vh,500px)]">
+          <div className="guide-floor relative h-[min(46vh,380px)] md:h-[min(52vh,440px)]">
             <Guide
               ref={guide}
               mode={mode(state)}
