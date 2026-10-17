@@ -26,6 +26,8 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
+  /* She walks in from beyond the right edge; that must not add a scrollbar. */
+  overflow-x: clip;
 }
 
 .label {
@@ -35,814 +37,114 @@ body {
   text-transform: uppercase;
 }
 
-/* A scene is a tall block; its pin stays on screen while --p runs 0 to 1. */
-.scene {
-  --p: 0;
-  position: relative;
-  height: calc(var(--len) * 1svh);
-}
-
-.scene-pin {
-  position: sticky;
-  top: 0;
-  height: 100svh;
-  overflow: hidden;
-}
-
-/* An act fills the pinned screen; the acts of a scene lie on top of each
-   other and the scene shows one at a time. */
-.act {
-  position: absolute;
-  inset: 0;
-}
-
-/* The stage is a 16:9 box that always covers the pin, so anything placed
-   inside it by percentage stays on the same spot of the picture. */
+/* The stage: a dark box with a warm pool of light on its floor. */
 .stage {
-  --sw: max(100vw, 177.78svh);
-  position: absolute;
-  top: 50%;
-  left: calc((100vw - var(--sw)) / 2);
-  width: var(--sw);
-  aspect-ratio: 16 / 9;
-  translate: 0 -50%;
-}
-
-/* --xn is a spot's place across the whole 16:9 picture, 0 to 1. */
-.pin,
-.brief,
-.ping {
-  --px: calc(var(--xn) * 100%);
-}
-
-/* Phones get a 3:4 cut of the picture, centred on --cx. The same spot is
-   then somewhere else across the stage. 0.4219 is the cut's share of the
-   width (3:4 of 16:9); 0.2109 is half of it. */
-@media (max-width: 820px) {
-  .stage {
-    --sw: max(100vw, 75svh);
-    aspect-ratio: 3 / 4;
-  }
-
-  .pin,
-  .brief {
-    --px: calc((var(--xn) - var(--cx) + 0.2109) / 0.4219 * 100%);
-  }
-}
-
-.stage img,
-.scrub {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.scrub {
-  opacity: 0;
-}
-
-.scrub[data-ready] {
-  opacity: 1;
-}
-
-/* show: appears at --at and stays. hide: leaves at --at. Both switch at once
-   and slide, so text is never half transparent. */
-.show {
-  opacity: clamp(0, (var(--p) - var(--at)) * 1000, 1);
-  translate: 0 calc((1 - clamp(0, (var(--p) - var(--at)) * 14, 1)) * 1.25rem);
-}
-
-.hide {
-  opacity: clamp(0, (var(--at) - var(--p)) * 1000, 1);
-  translate: 0 calc(clamp(0, (var(--p) - var(--at) + 0.07) * 14, 1) * -1.25rem);
-}
-
-/* cut: leaves at --at with no slide, for layers that must stay on the picture. */
-.cut {
-  opacity: clamp(0, (var(--at) - var(--p)) * 1000, 1);
-}
-
-/* fade: for pictures and shades only, never text. */
-.fade-in {
-  opacity: clamp(0, (var(--p) - var(--at)) / var(--over, 0.1), 1);
-}
-
-.fade-out {
-  opacity: clamp(0, 1 - (var(--p) - var(--at)) / var(--over, 0.1), 1);
-}
-
-.shade {
-  position: absolute;
-  inset: 0;
-  background: var(--background);
-  pointer-events: none;
-}
-
-.scrim {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+  position: relative;
+  height: min(52vh, 420px);
+  overflow: clip;
+  border: 1px solid rgb(201 164 74 / 0.22);
+  border-radius: 1.5rem;
   background:
-    linear-gradient(to bottom, rgb(13 8 7 / 0.7), rgb(13 8 7 / 0) 16%),
-    radial-gradient(ellipse 75% 65% at 0% 100%, rgb(13 8 7 / 0.88), rgb(13 8 7 / 0) 70%),
-    linear-gradient(to top, rgb(13 8 7 / 0.75), rgb(13 8 7 / 0) 45%);
+    radial-gradient(ellipse 70% 55% at 50% 100%, rgb(201 164 74 / 0.22), transparent),
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgb(243 234 217 / 0.05), transparent),
+    #130c08;
 }
 
-@media (max-width: 820px) {
-  .scrim {
-    background:
-      linear-gradient(to bottom, rgb(13 8 7 / 0.85), rgb(13 8 7 / 0) 34%),
-      linear-gradient(to top, rgb(13 8 7 / 0.92), rgb(13 8 7 / 0) 58%);
-  }
-}
-
-/* The beam: a bright line that crosses the stage top to bottom between
-   --b0 and --b1. A pin lights when the line reaches its height (--yn). */
-.beam {
-  --run: clamp(0, (var(--p) - var(--b0)) / (var(--b1) - var(--b0)), 1);
+.stage-floor {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 22%;
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    rgb(245 217 120 / 0),
-    rgb(245 217 120 / 0.1) 82%,
-    rgb(255 244 200 / 0.95) 99%,
-    rgb(245 217 120 / 0)
-  );
-  translate: 0 calc(var(--run) * 454.5% - 100%);
-  opacity: clamp(0, min(var(--run), 1 - var(--run)) * 1000, 1);
-}
-
-/* A pin is a clinic. Its tip sits on the spot; pins further up the picture
-   are further away, so they are drawn smaller. The beam lights it (--beam),
-   --f turns the story to the chosen one, --in and --out fade it with the
-   picture under it. */
-.pin {
-  --beam: clamp(0, (var(--p) - (var(--b0) + (var(--b1) - var(--b0)) * var(--yn))) * 1000, 1);
-  --lit: var(--beam);
-  --f: clamp(0, (var(--p) - var(--f0, 9)) / 0.012, 1);
-  --dim: calc(1 - 0.6 * var(--f));
-  --in: clamp(0, (var(--p) - var(--i0, -1)) / var(--io, 0.01), 1);
-  --gone: clamp(0, (var(--p) - var(--o0, 9)) / var(--oo, 0.01), 1);
-  --size: calc(0.6 + var(--yn) * 0.7);
-  --c: var(--base);
-  position: absolute;
-  left: var(--px);
-  top: var(--y);
-  color: var(--c);
-  opacity: calc(var(--lit) * var(--dim) * var(--in) * (1 - var(--gone)));
-  pointer-events: none;
-}
-
-.pin svg {
-  position: absolute;
-  left: -0.95rem;
-  top: -2.53rem;
-  width: 1.9rem;
-  height: 2.53rem;
-  transform-origin: 50% 100%;
-  scale: var(--size);
-  filter: drop-shadow(0 0 0.45rem color-mix(in srgb, var(--c) 85%, transparent));
-}
-
-/* The chosen pin turns red and grows when the story turns to it, and grows
-   on as the camera starts down towards it. In the fix it arrives red, turns
-   gold at --tg and green at --tn. */
-.pin.chosen {
-  --dim: 1;
-  --size: calc((0.6 + var(--yn) * 0.7) * (1 + 0.55 * var(--f) + 1.1 * var(--gone)));
-  --gold-on: clamp(0, (var(--p) - var(--tg, 9)) * 1000, 1);
-  --green-on: clamp(0, (var(--p) - var(--tn, 9)) * 1000, 1);
-  --c: color-mix(
-    in srgb,
-    var(--proof) calc(var(--green-on) * 100%),
-    color-mix(
-      in srgb,
-      var(--gold-bright) calc(var(--gold-on) * 100%),
-      color-mix(in srgb, var(--leak) calc(var(--f) * 100%), var(--foreground))
-    )
-  );
-  z-index: 1;
-}
-
-/* The clinics that answer everyone stay bright beside the chosen one. */
-.pin.top {
-  --dim: calc(1 - 0.15 * var(--f));
-}
-
-/* In the fix every pin is already lit; the second beam brightens each one
-   it passes. */
-.fixing .pin {
-  --lit: 1;
-  --dim: calc(0.45 + 0.55 * var(--beam));
-}
-
-.fixing .pin.chosen {
-  --dim: 1;
-  --size: calc((0.6 + var(--yn) * 0.7) * 1.55);
-}
-
-.pin-ring {
-  position: absolute;
-  left: -1.75rem;
-  top: -3.6rem;
-  width: 3.5rem;
-  height: 3.5rem;
-  opacity: calc(var(--f) * (1 - var(--gone)));
-}
-
-.pin-ring::before,
-.pin-ring::after {
-  content: "";
-  position: absolute;
-  inset: 0;
+  inset: auto 12% 4%;
+  height: 12%;
   border-radius: 50%;
-  border: 2px solid var(--leak);
-  animation: ring-out 1.8s ease-out infinite;
+  background: radial-gradient(ellipse, rgb(201 164 74 / 0.38), transparent 70%);
+  filter: blur(2px);
 }
 
-.pin-ring::after {
-  animation-delay: 0.9s;
+/* Her words. The tail points down at her. */
+.speech-row {
+  min-height: 5.5rem;
+  margin-right: 1.5rem;
 }
 
-.tag {
-  position: absolute;
-  left: 1.5rem;
-  top: -3rem;
-  white-space: nowrap;
-  border: 1px solid color-mix(in srgb, var(--c) 60%, transparent);
-  border-radius: 0.4rem;
-  background: rgb(13 8 7 / 0.9);
-  color: var(--foreground);
-  padding: 0.25rem 0.55rem;
-  font-size: 0.8125rem;
-}
-
-.tag.since {
-  opacity: clamp(0, (var(--p) - var(--at)) * 1000, 1);
-}
-
-/* The brief: the one window, opened beside the chosen pin from --t0 to
-   --t1. It switches on and slides, like the text. */
-.brief {
-  position: absolute;
-  left: calc(var(--px) + 3rem);
-  top: calc(var(--y) - 5.5rem);
-  width: 23rem;
-  border: 1px solid rgb(201 164 74 / 0.6);
-  border-top: 2px solid var(--leak);
-  border-radius: 0.75rem;
-  background: rgb(13 8 7 / 0.94);
-  padding: 1rem 1.15rem 0.9rem;
-  box-shadow: 0 1rem 2.5rem rgb(0 0 0 / 0.55);
-  pointer-events: none;
-  opacity: min(
-    clamp(0, (var(--p) - var(--t0)) * 1000, 1),
-    clamp(0, (var(--t1) - var(--p)) * 1000, 1)
-  );
-  translate: 0
-    calc(
-      (1 - clamp(0, (var(--p) - var(--t0)) * 40, 1)) * 1.25rem -
-        clamp(0, (var(--p) - var(--t1) + 0.025) * 40, 1) * 1.25rem
-    );
-}
-
-/* The line from the pin to the brief. */
-.brief::before {
-  content: "";
-  position: absolute;
-  left: -2.1rem;
-  top: 3.6rem;
-  width: 2.1rem;
-  border-top: 1px solid var(--leak);
-}
-
-.brief-title {
-  margin-top: 0.5rem;
-  font-family: var(--font-display), serif;
-  font-size: 1.3rem;
-  line-height: 1.25;
-}
-
-.brief ul {
-  margin-top: 0.7rem;
-  border-top: 1px solid rgb(201 164 74 / 0.25);
-}
-
-.row {
-  display: flex;
-  align-items: baseline;
-  gap: 0.55rem;
-  padding: 0.42rem 0;
-  border-bottom: 1px solid rgb(201 164 74 / 0.14);
-  font-size: 0.9375rem;
-  line-height: 1.35;
-}
-
-/* A row of the brief steps in quicker than a line of text. */
-.brief .row {
-  translate: 0 calc((1 - clamp(0, (var(--p) - var(--at)) * 60, 1)) * 0.75rem);
-}
-
-.row:last-child {
-  border-bottom: 0;
-}
-
-.row .found {
-  margin-left: auto;
-  text-align: right;
-  color: var(--muted);
-}
-
-.mark {
-  width: 1rem;
-  flex: none;
-  font-weight: 700;
-}
-
-.mark.ok {
-  color: var(--proof);
-}
-
-.mark.bad {
-  color: var(--leak);
-}
-
-/* On phones the brief is a sheet at the foot of the screen. */
-@media (max-width: 820px) {
-  .brief {
-    left: calc((var(--sw) - 100vw) / 2 + 1.25rem);
-    top: auto;
-    bottom: calc(50% - 50svh + 1.5rem);
-    width: calc(100vw - 2.5rem);
-  }
-
-  .brief::before {
-    display: none;
-  }
-
-  .row {
-    font-size: 1rem;
-  }
-}
-
-/* The WhatsApp message on the desk phone. It waits from --at; from --then
-   it is over, in the colour of how it ended (--end). */
-.ping {
-  --over: clamp(0, (var(--p) - var(--then)) * 1000, 1);
-  --c: color-mix(in srgb, var(--end) calc(var(--over) * 100%), var(--foreground));
-  position: absolute;
-  left: var(--px);
-  top: var(--y);
-  opacity: clamp(0, (var(--p) - var(--at)) * 1000, 1);
-}
-
-.ping-ring {
-  position: absolute;
-  left: -1.75rem;
-  top: -1.75rem;
-  width: 3.5rem;
-  height: 3.5rem;
-  opacity: calc(1 - var(--over));
-}
-
-.ping-ring::before,
-.ping-ring::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 2px solid var(--foreground);
-  animation: ring-out 1.4s ease-out infinite;
-}
-
-.ping-ring::after {
-  animation-delay: 0.7s;
-}
-
-@keyframes ring-out {
-  from {
-    scale: 0.3;
-    opacity: 0.95;
-  }
-
-  to {
-    scale: 1.5;
-    opacity: 0;
-  }
-}
-
-.ping-tag {
-  position: absolute;
-  left: 2rem;
-  bottom: 1.75rem;
-  display: grid;
-  width: 16rem;
-  white-space: nowrap;
-  /* Slides left as far as it must to stay on a narrow screen. */
-  translate: min(
-      0px,
-      calc(100vw - 2rem - (100vw - var(--sw)) / 2 - var(--xn) * var(--sw) - 18rem)
-    )
-    0;
-  border: 1px solid color-mix(in srgb, var(--c) 70%, transparent);
-  border-left: 4px solid var(--c);
-  border-radius: 0.8rem;
-  background: rgb(13 8 7 / 0.94);
-  padding: 0.8rem 1.25rem 0.85rem 1.1rem;
-  font-size: 1.3rem;
-  line-height: 1.3;
-  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.55);
-}
-
-.ping-tag > span {
-  grid-area: 1 / 1;
-}
-
-.ping-tag .label {
-  display: block;
-  margin-bottom: 0.2rem;
-  font-size: 0.8125rem;
-  color: var(--muted);
-}
-
-.ping-tag .waiting {
-  opacity: calc(1 - var(--over));
-}
-
-.ping-tag .ended {
-  opacity: var(--over);
-}
-
-.ping-tag .ended .label {
-  color: var(--end);
-}
-
-/* On phones the desk phone is outside the cut, so the message sits where a
-   phone shows one: a banner under the header. */
-@media (max-width: 820px) {
-  .ping {
-    left: calc((var(--sw) - 100vw) / 2 + 1.25rem);
-    top: calc(50% - 50svh + 5rem);
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .ping-ring,
-  .ping-tag {
-    position: relative;
-    left: auto;
-    top: auto;
-    bottom: auto;
-  }
-
-  .ping-ring {
-    width: 2.25rem;
-    height: 2.25rem;
-  }
-
-  .ping-tag {
-    width: auto;
-    min-width: 13rem;
-    font-size: 1.15rem;
-    translate: none;
-  }
-}
-
-@media (max-width: 820px) {
-  .wide-only {
-    display: none;
-  }
-}
-
-@media (min-width: 821px) {
-  .narrow-only {
-    display: none;
-  }
-}
-
-.bubble {
-  max-width: 21rem;
-  border-radius: 1rem;
-  padding: 0.7rem 0.9rem 0.5rem;
-  font-size: 1rem;
-  line-height: 1.45;
-  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.45);
-}
-
-.bubble-in {
-  background: #1d1510;
-  border: 1px solid #2b2014;
-  border-bottom-left-radius: 0.25rem;
-}
-
-.bubble-out {
-  margin-left: 2.5rem;
-  background: #123a2a;
-  border: 1px solid #1c5a40;
-  border-bottom-right-radius: 0.25rem;
-}
-
-.bubble time {
-  display: block;
-  margin-top: 0.2rem;
-  text-align: right;
-  font-size: 0.75rem;
-  color: var(--muted);
-}
-
-/* The screen: the inside of the phone, as wide as the view. It fades in over
-   the bright frame the camera ends on (from --s0), and from --t0 to --t1 it
-   shrinks onto the phone lying on the desk: --xn and --yn are that phone's
-   place in the 16:9 picture under it. */
-.screen {
-  --sw: max(100vw, 177.78svh);
-  --sh: calc(var(--sw) * 0.5625);
-  --px: var(--xn);
-  --k: clamp(0, (var(--p) - var(--t0)) / (var(--t1) - var(--t0)), 1);
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  background: radial-gradient(ellipse at 50% 40%, #1c130c, var(--background) 70%);
-  pointer-events: none;
-  transform-origin: calc((100vw - var(--sw)) / 2 + var(--px) * var(--sw))
-    calc(50svh - var(--sh) / 2 + var(--yn) * var(--sh));
-  scale: calc(1 - 0.975 * var(--k));
-  border-radius: calc(var(--k) * 4rem);
-  opacity: min(
-    clamp(0, (var(--p) - var(--s0)) / var(--so), 1),
-    clamp(0, (1 - var(--k)) * 5, 1)
-  );
-}
-
-@media (max-width: 820px) {
-  .screen {
-    --sw: max(100vw, 75svh);
-    --sh: calc(var(--sw) * 1.3333);
-    --px: calc((var(--xn) - var(--cx) + 0.2109) / 0.4219);
-  }
-}
-
-.screen-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  width: min(44rem, 100vw - 2.5rem);
-  padding-top: 3.5rem;
-}
-
-/* The app: a screen that only fades, in over the app's icon and out to it
-   again. Its colours are the real app's: #86c79f is its mark for a strong
-   channel. */
-.screen.app {
-  scale: none;
-  border-radius: 0;
-  background: var(--background);
-  opacity: min(clamp(0, (var(--p) - var(--s0)) / var(--so), 1), 1 - var(--k));
-}
-
-.app-standing {
-  border: 1px solid rgb(201 164 74 / 0.34);
-  border-radius: 1rem;
-  background: #161009;
-  padding: 0.9rem 1.1rem 1rem;
-}
-
-.app-score {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  margin: 0.2rem 0 0.3rem;
-  font-family: var(--font-display), serif;
-  color: #86c79f;
-}
-
-.app-score span {
-  font-size: 3.6rem;
-  line-height: 1;
-}
-
-.app-score small {
-  font-size: 1.2rem;
-  color: var(--muted);
-}
-
-.app-score b {
-  margin-left: 0.6rem;
-  border: 1px solid #86c79f;
-  border-radius: 0.5rem;
-  padding: 0.1rem 0.7rem;
-  font-size: 1.9rem;
-  font-weight: 400;
-  line-height: 1.2;
-}
-
-.app-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.6rem;
-}
-
-.app-cards li {
-  border: 1px solid rgb(201 164 74 / 0.16);
-  border-top-color: rgb(201 164 74 / 0.5);
-  border-radius: 1rem;
-  background: #161009;
-  padding: 0.7rem 0.85rem 0.75rem;
-}
-
-/* A card steps in quicker than a line of text. */
-.app-cards li.show {
-  translate: 0 calc((1 - clamp(0, (var(--p) - var(--at)) * 90, 1)) * 0.75rem);
-}
-
-.app-card-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  font-family: var(--font-display), serif;
-  font-size: 1.25rem;
-}
-
-.app-card-head b {
-  font-weight: 400;
-  font-size: 1.45rem;
-  color: #86c79f;
-}
-
-.app-card-fact {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-top: 0.35rem;
-  font-size: 0.875rem;
-  color: var(--muted);
-}
-
-.app-card-fact span:last-child {
-  color: var(--foreground);
-  text-align: right;
-}
-
-@media (max-width: 820px) {
-  .app-cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .app-score span {
-    font-size: 3rem;
-  }
-
-  .app-card-head {
-    font-size: 1.1rem;
-  }
-
-  .app-card-head b {
-    font-size: 1.25rem;
-  }
-}
-
-/* The engine: four rows, each a leak, a line in, a line out and the fix,
-   with the mark standing across all four in the middle. A row runs from its
-   own --at: the leak steps in, the lines grow through the mark, the fix
-   steps in. */
-.engine {
+.speech {
   position: relative;
-  display: grid;
-  grid-template-columns: 1fr 5.5rem 1fr;
-  row-gap: 0.55rem;
-  margin: 0.4rem 0 0.3rem;
+  border-radius: 1.5rem;
+  background: var(--foreground);
+  color: var(--background);
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1rem 2rem rgb(0 0 0 / 0.45);
 }
 
-.engine-core {
-  grid-column: 2;
-  grid-row: 1 / span 4;
-  position: relative;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgb(201 164 74 / 0.6);
-  border-radius: 1rem;
-  background: radial-gradient(circle, rgb(201 164 74 / 0.22), rgb(13 8 7 / 0) 72%);
-}
-
-.engine-core img {
-  position: relative;
-  width: 3rem;
-  height: auto;
-}
-
-.engine-ring {
+.speech-tail {
   position: absolute;
-  width: 4.6rem;
-  height: 4.6rem;
-  border-radius: 50%;
-  border: 2px dashed var(--gold-bright);
-  rotate: calc(var(--p) * 5turn);
+  bottom: -0.7rem;
+  left: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: -0.75rem;
+  border-bottom-right-radius: 0.375rem;
+  background: var(--foreground);
+  transform: rotate(45deg);
 }
 
-.engine-row {
-  display: contents;
+@keyframes guide-hop {
+  0%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-16px) scale(1.03); }
+  55% { transform: translateY(0); }
+  75% { transform: translateY(-6px); }
 }
 
-.engine-in,
-.engine-out {
-  grid-row: var(--row);
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  padding: 0.4rem 0;
-  font-size: 1rem;
-  line-height: 1.3;
+@keyframes guide-shake {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  20% { transform: translateX(-7px) rotate(-3deg); }
+  40% { transform: translateX(7px) rotate(3deg); }
+  60% { transform: translateX(-5px) rotate(-2deg); }
+  80% { transform: translateX(5px) rotate(2deg); }
 }
 
-.engine-in {
-  grid-column: 1;
-  opacity: clamp(0, (var(--p) - var(--at)) * 1000, 1);
-  translate: calc((1 - clamp(0, (var(--p) - var(--at)) * 60, 1)) * -0.75rem) 0;
+@keyframes speech-pop {
+  0% { transform: scale(0.92) translateY(6px); }
+  60% { transform: scale(1.02); }
+  100% { transform: scale(1); }
 }
 
-.engine-out {
-  grid-column: 3;
-  padding-left: 0.9rem;
-  opacity: clamp(0, (var(--p) - var(--at) - var(--w) * 1.7) * 1000, 1);
-  translate: calc((1 - clamp(0, (var(--p) - var(--at) - var(--w) * 1.7) * 60, 1)) * -0.75rem) 0;
+@keyframes cta-lit {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(245 217 120 / 0); }
+  50% { box-shadow: 0 0 0 0.5rem rgb(245 217 120 / 0.35); }
 }
 
-/* A line lies under its row's text, from the text's edge to the mark. */
-.engine-line {
-  grid-row: var(--row);
-  align-self: end;
-  height: 2px;
-  margin-bottom: 0.2rem;
-  transform-origin: left;
-}
-
-.engine-line.in {
-  grid-column: 1;
-  background: linear-gradient(to right, var(--leak), var(--gold-bright));
-  scale: clamp(0, (var(--p) - var(--at)) / var(--w), 1) 1;
-}
-
-.engine-line.out {
-  grid-column: 3;
-  background: linear-gradient(to right, var(--gold-bright), var(--proof));
-  scale: clamp(0, (var(--p) - var(--at) - var(--w)) / var(--w), 1) 1;
-}
-
-@media (max-width: 820px) {
-  .engine {
-    grid-template-columns: 1fr 3.6rem 1fr;
+/* Movement only for those who have not asked for less; her moods move the
+   picture inside the figure, so they never fight the walk-in. */
+@media (prefers-reduced-motion: no-preference) {
+  .speech {
+    animation: speech-pop 0.35s ease-out;
+    transform-origin: 50% 100%;
   }
 
-  .engine-in,
-  .engine-out {
-    font-size: 0.875rem;
-    gap: 0.3rem;
+  .guide-hop canvas {
+    animation: guide-hop 0.6s ease-out;
   }
 
-  .engine-out {
-    padding-left: 0.5rem;
+  .guide-shake canvas {
+    animation: guide-shake 0.5s ease-in-out;
   }
 
-  .engine-core img {
-    width: 2rem;
-  }
-
-  .engine-ring {
-    width: 3rem;
-    height: 3rem;
+  .cta-lit > a {
+    animation: cta-lit 1.2s ease-in-out 3;
   }
 }
 
-/* The closing page. It comes up over the story's last screen while that
-   screen is still pinned, and its own sky is the same picture, fixed to the
-   view and cut to the section: nothing behind the frame moves, so the join
-   with the story cannot show. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* The closing frame. */
 .closing {
   position: relative;
-  z-index: 5;
   display: grid;
   place-items: center;
-  min-height: 100svh;
-  margin-top: -100svh;
-  padding: 6rem 1.25rem 3rem;
-  clip-path: inset(0);
-}
-
-.closing-sky {
-  position: fixed;
-  inset: 0 0 auto;
-  height: 100svh;
-  pointer-events: none;
+  padding: 2rem 1.25rem 3rem;
 }
 
 .closing-frame {
@@ -853,7 +155,6 @@ body {
   background: rgb(13 8 7 / 0.86);
   padding: 2.75rem 2.75rem 1.75rem;
   box-shadow: 0 2rem 5rem rgb(0 0 0 / 0.6);
-  backdrop-filter: blur(14px);
 }
 
 /* The gold hairline across the frame's top edge. */
@@ -911,29 +212,6 @@ body {
 
   .closing-steps {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .scrub,
-  .beam {
-    display: none;
-  }
-
-  .engine-ring {
-    rotate: none;
-  }
-
-  .ping-ring::before,
-  .ping-ring::after,
-  .pin-ring::before,
-  .pin-ring::after {
-    animation: none;
-  }
-
-  .show,
-  .hide {
-    translate: none;
   }
 }
 

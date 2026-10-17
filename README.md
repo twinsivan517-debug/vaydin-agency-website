@@ -1,17 +1,30 @@
-# Starter
+# vaydin-night
 
-The template every site is cloned from. Next.js, TypeScript, Tailwind.
+The site at https://vaydin.agency. Next.js, TypeScript, Tailwind, exported to plain files
+and published by GitHub Pages from `main`. The home page is the guide: an illustrated
+woman who walks in and tells the pitch, chapter by chapter, in her own voice. The five
+product pages and the three legal pages are the standalone `.html` files in `public/`.
 
-## What to change first
+## Where things are
 
-- `site.json` — the name, the tier (`static`, `motion` or `3d`), the live address, one sentence, the email.
-- `src/app/page.tsx` — the page itself. Every sentence in it is a placeholder.
+- `src/app/page.tsx` — the home page: headline, the stage, the closing frame.
+- `src/components/Stage.tsx` — the speech cloud, the Meet-her button, the chapter chips,
+  Stop, the two buttons she lights at the end, the transcript.
+- `src/components/Guide.tsx` — her clips keyed onto a canvas, the walk-in, cross-fades,
+  moods, the opener with its own sound. Reduced motion shows `public/guide/still.webp`.
+- `src/lib/chroma.ts` — the green-screen keyer, two layers so clips fade into each other.
+- `src/lib/pitch.ts` — her words, chapter by chapter, and the path of each line's sound.
+- `src/lib/pitchMachine.ts` — what a tap, a poke, a line's end or Stop does; tested by
+  `npm test`.
+- `src/lib/speaker.ts` — one audio element, unlocked by the first tap.
+- `public/guide/` — `walk`, `idle`, `talk` loops (silent, 258x480) and `opener.mp4`
+  (with sound). `public/voice/` — one mp3 per line.
+- `media/prompt-log.md` — every generation that made her, with job ids; the sources
+  under `media/` are not in git.
 
-## What is already here
-
-- `src/app/layout.tsx`, `robots.ts`, `sitemap.ts` — search basics, read from `site.json`.
-- `src/components/ContactForm.tsx` + `src/app/actions.ts` — a contact form. It forwards to the address in the `CONTACT_WEBHOOK_URL` setting; with none set it tells the visitor to email instead.
-- `src/components/Reveal.tsx` + `.reveal` in `globals.css` — slides a block up into place as it scrolls into view, with no script and no fade (faded text fails the contrast check while it is half shown). It stands still for a visitor who asked for reduced motion, and in a browser without scroll-driven animation.
+Sound never starts on load: the first tap plays the opener, and that tap unlocks the
+page for every later line. The scroll story that was the home page until the guide is at
+tag `story-home-2026-10-17`.
 
 ## The ship gate
 
@@ -23,11 +36,9 @@ commit id passes it; nothing here can stop either. It catches drift, not intent.
 Each page sets its own canonical address in its own `metadata` (see `page.tsx`). Set in the
 layout it would be inherited, and every page would claim to be the home page.
 
-A new site is made from an export of this repository, not a clone: `.ship/` is left out of
-the export, so a new site never starts with this starter's stamp.
-
 ## Commands
 
     npm run dev      work on it
-    npm run build    build it
-    npm run start    serve the build
+    npm run build    build it (gzip twins are written after)
+    npm run start    serve the build at http://127.0.0.1:8080/
+    npm test         the guide's state machine

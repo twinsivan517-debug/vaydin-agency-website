@@ -6,6 +6,15 @@ the job id fetches them again). Gates are pass/fail. Scores are 0-5 with a reaso
 Reference ids: `REF-RECEPTION` = Vaydin's own reception image (`layer-fix.webp`),
 `REF-MAP` = Vaydin's own night map (`hero-map.webp`).
 
+The guide's entries (still, voice, clips) are at the end, under "The guide".
+
+---
+
+# The story, frozen at tag `story-home-2026-10-17`
+
+Everything from here to "The guide" made the scroll story that was the home page
+from 2026-10-13 to the guide's arrival. Its frames left this repository with it.
+
 ---
 
 ## S2 — room at sunset, wide

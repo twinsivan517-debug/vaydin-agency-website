@@ -47,3 +47,4 @@ next-env.d.ts
 # generated source media: fetched again by job id from media/prompt-log.md
 /media/stills/
 /media/clips/
+/media/voice/
