@@ -1,37 +1,34 @@
 "use client";
 
-/* The guide herself: green-screen clips keyed onto one canvas. She walks in
-   once after the page has loaded, idles, talks while a line plays, and plays
-   the opener (the one clip that carries its own sound) when told to from a
-   tap. Every change of clip is a short cross-fade. With reduced motion, or
-   without a canvas that can key, she is one still picture and only her
-   sound moves. */
+/* The guide herself: green-screen clips keyed onto one canvas. She is asleep
+   as the page opens, wakes on a tap into the opener (the one clip that
+   carries its own sound), idles, and talks while a line plays. Every change
+   of clip is a short cross-fade. With reduced motion, or without a canvas
+   that can key, she is one still picture and only her sound moves. */
 
 import Image from "next/image";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { painter, type Layer } from "@/lib/chroma";
 import { OPENER_VIDEO, type Mood } from "@/lib/pitch";
 
-export type Mode = "idle" | "talk" | "opener";
+export type Mode = "sleep" | "idle" | "talk" | "opener";
 export type GuideHandle = { opener(): void };
-type Clip = "walk" | "idle" | "talk" | "opener";
+type Clip = Mode;
 type Props = {
   mode: Mode;
   run: number;
   mood: Mood | null;
   pokeable: boolean;
-  onArrive: () => void;
   onOpenerTime: (seconds: number) => void;
   onOpenerEnd: () => void;
   onPoke: () => void;
 };
 
-const LOOPS: Clip[] = ["walk", "idle", "talk"];
+const LOOPS: Clip[] = ["sleep", "idle", "talk"];
 const STILL = "/guide/still.webp";
-const WALK_MS = 2200;
+const WIDTH = 516;
+const HEIGHT = 960;
 const FADE_MS = 200;
-/* The walk clip faces right; mirrored, she walks in from the right edge. */
-const WALK_FLIP = true;
 
 export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   const { mode, run, mood, pokeable, onPoke } = props;
@@ -45,7 +42,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   const fadeAt = useRef(0);
   const stillRef = useRef(false);
   const [still, setStill] = useState(false);
-  const [stage, setStage] = useState<"away" | "walking" | "here">("away");
+  const [shown, setShown] = useState(false);
 
   const make = useCallback((name: Clip) => {
     const video = document.createElement("video");
@@ -58,7 +55,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       video.ontimeupdate = () => latest.current.onOpenerTime(video.currentTime);
       video.onended = () => latest.current.onOpenerEnd();
     }
-    const layer: Layer = { video, flip: name === "walk" && WALK_FLIP };
+    const layer: Layer = { video };
     layers.current[name] = layer;
     return layer;
   }, []);
@@ -101,11 +98,8 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
     const list = layers.current;
 
     const begin = () => {
-      if (!paint) {
-        setStage("here");
-        latest.current.onArrive();
-        return;
-      }
+      setShown(true);
+      if (!paint) return;
       for (const name of LOOPS) make(name);
       let lastTime = -1;
       let lastLayer: Layer | null = null;
@@ -133,13 +127,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         }
       };
       frame = requestAnimationFrame(draw);
-      swap("walk");
-      setStage("walking");
-      wait = window.setTimeout(() => {
-        swap("idle");
-        setStage("here");
-        latest.current.onArrive();
-      }, WALK_MS);
+      swap("sleep");
     };
 
     const kick = () => {
@@ -160,8 +148,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   }, [make, swap]);
 
   useEffect(() => {
-    if (mode === "talk") swap("talk");
-    else if (mode === "idle") swap("idle");
+    if (mode !== "opener") swap(mode);
   }, [mode, run, swap]);
 
   /* The class is taken off and put back so the same mood replays. */
@@ -180,25 +167,21 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       <div
         ref={figure}
         aria-hidden="true"
-        className="guide-figure absolute bottom-0 left-1/2 z-10 aspect-[258/480] h-full"
-        style={{
-          opacity: stage === "away" ? 0 : 1,
-          transform: stage === "away" ? "translateX(calc(100vw - 50%))" : "translateX(-50%)",
-          transition: stage === "walking" ? `transform ${WALK_MS}ms linear, opacity 300ms` : "opacity 300ms",
-        }}
+        className="guide-figure absolute bottom-0 left-1/2 z-10 aspect-[516/960] h-full -translate-x-1/2 transition-opacity duration-700"
+        style={{ opacity: shown ? 1 : 0 }}
       >
         {still ? (
-          <Image src={STILL} alt="" width={258} height={480} className="h-full w-full" priority={false} />
+          <Image src={STILL} alt="" width={WIDTH} height={HEIGHT} className="h-full w-full" priority={false} />
         ) : (
-          <canvas ref={canvas} width={258} height={480} className="h-full w-full drop-shadow-[0_10px_12px_rgba(0,0,0,0.5)]" />
+          <canvas ref={canvas} width={WIDTH} height={HEIGHT} className="h-full w-full drop-shadow-[0_10px_12px_rgba(0,0,0,0.5)]" />
         )}
       </div>
       <button
         type="button"
         onClick={onPoke}
-        disabled={!pokeable || stage !== "here"}
-        aria-label="Poke her"
-        className="absolute bottom-0 left-1/2 z-20 aspect-[258/480] h-full -translate-x-1/2 cursor-pointer rounded-full disabled:cursor-default"
+        disabled={!pokeable || !shown}
+        aria-label={mode === "sleep" ? "Wake her up" : "Poke her"}
+        className="absolute bottom-0 left-1/2 z-20 aspect-[516/960] h-full -translate-x-1/2 cursor-pointer rounded-full disabled:cursor-default"
       />
     </div>
   );

@@ -3,12 +3,11 @@
 import assert from "node:assert/strict";
 import { ANSWERS, CHOOSE, UNKNOWN } from "./answers.ts";
 import { match } from "./match.ts";
-import { CHAPTERS, GREETING, POKES } from "./pitch.ts";
+import { CHAPTERS, POKES, SLEEPING } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
 
 const run = (events: Event[], from: State = START) => events.reduce(reduce, from);
-const arrived = run([{ type: "arrived" }]);
-const met = run([{ type: "tap", chapter: "meet" }, { type: "line_ended" }], arrived);
+const awake = run([{ type: "wake" }, { type: "line_ended" }]);
 
 let cases = 0;
 const check = (name: string, test: () => void) => {
@@ -17,36 +16,49 @@ const check = (name: string, test: () => void) => {
   console.log(`ok  ${name}`);
 };
 
-check("she greets in the cloud before anything is tapped, and nothing happens before she arrives", () => {
-  assert.equal(START.cloud, GREETING);
-  assert.equal(run([{ type: "tap", chapter: "meet" }]).phase, "away");
-  assert.equal(run([{ type: "poke", index: 0 }]).phase, "away");
-  assert.equal(run([{ type: "ask", reply: match("price") }]).phase, "away");
+check("she sleeps as the page opens, and a tap on her wakes her into the greeting", () => {
+  assert.equal(START.phase, "asleep");
+  assert.equal(START.cloud, SLEEPING);
+  assert.equal(mode(START), "sleep");
+  assert.equal(pokeable(START), true);
+  const woken = run([{ type: "wake" }]);
+  assert.equal(woken.phase, "opener");
+  assert.equal(mode(woken), "opener");
+  assert.equal(woken.cloud.id, "01");
+  assert.deepEqual(woken.shown, { kind: "chapter", id: "meet" });
+  assert.equal(run([{ type: "poke", index: 0 }]).phase, "opener");
+  assert.equal(run([{ type: "wake" }], awake), awake);
 });
 
-check("the Hello chip plays the opener; its end means she is met", () => {
-  const opener = run([{ type: "tap", chapter: "meet" }], arrived);
-  assert.equal(opener.phase, "opener");
-  assert.equal(mode(opener), "opener");
-  assert.equal(opener.cloud.id, "01");
-  assert.deepEqual(opener.shown, { kind: "chapter", id: "meet" });
-  assert.equal(met.phase, "done");
-  assert.equal(met.met, true);
+check("a chapter chip or a question also wakes her, straight into the answer", () => {
+  const see = run([{ type: "tap", chapter: "see" }]);
+  assert.equal(see.phase, "talking");
+  assert.equal(see.cloud.id, "03");
+  const price = run([{ type: "ask", reply: match("price") }]);
+  assert.equal(price.phase, "talking");
+  assert.equal(price.cloud.id, "a-price");
+});
+
+check("the greeting's end means she is met; the Hello chip replays it", () => {
+  assert.equal(awake.phase, "done");
+  assert.equal(awake.met, true);
+  const again = run([{ type: "tap", chapter: "meet" }], awake);
+  assert.equal(again.phase, "opener");
+  assert.equal(again.run, awake.run + 1);
 });
 
 check("the opener's clock moves the cloud to line 2, never back", () => {
-  const opener = run([{ type: "tap", chapter: "meet" }], arrived);
-  assert.equal(run([{ type: "cloud_at", seconds: 1 }], opener).cloud.id, "01");
-  const second = run([{ type: "cloud_at", seconds: 5 }], opener);
+  const woken = run([{ type: "wake" }]);
+  assert.equal(run([{ type: "cloud_at", seconds: 1 }], woken).cloud.id, "01");
+  const second = run([{ type: "cloud_at", seconds: 5 }], woken);
   assert.equal(second.cloud.id, "02");
   assert.equal(run([{ type: "cloud_at", seconds: 5.1 }], second), second);
 });
 
 check("a chapter plays its lines in order, shows its card, then rests", () => {
-  const see = run([{ type: "tap", chapter: "see" }], arrived);
+  const see = run([{ type: "tap", chapter: "see" }], awake);
   assert.equal(see.phase, "talking");
   assert.equal(mode(see), "talk");
-  assert.equal(see.cloud.id, "03");
   assert.deepEqual(see.shown, { kind: "chapter", id: "see" });
   const second = run([{ type: "line_ended" }], see);
   assert.equal(second.cloud.id, "04");
@@ -58,7 +70,7 @@ check("a chapter plays its lines in order, shows its card, then rests", () => {
 });
 
 check("tapping another chip mid-line restarts with a new run; the same chip replays", () => {
-  const see = run([{ type: "tap", chapter: "see" }, { type: "line_ended" }], met);
+  const see = run([{ type: "tap", chapter: "see" }, { type: "line_ended" }], awake);
   const fix = run([{ type: "tap", chapter: "fix" }], see);
   assert.equal(fix.chapter, "fix");
   assert.equal(fix.line, 0);
@@ -69,21 +81,20 @@ check("tapping another chip mid-line restarts with a new run; the same chip repl
 });
 
 check("the last chapter lights the buttons; the next tap puts them out", () => {
-  const lit = run([{ type: "tap", chapter: "start" }, { type: "line_ended" }], met);
+  const lit = run([{ type: "tap", chapter: "start" }, { type: "line_ended" }], awake);
   assert.equal(lit.lit, true);
   assert.equal(run([{ type: "tap", chapter: "see" }], lit).lit, false);
 });
 
 check("a question is answered aloud and on the card; a tie asks; a miss hands over", () => {
-  const price = run([{ type: "ask", reply: match("how much does it cost") }], arrived);
-  assert.equal(price.phase, "talking");
+  const price = run([{ type: "ask", reply: match("how much does it cost") }], awake);
   assert.equal(price.cloud.id, "a-price");
   assert.deepEqual(price.shown, { kind: "answer", id: "price" });
   assert.equal(price.chapter, null);
-  const miss = run([{ type: "ask", reply: match("zzz qqq") }], arrived);
+  const miss = run([{ type: "ask", reply: match("zzz qqq") }], awake);
   assert.equal(miss.cloud, UNKNOWN);
   assert.deepEqual(miss.shown, { kind: "unknown" });
-  const tie = run([{ type: "ask", reply: { kind: "choose", options: [ANSWERS[0], ANSWERS[1]] } }], arrived);
+  const tie = run([{ type: "ask", reply: { kind: "choose", options: [ANSWERS[0], ANSWERS[1]] } }], awake);
   assert.equal(tie.cloud, CHOOSE);
   assert.deepEqual(tie.shown, { kind: "choose", ids: ["price", "diagnostic"] });
 });
@@ -101,26 +112,26 @@ check("the matcher finds the obvious ones and keeps a greeting apart", () => {
   assert.equal(hit("what is the meaning of life"), "unknown");
 });
 
-check("pokes only while she rests, and they escalate to the last quip", () => {
-  assert.equal(pokeable(arrived), true);
-  const quip = run([{ type: "poke", index: 0 }], arrived);
+check("pokes only while she rests awake, and they escalate to the last quip", () => {
+  assert.equal(pokeable(awake), true);
+  const quip = run([{ type: "poke", index: 0 }], awake);
   assert.equal(quip.phase, "quip");
   assert.equal(quip.cloud.id, POKES[0].id);
   assert.equal(speaking(quip), true);
   assert.equal(run([{ type: "poke", index: 1 }], quip), quip);
-  assert.equal(run([{ type: "line_ended" }], quip).phase, "idle");
-  assert.equal(run([{ type: "poke", index: 9 }], met).cloud.id, POKES[POKES.length - 1].id);
-  assert.equal(run([{ type: "poke", index: 0 }], run([{ type: "tap", chapter: "see" }], met)).phase, "talking");
+  assert.equal(run([{ type: "line_ended" }], quip).phase, "done");
+  assert.equal(run([{ type: "poke", index: 9 }], awake).cloud.id, POKES[POKES.length - 1].id);
+  assert.equal(run([{ type: "poke", index: 0 }], run([{ type: "tap", chapter: "see" }], awake)).phase, "talking");
 });
 
-check("stop returns to rest; stopping the opener still counts as met", () => {
-  const see = run([{ type: "tap", chapter: "see" }], met);
+check("stop returns to rest; stopping the greeting still counts as met", () => {
+  const see = run([{ type: "tap", chapter: "see" }], awake);
   assert.equal(run([{ type: "stop" }], see).phase, "done");
-  const opener = run([{ type: "tap", chapter: "meet" }], arrived);
-  const stopped = run([{ type: "stop" }], opener);
+  const stopped = run([{ type: "wake" }, { type: "stop" }]);
   assert.equal(stopped.phase, "done");
   assert.equal(stopped.met, true);
-  assert.equal(run([{ type: "stop" }], arrived), arrived);
+  assert.equal(run([{ type: "stop" }], awake), awake);
+  assert.equal(run([{ type: "stop" }]), START);
 });
 
 check("every line has a sound or a time, chapters cover all ten, every card links somewhere", () => {

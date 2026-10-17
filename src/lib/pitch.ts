@@ -12,11 +12,8 @@ export type Chapter = { id: ChapterId; label: string; clip: "opener" | "talk"; l
 
 export const OPENER_VIDEO = "/guide/opener.mp4";
 
-/* In the cloud as she walks in. Not spoken: no sound may start before a tap. */
-export const GREETING: Line = {
-  id: "00",
-  text: "Hi, I'm Vaydin's voice. Welcome. Tap a chapter, ask me anything about Vaydin, or just tap me.",
-};
+/* In the cloud while she sleeps. Not spoken: no sound may start before a tap. */
+export const SLEEPING: Line = { id: "00", text: "Tap me to wake me up." };
 
 export const CHAPTERS: Chapter[] = [
   {
@@ -24,8 +21,8 @@ export const CHAPTERS: Chapter[] = [
     label: "Hello",
     clip: "opener",
     lines: [
-      { id: "01", text: "Hi. I'm Vaydin's voice. Give me ninety seconds.", at: 0 },
-      { id: "02", text: "Somewhere in Dubai tonight, a patient is choosing a clinic. Your name is on the list.", at: 4.6 },
+      { id: "01", text: "Thank you for waking me. I'm Vaydin's voice.", at: 0 },
+      { id: "02", text: "Tell me what you need, or pick a chapter, and I'll show you how patients find a clinic, and how they lose it.", at: 3.8 },
     ],
     card: {
       title: "Vaydin · Dubai",

@@ -1,8 +1,8 @@
 "use client";
 
 /* Around the guide: her speech cloud, the card beside her, the chapter chips,
-   a question box, Stop, and the two buttons she lights at the end. Sound
-   starts only from a tap; one tap unlocks the page for every line after it. */
+   a question box, Stop, and the two buttons she lights at the end. She sleeps
+   until a tap wakes her; that tap unlocks sound for every line after it. */
 
 import { useEffect, useReducer, useRef, useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
@@ -82,6 +82,11 @@ export function Stage() {
   }
 
   function poke() {
+    if (state.phase === "asleep") {
+      guide.current?.opener();
+      dispatch({ type: "wake" });
+      return;
+    }
     const now = Date.now();
     const count = now - pokes.current.at > 8000 ? 0 : Math.min(pokes.current.count + 1, POKES.length - 1);
     pokes.current = { count, at: now };
@@ -108,14 +113,13 @@ export function Stage() {
 
       <div className="mt-5 grid grid-cols-[42%_1fr] items-start gap-4 md:grid-cols-[minmax(0,22rem)_1fr] md:gap-10">
         <div className="sticky top-20">
-          <div className="guide-floor relative h-[min(46vh,380px)] md:h-[560px]">
+          <div className="guide-floor relative h-[min(46vh,380px)] md:h-[min(62vh,500px)]">
             <Guide
               ref={guide}
               mode={mode(state)}
               run={state.run}
               mood={state.phase === "quip" ? (state.cloud.mood ?? null) : null}
               pokeable={pokeable(state)}
-              onArrive={() => dispatch({ type: "arrived" })}
               onOpenerTime={(seconds) => dispatch({ type: "cloud_at", seconds })}
               onOpenerEnd={() => dispatch({ type: "line_ended" })}
               onPoke={poke}
