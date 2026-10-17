@@ -70,7 +70,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
     previous.current = current.current;
     current.current = layer;
     fadeAt.current = performance.now();
-  }, []);
+  }, [make]);
 
   useImperativeHandle(
     ref,
