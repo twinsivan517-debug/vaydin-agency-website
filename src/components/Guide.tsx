@@ -184,7 +184,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
           <canvas ref={canvas} width={WIDTH} height={HEIGHT} className="h-full w-full drop-shadow-[0_10px_12px_rgba(0,0,0,0.5)]" />
         )}
         {mode === "sleep" && (
-          <span className="guide-zzz absolute left-[62%] top-[34%] font-display text-2xl text-gold-bright">
+          <span className="guide-zzz absolute left-[30%] top-[60%] font-display text-2xl text-gold-bright">
             <i className="not-italic">z</i>
             <i className="not-italic">z</i>
             <i className="not-italic">Z</i>

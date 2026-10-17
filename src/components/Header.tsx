@@ -7,7 +7,7 @@ import { PAGES, WHATSAPP } from "@/lib/site";
 export function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-20 flex items-center justify-between bg-gradient-to-b from-background/80 to-transparent px-5 py-4 sm:px-12">
-      <Link href="/" className="flex items-center gap-3" aria-label="Vaydin, home">
+      <Link href="/" className="mark flex items-center gap-3" aria-label="Vaydin, home">
         <Image src="/img/mark.png" alt="" width={36} height={31} />
         <span className="hidden font-display text-xl tracking-[0.2em] sm:inline">VAYDIN</span>
       </Link>

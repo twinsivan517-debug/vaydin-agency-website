@@ -85,7 +85,7 @@ export function reduce(s: State, e: Event): State {
       if (s.phase !== "talking") return s;
       const next = s.line + 1;
       if (next < s.lines.length) return { ...s, line: next, cloud: s.lines[next] };
-      return { ...s, phase: "done", met: true, lit: s.chapter === "start" };
+      return { ...s, phase: "done", met: true, lit: s.chapter === "price" };
     }
     case "cloud_at": {
       if (s.phase !== "opener") return s;

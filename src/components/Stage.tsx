@@ -1,21 +1,29 @@
 "use client";
 
-/* Around the guide: her speech cloud, the card beside her, the chapter chips,
-   a question box, Stop, and the two buttons she lights at the end. She sleeps
-   until a tap wakes her; that tap unlocks sound for every line after it. */
+/* The hero: her, large, with a navy cloud by her head; beside her the five
+   questions, the folder she pulls out for each, and a box to ask her
+   anything. She sleeps until a tap wakes her, and the page sleeps with her:
+   it lights up the moment she stands. That first tap unlocks sound for every
+   line after it. */
 
 import { useEffect, useReducer, useRef, useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
 import { Guide, type GuideHandle } from "@/components/Guide";
 import { type Answer } from "@/lib/answers";
 import { match } from "@/lib/match";
-import { CHAPTERS, OPENER_AUDIO, POKES, chapter, talkTime, type ChapterId } from "@/lib/pitch";
+import { OPENER_AUDIO, POKES, QUESTIONS, STANDS_AT, chapter, talkTime, type ChapterId } from "@/lib/pitch";
 import { START, mode, pokeable, reduce, speaking } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
 import { WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
 
 const CHIP =
   "rounded-full border border-gold/50 px-4 py-2 text-base text-gold-bright transition-colors aria-pressed:border-gold-bright aria-pressed:bg-gold-bright aria-pressed:text-background";
+
+/* The page dims while she sleeps and lights up when she stands. */
+function lightUp() {
+  document.body.classList.remove("site-asleep");
+  document.body.classList.add("site-awake");
+}
 
 export function Stage() {
   const [state, dispatch] = useReducer(reduce, START);
@@ -27,12 +35,19 @@ export function Stage() {
   const pokes = useRef({ count: 0, at: 0 });
   const busy = speaking(state);
 
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    document.body.classList.add("site-asleep");
+    return () => document.body.classList.remove("site-asleep", "site-awake");
+  }, []);
+
   /* The greeting as sound alone, when its clip is missing or refused. */
   useEffect(() => {
     if (state.phase !== "opener" || !spoken) return;
     const sound = voice.current;
     if (!sound) return;
     let live = true;
+    lightUp();
     sound
       .say(OPENER_AUDIO, (seconds) => live && dispatch({ type: "cloud_at", seconds }))
       .then((outcome) => live && outcome !== "stopped" && dispatch({ type: "line_ended" }));
@@ -92,16 +107,19 @@ export function Stage() {
   function tap(id: ChapterId) {
     if (chapter(id).clip === "opener") return wake();
     unlock();
+    lightUp();
     dispatch({ type: "tap", chapter: id });
   }
 
   function ask(text: string) {
     unlock();
+    lightUp();
     dispatch({ type: "ask", reply: match(text) });
   }
 
   function pick(a: Answer) {
     unlock();
+    lightUp();
     dispatch({ type: "ask", reply: { kind: "answer", answer: a } });
   }
 
@@ -123,50 +141,56 @@ export function Stage() {
   }
 
   return (
-    <section aria-label="The guide">
-      <div aria-live="polite" className="speech-row">
-        <div key={state.cloud.id} className="speech">
-          <p className="text-[1.05rem] leading-snug">{state.cloud.text}</p>
-          <span aria-hidden="true" className="speech-tail" />
+    <section aria-label="The guide" className="hero">
+      <div className="hero-guide md:sticky md:top-16">
+        <div className="guide-floor relative h-[min(44vh,360px)] md:h-[min(76vh,620px)]">
+          <Guide
+            ref={guide}
+            mode={mode(state)}
+            run={state.run}
+            mood={state.phase === "quip" ? (state.cloud.mood ?? null) : null}
+            pokeable={pokeable(state)}
+            onOpenerTime={(seconds) => {
+              if (seconds >= STANDS_AT) lightUp();
+              dispatch({ type: "cloud_at", seconds });
+            }}
+            onOpenerEnd={() => dispatch({ type: "line_ended" })}
+            onPoke={poke}
+          />
         </div>
       </div>
 
-      <div className="mt-5 grid grid-cols-[42%_1fr] items-start gap-4 md:grid-cols-[minmax(0,22rem)_1fr] md:gap-10">
-        <div className="sticky top-20">
-          <div className="guide-floor relative h-[min(46vh,380px)] md:h-[min(52vh,440px)]">
-            <Guide
-              ref={guide}
-              mode={mode(state)}
-              run={state.run}
-              mood={state.phase === "quip" ? (state.cloud.mood ?? null) : null}
-              pokeable={pokeable(state)}
-              onOpenerTime={(seconds) => dispatch({ type: "cloud_at", seconds })}
-              onOpenerEnd={() => dispatch({ type: "line_ended" })}
-              onPoke={poke}
-            />
-          </div>
+      <div aria-live="polite" className="hero-cloud md:pt-12">
+        <div key={state.cloud.id} className="cloud">
+          <p className="text-[1.05rem] leading-snug md:text-lg">{state.cloud.text}</p>
+          <span aria-hidden="true" className="cloud-tail">
+            <i />
+            <i />
+          </span>
+        </div>
+      </div>
+
+      <div className="hero-panel min-w-0">
+        <div className="wakes flex flex-wrap items-center gap-2">
+          <ul className="flex flex-wrap gap-2" aria-label="Questions">
+            {QUESTIONS.map((c) => (
+              <li key={c.id}>
+                <button type="button" onClick={() => tap(c.id)} aria-pressed={c.id === state.chapter} className={CHIP}>
+                  {c.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+          {busy && (
+            <button type="button" onClick={() => dispatch({ type: "stop" })} className="rounded-full border border-gold/30 px-4 py-2 text-base text-muted">
+              Stop
+            </button>
+          )}
         </div>
 
-        <div className="min-w-0">
-          {/* The key remounts the card, so each chapter's folder is pulled out afresh. */}
+        <div className="wakes mt-4">
+          {/* The key remounts the card, so each answer's folder is pulled out afresh. */}
           <Card key={state.run} shown={state.shown} onPick={pick} />
-
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            <ul className="flex flex-wrap gap-2" aria-label="Chapters">
-              {CHAPTERS.map((c) => (
-                <li key={c.id}>
-                  <button type="button" onClick={() => tap(c.id)} aria-pressed={c.id === state.chapter} className={CHIP}>
-                    {c.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-            {busy && (
-              <button type="button" onClick={() => dispatch({ type: "stop" })} className="rounded-full border border-gold/30 px-4 py-2 text-base text-muted">
-                Stop
-              </button>
-            )}
-          </div>
 
           <form onSubmit={submit} className="mt-4 flex gap-2">
             <label htmlFor="ask" className="sr-only">
@@ -176,7 +200,7 @@ export function Stage() {
               id="ask"
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
-              placeholder="Ask her about Vaydin…"
+              placeholder="Ask her anything about Vaydin…"
               autoComplete="off"
               enterKeyHint="send"
               maxLength={200}
@@ -192,7 +216,7 @@ export function Stage() {
         </div>
       </div>
 
-      <div className={`sticky bottom-0 -mx-5 mt-8 flex flex-wrap gap-3 border-t border-gold/15 bg-background/95 px-5 py-3 backdrop-blur sm:-mx-12 sm:px-12 ${state.lit ? "cta-lit" : ""}`}>
+      <div className={`hero-bar wakes sticky bottom-0 -mx-5 mt-6 flex flex-wrap gap-3 border-t border-gold/15 bg-background/95 px-5 py-3 backdrop-blur sm:-mx-12 sm:px-12 ${state.lit ? "cta-lit" : ""}`}>
         <a href={WHATSAPP} className="rounded-full bg-gold-bright px-6 py-3 text-base font-medium text-background">
           WhatsApp · {WHATSAPP_SHOWN}
         </a>
@@ -200,15 +224,6 @@ export function Stage() {
           See the plans
         </a>
       </div>
-
-      <details className="mt-6 text-muted">
-        <summary className="label cursor-pointer text-gold-bright">Read what she says</summary>
-        <ol className="mt-3 space-y-2 text-base leading-7">
-          {CHAPTERS.flatMap((c) => c.lines).map((line) => (
-            <li key={line.id}>{line.text}</li>
-          ))}
-        </ol>
-      </details>
     </section>
   );
 }
