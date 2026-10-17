@@ -8,10 +8,10 @@
 
 import { useEffect, useReducer, useRef, useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
-import { Guide, type GuideHandle } from "@/components/Guide";
+import { Guide, type GuideHandle, type LineOutcome } from "@/components/Guide";
 import { type Answer } from "@/lib/answers";
 import { match } from "@/lib/match";
-import { BULB_FLIGHT, OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, chapter, talkTime, type ChapterId } from "@/lib/pitch";
+import { BULB_FLIGHT, OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, chapter, lineClip, talkTime, type ChapterId } from "@/lib/pitch";
 import { START, mode, pokeable, reduce, speaking } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
 import { WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
@@ -39,6 +39,8 @@ export function Stage() {
   const voice = useRef<Speaker | null>(null);
   const pokes = useRef({ count: 0, at: 0 });
   const busy = speaking(state);
+  /* Line clips that would not play here: those lines fall back to the recording. */
+  const [noClip, setNoClip] = useState<string[]>([]);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -46,19 +48,26 @@ export function Stage() {
     return () => document.body.classList.remove("site-asleep", "site-awake");
   }, []);
 
-  /* A line's sound; when it cannot play, the words stay up for reading time. */
+  /* A line is spoken by her clip when it has one; otherwise its recording
+     plays, and when that cannot play either, the words stay up for reading time. */
   const { phase, run, cloud, lines, line: lineAt } = state;
+  const talking = phase === "talking" || phase === "quip";
+  const clip = talking ? lineClip(cloud) : null;
+  const clipSrc = clip && !noClip.includes(clip) ? clip : null;
   useEffect(() => {
-    if (phase !== "talking" && phase !== "quip") return;
+    if (!talking) return;
     const line = cloud;
     const next = phase === "talking" ? lines[lineAt + 1] : undefined;
     const sound = voice.current;
+    const nextClip = next && lineClip(next);
+    if (nextClip && !noClip.includes(nextClip)) guide.current?.prime(nextClip);
+    else if (next?.audio) sound?.prefetch(next.audio);
+    if (clipSrc) return;
     let live = true;
     let timer = 0;
     const read = () => {
       timer = window.setTimeout(() => live && dispatch({ type: "line_ended" }), talkTime(line.text));
     };
-    if (next?.audio) sound?.prefetch(next.audio);
     if (!sound || !line.audio) read();
     else
       sound.say(line.audio).then((outcome) => {
@@ -71,7 +80,12 @@ export function Stage() {
       window.clearTimeout(timer);
       sound?.stop();
     };
-  }, [phase, run, lineAt, cloud, lines]);
+  }, [talking, phase, run, lineAt, cloud, lines, clipSrc, noClip]);
+
+  function lineEnded(outcome: LineOutcome) {
+    if (outcome === "ended") dispatch({ type: "line_ended" });
+    else if (clipSrc) setNoClip((list) => (list.includes(clipSrc) ? list : [...list, clipSrc]));
+  }
 
   useEffect(() => {
     const hide = () => document.hidden && dispatch({ type: "stop" });
@@ -92,6 +106,11 @@ export function Stage() {
     thrown.current = false;
     dispatch({ type: "tap", chapter: "meet" });
     guide.current?.opener().then((ok) => setSpoken(!ok));
+    /* The headers of the five questions' first clips, so a tap starts on the right frame. */
+    for (const q of QUESTIONS) {
+      const first = lineClip(q.lines[0]);
+      if (first) guide.current?.prime(first, false);
+    }
   }
 
   /* The bulb she tossed leaves her frame and flies on to the mark; when it lands, the page lights. */
@@ -184,6 +203,7 @@ export function Stage() {
             ref={guide}
             mode={mode(state)}
             run={state.run}
+            lineSrc={clipSrc}
             mood={state.phase === "quip" ? (state.cloud.mood ?? null) : null}
             pokeable={pokeable(state)}
             onOpenerTime={(seconds) => {
@@ -191,6 +211,7 @@ export function Stage() {
               dispatch({ type: "cloud_at", seconds });
             }}
             onOpenerEnd={() => dispatch({ type: "line_ended" })}
+            onLineEnd={lineEnded}
             onPoke={poke}
           />
         </div>

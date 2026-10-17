@@ -22,6 +22,14 @@ export const OPENER_AUDIO = "/voice/opener.mp3";
 export const THROW_AT = 10.8;
 export const BULB_FLIGHT = 1;
 
+/* One body, many mouths: every line with a recording also has a clip of the
+   idle loop with her lips on that line, made by scripts/lipsync.py and
+   carrying the voice. The loop is `BASE_LOOP` seconds; a line's clip cycles
+   it from its first frame, so frame t of a clip is frame t mod BASE_LOOP of
+   the loop, and the page can switch between them on one clock. */
+export const BASE_LOOP = 4.5;
+export const lineClip = (line: Line) => (line.audio ? line.audio.replace("/voice/", "/guide/lines/").replace(/\.mp3$/, ".mp4") : null);
+
 /* In the cloud while she sleeps. Not spoken: no sound may start before a tap. */
 export const SLEEPING: Line = { id: "00", text: "Zzz… Tap me to wake me up." };
 
