@@ -1,0 +1,182 @@
+{
+ "02": {
+  "audio": "48dd6a2974889a48",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "03": {
+  "audio": "3df3ebe33375b02d",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "04": {
+  "audio": "9c1963b8a6888623",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "05": {
+  "audio": "788a08da88ecb518",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "06": {
+  "audio": "999ca20be125dce2",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "07": {
+  "audio": "9ea506cb446175f3",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "08": {
+  "audio": "b623eedc550e7a5d",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "09": {
+  "audio": "ff118d0fe3f96093",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "10": {
+  "audio": "90a99c1ef7269dc4",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "11": {
+  "audio": "ef687feefdb31b00",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "a-ads": {
+  "audio": "0a9b601f67066e34",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "a-bot": {
+  "audio": "5be49c10754f50c7",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "a-branches": {
+  "audio": "74674991d14898b8",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "a-cancel": {
+  "audio": "349a175c757d4874",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "a-chatgpt": {
+  "audio": "15108939756fc962",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "a-clients": {
+  "audio": "f7cf92454e928331",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "a-contact": {
+  "audio": "889a9ecd90c05e0d",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "a-diagnostic": {
+  "audio": "15937b909771904c",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "a-engine": {
+  "audio": "98d40b889d5270d2",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "a-need": {
+  "audio": "ada35b91987d6066",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "a-price": {
+  "audio": "20800740e2592850",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "a-proof": {
+  "audio": "b845ea52fb740cdc",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "a-time": {
+  "audio": "36314a979250b573",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "a-where": {
+  "audio": "aeed6e6716ff6f6e",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "a-who": {
+  "audio": "21b1517a20eaf96d",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "g1": {
+  "audio": "12da22b5e417119f",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "poke-1": {
+  "audio": "c63466c2014d8869",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "poke-2": {
+  "audio": "8ed8c019ea08b876",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "poke-3": {
+  "audio": "c271d603ae9c6548",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "poke-4": {
+  "audio": "89bb1aa9a0c4d0ba",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "poke-5": {
+  "audio": "cf117affeb3c7b21",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "poke-6": {
+  "audio": "4ae3bb176a969d28",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "w1": {
+  "audio": "7042543fadae8432",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "x-choose": {
+  "audio": "7db18a5c08836757",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "x-hello": {
+  "audio": "9fbeb0da35ca099d",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ },
+ "x-unknown": {
+  "audio": "cf914895e38047a2",
+  "base": "c23674a2d3c85923",
+  "model": "wav2lip_gan"
+ }
+}
