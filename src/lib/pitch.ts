@@ -40,7 +40,7 @@ export const CHAPTERS: Chapter[] = [
     clip: "opener",
     lines: [
       { id: "00b", text: "Mmm… hi. It's so dark in here.", at: 0 },
-      { id: "01", text: "There. Thank you for waking me. I'm Vaydin's voice.", at: 8.2 },
+      { id: "01", text: "There. Thank you for waking me. I'm Vaydin's voice.", at: 8.8 },
       {
         id: "02",
         text: "Pick a question or ask me anything, and I'll show you how patients find a clinic, and how a clinic loses them without ever knowing.",
