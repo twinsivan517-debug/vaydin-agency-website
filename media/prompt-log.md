@@ -417,3 +417,103 @@ Source files live in `media/stills/guide-*` and `media/clips/guide-*` and `media
   moved to her hand: `THROW_AT` 9.4, chime at 10.3 s mixed softly under her words.
 - Web file `public/guide/opener.mp4`: 720x1280, crf 25, with the greeting as AAC mono.
 - Verdict: OWED, the owner's eye on the page.
+
+## C3 — the Kling gesture test
+
+- Date 2026-10-18 · Kling v3.0 · pro · 9:16 · 5 s · sound off · 8.75 credits (quoted exactly with
+  the inputs, "IN THE DARK" preset declined; balance 12.49 before) · job
+  `5db1e553-adaf-4ef1-918c-97d0527faee1`
+- Start = end = G1 option 2, uploaded from `media/stills/guide-2.png` (media
+  `4e3d005a-f74c-44c6-83fb-08a7f538e270`)
+- Why: the owner's word 2026-10-18, quality first, gestures and walking that follow the
+  words. Prices read the same day per 10 s silent 9:16: Mini 720p 10 · Kling 3.0 pro 17.5 ·
+  FLUX 3 1080p 80 · Seedance 2.0 std 1080p 120 · Seedance 2.5 1080p 160 · Seedance 2.0
+  4k 220. Speech to cover: 37 lines, 342 s. Kling 3.0 is the candidate body model; it takes
+  a start and an end picture, no audio reference, so lips stay the local model's.
+- Prompt:
+  > A polished stylised 3D-rendered animated woman, exactly the character in the picture: same face, long dark wavy hair, charcoal-black blazer, cream top, black trousers, thin gold necklace, dark low heels. The camera is locked on a tripod: no zoom, no pan, no shake. Full body visible from head to feet. The background is one perfectly flat, uniform pure chroma-key green (#00FF00) with no floor, no shadow, no gradient and no objects. She addresses the viewer with natural, confident presenter gestures: both hands open and rise to present something, then she takes one easy step to her left while gesturing with her open hand to the side, as if showing a thing beside her, then steps back to the centre and settles into exactly the starting pose, one hand slightly open at her side. Warm welcoming expression, lips closed in a gentle smile, no talking. Smooth natural movement, one continuous shot, no cut, no text, no logo, nothing enters or leaves the frame.
+- Gates: flat green · full body, feet visible · her face and clothes unchanged · first frame = last
+  frame · lips closed · a real step, not a slide
+- What came back: 1172x1764, 121 frames, 5.04 s, 5.8 MB (`media/clips/guide-kling-test-src.mp4`,
+  sheet beside it). By my eye every gate passes: flat green, feet in frame, her face and
+  clothes held, first frame = last frame, lips closed, a real step across with the legs
+  crossing and back to the mark. Her face is visibly sharper than the Mini idle at the
+  same crop.
+- Verdict: OWED, the owner's eye against the Mini clips on the page.
+
+## C4 — the chapter lines' bodies (Kling v3.0 pro, 9:16, sound off, start = end = G1 option 2)
+
+The owner's word 2026-10-18: "yes please", gestures from the words, a hand in a pocket where
+it fits. Price 1.75 credits a second, quoted exactly before each. Each clip's length is the
+line's recording rounded up plus one second, 15 at most; a longer line wraps the body (first
+frame = last frame). Lips: the local model over each body (`scripts/body.py`, then
+`scripts/lipsync.py`).
+
+- w1 (13.0 s) · 14 s · 24.5 credits · job `8d012b7c-4da8-4e22-8463-1965ca1b23ad`
+  > …she lays one hand on her chest as she introduces herself, then holds both hands up to frame a small picture in the air, as if showing how something looks, then takes two easy steps to her left and mimes opening a door with one hand and inviting the viewer through it with the other, then walks back to the centre and settles into exactly the starting pose…
+  What came back: 1172x1764, 337 frames. **FAILED the flat-green gate**: the background washes to
+  near-white from 1.5 s to 12 s, a real door is drawn when she mimes one (sheet
+  `media/clips/guide-w1-sheet.jpg`). A mimed object becomes an object; "showing how something
+  looks" becomes a light change. 24.5 credits lost. Rule from here: gestures of the body and
+  hands only, nothing mimed, nothing shown, and the prompt says the green and the light never
+  change.
+- w1, second take · 14 s · 24.5 credits · job `fa0260ef-01b2-4090-acb8-825af4e3bd39`
+  > …the background … stays exactly the same pure green for the whole clip; the lighting on her never changes; nothing is ever drawn, shown or held, and no object, prop, light or effect appears at any point. Only her body and hands move. … she lays one hand on her chest, then opens both palms toward the viewer at waist height, then takes two easy steps to her left while her near arm sweeps open in a wide inviting gesture, then walks back to the centre and settles into exactly the starting pose…
+  What came back: 337 frames, the motion as asked (hand on chest, open palms, two steps and
+  the sweep, back to the mark). **FAILED the flat-green gate**: no object this time, the green
+  itself drifts to studio grey from 1.5 s to 12 s and snaps back for the forced end frame
+  (`scripts/green_gate.py`: 80.2 % wash at frame 150). Kling holds the green for 5 s, not 14.
+  49 credits on w1 so far. Rescue without credits: `scripts/rekey.py` keys each frame against
+  its own flat backdrop colour; take 2 is the proving ground.
+- w1, third take, 7 s · 12.25 credits · job `18e5cd1c-51e6-460d-b270-b9e55f0cc1c4` · the same
+  gestures condensed (one step instead of two). The question it answers: does the green hold at
+  7 s, as it did at 5 and did not at 14? If so every line gets a 7 s loop, wrapped under longer
+  lines, and no rescue. What came back: 169 frames, gate PASS at 0.0 % wash, every gesture as
+  asked, first frame = last. **Verdict: this is the road** (my eye; the owner sees it on the page).
+  Body: `media/guide/bodies/w1.mp4`. The 14 s takes are kept as `w1-take1-failed`, `w1-take2-drift`
+  under bodies/ for the re-key experiment (`scripts/rekey.py`), not for the page.
+
+The 7 s loops, 12.25 credits each, quoted exactly before each, same frame rules as w1's third take:
+- 02 (5.8 s) · job `f7c83469-4999-42d6-9cff-d03a91ee760d` · one open hand to the viewer, index then
+  second finger (two things), a small shrug, back to the mark. Gate PASS at 0.0 % wash; every gesture as asked (sheet beside the source). Body made.
+- 07 (20.2 s, wraps) · job `138de186-8011-43e4-988e-83efa79aeea9` · one finger (layer one), other
+  hand into her pocket and stays, three fingers then the open hand (days), a slow nod palm up,
+  hand out, back. Gate PASS at 0.0 % wash; every gesture as asked (sheet beside the source). Body made.
+- 08 (18.2 s, wraps) · job `eeb1925d-3cd5-4f43-b1e7-3821b55e6f66` · two fingers (layer two), counts
+  four on one hand, that hand into the pocket while the other draws a small circle, hand out,
+  back. Gate PASS at 0.0 % wash; two fingers held on both hands, then an OK sign with the other hand in her pocket, back: not the four-count asked, but a fit for "layer two". Body made.
+- g1 (12.4 s, wraps) · job `c626f826-78b6-41d9-8956-d80085333a12` · both hands gather to her chest
+  (gain), one sweeps outward (in public), counts three, a nod, back. Gate PASS at 0.0 % wash; hands gather to the chest, open wide, two fingers (three asked), a nod, back. Body made.
+- 10 (12.4 s, wraps) · job `972a67e5-8467-4543-aec0-a361f13853ab` · a flat hand across in a level
+  line (measure), two taps of the index finger (scored, explained), hand in pocket with a knowing
+  head tilt, hand out, back. Gate PASS at 0.0 % wash; the flat hand across, the finger taps, hand to her hip pocket with the head tilt, back. Body made.
+- a-need (13.4 s, wraps) · job `37014af2-c7a1-4607-9ab5-013c7c9c31c7` · empty palms lift (nothing),
+  counts four (profile, Instagram, website, WhatsApp), a step toward the viewer and back. Gate PASS at 0.0 % wash; palms lift, the count, the step forward and back. Body made.
+- a-time (9.0 s, wraps) · job `6e9f6711-2a88-4efb-a1c7-a49cbc6ca79c` · a finger draws a line left to
+  right (time), three fingers (months), rolls a sleeve a little (hands-on), back. Gate PASS at 0.0 % wash; the finger's line, the fingers, a tug at the sleeve, back. Body made.
+- a-price (22.8 s, wraps) · job `b1aa85c3-c20f-4471-9242-89f854b66bbd` · one hand in the pocket and
+  stays, the other marks two points (the two prices), a this-much between thumb and finger, an open
+  palm, hand out, back. Gate PASS at 0.0 % wash; hand in the pocket throughout, the other marks and opens, back. Body made.
+- a-cancel (5.9 s) · job `27cba94a-09db-423f-861d-a012b026347c` · an easy shrug, three fingers, a
+  reassuring nod palms up, back. Gate PASS at 0.0 % wash; the shrug, the fingers, palms up, back. Body made. All ten chapter bodies passed the gate on the first 7 s take.
+Ten chapter lines sent 2026-10-18: 9 × 12.25 + w1's three takes (24.5 + 24.5 + 12.25) = 171.5 credits.
+
+## C5 — the poke quips' bodies (Kling v3.0 pro, 9:16, 5 s, sound off, 8.75 credits each, quoted exactly before each)
+
+The owner's word 2026-10-17: when poked too much, funny body gestures, not only the CSS hop and shake.
+Start = G1 option 2; end = G1 option 2, except p6, which ends on G2 asleep (uploaded from
+`media/stills/guide-asleep.png`, media `f084cc70-821c-494d-a5c7-6d710ce79af1`).
+- p1 "Hi there. Tap a question and I'll explain." · job `dca10c90-a9b5-4f71-954a-81b86942b280` · a small
+  wave, then an open hand pointing sideways to the questions, back. Gate PASS 0.0 %; the wave and the open-hand point, back. Body made.
+- p2 "Yes? I'm listening." · job `7d54d3d7-93d7-40c3-abcb-fe8093438926` · leans in, a hand cupped behind
+  her ear, eyebrows up, back. Gate PASS 0.0 %; a lean in with a hand raised to listen, back; the ear cup is slight. Body made.
+- p3 "Careful, I'm working." · job `22416e65-92a3-4301-8ec3-e060fb15896b` · hand on hip, a playful
+  finger wag, mock-stern then a smile, back. Gate PASS 0.0 %; hand on hip, the finger wag, back. Body made.
+- p4 "Okay, okay. What would you like to know?" · job `9be2d1dc-ffaf-482b-b8c1-6e07a0f7ae7a` · both
+  palms up in a laughing surrender, shoulders up, back. Gate PASS 0.0 %; both hands up in surrender with a laugh, back. Body made.
+- p5 "I'm a guide, not a button." · job `b52d508f-a6ac-424c-b743-e55b0f04f68c` · arms folded, one
+  eyebrow, a slow unimpressed head shake, back. Gate PASS 0.0 %; arms folded, the eyebrow and the slow head shake, unfolds, back. Body made.
+- p6 "Fine. I'll just lie back down, then." · job `4e3fab0c-da6c-4f39-8e6c-f95d95e9ca4e` · a sigh and a
+  shrug, turns, lies down, curls up asleep. The page would then have to go to sleep after p6, a
+  change to the machine, on the owner's word. Gate PASS 0.0 %; the shrug, she turns, crouches, lies on her side and curls up asleep. Body made. Her lips can only be synced while she faces front (the first 2.5 s); the model finds no face once she turns.
+Six quips: 52.5 credits.
