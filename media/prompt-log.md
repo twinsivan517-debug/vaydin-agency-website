@@ -549,3 +549,35 @@ on its word. The counting takes are kept in bodies/ as `<id>-counts.mp4`, not fo
   a nod, back. Gate PASS 0.0 %; the shrug, the hand over her heart; no count. Body made. All six retakes passed first time.
 Six retakes: 73.5 credits. 02's "index then a second finger" shows a two the words do not say; left as
 is on the owner's list of six, flagged.
+
+## C8 — the greeting on the same body, and three bodies retaken with her feet planted
+
+The owner 2026-10-18, on the page: after the wake-up she becomes a different woman (the
+greeting was the Mini render from the first still, 720x1280; everything after it is the Kling
+body from G1 option 2, 1172x2084), and the "What is Vaydin?" body crosses her legs mid-loop.
+Kling v3.0 pro, 9:16, sound off, "IN THE DARK" preset declined; prices read the same minute,
+the rate now 2.5 credits a second (1.75 the day before); balance 130.49 before. Owner: "send four".
+- greeting · 10 s · 25 credits · job `dca7db1d-bc44-40e5-8bad-38295c43fec6` · start = G2 asleep
+  (`f084cc70`), end = G1 option 2 (`4e3d005a`): asleep, stirs, rubs her eyes, stretches, sits,
+  stands, settles into the standing pose, lips closed. 10 s sits past the 7 s where the green
+  holds; `scripts/rekey.py` is the rescue. Her lips go on with `scripts/opener_lipsync.py`.
+- w1 · 7 s · 17.5 · job `82b8d489-49c0-4052-9e04-e98e94fe5e7d` · feet planted, never a step:
+  hand over her heart, palms open, one hand into the pocket while the other explains, out, back.
+- 02 · 7 s · 17.5 · job `23734532-72ea-4f37-9cc7-05c1624234ea` · feet planted: one open hand
+  inviting, both open wide, a small shrug, back. No count.
+- a-need · 7 s · 17.5 · job `15c34b56-8060-4a71-b9a5-7337d8a12ded` · feet planted: empty palms
+  lift, a sweep across, hand on chest with a nod, back. No step.
+- Gates: flat green (`green_gate.py`) · feet never move · no count · first frame = last · lips
+  closed · the greeting: ends in the standing pose, her face and clothes those of the loops.
+- Verdicts, all four back within ten minutes, every gate PASS at 0.0 % wash, feet planted, no count,
+  first frame = last on the three bodies: the greeting (241 frames) sleeps five seconds, stirs,
+  rises fast at about 6.5 s, stands from 7 s with a hand to her chest and an open palm, ends
+  on the still; its last frame against the idle loop's first measures 1.74 mean difference,
+  no pixel over 40, so the clip plus five seconds of the idle loop is the 361-frame source
+  `media/clips/guide-opener3-src.mp4`, lips from 7.5 s by `opener_lipsync.py --src`. The old
+  bodies stay as `w1-crossed`, `02-counts`, `a-need-step`; the new ones are the bodies.
+- Lips: w1 1038 s, 02 632 s, a-need 783 s on the lab; the greeting 361 frames, join 7.5 s,
+  blend 6, 4158 KB, her mouth closed on the pause after "There" and open on "Thank you" (frames
+  at 9.3 and 10.2 s). `public/guide/opener.mp4` is now 1172x2084 like the loops; the Mini
+  greeting lives on in git history (commit 85537e2 and before).
+Four jobs: 77.5 credits (balance 130.49 to 52.99, read after).

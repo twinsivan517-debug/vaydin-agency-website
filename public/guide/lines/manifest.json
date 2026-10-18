@@ -96,7 +96,7 @@
  },
  "a-need": {
   "audio": "ada35b91987d6066",
-  "base": "7a9f2b97f5206cc1",
+  "base": "99d5a79a65a517a2",
   "model": "wav2lip_gan"
  },
  "a-price": {

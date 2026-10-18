@@ -12,6 +12,8 @@ from media/voice/opener2.mp3. The lab is the one scripts/lipsync.py uses.
     python scripts/opener_lipsync.py                       # join 7.5 s, blend 6 frames
     python scripts/opener_lipsync.py --join 8.0 --blend 0  # the 2026-10-17 cut
     python scripts/opener_lipsync.py --out L:/lipsync/out/try.mp4
+    python scripts/opener_lipsync.py --src media/clips/guide-opener3-src.mp4  # another
+                                                        # waking clip of 361 frames
     python scripts/opener_lipsync.py --hum 7.54 8.08   # her own "Mmm" (2.62-3.22 s)
                                                         # under that silent window, so
                                                         # the model draws closed lips
@@ -43,11 +45,12 @@ def ff(*args: str) -> None:
 
 
 def main(argv: list[str]) -> int:
+    src = Path(arg(argv, "--src", str(SRC)))
     join = round(float(arg(argv, "--join", "7.5")) * FPS)
     blend = int(arg(argv, "--blend", "6"))
     out = Path(arg(argv, "--out", str(WEB)))
     audio_from = WEB if WEB.exists() else MP3
-    for p in (PYTHON, WAV2LIP / "inference.py", WEIGHTS, SRC, audio_from):
+    for p in (PYTHON, WAV2LIP / "inference.py", WEIGHTS, src, audio_from):
         if not p.exists():
             print(f"missing: {p}", file=sys.stderr)
             return 2
@@ -58,7 +61,7 @@ def main(argv: list[str]) -> int:
             work = Path(tmp)
             seg, wav, raw = work / "seg.mp4", work / "seg.wav", work / "seg.raw.mp4"
             # The standing part, lossless enough; its sound padded to its own length.
-            ff("-i", str(SRC), "-vf", f"select=gte(n\,{join}),setpts=N/{FPS}/TB", "-r", str(FPS), "-an",
+            ff("-i", str(src), "-vf", f"select=gte(n\,{join}),setpts=N/{FPS}/TB", "-r", str(FPS), "-an",
                "-c:v", "libx264", "-crf", "12", "-pix_fmt", "yuv420p", str(seg))
             # A seek with -ss lands short by a few ms; the trim chain is exact.
             ff("-i", str(audio_from), "-vn", "-ar", "16000", "-ac", "1", str(work / "full.wav"))
@@ -86,7 +89,7 @@ def main(argv: list[str]) -> int:
                 if blend else
                 f"[0:v]select=lt(n\,{join}),setpts=N/{FPS}/TB[h];[1:v]select=lt(n\,{tail}),setpts=N/{FPS}/TB[t];[h][t]concat=n=2:v=1:a=0[v]"
             )
-            ff("-i", str(SRC), "-i", str(raw), "-i", str(audio_from), "-filter_complex", graph,
+            ff("-i", str(src), "-i", str(raw), "-i", str(audio_from), "-filter_complex", graph,
                "-map", "[v]", "-map", "2:a:0", "-c:v", "libx264", "-crf", "25", "-preset", "medium", "-g", "12",
                "-pix_fmt", "yuv420p", "-r", str(FPS), *(["-c:a", "copy"] if audio_from == WEB else ["-c:a", "aac", "-ac", "1", "-b:a", "48k"]),
                "-metadata", f"comment=opener_lipsync join={join} blend={blend} hum={arg(argv, '--hum', 'none')}", "-movflags", "+faststart", str(out))
