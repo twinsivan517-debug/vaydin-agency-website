@@ -2,7 +2,8 @@
    Phases: asleep (as the page opens), idle, opener (the lip-synced waking
    greeting), talking (lines, one after another), quip (a poke reply), done
    (a run finished; the card stays). `run` changes whenever a new sound must
-   start, so tapping the active chip again replays it. */
+   start, so tapping the active chip again replays it. The last poke's quip
+   ends with her asleep again. */
 
 import { CHOOSE, HELLO, UNKNOWN, answerLine } from "./answers.ts";
 import type { Reply } from "./match.ts";
@@ -86,7 +87,11 @@ export function reduce(s: State, e: Event): State {
         if (next >= 0) return { ...s, phase: "talking", line: next, cloud: s.lines[next], met: true };
         return { ...s, phase: "done", met: true };
       }
-      if (s.phase === "quip") return { ...s, phase: s.met ? "done" : "idle" };
+      if (s.phase === "quip") {
+        /* The last quip is her lying back down: the page sleeps with her, and the next tap wakes her again. */
+        if (s.cloud.id === POKES[POKES.length - 1].id) return { ...s, phase: "asleep", cloud: SLEEPING, lit: false };
+        return { ...s, phase: s.met ? "done" : "idle" };
+      }
       if (s.phase !== "talking") return s;
       const next = s.line + 1;
       if (next < s.lines.length) return { ...s, line: next, cloud: s.lines[next] };

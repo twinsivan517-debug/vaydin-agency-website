@@ -37,8 +37,10 @@ type Props = {
 };
 
 const STILL = "/guide/still.webp";
-const WIDTH = 720;
-const HEIGHT = 1280;
+/* The canvas her clips are drawn into: the bodies are 1172 px wide, so
+   nothing below that is thrown away before the screen. */
+const WIDTH = 1080;
+const HEIGHT = 1920;
 const FADE_MS = 200;
 
 export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {

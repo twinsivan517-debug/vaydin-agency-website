@@ -12,6 +12,9 @@ the Wav2Lip checkout, models/wav2lip_gan.pth. Setup is in scripts/LIPSYNC.md.
     python scripts/lipsync.py            # everything stale, chapters first
     python scripts/lipsync.py w1 poke-1  # only these ids
     python scripts/lipsync.py --check    # list stale ids, run nothing
+    python scripts/lipsync.py --base talk --out L:/lipsync/out w1   # her talk loop
+                                         # (hands moving) as the body, written
+                                         # elsewhere: a try, not the page's clip
 """
 import hashlib
 import json
@@ -24,7 +27,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VOICE = ROOT / "public" / "voice"
-BASE = ROOT / "media" / "guide" / "base-loop.mp4"
+BASES = {"idle": ROOT / "media" / "guide" / "base-loop.mp4", "talk": ROOT / "media" / "guide" / "talk-loop.mp4"}
+BASE = BASES["idle"]
+# A line with a body of its own (a generated gesture clip, padded to 9:16 by
+# scripts/body.py) is made over that body instead of the shared loop.
+BODIES = ROOT / "media" / "guide" / "bodies"
 OUT = ROOT / "public" / "guide" / "lines"
 MANIFEST = OUT / "manifest.json"
 LAB = Path(os.environ.get("LIPSYNC_LAB") or ("L:/lipsync" if Path("L:/lipsync").exists() else Path.home() / "lab" / "lipsync"))
@@ -51,10 +58,15 @@ def ordered_ids() -> list[str]:
     return [i for i in FIRST if i in ids] + [i for i in ids if i not in FIRST]
 
 
+def body_of(i: str) -> Path:
+    own = BODIES / f"{i}.mp4"
+    return own if own.exists() else BASE
+
+
 def stale(ids: list[str], manifest: dict, base_sha: str) -> list[str]:
     out = []
     for i in ids:
-        want = {"audio": sha(VOICE / f"{i}.mp3"), "base": base_sha, "model": MODEL}
+        want = {"audio": sha(VOICE / f"{i}.mp3"), "base": base_sha if body_of(i) == BASE else sha(body_of(i)), "model": MODEL}
         have = manifest.get(i)
         if have != want or not (OUT / f"{i}.mp4").exists():
             out.append(i)
@@ -81,29 +93,58 @@ def hold_lock() -> None:
             time.sleep(20)
 
 
+def front_frames(i: str) -> int:
+    """A body that turns away: bodies/<id>.front holds how many frames show her
+    face. Her lips are synced over those; the rest of the body follows untouched
+    and the clip runs the body's full length, the sound ending when it ends."""
+    f = BODIES / f"{i}.front"
+    return int(f.read_text().strip()) if f.exists() else 0
+
+
 def run_one(i: str, work: Path) -> float:
     wav = work / f"{i}.wav"
     raw = work / f"{i}.raw.mp4"
     final = OUT / f"{i}.mp4"
+    body = body_of(i)
+    front = front_frames(i)
     t0 = time.time()
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(VOICE / f"{i}.mp3"), "-ar", "16000", "-ac", "1", str(wav)], check=True)
+    if front:
+        face = work / f"{i}.front.mp4"
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(body), "-vf", f"select=lt(n\,{front}),setpts=N/{FPS}/TB", "-r", str(FPS),
+                        "-c:v", "libx264", "-crf", "12", "-pix_fmt", "yuv420p", str(face)], check=True)
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(VOICE / f"{i}.mp3"), "-ar", "16000", "-ac", "1",
+                        "-af", f"apad=pad_dur=2,atrim=end={front / FPS + 0.3:.6f}", str(wav)], check=True)
+    else:
+        face = body
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(VOICE / f"{i}.mp3"), "-ar", "16000", "-ac", "1", str(wav)], check=True)
     subprocess.run(
-        [str(PYTHON), "inference.py", "--checkpoint_path", str(WEIGHTS), "--face", str(BASE), "--audio", str(wav),
+        [str(PYTHON), "inference.py", "--checkpoint_path", str(WEIGHTS), "--face", str(face), "--audio", str(wav),
          "--outfile", str(raw), "--face_det_batch_size", "4", "--wav2lip_batch_size", "32"],
         cwd=WAV2LIP, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
     )
-    subprocess.run(
-        ["ffmpeg", "-v", "error", "-y", "-i", str(raw), "-i", str(VOICE / f"{i}.mp3"), "-map", "0:v:0", "-map", "1:a:0",
-         "-c:v", "libx264", "-crf", "23", "-preset", "medium", "-g", "12", "-pix_fmt", "yuv420p", "-r", "24",
-         "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", "-shortest", str(final)],
-        check=True,
-    )
+    encode = ["-c:v", "libx264", "-crf", "23", "-preset", "medium", "-g", "12", "-pix_fmt", "yuv420p", "-r", str(FPS),
+              "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart"]
+    if front:
+        graph = (f"[0:v]select=lt(n\,{front}),setpts=N/{FPS}/TB[h];[1:v]select=gte(n\,{front}),setpts=N/{FPS}/TB[t];"
+                 f"[h][t]concat=n=2:v=1:a=0,fps={FPS}[v]")
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(raw), "-i", str(body), "-i", str(VOICE / f"{i}.mp3"),
+                        "-filter_complex", graph, "-map", "[v]", "-map", "2:a:0", *encode, str(final)], check=True)
+    else:
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(raw), "-i", str(VOICE / f"{i}.mp3"), "-map", "0:v:0", "-map", "1:a:0",
+                        *encode, "-shortest", str(final)], check=True)
     return time.time() - t0
 
 
 def main(argv: list[str]) -> int:
+    global BASE, OUT, MANIFEST
     check = "--check" in argv
-    wanted = [a for a in argv if not a.startswith("--")]
+    if "--base" in argv:
+        BASE = BASES[argv[argv.index("--base") + 1]]
+    if "--out" in argv:
+        OUT = Path(argv[argv.index("--out") + 1])
+        MANIFEST = OUT / "manifest.json"
+    flags = {"--base", "--out"}
+    wanted = [a for i, a in enumerate(argv) if not a.startswith("--") and (i == 0 or argv[i - 1] not in flags)]
     for p in (PYTHON, WAV2LIP / "inference.py", WEIGHTS, BASE):
         if not p.exists():
             print(f"missing: {p}", file=sys.stderr)
@@ -121,7 +162,7 @@ def main(argv: list[str]) -> int:
         with tempfile.TemporaryDirectory() as tmp:
             for n, i in enumerate(ids, 1):
                 took = run_one(i, Path(tmp))
-                manifest[i] = {"audio": sha(VOICE / f"{i}.mp3"), "base": base_sha, "model": MODEL}
+                manifest[i] = {"audio": sha(VOICE / f"{i}.mp3"), "base": base_sha if body_of(i) == BASE else sha(body_of(i)), "model": MODEL}
                 MANIFEST.write_text(json.dumps(manifest, indent=1, sort_keys=True) + "\n")
                 size = (OUT / f"{i}.mp4").stat().st_size // 1024
                 print(f"[{n}/{len(ids)}] {i}: {took:.0f} s, {size} KB", flush=True)

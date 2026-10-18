@@ -132,6 +132,19 @@ check("pokes only while she rests awake, and they escalate to the last quip", ()
   assert.equal(run([{ type: "poke", index: 0 }], run([{ type: "tap", chapter: "how" }], awake)).phase, "talking");
 });
 
+check("the last quip puts her back to sleep, and a tap wakes her into the greeting again", () => {
+  const last = run([{ type: "poke", index: POKES.length - 1 }], awake);
+  assert.equal(last.cloud.id, POKES[POKES.length - 1].id);
+  const asleep = run([{ type: "line_ended" }], last);
+  assert.equal(asleep.phase, "asleep");
+  assert.equal(mode(asleep), "sleep");
+  assert.equal(asleep.cloud, SLEEPING);
+  assert.equal(asleep.met, true);
+  assert.equal(pokeable(asleep), true);
+  assert.equal(run([{ type: "poke", index: 0 }], asleep).phase, "opener");
+  assert.equal(run([{ type: "line_ended" }], run([{ type: "poke", index: 0 }], awake)).phase, "done");
+});
+
 check("stop returns to rest; stopping the greeting still counts as met", () => {
   const see = run([{ type: "tap", chapter: "how" }], awake);
   assert.equal(run([{ type: "stop" }], see).phase, "done");

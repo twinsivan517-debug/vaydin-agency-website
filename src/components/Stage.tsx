@@ -48,6 +48,15 @@ export function Stage() {
     return () => document.body.classList.remove("site-asleep", "site-awake");
   }, []);
 
+  /* She lay back down after the last poke: the page dims with her, and the pokes start over. */
+  useEffect(() => {
+    if (state.phase !== "asleep" || !state.met) return;
+    pokes.current = { count: 0, at: 0 };
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    document.body.classList.remove("site-awake");
+    document.body.classList.add("site-asleep");
+  }, [state.phase, state.met]);
+
   /* A line is spoken by her clip when it has one; otherwise its recording
      plays, and when that cannot play either, the words stay up for reading time. */
   const { phase, run, cloud, lines, line: lineAt } = state;
@@ -204,7 +213,7 @@ export function Stage() {
             mode={mode(state)}
             run={state.run}
             lineSrc={clipSrc}
-            mood={state.phase === "quip" ? (state.cloud.mood ?? null) : null}
+            mood={state.phase === "quip" && !clipSrc ? (state.cloud.mood ?? null) : null}
             pokeable={pokeable(state)}
             onOpenerTime={(seconds) => {
               if (seconds >= THROW_AT) throwBulb();
