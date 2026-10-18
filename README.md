@@ -24,8 +24,9 @@ product pages and the three legal pages are the standalone `.html` files in `pub
   `opener_lipsync.py` (the greeting's standing part), `body.py` (a generated gesture clip
   made ready as a line's body), `loop.py` (her idle, talk and sleep loops from generated clips), `green_gate.py` (can every frame be keyed), `rekey.py`
   (rescues a clip whose backdrop drifted), `LIPSYNC.md` (the lab they need, outside the repo).
-- `media/guide/bodies/` — one gesture clip per line that has one, not in git; the page's
-  clips in `public/guide/lines/` are made from them.
+- `media/guide/bodies/` — one gesture clip per line that has one, not in git (made again
+  from `body.py` and the job id in the log); a `<id>.front` file, in git, holds how many
+  frames show her face. The page's clips in `public/guide/lines/` are made from them.
 - `media/prompt-log.md` — every generation that made her, with job ids; the sources
   under `media/` are not in git.
 
