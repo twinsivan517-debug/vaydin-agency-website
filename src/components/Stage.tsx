@@ -16,8 +16,8 @@ import { START, mode, pokeable, reduce, speaking } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
 import { WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
 
-const CHIP =
-  "rounded-full border border-gold/50 px-4 py-2 text-base text-gold-bright transition-colors aria-pressed:border-gold-bright aria-pressed:bg-gold-bright aria-pressed:text-background";
+/* A small sign on each question's chip. */
+const ICONS: Record<string, string> = { what: "?", how: "\u2699", gain: "\u25B2", start: "\u25B6", price: "$" };
 
 /* The page dims while she sleeps and lights up when she stands. */
 function lightUp() {
@@ -207,7 +207,14 @@ export function Stage() {
   return (
     <section aria-label="The guide" className="hero">
       <div className="hero-guide md:sticky md:top-16">
-        <div className="guide-floor relative h-[min(44vh,360px)] md:h-[min(76vh,620px)]">
+        <div className="guide-floor relative aspect-[9/16] w-full md:aspect-auto md:h-[min(76vh,620px)]">
+          {busy && (
+            <button type="button" onClick={() => dispatch({ type: "stop" })} className="guide-stop" aria-label="Stop her">
+              <svg aria-hidden="true" viewBox="0 0 20 20" width="16" height="16">
+                <rect x="4" y="4" width="12" height="12" rx="2" fill="currentColor" />
+              </svg>
+            </button>
+          )}
           <Guide
             ref={guide}
             mode={mode(state)}
@@ -236,29 +243,25 @@ export function Stage() {
         </div>
       </div>
 
-      <div className="hero-panel min-w-0">
-        <div className="wakes flex flex-wrap items-center gap-2">
-          <ul className="flex flex-wrap gap-2" aria-label="Questions">
-            {QUESTIONS.map((c) => (
-              <li key={c.id}>
-                <button type="button" onClick={() => tap(c.id)} aria-pressed={c.id === state.chapter} className={CHIP}>
-                  {c.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-          {busy && (
-            <button type="button" onClick={() => dispatch({ type: "stop" })} className="rounded-full border border-gold/30 px-4 py-2 text-base text-muted">
-              Stop
+      <ul className="hero-chips wakes" aria-label="Questions">
+        {QUESTIONS.map((c) => (
+          <li key={c.id}>
+            <button type="button" onClick={() => tap(c.id)} aria-pressed={c.id === state.chapter} className="chip">
+              <i aria-hidden="true">{ICONS[c.id] ?? "?"}</i>
+              {c.label}
             </button>
-          )}
-        </div>
+          </li>
+        ))}
+      </ul>
 
-        <div className="wakes mt-4">
-          {/* The key remounts the card, so each answer's folder is pulled out afresh. */}
-          <Card key={state.run} shown={state.shown} onPick={pick} />
+      <div className="hero-card wakes min-w-0">
+        {/* The key remounts the card, so each answer's folder is pulled out afresh. */}
+        <Card key={state.run} shown={state.shown} onPick={pick} />
+      </div>
 
-          <form onSubmit={submit} className="mt-4 flex gap-2">
+      <div className="hero-ask wakes min-w-0">
+        <div>
+          <form onSubmit={submit} className="flex gap-2">
             <label htmlFor="ask" className="sr-only">
               Your question
             </label>
@@ -266,11 +269,11 @@ export function Stage() {
               id="ask"
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
-              placeholder="Ask her anything about Vaydin…"
+              placeholder="Ask her anything…"
               autoComplete="off"
               enterKeyHint="send"
               maxLength={200}
-              className="min-w-0 flex-1 rounded-full border border-gold/40 bg-background px-4 py-3 text-base text-foreground placeholder:text-muted"
+              className="min-w-0 flex-1 rounded-full border border-gold/40 bg-white/[0.04] px-4 py-3 text-base text-foreground placeholder:text-muted"
             />
             <button type="submit" className="rounded-full bg-gold-bright px-5 py-3 text-base font-medium text-background">
               Ask

@@ -39,27 +39,129 @@ body {
   text-transform: uppercase;
 }
 
-/* The hero: on a phone the cloud, then her across the full width, then the
-   questions; on a wider screen she stands on the left for the whole column. */
+/* The hero: she stands on the left at every width, with her cloud, the
+   questions and the typing box beside her; the card sits under them on a
+   phone and in her column's neighbour on a wider screen. */
 .hero {
   display: grid;
-  grid-template-areas: "cloud" "guide" "panel" "bar";
-  gap: 0.75rem;
+  grid-template-columns: 50% minmax(0, 1fr);
+  grid-template-areas: "guide cloud" "guide chips" "guide ask" "card card" "bar bar";
+  column-gap: 0.6rem;
+  row-gap: 0.6rem;
   align-items: start;
 }
 
-.hero-cloud { grid-area: cloud; }
-.hero-guide { grid-area: guide; }
-.hero-panel { grid-area: panel; }
+.hero-cloud { grid-area: cloud; align-self: end; }
+.hero-guide { grid-area: guide; align-self: end; }
+.hero-chips { grid-area: chips; }
+.hero-card { grid-area: card; }
+.hero-ask { grid-area: ask; }
 .hero-bar { grid-area: bar; }
 
 @media (min-width: 768px) {
   .hero {
     grid-template-columns: minmax(0, 26rem) 1fr;
-    grid-template-areas: "guide cloud" "guide panel" "bar bar";
+    grid-template-areas: "guide cloud" "guide chips" "guide card" "guide ask" "bar bar";
     column-gap: 2.5rem;
     row-gap: 1.25rem;
   }
+}
+
+/* The questions: a sign, a soft colour field, a gold edge on the one playing. */
+.hero-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .hero-chips { flex-direction: row; flex-wrap: wrap; gap: 0.5rem; }
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  border-radius: 0.9rem;
+  border: 1px solid rgb(201 164 74 / 0.35);
+  background: linear-gradient(135deg, rgb(74 46 130 / 0.35), rgb(15 80 78 / 0.25));
+  color: var(--foreground);
+  padding: 0.55rem 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  text-align: left;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.15s ease;
+}
+
+.chip:active { transform: scale(0.98); }
+
+.chip i {
+  flex: none;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.5rem;
+  background: rgb(201 164 74 / 0.18);
+  color: var(--gold-bright);
+  font-style: normal;
+  font-size: 0.8rem;
+}
+
+.chip[aria-pressed="true"] {
+  border-color: var(--gold-bright);
+  background: linear-gradient(135deg, rgb(201 164 74 / 0.35), rgb(74 46 130 / 0.35));
+}
+
+@media (min-width: 768px) {
+  .chip { width: auto; font-size: 1rem; padding: 0.6rem 0.9rem 0.6rem 0.7rem; }
+}
+
+/* Stop, a small round sign at her shoulder while she speaks. */
+.guide-stop {
+  position: absolute;
+  top: 9%;
+  right: 2%;
+  z-index: 30;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid rgb(201 164 74 / 0.6);
+  background: rgb(13 8 7 / 0.7);
+  color: var(--gold-bright);
+  display: grid;
+  place-items: center;
+  backdrop-filter: blur(4px);
+}
+
+/* The sky behind everything: three soft colour fields, violet, teal and
+   gold, drifting over half a minute. Plain gradients, no blur: a phone
+   paints it once per frame for next to nothing. Still under reduced motion. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60% 45% at 20% 25%, rgb(74 46 130 / 0.5), transparent 70%),
+    radial-gradient(55% 40% at 85% 70%, rgb(15 80 78 / 0.5), transparent 70%),
+    radial-gradient(40% 30% at 70% 15%, rgb(201 164 74 / 0.18), transparent 70%),
+    var(--background);
+  background-size: 200% 200%;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body::before { animation: sky-drift 28s ease-in-out infinite alternate; }
+}
+
+@keyframes sky-drift {
+  from { background-position: 0% 0%; }
+  to { background-position: 100% 100%; }
 }
 
 /* No frame around her: only a warm pool of light under her feet. */
@@ -85,8 +187,8 @@ body {
 .cloud {
   position: relative;
   isolation: isolate;
-  margin: 1.5rem 0 1rem 0.75rem;
-  border-radius: 2rem;
+  margin: 1.5rem 0 0.5rem 0.75rem;
+  border-radius: 1.4rem;
   background: var(--navy);
   color: var(--foreground);
   padding: 1.1rem 1.4rem;
