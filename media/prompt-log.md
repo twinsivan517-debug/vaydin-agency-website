@@ -528,3 +528,24 @@ answer lines' lips synced over the sharper idle for free afterwards.
   end = G1 option 2; the body of any line without one. Gate PASS 0.0 %; gentle open palms, a nod. `public/guide/talk.mp4` 1329 KB, `media/guide/talk-loop.mp4`.
 - sleep · job `acdfddce-49dc-43de-a1fe-5efbc1a24d30` · asleep, breathing, start = end = G2.
   Gate PASS 0.0 %; asleep, breathing. `public/guide/sleep.mp4` 803 KB against the old 611 KB; it loads with the page, so the ship gate's home-page budget is re-measured before anything ships. Placement matches the old loop within 0.5 %. The greeting clip stays the Mini one for now: 15 s would drift on Kling; the rescue (`scripts/rekey.py`) is the road if the owner wants it sharper.
+
+## C7 — six chapter bodies retaken under the no-numbers rule (7 s, 12.25 each, quoted exactly)
+
+The owner 2026-10-18: "if she says six she is showing four fingers". Lesson 7 in the house:
+a body gesture may never carry a specific the words carry (a number, an object, a direction),
+because the generator miscounts and a 7 s loop wraps under a 6-23 s line so no gesture lands
+on its word. The counting takes are kept in bodies/ as `<id>-counts.mp4`, not for the page.
+- 07 · job `617f7ac5-6e6b-424d-8b71-1bec49676ec3` · hand on chest, opens to the viewer, other hand
+  in the pocket, palm up with a nod, out, back. Gate PASS 0.0 %; hand on chest, opens, the pocket, palm up, back; no count. Body made.
+- 08 · job `e21cf547-b07e-43eb-a026-4c30f383d7fa` · palms rise as if lifting, one hand in the pocket,
+  the other explains palm up, out, back. Gate PASS 0.0 %; palms rise, the pocket, the free hand explains, back; no count. Body made.
+- g1 · job `384685d9-62b0-402c-8c73-cc1979180ff2` · hands gather to the chest, open wide, a nod
+  with an open palm, back. Gate PASS 0.0 %; hands gather, open wide, a nod; no count. Body made.
+- a-need · job `c0e7925c-c914-407b-9b93-8cb9c3e0498f` · empty palms lift (nothing), a sweep across,
+  a step forward and back. Gate PASS 0.0 %; palms lift, the sweep, the step forward and back; no count. Body made.
+- a-time · job `38dbce29-083a-4ff8-92bc-f12055db275f` · a flat hand left to right (time), into the
+  pocket, a nod palm up, out, back. Gate PASS 0.0 %; the hand across, the pocket, the nod; no count. Body made.
+- a-cancel · job `1eae227f-5f13-4d84-bc61-847207ea75cf` · an easy shrug, a hand over her heart with
+  a nod, back. Gate PASS 0.0 %; the shrug, the hand over her heart; no count. Body made. All six retakes passed first time.
+Six retakes: 73.5 credits. 02's "index then a second finger" shows a two the words do not say; left as
+is on the owner's list of six, flagged.

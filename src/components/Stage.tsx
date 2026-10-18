@@ -269,7 +269,7 @@ export function Stage() {
               id="ask"
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
-              placeholder="Ask her anything…"
+              placeholder="Ask her…"
               autoComplete="off"
               enterKeyHint="send"
               maxLength={200}
