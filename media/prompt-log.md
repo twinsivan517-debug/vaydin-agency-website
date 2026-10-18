@@ -517,3 +517,14 @@ Start = G1 option 2; end = G1 option 2, except p6, which ends on G2 asleep (uplo
   shrug, turns, lies down, curls up asleep. The page would then have to go to sleep after p6, a
   change to the machine, on the owner's word. Gate PASS 0.0 %; the shrug, she turns, crouches, lies on her side and curls up asleep. Body made. Her lips can only be synced while she faces front (the first 2.5 s); the model finds no face once she turns.
 Six quips: 52.5 credits.
+
+## C6 — her three loops again, on Kling (5 s, 8.75 each, quoted exactly before each)
+
+The owner's "continue" 2026-10-18 after the price was named: one body throughout, and the
+answer lines' lips synced over the sharper idle for free afterwards.
+- idle · job `d6a533e6-0e4d-4fba-88d3-7ad1e9213f3c` · at ease, breathing, a slight weight shift,
+  a blink, no gesture, start = end = G1 option 2. Gate PASS 0.0 %; at ease, a hand opening a little, nothing more. `scripts/loop.py`: 4.5 s seamless (first vs last frame 0.94 mean diff), `public/guide/idle.mp4` 1260 KB, `media/guide/base-loop.mp4` the new lip-sync base: every line without a body is now stale and is remade over it, free.
+- talk · job `83ec0fb5-fdb7-453c-8a01-86d0b2c46513` · gentle open-palm gestures, a nod, start =
+  end = G1 option 2; the body of any line without one. Gate PASS 0.0 %; gentle open palms, a nod. `public/guide/talk.mp4` 1329 KB, `media/guide/talk-loop.mp4`.
+- sleep · job `acdfddce-49dc-43de-a1fe-5efbc1a24d30` · asleep, breathing, start = end = G2.
+  Gate PASS 0.0 %; asleep, breathing. `public/guide/sleep.mp4` 803 KB against the old 611 KB; it loads with the page, so the ship gate's home-page budget is re-measured before anything ships. Placement matches the old loop within 0.5 %. The greeting clip stays the Mini one for now: 15 s would drift on Kling; the rescue (`scripts/rekey.py`) is the road if the owner wants it sharper.

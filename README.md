@@ -22,7 +22,7 @@ product pages and the three legal pages are the standalone `.html` files in `pub
   per line: the idle loop with her lips on that line, made by `scripts/lipsync.py`.
 - `scripts/` — `lipsync.py` (the lines, over the shared loop or a line's own body),
   `opener_lipsync.py` (the greeting's standing part), `body.py` (a generated gesture clip
-  made ready as a line's body), `green_gate.py` (can every frame be keyed), `rekey.py`
+  made ready as a line's body), `loop.py` (her idle, talk and sleep loops from generated clips), `green_gate.py` (can every frame be keyed), `rekey.py`
   (rescues a clip whose backdrop drifted), `LIPSYNC.md` (the lab they need, outside the repo).
 - `media/guide/bodies/` — one gesture clip per line that has one, not in git; the page's
   clips in `public/guide/lines/` are made from them.
