@@ -48,3 +48,4 @@ next-env.d.ts
 /media/stills/
 /media/clips/
 /media/voice/
+__pycache__/

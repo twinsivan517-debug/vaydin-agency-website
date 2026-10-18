@@ -18,7 +18,10 @@ product pages and the three legal pages are the standalone `.html` files in `pub
   `npm test`.
 - `src/lib/speaker.ts` — one audio element, unlocked by the first tap.
 - `public/guide/` — `walk`, `idle`, `talk` loops (silent, 258x480) and `opener.mp4`
-  (with sound). `public/voice/` — one mp3 per line.
+  (with sound). `public/voice/` — one mp3 per line. `public/guide/lines/` — one clip
+  per line: the idle loop with her lips on that line, made by `scripts/lipsync.py`.
+- `scripts/` — `lipsync.py` (the lines), `opener_lipsync.py` (the greeting's standing
+  part), `LIPSYNC.md` (the lab they need, outside the repo).
 - `media/prompt-log.md` — every generation that made her, with job ids; the sources
   under `media/` are not in git.
 

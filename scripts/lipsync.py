@@ -27,7 +27,8 @@ VOICE = ROOT / "public" / "voice"
 BASE = ROOT / "media" / "guide" / "base-loop.mp4"
 OUT = ROOT / "public" / "guide" / "lines"
 MANIFEST = OUT / "manifest.json"
-LAB = Path(os.environ.get("LIPSYNC_LAB", "L:/lipsync"))
+LAB = Path(os.environ.get("LIPSYNC_LAB") or ("L:/lipsync" if Path("L:/lipsync").exists() else Path.home() / "lab" / "lipsync"))
+FPS = 24
 PYTHON = LAB / "venv" / "Scripts" / "python.exe"
 WAV2LIP = LAB / "Wav2Lip"
 WEIGHTS = LAB / "models" / "wav2lip_gan.pth"
@@ -61,6 +62,10 @@ def stale(ids: list[str], manifest: dict, base_sha: str) -> list[str]:
 
 
 LOCK = LAB / "running.lock"
+
+
+def release_lock() -> None:
+    LOCK.unlink(missing_ok=True)
 
 
 def hold_lock() -> None:
@@ -121,7 +126,7 @@ def main(argv: list[str]) -> int:
                 size = (OUT / f"{i}.mp4").stat().st_size // 1024
                 print(f"[{n}/{len(ids)}] {i}: {took:.0f} s, {size} KB", flush=True)
     finally:
-        LOCK.unlink(missing_ok=True)
+        release_lock()
     return 0
 
 

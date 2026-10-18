@@ -10,8 +10,10 @@ changes.
 ## The lab (outside the repo; code ships, the lab does not)
 
 The model, its weights and a Python environment live in a folder named by
-`LIPSYNC_LAB` (default `L:/lipsync`). Paths must stay short on Windows, hence
-the drive letter: `subst L: <some local folder>`.
+`LIPSYNC_LAB`, else `L:/lipsync`, else `~/lab/lipsync`. On this PC the lab is
+`%USERPROFILE%\lab\lipsync` (local disk, outside OneDrive; 1.9 GB) and `L:` is
+`subst L: %USERPROFILE%\lab`, which does not survive a reboot: the fallback
+finds the lab without it. Paths must stay short on Windows, hence the letter.
 
     L:/lipsync/venv            python -m venv venv; pip install torch torchvision
                                --index-url https://download.pytorch.org/whl/cpu;
@@ -37,6 +39,18 @@ second faded over its first so it loops without a seam:
       -r 24 -c:v libx264 -crf 18 -g 12 -pix_fmt yuv420p -an media/guide/base-loop.mp4
 
 `public/guide/idle.mp4` is the same at crf 24.
+
+## The greeting
+
+`public/guide/opener.mp4` is the generator's waking clip with its standing
+part lip-synced by `scripts/opener_lipsync.py`: from the join frame on, the
+clip runs through Wav2Lip against the greeting's sound, padded with silence to
+the clip's end, and meets the untouched head in a short fade of the whole
+frame (only the mouth differs, so only the mouth blends). The model cannot find
+her face while she lies asleep and stretches, so the head cannot be run. Frame
+count stays 361 and the sound is copied from the previous file, so the bulb's
+second and the page's timings hold. Join and blend are arguments; the file
+says which it was made with.
 
 ## Cost and time
 
