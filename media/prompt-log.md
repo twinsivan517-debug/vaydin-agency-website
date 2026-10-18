@@ -581,3 +581,24 @@ the rate now 2.5 credits a second (1.75 the day before); balance 130.49 before. 
   at 9.3 and 10.2 s). `public/guide/opener.mp4` is now 1172x2084 like the loops; the Mini
   greeting lives on in git history (commit 85537e2 and before).
 Four jobs: 77.5 credits (balance 130.49 to 52.99, read after).
+
+## C9 — her mouth sealed in the silent loops; the greeting's first words still owed
+
+The owner 2026-10-18 night, on the page: (1) lying down she says "Mmm, it's so dark" with
+sealed lips; (2) after the intro her lips keep moving with no sound. Frames read at 6 a
+second: (2) is the idle and talk loops themselves (C6): Kling mouthed words in both though
+told "lips closed, no talking"; the greeting's silent tail inherited it through the lip model,
+which redraws the mouth it is given on silence. No credits: `scripts/seal.py` pastes a
+closed-mouth patch (frame 240 of `guide-opener3-src.mp4`, her standing still) over her mouth
+in every frame, placed by matching the ring of nose, cheeks and chin around it; the seam is
+invisible at full size. New `media/guide/base-loop.mp4`, `talk-loop.mp4`, `public/guide/
+idle.mp4` (1435 KB), `talk.mp4` (1490 KB). Every line without a body (20) is stale against the
+sealed base and waits for a render (about 3 h CPU, or a GPU). The greeting source
+`guide-opener3-src.mp4` carries the sealed idle as its tail, and `opener_lipsync.py --end`
+hands the frames after the last word back to the clip; not yet rendered.
+(1) The lip model finds her lying face but paints the mouth on her cheek (face tilted). A
+test with her band of the frame rotated upright (-45°, -60°) was stopped on the owner's word
+to shut down; result unknown. The bodies also mouth words in places; under a line the model
+draws the mouth while she speaks, so only pauses show it; left for now.
+Lesson: queued lip-sync runs overwrite each other's manifest entries (w1, 02 repaired by hand);
+one call per batch, in `scripts/LIPSYNC.md`.

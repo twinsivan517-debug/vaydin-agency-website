@@ -14,6 +14,8 @@ from media/voice/opener2.mp3. The lab is the one scripts/lipsync.py uses.
     python scripts/opener_lipsync.py --out L:/lipsync/out/try.mp4
     python scripts/opener_lipsync.py --src media/clips/guide-opener3-src.mp4  # another
                                                         # waking clip of 361 frames
+    python scripts/opener_lipsync.py --end 11.6   # frames after the last word come
+                                                  # from the clip, not the model
     python scripts/opener_lipsync.py --hum 7.54 8.08   # her own "Mmm" (2.62-3.22 s)
                                                         # under that silent window, so
                                                         # the model draws closed lips
@@ -48,6 +50,7 @@ def main(argv: list[str]) -> int:
     src = Path(arg(argv, "--src", str(SRC)))
     join = round(float(arg(argv, "--join", "7.5")) * FPS)
     blend = int(arg(argv, "--blend", "6"))
+    end = round(float(arg(argv, "--end", "0")) * FPS)  # 0: the model to the last frame
     out = Path(arg(argv, "--out", str(WEB)))
     audio_from = WEB if WEB.exists() else MP3
     for p in (PYTHON, WAV2LIP / "inference.py", WEIGHTS, src, audio_from):
@@ -89,15 +92,20 @@ def main(argv: list[str]) -> int:
                 if blend else
                 f"[0:v]select=lt(n\,{join}),setpts=N/{FPS}/TB[h];[1:v]select=lt(n\,{tail}),setpts=N/{FPS}/TB[t];[h][t]concat=n=2:v=1:a=0[v]"
             )
+            if end:
+                # The clip is split: one copy feeds the head, the other resumes after the last word.
+                graph = "[0:v]split=2[s0][s1];" + graph.replace("[0:v]", "[s0]") + (
+                    f";[v]select=lt(n\,{end}),setpts=N/{FPS}/TB[vh];[s1]select=gte(n\,{end}),setpts=N/{FPS}/TB[vt];"
+                    f"[vh][vt]concat=n=2:v=1:a=0[v2]")
             ff("-i", str(src), "-i", str(raw), "-i", str(audio_from), "-filter_complex", graph,
-               "-map", "[v]", "-map", "2:a:0", "-c:v", "libx264", "-crf", "25", "-preset", "medium", "-g", "12",
+               "-map", "[v2]" if end else "[v]", "-map", "2:a:0", "-c:v", "libx264", "-crf", "25", "-preset", "medium", "-g", "12",
                "-pix_fmt", "yuv420p", "-r", str(FPS), *(["-c:a", "copy"] if audio_from == WEB else ["-c:a", "aac", "-ac", "1", "-b:a", "48k"]),
-               "-metadata", f"comment=opener_lipsync join={join} blend={blend} hum={arg(argv, '--hum', 'none')}", "-movflags", "+faststart", str(out))
+               "-metadata", f"comment=opener_lipsync join={join} blend={blend} end={end} hum={arg(argv, '--hum', 'none')}", "-movflags", "+faststart", str(out))
     finally:
         release_lock()
     n = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v", "-count_frames", "-show_entries", "stream=nb_read_frames",
                         "-of", "csv=p=0", str(out)], capture_output=True, text=True, check=True).stdout.strip()
-    print(f"{out}: {n} frames (want {FRAMES}), join {join} ({join / FPS:.2f} s), blend {blend}, {out.stat().st_size // 1024} KB")
+    print(f"{out}: {n} frames (want {FRAMES}), join {join} ({join / FPS:.2f} s), blend {blend}, end {end}, {out.stat().st_size // 1024} KB")
     return 0 if n == str(FRAMES) else 1
 
 

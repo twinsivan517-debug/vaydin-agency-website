@@ -57,3 +57,11 @@ says which it was made with.
 Zero credits. On this PC's CPU (Ryzen 7 7730U) a 13 s line takes about 5
 minutes; the whole set is a couple of hours, unattended. A changed line or a
 changed base is redone on the next run; nothing else is touched.
+
+## One run at a time means one call
+
+Each run loads `public/guide/lines/manifest.json` when it starts and writes the whole
+file after every line. Two runs queued on the lock finish in no fixed order, and the
+later one writes back the entries it loaded, undoing the other's. On 2026-10-18 a
+queued run put w1 and 02 back to stale after they were made. Give one call every id;
+chain further runs with `&&` in one shell, never as separate waiting processes.
