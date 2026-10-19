@@ -36,7 +36,7 @@ OUT = ROOT / "public" / "guide" / "lines"
 MANIFEST = OUT / "manifest.json"
 LAB = Path(os.environ.get("LIPSYNC_LAB") or ("L:/lipsync" if Path("L:/lipsync").exists() else Path.home() / "lab" / "lipsync"))
 FPS = 24
-PYTHON = LAB / "venv" / "Scripts" / "python.exe"
+PYTHON = LAB / "venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
 WAV2LIP = LAB / "Wav2Lip"
 WEIGHTS = LAB / "models" / "wav2lip_gan.pth"
 MODEL = "wav2lip_gan"
