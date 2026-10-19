@@ -88,16 +88,31 @@ def mouth_mask(turned: np.ndarray, box: tuple[int, int, int, int]) -> np.ndarray
     return cv2.GaussianBlur(m, (0, 0), 0.12 * w)[..., None]
 
 
-def face_box(turned: np.ndarray) -> tuple[int, int, int, int]:
-    """The model's own detector on one frame, in the turned space."""
-    code = ("import sys,cv2,numpy as np;sys.path.insert(0,sys.argv[1]);import face_detection as fd;"
+def face_boxes(turned: list[np.ndarray], work: Path) -> list[tuple[int, int, int, int]]:
+    """The model's own detector on every frame, in the turned space: she moves
+    while she rises, so the mouth mask must follow her. A frame without a
+    face takes its neighbour's box."""
+    folder = work / "det"
+    folder.mkdir(exist_ok=True)
+    for i, f in enumerate(turned):
+        cv2.imwrite(str(folder / f"{i:04d}.png"), f)
+    code = ("import sys,cv2,numpy as np,pathlib;sys.path.insert(0,sys.argv[1]);import face_detection as fd;"
             "d=fd.FaceAlignment(fd.LandmarksType._2D,flip_input=False,device='cpu');"
-            "b=d.get_detections_for_batch(np.array([cv2.imread(sys.argv[2])]))[0];print(*[int(v) for v in b])")
-    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as t:
-        cv2.imwrite(t.name, turned)
-    r = subprocess.run([str(PYTHON), "-c", code, str(WAV2LIP), t.name], cwd=WAV2LIP, capture_output=True, text=True, check=True)
-    Path(t.name).unlink()
-    return tuple(int(v) for v in r.stdout.split()[-4:])  # type: ignore[return-value]
+            "fs=sorted(pathlib.Path(sys.argv[2]).glob('*.png'))\n"
+            "for i in range(0,len(fs),4):\n"
+            "  for b in d.get_detections_for_batch(np.array([cv2.imread(str(p)) for p in fs[i:i+4]])):\n"
+            "    print('none' if b is None else ' '.join(str(int(v)) for v in b),flush=True)")
+    r = subprocess.run([str(PYTHON), "-c", code, str(WAV2LIP), str(folder)], cwd=WAV2LIP, capture_output=True, text=True, check=True)
+    raw = [None if line.strip() == "none" else tuple(int(v) for v in line.split()) for line in r.stdout.strip().splitlines()]
+    if len(raw) != len(turned):
+        raise RuntimeError(f"detector answered for {len(raw)} of {len(turned)} frames")
+    boxes: list = list(raw)
+    for i in range(len(boxes)):
+        if boxes[i] is None:
+            boxes[i] = next((b for b in boxes[i + 1 :] if b), None) or next((b for b in reversed(boxes[:i]) if b), None)
+    if any(b is None for b in boxes):
+        raise RuntimeError("no face in the whole band")
+    return boxes
 
 
 def band(src_frames: list[np.ndarray], first: int, angle: float, work: Path, audio_wav: Path) -> list[np.ndarray]:
@@ -114,10 +129,11 @@ def band(src_frames: list[np.ndarray], first: int, angle: float, work: Path, aud
     made = read_frames(raw, 0, n)
     if len(made) != n:
         raise RuntimeError(f"band {first}: model gave {len(made)} frames, wanted {n}")
-    mask = mouth_mask(turned[0], face_box(turned[0]))
+    boxes = face_boxes(turned, work)
     out = []
-    for orig, m in zip(src_frames, made):
+    for orig, m, t, box in zip(src_frames, made, turned, boxes):
         back = turn_back(m, angle, h, w)
+        mask = mouth_mask(t, box)
         mk = turn_back((mask * 255).astype(np.uint8), angle, h, w).astype(np.float32)[..., None] / 255
         out.append((orig * (1 - mk) + back * mk).astype(np.uint8))
     return out

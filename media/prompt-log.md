@@ -627,3 +627,27 @@ media/clips/guide-opener3-src.mp4 --join 7.5 --end 11.6`), low priority, log in 
 - Still open from C9: her first words lying down have no lips (the model paints the mouth on
   her tilted cheek); the rotated-band test is untouched. House lesson 8: the untested step
   runs first, never last in a long batch.
+
+## C11 — her first words lying down have lips; a line on its own body rests on her still
+
+The owner 2026-10-19 afternoon, on the phone: (1) "Mmm, it's so dark in here" with a closed
+mouth; (2) when a line ends or is stopped she snaps into the loop, read as lag. No credits.
+- (1) A probe (four waking frames, nine angles) showed the detector finds her lying face at
+  every angle; the model simply paints the mouth at the bottom of the box, which on a face
+  on its side is her cheek. `scripts/opener_lying.py`: frames 84-120 turned -60° (her face
+  upright), 120-180 at 0°, each band through the model against its slice of the sound, turned
+  back, and only the mouth of the detected face box blended in, the box per frame because
+  she moves while rising (the first try, one box per band, painted nothing from 6.5 s on;
+  stopped and redone). Source `media/clips/guide-opener4-src.mp4`, 361 frames; the tail as
+  before (`opener_lipsync.py --src ... --join 7.5 --end 11.6`): 361 frames, 4596 KB. Frames
+  read: open on her lips at 3.8-4.8 s, painted through 5.4-7.0 s on the generator's own
+  motion blur, one blurred frame (159) untouched. CPU: two bands about 25 min, the tail 18.
+- (2) Measured: the loop's first frame and a body's first and last differ by 2 mean; the
+  loop's middle by 8 with 152k pixels over 40. The page started a body line at the loop's
+  phase and resumed the loop at the body's time. Now a body line starts at frame 0, the loop
+  resumes at frame 0 when it ends, and that cross is 450 ms (200 elsewhere). `lipsync.py`
+  writes `public/guide/lines/bodies.json`; the page reads it at wake. A line stopped
+  mid-gesture still crosses from arms in the air; only a render change would end every
+  gesture on the still.
+- Also on the phone: the cloud is a wide row above her, the bottom bar one slim row with a
+  WhatsApp icon (commit 08c96c5).
