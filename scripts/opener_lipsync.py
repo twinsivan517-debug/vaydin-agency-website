@@ -97,10 +97,14 @@ def main(argv: list[str]) -> int:
                 graph = "[0:v]split=2[s0][s1];" + graph.replace("[0:v]", "[s0]") + (
                     f";[v]select=lt(n\,{end}),setpts=N/{FPS}/TB[vh];[s1]select=gte(n\,{end}),setpts=N/{FPS}/TB[vt];"
                     f"[vh][vt]concat=n=2:v=1:a=0[v2]")
+            # ffmpeg refuses an output that is also an input (the sound comes from the
+            # file being replaced), so the result is written beside the work and moved in.
+            made = work / "opener.mp4"
             ff("-i", str(src), "-i", str(raw), "-i", str(audio_from), "-filter_complex", graph,
                "-map", "[v2]" if end else "[v]", "-map", "2:a:0", "-c:v", "libx264", "-crf", "25", "-preset", "medium", "-g", "12",
                "-pix_fmt", "yuv420p", "-r", str(FPS), *(["-c:a", "copy"] if audio_from == WEB else ["-c:a", "aac", "-ac", "1", "-b:a", "48k"]),
-               "-metadata", f"comment=opener_lipsync join={join} blend={blend} end={end} hum={arg(argv, '--hum', 'none')}", "-movflags", "+faststart", str(out))
+               "-metadata", f"comment=opener_lipsync join={join} blend={blend} end={end} hum={arg(argv, '--hum', 'none')}", "-movflags", "+faststart", str(made))
+            out.write_bytes(made.read_bytes())
     finally:
         release_lock()
     n = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v", "-count_frames", "-show_entries", "stream=nb_read_frames",
