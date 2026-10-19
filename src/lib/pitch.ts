@@ -7,8 +7,7 @@
    clip, measured on the recording. No statistic anywhere. */
 
 export type Mood = "hop" | "shake";
-/* `quiet`: spoken but not shown; the cloud stays empty while it plays. */
-export type Line = { id: string; text: string; audio?: string; at?: number; mood?: Mood; quiet?: boolean };
+export type Line = { id: string; text: string; audio?: string; at?: number; mood?: Mood };
 export type ChapterId = "meet" | "what" | "how" | "gain" | "start" | "price";
 export type Card = { title: string; body: string; facts: string[]; links: { href: string; label: string }[] };
 export type Chapter = { id: ChapterId; label: string; clip: "opener" | "talk"; lines: Line[]; card: Card };
@@ -46,7 +45,6 @@ export const CHAPTERS: Chapter[] = [
         id: "02",
         text: "Pick a question or ask me anything, and I'll show you how patients find a clinic, and how a clinic loses them without ever knowing.",
         audio: "/voice/02.mp3",
-        quiet: true,
       },
     ],
     card: {

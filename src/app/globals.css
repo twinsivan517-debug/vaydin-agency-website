@@ -197,9 +197,6 @@ body::before {
   box-shadow: 0 1rem 2rem rgb(0 0 0 / 0.45);
 }
 
-/* A line marked quiet in pitch.ts is spoken, not shown. */
-.cloud-quiet { visibility: hidden; }
-
 .cloud::before,
 .cloud::after,
 .cloud-tail i {
