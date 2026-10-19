@@ -602,3 +602,28 @@ to shut down; result unknown. The bodies also mouth words in places; under a lin
 draws the mouth while she speaks, so only pauses show it; left for now.
 Lesson: queued lip-sync runs overwrite each other's manifest entries (w1, 02 repaired by hand);
 one call per batch, in `scripts/LIPSYNC.md`.
+
+## C10 — the twenty stale lines rendered on this PC's CPU: fourteen made, six retired, the greeting's tail sealed
+
+The owner 2026-10-19 morning: the GPU on AWS waited on three doors (the key, a driver script
+refused in auto mode, the account's G-instance quota), so his word was the CPU. No credits.
+One detached call (`lipsync.py` with fourteen ids `&&` `opener_lipsync.py --src
+media/clips/guide-opener3-src.mp4 --join 7.5 --end 11.6`), low priority, log in the lab.
+- Fourteen answer lines over the sealed idle, 10:57 to 13:20, 8540 s in all: a-ads 683,
+  a-bot 634, a-branches 629, a-chatgpt 817, a-clients 878, a-contact 594, a-diagnostic 619,
+  a-engine 621, a-proof 599, a-where 583, a-who 555, x-choose 208, x-hello 521, x-unknown 599.
+  The cost is per face frame, not per second of speech: the detector runs over as many base
+  frames as the line has sound, capped at the loop's 108, about 5 s a frame on this CPU
+  (x-choose, 1.7 s of speech, 208 s). Lines 4 and 5 ran slow while OneDrive re-uploaded
+  the finished clips. A cache of the detection over the one base would make every line a
+  minute or two; not built.
+- The six retired lines (03, 04, 05, 06, 09, 11) were left out and stay stale until their
+  deletion is said. `lipsync.py --check` lists exactly those six.
+- The greeting: the first run failed at its last ffmpeg call after 17 min of inference, the
+  output being also the sound's input (opener.mp4), which ffmpeg refuses; fixed in
+  `opener_lipsync.py` (written beside the work, moved in), re-run 13:38 to 13:56. 361 frames,
+  join 180, blend 6, end 278, 4340 KB (was 4158). Frames read: pursed on the pause at 9.3 s,
+  open on "Thank you" at 10.2 s, closed at 12.5 s and 14.2 s, where it mouthed before.
+- Still open from C9: her first words lying down have no lips (the model paints the mouth on
+  her tilted cheek); the rotated-band test is untouched. House lesson 8: the untested step
+  runs first, never last in a long batch.
