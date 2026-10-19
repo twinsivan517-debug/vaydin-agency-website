@@ -238,8 +238,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
     fit();
     const watch = figure.current && "ResizeObserver" in window ? new ResizeObserver(fit) : null;
     if (figure.current) watch?.observe(figure.current);
-    const paint = !reduce && canvas.current ? painter(canvas.current) : null;
-    if (!paint) {
+    if (reduce) {
       stillRef.current = true;
       setStill(true);
     }
@@ -250,7 +249,15 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
 
     const begin = () => {
       setShown(true);
-      if (!paint) return;
+      if (reduce) return;
+      /* The keyer is made here, not at mount: setting up WebGL was the
+         page's one long task, and nothing is drawn before this moment. */
+      const paint = canvas.current ? painter(canvas.current) : null;
+      if (!paint) {
+        stillRef.current = true;
+        setStill(true);
+        return;
+      }
       make("sleep");
       fetch(BODIES)
         .then((r) => (r.ok ? r.json() : []))
