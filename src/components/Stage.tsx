@@ -120,6 +120,11 @@ export function Stage() {
       const first = lineClip(q.lines[0]);
       if (first) guide.current?.prime(first, false);
     }
+    /* The whole of the first line she speaks after the greeting: it follows
+       with no tap, and nothing else loads it while the greeting plays. */
+    const after = chapter("meet").lines.find((l) => l.audio);
+    const afterClip = after && lineClip(after);
+    if (afterClip) guide.current?.prime(afterClip, true);
   }
 
   /* The bulb she tossed leaves her frame and flies on to the mark; when it lands, the page lights. */
