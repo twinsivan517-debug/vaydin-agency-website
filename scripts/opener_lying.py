@@ -12,6 +12,8 @@ lips are then made as before by scripts/opener_lipsync.py --src on it.
     python scripts/opener_lying.py                 # writes media/clips/guide-opener4-src.mp4
     python scripts/opener_lying.py --quick         # three frames of the first band only: proves the chain
     python scripts/opener_lying.py --out L:/lipsync/out/try.mp4
+    python scripts/opener_lying.py --splice          # also public/guide/opener.mp4: this head, the tail kept
+    python scripts/opener_lying.py --only 1 --splice # redo one band, the others from the clip made before
 """
 import subprocess
 import sys
@@ -28,8 +30,15 @@ SRC = ROOT / "media" / "clips" / "guide-opener3-src.mp4"
 OUT = ROOT / "media" / "clips" / "guide-opener4-src.mp4"
 AUDIO = ROOT / "public" / "guide" / "opener.mp4"
 FRAMES = 361
-# (first frame, last frame exclusive, degrees counter-clockwise to stand her face up)
-BANDS = [(84, 120, -60), (120, 180, 0)]
+# (first frame, last frame exclusive, degrees counter-clockwise to stand her
+# face up, whether the model may smooth its face box over five frames: not
+# while she rises fast, where the smoothed box lagged her face and smeared it)
+# The rising band ends at 6.25 s, where "in" ends: "here" (6.5-7.2 s) falls on
+# the generator's own motion blur as she springs up, and a crisp mouth drawn
+# into that blur reads as a broken face; the blur is left as generated.
+BANDS = [(84, 120, -60, True), (120, 150, 0, False)]
+WEB = ROOT / "public" / "guide" / "opener.mp4"
+JOIN = 180
 GREEN = (0, 254, 0)
 
 
@@ -106,16 +115,31 @@ def face_boxes(turned: list[np.ndarray], work: Path) -> list[tuple[int, int, int
     raw = [None if line.strip() == "none" else tuple(int(v) for v in line.split()) for line in r.stdout.strip().splitlines()]
     if len(raw) != len(turned):
         raise RuntimeError(f"detector answered for {len(raw)} of {len(turned)} frames")
-    boxes: list = list(raw)
+    # The detector sometimes lands on her hand or chest while she rises; such a
+    # box is far smaller or larger than her face, or jumps. Those are dropped
+    # and take a neighbour's box, so the model's stray patch stays outside the
+    # mask and is discarded.
+    widths = sorted(b[2] - b[0] for b in raw if b)
+    if not widths:
+        raise RuntimeError("no face in the whole band")
+    med = widths[len(widths) // 2]
+    boxes: list = []
+    last = None
+    for i, b in enumerate(raw):
+        ok = b is not None and 0.6 * med <= b[2] - b[0] <= 1.4 * med
+        if ok and last is not None:
+            ok = abs((b[0] + b[2]) / 2 - (last[0] + last[2]) / 2) <= 1.5 * med and abs((b[1] + b[3]) / 2 - (last[1] + last[3]) / 2) <= 1.5 * med
+        boxes.append(b if ok else None)
+        if ok:
+            last = b
+        print(f"  frame +{i}: {'none' if b is None else b}{'' if ok else '  dropped'}", flush=True)
     for i in range(len(boxes)):
         if boxes[i] is None:
-            boxes[i] = next((b for b in boxes[i + 1 :] if b), None) or next((b for b in reversed(boxes[:i]) if b), None)
-    if any(b is None for b in boxes):
-        raise RuntimeError("no face in the whole band")
+            boxes[i] = next((x for x in boxes[i + 1 :] if x), None) or next((x for x in reversed(boxes[:i]) if x), None)
     return boxes
 
 
-def band(src_frames: list[np.ndarray], first: int, angle: float, work: Path, audio_wav: Path) -> list[np.ndarray]:
+def band(src_frames: list[np.ndarray], first: int, angle: float, smooth: bool, work: Path, audio_wav: Path) -> list[np.ndarray]:
     h, w = src_frames[0].shape[:2]
     size = max(h, w)
     turned = [turn(f, angle, size) for f in src_frames]
@@ -124,7 +148,7 @@ def band(src_frames: list[np.ndarray], first: int, angle: float, work: Path, aud
     n = len(turned)
     ff("-i", str(audio_wav), "-af", f"atrim=start={first / FPS:.6f},asetpts=PTS-STARTPTS,apad=pad_dur=2,atrim=end={n / FPS + 0.3:.6f}", str(wav))
     subprocess.run([str(PYTHON), "inference.py", "--checkpoint_path", str(WEIGHTS), "--face", str(face), "--audio", str(wav),
-                    "--outfile", str(raw), "--face_det_batch_size", "4", "--wav2lip_batch_size", "32"],
+                    "--outfile", str(raw), "--face_det_batch_size", "4", "--wav2lip_batch_size", "32", *([] if smooth else ["--nosmooth"])],
                    cwd=WAV2LIP, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     made = read_frames(raw, 0, n)
     if len(made) != n:
@@ -146,21 +170,39 @@ def main(argv: list[str]) -> int:
         if not p.exists():
             print(f"missing: {p}", file=sys.stderr)
             return 2
-    frames = read_frames(SRC, 0, FRAMES)
-    if len(frames) != FRAMES:
-        print(f"{SRC}: {len(frames)} frames, want {FRAMES}", file=sys.stderr)
+    src_frames = read_frames(SRC, 0, FRAMES)
+    if len(src_frames) != FRAMES:
+        print(f"{SRC}: {len(src_frames)} frames, want {FRAMES}", file=sys.stderr)
         return 2
-    bands = [(BANDS[0][0], BANDS[0][0] + 3, BANDS[0][2])] if quick else BANDS
+    frames = list(src_frames)
+    # --only 1: redo just that band; the others are kept from the clip made before.
+    only = [int(x) for x in argv[argv.index("--only") + 1].split(",")] if "--only" in argv else list(range(len(BANDS)))
+    if "--only" in argv:
+        prev = read_frames(out, 0, FRAMES)
+        for i, (first, last, _a, _s) in enumerate(BANDS):
+            if i not in only:
+                frames[first:last] = prev[first:last]
+    bands = [(BANDS[1][0], BANDS[1][0] + 3, BANDS[1][2], BANDS[1][3])] if quick else [b for i, b in enumerate(BANDS) if i in only]
     hold_lock()
     try:
         with tempfile.TemporaryDirectory() as tmp:
             work = Path(tmp)
             wav = work / "full.wav"
             ff("-i", str(AUDIO), "-vn", "-ar", "16000", "-ac", "1", str(wav))
-            for first, last, angle in bands:
-                frames[first:last] = band(frames[first:last], first, angle, work, wav)
+            for first, last, angle, smooth in bands:
+                frames[first:last] = band(src_frames[first:last], first, angle, smooth, work, wav)
                 print(f"band {first}-{last} at {angle:+d}: done", flush=True)
             write_clip(frames, out)
+            if "--splice" in argv:
+                # The page's greeting with only its head replaced: the standing
+                # tail, already lip-synced, and the sound are kept as they are.
+                made = work / "opener.mp4"
+                ff("-i", str(out), "-i", str(WEB), "-filter_complex",
+                   f"[0:v]select=lt(n\\,{JOIN}),setpts=N/{FPS}/TB[h];[1:v]select=gte(n\\,{JOIN}),setpts=N/{FPS}/TB[t];[h][t]concat=n=2:v=1:a=0[v]",
+                   "-map", "[v]", "-map", "1:a:0", "-c:v", "libx264", "-crf", "25", "-preset", "medium", "-g", "12", "-pix_fmt", "yuv420p",
+                   "-r", str(FPS), "-c:a", "copy", "-metadata", f"comment=opener_lying head spliced before frame {JOIN}", "-movflags", "+faststart", str(made))
+                WEB.write_bytes(made.read_bytes())
+                print(f"{WEB}: head spliced, {WEB.stat().st_size // 1024} KB", flush=True)
     finally:
         release_lock()
     n = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v", "-count_frames", "-show_entries", "stream=nb_read_frames",

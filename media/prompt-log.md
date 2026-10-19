@@ -651,3 +651,13 @@ mouth; (2) when a line ends or is stopped she snaps into the loop, read as lag. 
   gesture on the still.
 - Also on the phone: the cloud is a wide row above her, the bottom bar one slim row with a
   WhatsApp icon (commit 08c96c5).
+- C11, second pass, the owner on the phone 17:00: the first head render had a smear on her
+  face from 6.3 s and a patch near her chest as she rose. Frames read against the generator's
+  own: the smear is Kling's motion blur as she springs up, and the model had drawn a crisp
+  mouth into it for "here" (6.5-7.2 s), which reads as a broken face. The rising band now
+  ends at 6.25 s (frame 150), the model's box smoothing is off there, and a box the wrong
+  size for her face or jumping away from it is dropped (none were). Frames 150-179 measure 0
+  pixels changed against the generator's clip. `--only 1 --splice` redid that band alone,
+  spliced before frame 180 onto the tail already made: 361 frames, 4428 KB. The "patch" was
+  her white top, present in the original. Page screenshots, 52 over the first 11 s, show
+  nothing stray.
