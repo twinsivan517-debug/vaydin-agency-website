@@ -39,13 +39,15 @@ body {
   text-transform: uppercase;
 }
 
-/* The hero: she stands on the left at every width, with her cloud, the
-   questions and the typing box beside her; the card sits under them on a
-   phone and in her column's neighbour on a wider screen. */
+/* The hero: she stands on the left at every width, with the questions and
+   the typing box beside her. On a phone her cloud is a wide row above her,
+   its tail pointing down at her, so a long line grows sideways, not into a
+   tower; on a wider screen the cloud sits beside her head. The card sits
+   under them on a phone and in her column's neighbour on a wider screen. */
 .hero {
   display: grid;
   grid-template-columns: 50% minmax(0, 1fr);
-  grid-template-areas: "guide cloud" "guide chips" "guide ask" "card card" "bar bar";
+  grid-template-areas: "cloud cloud" "guide chips" "guide ask" "card card" "bar bar";
   column-gap: 0.6rem;
   row-gap: 0.6rem;
   align-items: start;
