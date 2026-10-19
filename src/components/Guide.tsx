@@ -49,6 +49,8 @@ const FADE_MS = 200;
 const REST_MS = 450;
 /* Which lines stand on their own body, written by scripts/lipsync.py. */
 const BODIES = "/guide/lines/bodies.json";
+/* How many line clips stay loaded at once; the rest are released. */
+const KEEP = 8;
 
 export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   const { mode, run, lineSrc, mood, pokeable, onPoke } = props;
@@ -64,6 +66,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   const fadeMs = useRef(FADE_MS);
   const bodies = useRef<Set<string>>(new Set());
   const resized = useRef(false);
+  const asked = useRef(0);
   const stillRef = useRef(false);
   const openerRun = useRef(0);
   const [still, setStill] = useState(false);
@@ -99,6 +102,18 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
     video.preload = full ? "auto" : "metadata";
     const layer: Layer = { video };
     lines.current[src] = layer;
+    /* Phones allow only so many media pipelines at once: the oldest clips
+       not on screen are released, and come back from the cache when asked. */
+    const keys = Object.keys(lines.current);
+    for (const k of keys) {
+      if (keys.length - (keys.indexOf(k) + 1) < KEEP) break;
+      const l = lines.current[k];
+      if (l === current.current || l === previous.current) continue;
+      l.video.pause();
+      l.video.removeAttribute("src");
+      l.video.load();
+      delete lines.current[k];
+    }
     return layer;
   }, []);
 
@@ -140,6 +155,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   const swap = useCallback(
     (name: Clip) => {
       if (!current.current && name !== "sleep") return;
+      asked.current++;
       const layer = layers.current[name] ?? make(name);
       if (name === "talk") layer.video.currentTime = 0;
       show(layer);
@@ -150,10 +166,21 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   /* A line's clip, started at the body's phase so nothing but the mouth moves. */
   const speak = useCallback(
     (src: string) => {
-      if (stillRef.current || !current.current) return latest.current.onLineEnd("failed");
+      if (stillRef.current) return latest.current.onLineEnd("failed");
+      /* Before she has begun (window load plus a moment) the line is not
+         refused: begin() replays whatever the page then wants. */
+      if (!current.current) return;
+      /* The line playing until now must not report its end as this one's. */
+      const old = current.current;
+      if (isLine(old)) old.video.onended = null;
       const layer = lines.current[src] ?? makeLine(src);
       const video = layer.video;
+      /* Each request owns a number: a Stop or another line while this one's
+         header still loads leaves it unplayed, rather than played with no
+         Stop sign and nothing to end it. */
+      const mine = ++asked.current;
       const start = () => {
+        if (mine !== asked.current) return;
         /* The phase is read here, not when the line was asked for: the body
            kept moving while the clip's header loaded. */
         const at = ownBody(layer) ? 0 : phase();
@@ -162,17 +189,17 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         video.currentTime = video.duration > at + 0.25 ? at : 0;
         video.muted = false;
         video.play().then(
-          () => show(layer),
-          () => latest.current.onLineEnd("failed"),
+          () => (mine === asked.current ? show(layer) : video.pause()),
+          () => mine === asked.current && latest.current.onLineEnd("failed"),
         );
       };
       if (video.readyState >= 1) start();
       else {
         video.onloadedmetadata = start;
-        video.onerror = () => latest.current.onLineEnd("failed");
+        video.onerror = () => mine === asked.current && latest.current.onLineEnd("failed");
       }
     },
-    [makeLine, ownBody, phase, show],
+    [isLine, makeLine, ownBody, phase, show],
   );
 
   useImperativeHandle(
@@ -293,6 +320,12 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       };
       frame = requestAnimationFrame(draw);
       swap("sleep");
+      /* A tap may have come before this moment (the chips show before she
+         does): the page's present wish is replayed, not lost. */
+      const { mode: now, lineSrc: src } = latest.current;
+      if (now === "opener") swap("opener");
+      else if (now === "talk" && src) speak(src);
+      else if (now !== "sleep") swap(now);
     };
 
     const kick = () => {
@@ -311,7 +344,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         layer?.video.removeAttribute("src");
       }
     };
-  }, [make, swap]);
+  }, [make, speak, swap]);
 
   useEffect(() => {
     if (mode === "opener") return;

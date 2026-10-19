@@ -48,8 +48,12 @@ export function Stage() {
     return () => document.body.classList.remove("site-asleep", "site-awake");
   }, []);
 
-  /* She lay back down after the last poke: the page dims with her, and the pokes start over. */
+  /* She lay back down after the last poke: the page dims with her, and the pokes start over.
+     And once she has been met and is up, the page is lit: the bulb lights it
+     mid-greeting, but a greeting stopped early (Stop, a tab switch) must not
+     leave the page dimmed with her standing awake. */
   useEffect(() => {
+    if (state.met && state.phase !== "asleep" && state.phase !== "opener") lightUp();
     if (state.phase !== "asleep" || !state.met) return;
     pokes.current = { count: 0, at: 0 };
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
