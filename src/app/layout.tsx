@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     title: SITE.name,
     description: SITE.description,
     url: SITE.url,
+    siteName: SITE.name,
     type: "website",
     images: [{ url: "/vaydin-og.png", width: 1200, height: 630 }],
   },
@@ -48,6 +49,9 @@ const ORGANISATION = {
     "Vaydin builds the operating system for aesthetic clinics — diagnostic-led mystery shopping, AI response bots, booking integration, attribution-tracked acquisition. Designed in Dubai. Built for MENA. Operated for you.",
   areaServed: { "@type": "Place", name: "MENA" },
   email: SITE.email,
+  /* Profiles that are ours and answer: they tell a search engine which
+     "Vaydin" this is. */
+  sameAs: ["https://www.instagram.com/vaydin.agency/"],
 };
 
 /* The site as an entity of its own, so a search engine ties the name to
