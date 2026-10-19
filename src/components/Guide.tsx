@@ -42,6 +42,11 @@ const STILL = "/guide/still.webp";
 const WIDTH = 1080;
 const HEIGHT = 1920;
 const FADE_MS = 200;
+/* The fade back to the loop after a line on its own body: the gesture may
+   be mid-air when the line ends or is stopped, so the rest is a slower cross. */
+const REST_MS = 450;
+/* Which lines stand on their own body, written by scripts/lipsync.py. */
+const BODIES = "/guide/lines/bodies.json";
 
 export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   const { mode, run, lineSrc, mood, pokeable, onPoke } = props;
@@ -54,6 +59,8 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   const current = useRef<Layer | null>(null);
   const previous = useRef<Layer | null>(null);
   const fadeAt = useRef(0);
+  const fadeMs = useRef(FADE_MS);
+  const bodies = useRef<Set<string>>(new Set());
   const stillRef = useRef(false);
   const openerRun = useRef(0);
   const [still, setStill] = useState(false);
@@ -93,6 +100,11 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   }, []);
 
   const isLine = useCallback((layer: Layer | null) => !!layer && Object.values(lines.current).includes(layer), []);
+  /* A line on its own gesture body, rather than on the shared loop. */
+  const ownBody = useCallback((layer: Layer) => {
+    const src = Object.keys(lines.current).find((k) => lines.current[k] === layer);
+    return !!src && bodies.current.has(src.replace(/^.*\//, "").replace(/\.mp4$/, ""));
+  }, []);
   /* Where the body is in its loop: known for the loop and for a line's clip. */
   const phase = useCallback(() => {
     const c = current.current;
@@ -105,13 +117,21 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   const show = useCallback((layer: Layer) => {
     if (layer === current.current) return;
     const old = current.current;
-    if (layer === layers.current.idle && old && (old === layers.current.idle || isLine(old))) layer.video.currentTime = old.video.currentTime % BASE_LOOP;
+    if (layer === layers.current.idle && old && (old === layers.current.idle || isLine(old))) {
+      /* A line on the shared loop hands its phase back exactly. A line on its
+         own body begins and ends on her still, which is the loop's first
+         frame; but stopped or cut mid-gesture it is not there, so the rest
+         is a slower cross. */
+      const own = isLine(old) && ownBody(old);
+      layer.video.currentTime = own ? 0 : old.video.currentTime % BASE_LOOP;
+      fadeMs.current = own ? REST_MS : FADE_MS;
+    } else fadeMs.current = FADE_MS;
     if (!stillRef.current) layer.video.play().catch(() => {});
     if (old && (old === layers.current.opener || isLine(old))) old.video.pause();
     previous.current = old;
     current.current = layer;
     fadeAt.current = performance.now();
-  }, [isLine]);
+  }, [isLine, ownBody]);
 
   /* Only the sleep loop loads with the page; the others arrive when she wakes. */
   const swap = useCallback(
@@ -133,7 +153,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       const start = () => {
         /* The phase is read here, not when the line was asked for: the body
            kept moving while the clip's header loaded. */
-        const at = phase();
+        const at = ownBody(layer) ? 0 : phase();
         video.onended = () => latest.current.onLineEnd("ended");
         video.onerror = () => latest.current.onLineEnd("failed");
         video.currentTime = video.duration > at + 0.25 ? at : 0;
@@ -149,7 +169,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         video.onerror = () => latest.current.onLineEnd("failed");
       }
     },
-    [makeLine, phase, show],
+    [makeLine, ownBody, phase, show],
   );
 
   useImperativeHandle(
@@ -212,6 +232,12 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       setShown(true);
       if (!paint) return;
       make("sleep");
+      fetch(BODIES)
+        .then((r) => (r.ok ? r.json() : []))
+        .then((ids: string[]) => {
+          bodies.current = new Set(ids);
+        })
+        .catch(() => {});
       let lastTime = -1;
       let lastLayer: Layer | null = null;
       const draw = () => {
@@ -228,7 +254,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         lastTime = c.video.currentTime;
         lastLayer = c;
         if (p && p.video.readyState >= 2) {
-          const mix = Math.min(1, (performance.now() - fadeAt.current) / FADE_MS);
+          const mix = Math.min(1, (performance.now() - fadeAt.current) / fadeMs.current);
           paint(p, c, mix);
           if (mix < 1) return;
         } else paint(c, null, 0);

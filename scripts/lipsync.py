@@ -152,6 +152,9 @@ def main(argv: list[str]) -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     manifest = load_manifest()
     base_sha = sha(BASE)
+    # The page starts a line on its own body at its first frame and rests on
+    # the loop's; it learns which lines those are from this list.
+    (OUT / "bodies.json").write_text(json.dumps([i for i in ordered_ids() if body_of(i) != BASE]) + "\n")
     ids = wanted or stale(ordered_ids(), manifest, base_sha)
     if check:
         print("\n".join(ids) if ids else "nothing stale")
