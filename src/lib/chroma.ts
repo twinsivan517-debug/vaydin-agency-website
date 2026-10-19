@@ -82,7 +82,15 @@ function gpu(canvas: HTMLCanvasElement): Painter | null {
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, layer.video);
   };
 
+  let w = canvas.width;
+  let h = canvas.height;
   return (a, b, mix) => {
+    /* The canvas is sized to the figure on screen; a resize moves the viewport with it. */
+    if (canvas.width !== w || canvas.height !== h) {
+      w = canvas.width;
+      h = canvas.height;
+      gl.viewport(0, 0, w, h);
+    }
     upload(0, a);
     if (b && mix > 0) upload(1, b);
     gl.uniform1f(mixAt, b ? mix : 0);

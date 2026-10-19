@@ -37,8 +37,10 @@ type Props = {
 };
 
 const STILL = "/guide/still.webp";
-/* The canvas her clips are drawn into: the bodies are 1172 px wide, so
-   nothing below that is thrown away before the screen. */
+/* The most the canvas her clips are drawn into may be: the bodies are 1172 px
+   wide, so nothing below that is thrown away before the screen. On screen it
+   is sized to the figure's own pixels, which on a phone is a tenth of this:
+   keying 1080 by 1920 for a 170 px figure was the page's one slow task. */
 const WIDTH = 1080;
 const HEIGHT = 1920;
 const FADE_MS = 200;
@@ -61,6 +63,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   const fadeAt = useRef(0);
   const fadeMs = useRef(FADE_MS);
   const bodies = useRef<Set<string>>(new Set());
+  const resized = useRef(false);
   const stillRef = useRef(false);
   const openerRun = useRef(0);
   const [still, setStill] = useState(false);
@@ -218,6 +221,23 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    /* The canvas takes the figure's size in device pixels, never more than the clips'. */
+    const fit = () => {
+      const c = canvas.current;
+      const f = figure.current;
+      if (!c || !f) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 3);
+      const w = Math.min(WIDTH, Math.max(2, Math.round(f.clientWidth * dpr)));
+      const h = Math.min(HEIGHT, Math.max(2, Math.round(f.clientHeight * dpr)));
+      if (c.width !== w || c.height !== h) {
+        c.width = w;
+        c.height = h;
+        resized.current = true;
+      }
+    };
+    fit();
+    const watch = figure.current && "ResizeObserver" in window ? new ResizeObserver(fit) : null;
+    if (figure.current) watch?.observe(figure.current);
     const paint = !reduce && canvas.current ? painter(canvas.current) : null;
     if (!paint) {
       stillRef.current = true;
@@ -250,7 +270,8 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
           fadeAt.current = performance.now();
           return;
         }
-        if (!p && c.video.currentTime === lastTime && c === lastLayer) return;
+        if (!p && !resized.current && c.video.currentTime === lastTime && c === lastLayer) return;
+        resized.current = false;
         lastTime = c.video.currentTime;
         lastLayer = c;
         if (p && p.video.readyState >= 2) {
@@ -277,6 +298,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       cancelAnimationFrame(frame);
       window.clearTimeout(wait);
       window.removeEventListener("load", kick);
+      watch?.disconnect();
       for (const layer of [...Object.values(list), ...Object.values(spoken)]) {
         layer?.video.pause();
         layer?.video.removeAttribute("src");
