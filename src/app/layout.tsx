@@ -46,7 +46,6 @@ const ORGANISATION = {
   image: `${SITE.url}/vaydin-og.png`,
   description:
     "Vaydin builds the operating system for aesthetic clinics — diagnostic-led mystery shopping, AI response bots, booking integration, attribution-tracked acquisition. Designed in Dubai. Built for MENA. Operated for you.",
-  sameAs: ["https://reports.vaydin.agency/"],
   areaServed: { "@type": "Place", name: "MENA" },
   email: SITE.email,
 };
