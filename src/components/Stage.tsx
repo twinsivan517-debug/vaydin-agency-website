@@ -239,8 +239,9 @@ export function Stage() {
       </div>
 
       <div aria-live="polite" className="hero-cloud md:pt-12">
-        <div key={state.cloud.id} className="cloud">
-          <p className="text-[1.05rem] leading-snug md:text-lg">{state.cloud.text}</p>
+        {/* A quiet line is heard, not read: the cloud keeps its place, unseen. */}
+        <div key={state.cloud.id} className={`cloud${state.cloud.quiet ? " cloud-quiet" : ""}`}>
+          <p className="text-[1.05rem] leading-snug md:text-lg">{state.cloud.quiet ? "" : state.cloud.text}</p>
           <span aria-hidden="true" className="cloud-tail">
             <i />
             <i />
