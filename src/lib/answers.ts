@@ -244,7 +244,7 @@ export const ANSWERS: Answer[] = [
     short: "Are you AI?",
     question: "Who are you?",
     answer: "My voice and look are made with AI, but my answers are written by Vaydin and fixed: I'm not a chatbot. Anything I can't answer, a person answers on WhatsApp.",
-    keywords: ["who are you", "are you real", "are you a real", "are you a person", "are you human", "are you a human", "are you ai", "are you a bot", "are you a robot", "your name", "what's your name", "whats your name", "what are you", "talking to a bot", "talking to a person", "talking to a real", "who am i talking"],
+    keywords: ["who are you", "are you real", "are you a real", "are you a person", "are you human", "are you a human", "are you ai", "are you an ai", "are you artificial", "is she ai", "is she real", "are you a bot", "are you a robot", "your name", "what's your name", "whats your name", "what are you", "talking to a bot", "talking to a person", "talking to a real", "who am i talking"],
     link: { href: "/pricing.html", label: "Ask a person on WhatsApp" },
   },
   {

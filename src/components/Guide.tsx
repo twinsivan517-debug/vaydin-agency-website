@@ -240,8 +240,9 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       const video = layer.video;
       /* A clip that failed while it loaded ahead fires no event again: it is
          dropped at once (a later ask makes it afresh), and the page plays
-         the recording. */
-      if (video.error || video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+         the recording. Only its error says so: an element given its source
+         this moment reads "no source" until the browser starts the load. */
+      if (video.error) {
         delete lines.current[src];
         spare.current?.give(video);
         return latest.current.onLineEnd("failed");
