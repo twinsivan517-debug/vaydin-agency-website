@@ -2,6 +2,7 @@
    each page's summary when the visitor says yes. The owner's words of
    2026-10-20; every fact is the page's own. Keyed by the page's file name. */
 
+import type { Reply } from "./match.ts";
 import type { Line } from "./pitch.ts";
 
 const line = (id: string, text: string): Line => ({ id, text, audio: `/voice/${id}.mp3` });
@@ -30,3 +31,7 @@ export const SUMMARIES: Record<string, Line> = {
     "Every plan is built for your clinic. Start with the diagnostic, and add the Engine when the numbers convince you. Message us on WhatsApp and a person sends yours.",
   ),
 };
+
+/* In the corner there are no chapter chips to point at: a greeting is met
+   with the welcome, and a question she cannot answer with the list. */
+export const inCorner = (r: Reply): Reply | "welcome" | "more" => (r.kind === "greeting" ? "welcome" : r.kind === "unknown" ? "more" : r);

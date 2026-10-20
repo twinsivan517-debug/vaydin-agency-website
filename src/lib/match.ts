@@ -40,7 +40,7 @@ const KEEP = 0.5;
 
 /* Words that say nothing about which answer is meant; her email's words too. */
 const FILLER = new Set(
-  "hello dot vaydin a an and any are as at be been being but by can could did do does doing done for from get got had has have having he her here hey hi him his how i i'm if in into is it it's its just let me my no not now of off on once only or our ours out over own please pls so some such than that that's the their them then there these they this those to too u ur us very was we we're were what what's whats when where which while who whom why will with would yes you you're your yours also about again all am because before both each few more most other same should until up down".split(
+  "hello dot vaydin thank thanks thx a an and any are as at be been being but by can could did do does doing done for from get got had has have having he her here hey hi him his how i i'm if in into is it it's its just let me my no not now of off on once only or our ours out over own please pls so some such than that that's the their them then there these they this those to too u ur us very was we we're were what what's whats when where which while who whom why will with would yes you you're your yours also about again all am because before both each few more most other same should until up down".split(
     " ",
   ),
 );
@@ -143,13 +143,18 @@ export function match(input: string): Reply {
   if (!text) return { kind: "unknown" };
   if (rude(text)) return { kind: "talk", talk: "rude" };
 
+  /* Small talk alone is met as small talk; beside a question, the question
+     is answered: "thanks, what is the diagnostic?" is about the diagnostic. */
+  const said = talk(text);
+  const aside = said && content(said.rest).every((w) => !KNOWN.has(w) && !KNOWN.has(w.replace(/s$/, "")));
+  if (said && aside) return { kind: "talk", talk: said.kind };
+
   const ranked = scores(text);
   const [first, second] = ranked;
   const sure = first.keyed && first.points >= SURE && first.points >= MARGIN * second.points;
-  const said = talk(text);
-  if (said && !sure) return { kind: "talk", talk: said };
   if (first.points < OFFER || !ranked.slice(0, 3).some((entry) => entry.keyed)) {
     if (GREETING.test(text)) return { kind: "greeting" };
+    if (said) return { kind: "talk", talk: said.kind };
     const options = misspelt(text);
     return options.length > 0 ? { kind: "choose", options } : { kind: "unknown" };
   }
@@ -163,13 +168,10 @@ export function match(input: string): Reply {
   };
 }
 
-/* A reply to "Did you mean": yes takes the first offered, an ordinal takes
-   that one, no asks for the list. Only when the reply is nothing more than
-   that; anything else is a new question. */
-const YES = new Set("y yes yeah yea yeh yep yup ya yah ok okay sure correct right exactly true absolutely definitely course aiwa aywa haan".split(" "));
+const YES = new Set("y yes yeah yea yeh yep yup ya yah ok okay sure correct right exactly true absolutely definitely course ahead aiwa aywa haan".split(" "));
 const NO = new Set("n no nope nah neither none wrong".split(" "));
 const PLACE: Record<string, number> = { first: 0, "1st": 0, "1": 0, second: 1, "2nd": 1, "2": 1, third: 2, "3rd": 2, "3": 2, last: -1 };
-const AND = new Set("please pls that this these those them one it is the i mean meant did do number thanks thank you of thing".split(" "));
+const AND = new Set("please pls that this these those them one it is the i mean meant did do number thanks thank you of thing tell me more about go".split(" "));
 
 /* A reply that is only a yes or only a no, to any question she asked. */
 export function yesNo(input: string): "yes" | "no" | null {
@@ -181,11 +183,14 @@ export function yesNo(input: string): "yes" | "no" | null {
   return null;
 }
 
+/* A reply to "Did you mean": yes takes the first offered, an ordinal takes
+   that one, no asks for the list. Only when the reply is nothing more than
+   that; anything else is a new question. */
 export function followUp(input: string, offered: Answer[]): Reply | "more" | null {
   const words = normalise(input).split(" ");
   if (offered.length === 0 || words.length > 6) return null;
   const said = words.filter((w) => !AND.has(w));
-  const place = said.find((w) => w in PLACE);
+  const place = said.find((w) => Object.hasOwn(PLACE, w));
   if (place !== undefined && said.every((w) => w === place || YES.has(w) || NO.has(w))) {
     const answer = offered.at(PLACE[place]);
     return answer ? { kind: "answer", answer } : null;
@@ -193,4 +198,14 @@ export function followUp(input: string, offered: Answer[]): Reply | "more" | nul
   if (said.length > 0 && said.every((w) => YES.has(w))) return { kind: "answer", answer: offered[0] };
   if (said.length > 0 && said.every((w) => NO.has(w))) return "more";
   return null;
+}
+
+/* Lines of hers that end on a question to the visitor ("Is there anything
+   else I can help with?"): a yes opens the list, a no is goodbye. */
+const ASKING = new Set(["x-hello", "x-thanks", "x-howareyou", "x-kind", "x-personal", "x-rude"]);
+
+export function afterTalk(input: string, lastLine: string): Reply | "more" | null {
+  if (!ASKING.has(lastLine)) return null;
+  const said = yesNo(input);
+  return said === "yes" ? "more" : said === "no" ? { kind: "talk", talk: "bye" } : null;
 }

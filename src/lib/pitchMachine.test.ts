@@ -3,10 +3,10 @@
 import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { ANSWERS, CHOOSE, GROUPS, HELLO, MORE, UNKNOWN, UNLISTED, answer, answerLine } from "./answers.ts";
-import { followUp, match } from "./match.ts";
+import { afterTalk, followUp, match, type Reply } from "./match.ts";
 import { CHAPTERS, POKES, SLEEPING, lineClip } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
-import { SUMMARIES, WELCOME } from "./pages.ts";
+import { SUMMARIES, WELCOME, inCorner } from "./pages.ts";
 import { TALK } from "./talk.ts";
 
 const run = (events: Event[], from: State = START) => events.reduce(reduce, from);
@@ -330,6 +330,51 @@ check("every page that carries her has its summary, and the frame's page and its
   );
   assert.deepEqual(carrying.map((f) => f.replace(/\.html$/, "")).sort(), Object.keys(SUMMARIES).sort());
   for (const path of ["public/guide/corner.js", "public/guide/idle-small.mp4", "src/app/corner/page.tsx"]) assert.ok(existsSync(new URL(path, root)), path);
+});
+
+/* The review of 2026-10-20: a business question was met as rudeness or
+   small talk, and in the corner she pointed at chapter chips that are not there. */
+check("a business question is never met as rudeness or small talk, and courtesy never hides a question", () => {
+  for (const text of [
+    "are you available for a call this week",
+    "are you available on weekends",
+    "how is it going to work",
+    "how's it going to help us",
+    "are you good at instagram",
+    "are you ok with small clinics",
+    "I would like the website to book patients",
+    "how old is vaydin",
+    "that's all you do?",
+  ]) {
+    assert.notEqual(match(text).kind, "talk", text);
+  }
+  const id = (text: string) => {
+    const r = match(text);
+    return r.kind === "answer" ? r.answer.id : r.kind;
+  };
+  assert.equal(id("thanks, what is the diagnostic?"), "diagnostic");
+  assert.equal(id("thank you, can I cancel"), "cancel");
+  assert.equal(id("thanks! where are you based"), "where");
+  const after = (text: string, last: string) => {
+    const r = afterTalk(text, last);
+    return r === null ? null : r === "more" ? "more" : r.kind === "talk" ? r.talk : r.kind;
+  };
+  assert.equal(after("no", "x-thanks"), "bye");
+  assert.equal(after("no thanks", "x-thanks"), "bye");
+  assert.equal(after("yes", "x-howareyou"), "more");
+  assert.equal(after("what is the engine", "x-thanks"), null);
+  assert.equal(after("yes", "a-price"), null);
+});
+
+check("in the corner she never points at chapter chips", () => {
+  for (const text of ["hi", "hello", "good morning", "zzz qqq", "football", "what is the meaning of life"]) {
+    const r = inCorner(match(text));
+    assert.ok(r === "welcome" || r === "more", `${text} -> ${typeof r === "string" ? r : r.kind}`);
+  }
+  const answered: Reply = { kind: "answer", answer: ANSWERS[0] };
+  assert.equal(inCorner(answered), answered);
+  const spoken = [...ANSWERS.map(answerLine), ...Object.values(TALK), CHOOSE, MORE, WELCOME, ...Object.values(SUMMARIES)];
+  for (const line of spoken) assert.ok(!/chapter/i.test(line.text), line.id);
 });
 
 console.log(`${cases} cases passed`);

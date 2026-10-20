@@ -13,16 +13,19 @@ import { useEffect, useReducer, useRef, useState, type FormEvent, type MouseEven
 import { Card } from "@/components/Card";
 import { Guide, type GuideHandle, type LineOutcome } from "@/components/Guide";
 import { answer, answerLine, type Answer } from "@/lib/answers";
-import { followUp, match, yesNo, type Reply } from "@/lib/match";
-import { SUMMARIES, WELCOME } from "@/lib/pages";
+import { afterTalk, followUp, match, yesNo, type Reply } from "@/lib/match";
+import { SUMMARIES, WELCOME, inCorner } from "@/lib/pages";
 import { lineClip, talkTime, type Line } from "@/lib/pitch";
 import { START, mode, reduce, replyLines, speaking, type State } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
 
 const AWAKE: State = { ...START, phase: "done", met: true, cloud: WELCOME };
 
-/* The page around the frame opens it to the panel's size, or back to hers. */
-const tell = (open: boolean) => window.parent.postMessage({ vaydinCorner: open ? "open" : "closed" }, location.origin);
+/* The page around the frame sizes it: to the panel and her, or back to her alone. */
+const tell = (height: number | null) =>
+  window.parent.postMessage(height === null ? { vaydinCorner: "closed" } : { vaydinCorner: "open", height }, location.origin);
+/* Her figure, the gap above it and the frame's padding, under the panel. */
+const BELOW = 180 + 8 + 8;
 
 /* Which page she sits on, from the frame's address. */
 const pageSummary = () => SUMMARIES[new URLSearchParams(location.search).get("p") ?? ""];
@@ -38,7 +41,22 @@ export function Corner() {
   const [noClip, setNoClip] = useState<string[]>([]);
   const guide = useRef<GuideHandle>(null);
   const voice = useRef<Speaker | null>(null);
+  const panel = useRef<HTMLElement>(null);
+  const inner = useRef<HTMLDivElement>(null);
   const busy = speaking(state);
+
+  /* The frame is only as tall as the panel's content, so the page under its
+     empty part stays tappable. */
+  useEffect(() => {
+    const box = panel.current;
+    const content = inner.current;
+    if (!open || !box || !content) return;
+    const send = () => tell(content.offsetHeight + (box.offsetHeight - box.clientHeight) + 32 + BELOW);
+    send();
+    const watch = new ResizeObserver(send);
+    watch.observe(content);
+    return () => watch.disconnect();
+  }, [open]);
   /* The card under her words, unless she is offering or saying the page's own lines. */
   const pageLine = state.cloud.id === WELCOME.id || Object.values(SUMMARIES).includes(state.cloud);
   const card = !offering && !pageLine && state.shown.kind !== "chapter";
@@ -111,14 +129,15 @@ export function Corner() {
 
   function openUp() {
     unlock();
-    if (!open) {
-      setOpen(true);
-      tell(true);
-    }
+    if (!open) setOpen(true);
     /* Mid-line, the panel opens on what she is saying. */
-    if (busy) return;
+    if (!busy) welcome();
+  }
+
+  function welcome() {
     const summary = pageSummary();
     if (!summary) return more();
+    unlock();
     setOffering(true);
     dispatch({ type: "say", lines: [WELCOME] });
     ready(summary);
@@ -126,25 +145,28 @@ export function Corner() {
 
   function hide() {
     setOpen(false);
-    tell(false);
+    tell(null);
   }
 
   function stop() {
     dispatch({ type: "stop" });
   }
 
-  /* A typed line: a yes or no to the summary, a reply to "Did you mean", or a question. */
-  function heard(text: string): Reply | "more" | "summary" {
+  /* A typed line: a yes or no to the summary or to her last question, a reply to "Did you mean", or a question. */
+  function heard(text: string): Reply | "more" | "summary" | "welcome" {
     if (offering) {
       const said = yesNo(text);
       if (said) return said === "yes" ? "summary" : "more";
     }
-    return followUp(text, state.shown.kind === "choose" ? state.shown.ids.map(answer) : []) ?? match(text);
+    const reply =
+      afterTalk(text, state.cloud.id) ?? followUp(text, state.shown.kind === "choose" ? state.shown.ids.map(answer) : []) ?? match(text);
+    return reply === "more" ? reply : inCorner(reply);
   }
 
   function ask(text: string) {
     const reply = heard(text);
     if (reply === "summary") return summarise();
+    if (reply === "welcome") return welcome();
     if (reply === "more") return more();
     unlock();
     setOffering(false);
@@ -177,66 +199,70 @@ export function Corner() {
     <div className="flex h-dvh flex-col items-start justify-end gap-2 overflow-hidden p-1">
       {open && (
         <section
+          ref={panel}
           aria-label="Ask Vaydin"
           onClickCapture={lead}
           onKeyDown={(event) => event.key === "Escape" && hide()}
-          className="relative flex max-h-full min-h-0 w-full flex-col gap-3 overflow-y-auto rounded-3xl border border-gold/30 bg-[#120c08] p-4 shadow-[0_10px_40px_rgba(0,0,0,0.6)]"
+          className="relative max-h-full min-h-0 w-full overflow-y-auto rounded-3xl border border-gold/30 bg-[#120c08] p-4 shadow-[0_10px_40px_rgba(0,0,0,0.6)]"
         >
-          <div className="absolute right-3 top-3 flex items-center gap-3">
-            {busy && (
-              <button type="button" onClick={stop} className="rounded-full border border-gold/40 px-2.5 py-0.5 text-xs text-gold-bright">
-                {"■"} Stop
-              </button>
-            )}
-            <button type="button" onClick={hide} aria-label="Hide" className="text-xl leading-none text-muted">
-              {"×"}
-            </button>
-          </div>
-          <p aria-live="polite" className={echoed ? "sr-only" : `${busy ? "pr-24" : "pr-6"} text-[0.95rem] leading-snug`}>
-            {state.cloud.text}
-          </p>
-          {offering ? (
-            <div className="flex flex-wrap gap-2">
-              <button type="button" onClick={summarise} className={`${BUTTON} bg-gold/15`}>
-                Yes, tell me
-              </button>
-              <button type="button" onClick={more} className={BUTTON}>
-                No, thanks
+          <div ref={inner} className="flex flex-col gap-3">
+            <div className="absolute right-3 top-3 flex items-center gap-3">
+              {busy && (
+                <button type="button" onClick={stop} className="rounded-full border border-gold/40 px-2.5 py-0.5 text-xs text-gold-bright">
+                  {"■"} Stop
+                </button>
+              )}
+              <button type="button" onClick={hide} aria-label="Hide" className="text-xl leading-none text-muted">
+                {"×"}
               </button>
             </div>
-          ) : (
-            card && (
-              /* Room above the card for its folder tab. */
-              <div className="pt-2">
-                <Card key={`${state.run}-${state.shown.kind}`} shown={state.shown} onPick={pick} onSoon={(a) => ready(answerLine(a))} onMore={more} />
+            <p aria-live="polite" className={echoed ? "sr-only" : `${busy ? "pr-24" : "pr-6"} text-[0.95rem] leading-snug`}>
+              {state.cloud.text}
+            </p>
+            {offering ? (
+              <div className="flex flex-wrap gap-2">
+                <button type="button" onClick={summarise} className={`${BUTTON} bg-gold/15`}>
+                  Yes, tell me
+                </button>
+                <button type="button" onClick={more} className={BUTTON}>
+                  No, thanks
+                </button>
               </div>
-            )
-          )}
-          <div className="flex flex-col gap-2">
-            {state.shown.kind !== "more" && (
-              <button type="button" onClick={more} className={`${BUTTON} self-start`}>
-                {"…"} More questions
-              </button>
+            ) : (
+              card && (
+                /* Room above the card for its folder tab. */
+                <div className="pt-2">
+                  <Card key={`${state.run}-${state.shown.kind}`} shown={state.shown} onPick={pick} onSoon={(a) => ready(answerLine(a))} onMore={more} />
+                </div>
+              )
             )}
-            <form onSubmit={submit} className="flex gap-2">
-              <label htmlFor="corner-ask" className="sr-only">
-                Your question
-              </label>
-              <input
-                id="corner-ask"
-                value={draft}
-                onChange={(event) => {
-                  setDraft(event.target.value);
-                  const reply = event.target.value.trim().length > 2 ? heard(event.target.value) : null;
-                  if (reply && reply !== "more" && reply !== "summary") ready(replyLines(reply)[0]);
-                }}
-                placeholder="Ask her…"
-                className="min-w-0 flex-1 rounded-full border border-gold/30 bg-transparent px-4 py-2 text-sm"
-              />
-              <button type="submit" className="rounded-full bg-gold px-4 py-2 text-sm font-medium text-[#120c08]">
-                Ask
-              </button>
-            </form>
+            <div className="flex flex-col gap-2">
+              {state.shown.kind !== "more" && (
+                <button type="button" onClick={more} className={`${BUTTON} self-start`}>
+                  {"…"} More questions
+                </button>
+              )}
+              <form onSubmit={submit} className="flex gap-2">
+                <label htmlFor="corner-ask" className="sr-only">
+                  Your question
+                </label>
+                <input
+                  id="corner-ask"
+                  value={draft}
+                  onChange={(event) => {
+                    setDraft(event.target.value);
+                    const reply = event.target.value.trim().length > 2 ? heard(event.target.value) : null;
+                    if (reply && typeof reply !== "string") ready(replyLines(reply)[0]);
+                  }}
+                  placeholder="Ask her…"
+                  maxLength={200}
+                  className="min-w-0 flex-1 rounded-full border border-gold/30 bg-transparent px-4 py-2 text-base"
+                />
+                <button type="submit" className="rounded-full bg-gold px-4 py-2 text-sm font-medium text-[#120c08]">
+                  Ask
+                </button>
+              </form>
+            </div>
           </div>
         </section>
       )}

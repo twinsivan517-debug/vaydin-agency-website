@@ -71,6 +71,9 @@ export function Card({ shown, onPick, onSoon, onMore }: Props) {
             <Chips answers={group.ids.map(answer)} onPick={onPick} onSoon={onSoon} full />
           </details>
         ))}
+        <a href={WHATSAPP} className={`${LINK} mt-4`}>
+          Not on the list? Ask on WhatsApp
+        </a>
       </div>
     );
   }

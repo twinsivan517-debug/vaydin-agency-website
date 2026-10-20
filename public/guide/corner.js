@@ -1,28 +1,88 @@
-/* Her, small, in the bottom-left corner of this page: a frame added once the page has
-   loaded, so the page is never slower for her. The frame is her size until
-   she is opened, then the panel's; the frame says which. Her side of it is
-   src/components/Corner.tsx. */
+/* Her, small, in the bottom-left corner of this page: a frame added once the
+   page has loaded, so the page is never slower for her. The frame is her size
+   until she is opened, then as tall as her panel needs; the frame says which.
+   A bar or panel the page fixes along its bottom, on her side and showing,
+   lifts her above it. Her side of it is src/components/Corner.tsx. */
 (function () {
   var page = location.pathname.replace(/^.*\//, "").replace(/\.html$/, "");
-  var CLOSED = ["112px", "222px"];
-  var OPEN = ["min(380px, calc(100vw - 8px))", "min(640px, calc(100vh - 76px))"];
-  function size(frame, wh) {
-    frame.style.width = wh[0];
-    frame.style.height = wh[1];
+  var CLOSED = [112, 222];
+  var WIDE = "min(380px, calc(100vw - 8px))";
+  var GAP = 6;
+  var frame;
+  var want = null;
+  var docked = [];
+
+  /* The page's own fixed elements, found once and again on a resize. */
+  function scan() {
+    docked = Array.prototype.filter.call(document.querySelectorAll("body *"), function (el) {
+      return el !== frame && getComputedStyle(el).position === "fixed";
+    });
   }
+
+  /* How far above the bottom she must stand to clear what shows there. */
+  function clearance() {
+    var most = 0;
+    var right = frame.getBoundingClientRect().right;
+    docked.forEach(function (el) {
+      var style = getComputedStyle(el);
+      if (style.display === "none" || style.visibility === "hidden" || parseFloat(style.opacity) < 0.05) return;
+      var box = el.getBoundingClientRect();
+      if (box.height === 0 || box.top < innerHeight * 0.5 || box.left > right || box.right < 0) return;
+      most = Math.max(most, Math.ceil(innerHeight - box.top) + GAP);
+    });
+    return most;
+  }
+
+  function place() {
+    var lift = clearance();
+    frame.style.bottom = Math.max(4, lift) + "px";
+    if (want === null) {
+      frame.style.width = CLOSED[0] + "px";
+      frame.style.height = CLOSED[1] + "px";
+    } else {
+      frame.style.width = WIDE;
+      frame.style.height = Math.max(CLOSED[1], Math.min(want, innerHeight - 76 - lift)) + "px";
+    }
+  }
+
+  var queued = false;
+  function soonPlace() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(function () {
+      queued = false;
+      place();
+    });
+  }
+
   function add() {
-    var frame = document.createElement("iframe");
+    frame = document.createElement("iframe");
     frame.src = "/corner.html?p=" + encodeURIComponent(page);
     frame.title = "Ask Vaydin";
     frame.setAttribute("allow", "autoplay");
     frame.style.cssText = "position:fixed;left:4px;bottom:4px;border:0;background:transparent;z-index:45;color-scheme:normal";
-    size(frame, CLOSED);
     document.body.appendChild(frame);
+    scan();
+    place();
     addEventListener("message", function (event) {
       if (event.origin !== location.origin || event.source !== frame.contentWindow || !event.data) return;
-      if (event.data.vaydinCorner) size(frame, event.data.vaydinCorner === "open" ? OPEN : CLOSED);
+      var said = event.data.vaydinCorner;
+      if (!said) return;
+      want = said === "closed" ? null : Math.round(event.data.height || 640);
+      place();
     });
+    addEventListener("scroll", soonPlace, { passive: true });
+    addEventListener("resize", function () {
+      scan();
+      soonPlace();
+    });
+    /* A page's panel shows after a tap, through a transition. */
+    document.addEventListener("click", function () {
+      setTimeout(soonPlace, 350);
+    });
+    document.addEventListener("transitionend", soonPlace, true);
   }
+
   function soon() {
     setTimeout(add, 800);
   }

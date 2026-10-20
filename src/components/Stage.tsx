@@ -10,7 +10,7 @@ import { useEffect, useEffectEvent, useReducer, useRef, useState, type FormEvent
 import { Card } from "@/components/Card";
 import { Guide, type GuideHandle, type LineOutcome } from "@/components/Guide";
 import { MORE, UNKNOWN, answer, answerLine, type Answer } from "@/lib/answers";
-import { followUp, match, type Reply } from "@/lib/match";
+import { afterTalk, followUp, match, type Reply } from "@/lib/match";
 import { BULB_FLIGHT, OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, chapter, lineClip, talkTime, type ChapterId, type Line } from "@/lib/pitch";
 import { START, mode, pokeable, reduce, replyLines, speaking } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
@@ -213,9 +213,11 @@ export function Stage() {
     dispatch({ type: "tap", chapter: id });
   }
 
-  /* What a typed line means here: a reply to "Did you mean", or a question. */
+  /* What a typed line means here: a reply to her last question, to "Did you mean", or a question. */
   function heard(text: string): Reply | "more" {
-    return followUp(text, state.shown.kind === "choose" ? state.shown.ids.map(answer) : []) ?? match(text);
+    return (
+      afterTalk(text, state.cloud.id) ?? followUp(text, state.shown.kind === "choose" ? state.shown.ids.map(answer) : []) ?? match(text)
+    );
   }
 
   function ask(text: string) {

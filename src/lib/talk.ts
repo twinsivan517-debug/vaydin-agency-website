@@ -1,7 +1,9 @@
 /* Small talk: a visitor talking to her rather than asking about Vaydin. Each
    kind has one line, the owner's words of 2026-10-20, and every line steers
    back to Vaydin. Rude is looked for first and wins over any question in the
-   same message; the rest only when nothing about Vaydin was asked. */
+   same message. The rest return what is left of the message once the small
+   talk is taken out, so the matcher can tell "thanks" from "thanks, what is
+   the diagnostic?". */
 
 import type { Line } from "./pitch.ts";
 
@@ -29,7 +31,7 @@ const RUDE = new RegExp(
     `\\b${YOU} ${VERY}(?:hot|stupid|dumb|idiot|useless|ugly|trash|garbage|retarded|crap|suck|sucks|worthless|pathetic|annoying)\\b`,
     "\\b(?:stupid|dumb|useless|shit|crap) (?:bot|ai|site|website|girl|avatar)\\b",
     "\\bshut up\\b",
-    "\\bare (?:you|u) (?:single|hot|sexy|available)\\b",
+    "\\bare (?:you|u) (?:single|hot|sexy)\\b",
   ].join("|"),
 );
 
@@ -43,12 +45,13 @@ const KIND = new RegExp(
   ].join("|"),
 );
 
-const HOW = /\b(?:how are (?:you|u)|how r (?:you|u)|how ?(?:'s|s| is) (?:it going|your day|everything|life)|how you doing|how are you doing|what'?s up|wassup|sup|how do (?:you|u) do$|are (?:you|u) (?:ok|okay|good|well|fine)|kaifak|kaifik|kif halak|keef halak)\b/;
+const HOW = /\b(?:how are (?:you|u)|how r (?:you|u)|how ?(?:'s|s| is) (?:it going(?! to)|your day|everything|life)|how you doing|how are you doing|what'?s up|wassup|sup|how do (?:you|u) do$|are (?:you|u) (?:ok|okay|good|well|fine)|kaifak|kaifik|kif halak|keef halak)\b/;
 const THANKS = /\b(?:thanks?|thank (?:you|u)|thx|thnx|tnx|ty|tysm|shukran|appreciate (?:it|that)|much appreciated|cheers)\b/;
-const BYE = /\b(?:bye|byee+|goodbye|good bye|see (?:you|u|ya)|cya|good night|take care|ma ?'?a ?salama|that'?s all|that is all|gotta go)\b/;
+const BYE = /\b(?:bye|byee+|goodbye|good bye|see (?:you|u|ya)|cya|good night|take care|ma ?'?a ?salama|(?:that'?s|that is) all(?: for now| thanks?| thank you)?$|gotta go)\b/;
 const PERSONAL = new RegExp(
   [
-    "\\b(?:how old|your age|are (?:you|u) married|(?:you|u) married|where do (?:you|u) live|where were (?:you|u) born|where are (?:you|u) from)\\b",
+    "\\bdo (?:you|u) (?:like|love|enjoy) (?:your|ur) (?:job|work)\\b",
+    "\\b(?:how old are (?:you|u)|your age|are (?:you|u) married|(?:you|u) married|where do (?:you|u) live|where were (?:you|u) born|where are (?:you|u) from)\\b",
     "\\bdo (?:you|u) have (?:a |an |any )?(?:boyfriend|husband|wife|family|kids|children|friends|pets?)\\b",
     "\\byour (?:boyfriend|husband|wife|family|kids|age|birthday)\\b",
     "\\b(?:a joke|joke|favou?rite|zodiac|horoscope|your hobby|your hobbies|sing for me|sing a song|dance for me)\\b",
@@ -61,12 +64,19 @@ const PERSONAL = new RegExp(
 
 export const rude = (text: string) => RUDE.test(text);
 
-/* Small talk in a message that asked nothing about Vaydin. */
-export function talk(text: string): TalkKind | null {
-  if (KIND.test(text)) return "kind";
-  if (HOW.test(text)) return "howareyou";
-  if (PERSONAL.test(text)) return "personal";
-  if (BYE.test(text)) return "bye";
-  if (THANKS.test(text)) return "thanks";
+const KINDS: [RegExp, TalkKind][] = [
+  [KIND, "kind"],
+  [HOW, "howareyou"],
+  [PERSONAL, "personal"],
+  [BYE, "bye"],
+  [THANKS, "thanks"],
+];
+
+/* The small talk in a message, and what the message says besides it. */
+export function talk(text: string): { kind: TalkKind; rest: string } | null {
+  for (const [pattern, kind] of KINDS) {
+    const found = pattern.exec(text);
+    if (found) return { kind, rest: `${text.slice(0, found.index)} ${text.slice(found.index + found[0].length)}`.trim() };
+  }
   return null;
 }
