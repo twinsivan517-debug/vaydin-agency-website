@@ -9,8 +9,8 @@
 import { useEffect, useEffectEvent, useReducer, useRef, useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
 import { Guide, type GuideHandle, type LineOutcome } from "@/components/Guide";
-import { MORE, UNKNOWN, answerLine, type Answer } from "@/lib/answers";
-import { match } from "@/lib/match";
+import { MORE, UNKNOWN, answer, answerLine, type Answer } from "@/lib/answers";
+import { followUp, match, type Reply } from "@/lib/match";
 import { BULB_FLIGHT, OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, chapter, lineClip, talkTime, type ChapterId, type Line } from "@/lib/pitch";
 import { START, mode, pokeable, reduce, replyLines, speaking } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
@@ -71,14 +71,21 @@ export function Stage() {
     document.body.classList.add("site-asleep");
   }, [state.phase, state.met]);
 
-  /* On a phone the card sits below the fold, and More says nothing aloud:
-     the list is brought up to where it can be seen. */
+  /* On a phone the card sits below the fold: the list is brought up to
+     where it can be seen. */
   useEffect(() => {
     const list = card.current;
     if (state.shown.kind === "more" && list && list.getBoundingClientRect().top > window.innerHeight * 0.6) {
       list.scrollIntoView({ behavior: glide(), block: "start" });
     }
   }, [state.shown.kind]);
+
+  /* While she asks "Did you mean", a yes is the likeliest reply: her first offer loads. */
+  const firstOffer = state.shown.kind === "choose" ? state.shown.ids[0] : null;
+  const readyOffer = useEffectEvent((id: string) => ready(answerLine(answer(id))));
+  useEffect(() => {
+    if (firstOffer) readyOffer(firstOffer);
+  }, [firstOffer]);
 
   /* A line is spoken by her clip when it has one; otherwise its recording
      plays, and when that cannot play either, the words stay up for reading time. */
@@ -206,10 +213,17 @@ export function Stage() {
     dispatch({ type: "tap", chapter: id });
   }
 
+  /* What a typed line means here: a reply to "Did you mean", or a question. */
+  function heard(text: string): Reply | "more" {
+    return followUp(text, state.shown.kind === "choose" ? state.shown.ids.map(answer) : []) ?? match(text);
+  }
+
   function ask(text: string) {
+    const reply = heard(text);
+    if (reply === "more") return more();
     unlock();
     lightUp();
-    dispatch({ type: "ask", reply: match(text) });
+    dispatch({ type: "ask", reply });
   }
 
   /* The list opens on the card; asleep, she wakes as for any other chip. */
@@ -343,7 +357,8 @@ export function Stage() {
               onChange={(event) => {
                 setDraft(event.target.value);
                 /* Her reply to what is typed so far loads while the visitor types. */
-                if (event.target.value.trim().length > 2) ready(replyLines(match(event.target.value))[0]);
+                const reply = event.target.value.trim().length > 2 ? heard(event.target.value) : null;
+                if (reply && reply !== "more") ready(replyLines(reply)[0]);
               }}
               placeholder="Ask her…"
               autoComplete="off"

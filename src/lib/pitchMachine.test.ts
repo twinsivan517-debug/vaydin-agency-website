@@ -2,8 +2,8 @@
 
 import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { ANSWERS, CHOOSE, GROUPS, HELLO, MORE, UNKNOWN, UNLISTED, answerLine } from "./answers.ts";
-import { match } from "./match.ts";
+import { ANSWERS, CHOOSE, GROUPS, HELLO, MORE, UNKNOWN, UNLISTED, answer, answerLine } from "./answers.ts";
+import { followUp, match } from "./match.ts";
 import { CHAPTERS, POKES, SLEEPING, lineClip } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
 import { TALK } from "./talk.ts";
@@ -224,6 +224,23 @@ check("visitors' own phrasings: she finds the right answer often and is rarely w
   assert.ok(met >= 55, `small talk met ${met} of 70`);
   const answered = asked.offtopic.filter((text) => match(text).kind === "answer").length;
   assert.ok(answered <= 8, `off-topic answered ${answered} of ${asked.offtopic.length}`);
+});
+
+/* The owner's word of 2026-10-20: after "Did you mean", a typed yes is answered. */
+check("a yes to Did you mean answers the first offer, an ordinal its own, a no asks for the list", () => {
+  const offered = ["price", "rivals", "brief"].map(answer);
+  const said = (text: string) => {
+    const r = followUp(text, offered);
+    return r === null ? null : r === "more" ? "more" : r.kind === "answer" ? r.answer.id : r.kind;
+  };
+  for (const yes of ["yes", "Yes!", "yeah", "yes please", "ok", "sure thing", "of course", "y"]) assert.equal(said(yes), "price", yes);
+  assert.equal(said("the second one"), "rivals");
+  assert.equal(said("3"), "brief");
+  assert.equal(said("the last one"), "brief");
+  for (const no of ["no", "nope", "no thanks", "none of these"]) assert.equal(said(no), "more", no);
+  assert.equal(said("yes how much"), null);
+  assert.equal(said("what about competitors"), null);
+  assert.equal(followUp("yes", []), null);
 });
 
 check("pokes only while she rests awake, and they escalate to the last quip", () => {

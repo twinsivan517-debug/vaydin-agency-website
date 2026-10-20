@@ -162,3 +162,25 @@ export function match(input: string): Reply {
       .map((entry) => entry.answer),
   };
 }
+
+/* A reply to "Did you mean": yes takes the first offered, an ordinal takes
+   that one, no asks for the list. Only when the reply is nothing more than
+   that; anything else is a new question. */
+const YES = new Set("y yes yeah yea yeh yep yup ya yah ok okay sure correct right exactly true absolutely definitely course aiwa aywa haan".split(" "));
+const NO = new Set("n no nope nah neither none wrong".split(" "));
+const PLACE: Record<string, number> = { first: 0, "1st": 0, "1": 0, second: 1, "2nd": 1, "2": 1, third: 2, "3rd": 2, "3": 2, last: -1 };
+const AND = new Set("please pls that this these those them one it is the i mean meant did do number thanks thank you of thing".split(" "));
+
+export function followUp(input: string, offered: Answer[]): Reply | "more" | null {
+  const words = normalise(input).split(" ");
+  if (offered.length === 0 || words.length > 6) return null;
+  const said = words.filter((w) => !AND.has(w));
+  const place = said.find((w) => w in PLACE);
+  if (place !== undefined && said.every((w) => w === place || YES.has(w) || NO.has(w))) {
+    const answer = offered.at(PLACE[place]);
+    return answer ? { kind: "answer", answer } : null;
+  }
+  if (said.length > 0 && said.every((w) => YES.has(w))) return { kind: "answer", answer: offered[0] };
+  if (said.length > 0 && said.every((w) => NO.has(w))) return "more";
+  return null;
+}
