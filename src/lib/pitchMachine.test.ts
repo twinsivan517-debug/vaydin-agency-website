@@ -2,7 +2,7 @@
 
 import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { ANSWERS, CHOOSE, HELLO, UNKNOWN, answerLine } from "./answers.ts";
+import { ANSWERS, CHOOSE, GROUPS, HELLO, UNKNOWN, UNLISTED, answerLine } from "./answers.ts";
 import { match } from "./match.ts";
 import { CHAPTERS, POKES, SLEEPING, lineClip } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
@@ -119,6 +119,48 @@ check("the matcher finds the obvious ones and keeps a greeting apart", () => {
   assert.equal(hit("is this a chatbot"), "bot");
   assert.equal(hit("hello"), "greeting");
   assert.equal(hit("what is the meaning of life"), "unknown");
+});
+
+/* The owner's word of 2026-10-20: visitors misspell and ask the same thing
+   in other words. A misspelt question is offered its nearest answers, never
+   answered on a guess, and nonsense still reaches a person. */
+check("a misspelt question is offered its nearest answers; nonsense still hands over", () => {
+  const offered = (text: string) => {
+    const r = match(text);
+    return r.kind === "choose" ? r.options.map((a) => a.id) : [r.kind];
+  };
+  const typos: [string, string][] = [
+    ["pirce", "price"],
+    ["how mutch", "price"],
+    ["competiter", "rivals"],
+    ["mistery shoper", "diagnostic"],
+    ["what is the diagnostik", "diagnostic"],
+    ["can i cancle", "cancel"],
+    ["privasy", "privacy"],
+    ["is it legel", "lawful"],
+    ["reveiws", "rooms"],
+    ["apointment", "slots"],
+    ["chatgtp", "chatgpt"],
+    ["staf know", "unannounced"],
+  ];
+  for (const [text, id] of typos) assert.ok(offered(text).includes(id), `${text} -> ${offered(text)}`);
+  for (const text of ["zzz qqq", "what is the meaning of life", "tell me a joke", "how old are you", "football", "make me a sandwich"]) {
+    assert.deepEqual(offered(text), ["unknown"], text);
+  }
+  assert.deepEqual(offered("good morning"), ["greeting"]);
+  assert.ok(offered("whats the prise").length <= 3);
+});
+
+check("More lists every answer once, except the hand-offs, and leaves her speaking", () => {
+  const listed = GROUPS.flatMap((g) => g.ids);
+  assert.deepEqual([...listed, ...UNLISTED].sort(), ANSWERS.map((a) => a.id).sort());
+  assert.equal(new Set(listed).size, listed.length);
+  const see = run([{ type: "tap", chapter: "how" }], awake);
+  const list = run([{ type: "more" }], see);
+  assert.deepEqual(list.shown, { kind: "more" });
+  assert.equal(list.phase, "talking");
+  assert.equal(list.cloud, see.cloud);
+  assert.equal(list.run, see.run);
 });
 
 check("pokes only while she rests awake, and they escalate to the last quip", () => {

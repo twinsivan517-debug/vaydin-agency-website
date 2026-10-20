@@ -1,8 +1,8 @@
 /* The card beside the guide: the chapter she is telling, the answer to a
-   question, a choice when a question could mean two things, or a hand-off
-   when she has no answer. */
+   question, a choice when a question could mean two things or was misspelt,
+   a hand-off when she has no answer, or every question she can answer. */
 
-import { ANSWERS, answer, type Answer } from "@/lib/answers";
+import { GROUPS, answer, type Answer } from "@/lib/answers";
 import { chapter } from "@/lib/pitch";
 import type { Shown } from "@/lib/pitchMachine";
 import { WHATSAPP } from "@/lib/site";
@@ -12,28 +12,37 @@ import { WHATSAPP } from "@/lib/site";
 const CARD = "folder relative rounded-3xl border border-gold/20 bg-[#161009] p-5";
 const LINK = "label inline-block border-b border-transparent text-gold-bright transition-colors hover:border-gold-bright";
 
-function Chips({ answers, onPick }: { answers: Answer[]; onPick: (a: Answer) => void }) {
+/* A finger landing on a question starts her answer loading before it lifts. */
+type Pick = { onPick: (a: Answer) => void; onSoon: (a: Answer) => void };
+
+function Chips({ answers, onPick, onSoon, full }: Pick & { answers: Answer[]; full?: boolean }) {
   return (
     <div className="mt-3 flex flex-wrap gap-2">
       {answers.map((a) => (
-        <button key={a.id} type="button" onClick={() => onPick(a)} className="rounded-full border border-gold/40 px-3 py-1.5 text-sm text-gold-bright">
-          {a.short}
+        <button key={a.id} type="button" onPointerDown={() => onSoon(a)} onClick={() => onPick(a)} className="rounded-2xl border border-gold/40 px-3 py-1.5 text-left text-sm text-gold-bright">
+          {full ? a.question : a.short}
         </button>
       ))}
     </div>
   );
 }
 
-export function Card({ shown, onPick }: { shown: Shown; onPick: (a: Answer) => void }) {
+type Props = Pick & { shown: Shown; onMore: () => void };
+
+export function Card({ shown, onPick, onSoon, onMore }: Props) {
   if (shown.kind === "unknown") {
     return (
       <div className={CARD}>
         <p className="font-display text-xl">Not one I know yet</p>
-        <p className="mt-2 leading-7 text-muted">A person answers on WhatsApp. Or try one of these.</p>
-        <a href={WHATSAPP} className={`${LINK} mt-3`}>
-          Ask on WhatsApp
-        </a>
-        <Chips answers={ANSWERS.slice(0, 4)} onPick={onPick} />
+        <p className="mt-2 leading-7 text-muted">A person answers on WhatsApp. Or see every question I can answer.</p>
+        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+          <a href={WHATSAPP} className={LINK}>
+            Ask on WhatsApp
+          </a>
+          <button type="button" onClick={onMore} className={LINK}>
+            See all questions
+          </button>
+        </div>
       </div>
     );
   }
@@ -41,7 +50,27 @@ export function Card({ shown, onPick }: { shown: Shown; onPick: (a: Answer) => v
     return (
       <div className={CARD}>
         <p className="font-display text-xl">Did you mean</p>
-        <Chips answers={shown.ids.map(answer)} onPick={onPick} />
+        <Chips answers={shown.ids.map(answer)} onPick={onPick} onSoon={onSoon} />
+        <a href={WHATSAPP} className={`${LINK} mt-4`}>
+          None of these? Ask on WhatsApp
+        </a>
+      </div>
+    );
+  }
+  if (shown.kind === "more") {
+    return (
+      <div className={CARD}>
+        <p className="font-display text-xl text-gold-bright">More questions</p>
+        <p className="mt-2 leading-7 text-muted">Tap one, or type your own.</p>
+        {/* One subject open at a time, so the list stays short on a phone. */}
+        {GROUPS.map((group, index) => (
+          <details key={group.title} name="more" open={index === 0} className="mt-3 border-t border-gold/15 pt-3">
+            <summary className="label cursor-pointer text-gold-bright">
+              {group.title} ({group.ids.length})
+            </summary>
+            <Chips answers={group.ids.map(answer)} onPick={onPick} onSoon={onSoon} full />
+          </details>
+        ))}
       </div>
     );
   }

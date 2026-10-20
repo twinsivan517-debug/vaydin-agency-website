@@ -31,7 +31,7 @@ export const ANSWERS: Answer[] = [
     question: "What is the diagnostic?",
     answer:
       "Every thirty to sixty days a real person messages your clinic on WhatsApp like a new patient. Between shops we read your Google profile and rivals weekly, your Instagram and website monthly. Six rooms, one score, a report every month, and what to fix first.",
-    keywords: ["diagnostic", "diagnose", "intelligence", "mystery", "shop", "shopper", "shopping", "audit", "measure", "measured", "measurement", "score", "scored", "scores", "test", "assessment", "report", "first step", "step one", "layer one", "layer 1"],
+    keywords: ["diagnostic", "diagnose", "intelligence", "mystery", "shop", "shopper", "shopping", "audit", "measure", "measured", "measurement", "score", "scored", "scores", "test", "assessment", "report", "first step", "step one", "layer one", "layer 1", "leak", "leaks"],
     link: { href: "/diagnose.html", label: "How the diagnostic works" },
   },
   {
@@ -40,7 +40,7 @@ export const ANSWERS: Answer[] = [
     question: "What is the engine?",
     answer:
       "Seven parts: intake, booking, consult conversion, show-up, dormant recovery, cross-sell and a dashboard, plus your estate: Google profile managed, every review answered within a day, Instagram and email on the same intake, website changes within two days. On your own number, your reception approving with a tap.",
-    keywords: ["engine", "fix", "run", "operate", "operated", "answer", "answered", "answers", "reply", "replies", "respond", "whatsapp", "booking", "bookings", "book", "reminder", "reminders", "reception", "front door", "no show", "no shows", "revive", "follow up", "estate", "layer two", "layer 2", "dashboard"],
+    keywords: ["engine", "fix", "run", "operate", "operated", "answer", "answered", "answers", "reply", "replies", "respond", "whatsapp", "booking", "bookings", "book", "reminder", "reminders", "reception", "front door", "no show", "no shows", "revive", "follow up", "estate", "layer two", "layer 2", "dashboard", "google", "reviews", "review", "google maps", "listing"],
     link: { href: "/fix.html", label: "What the engine runs" },
   },
   {
@@ -90,7 +90,7 @@ export const ANSWERS: Answer[] = [
     question: "How do I know it works?",
     answer:
       "Evidence a patient could find themselves: Google, reviews, Instagram, the website, how you answered. Scored and explained, every month. The next shop scores us too.",
-    keywords: ["proof", "prove", "results", "result", "guarantee", "guaranteed", "roi", "works", "working", "evidence", "numbers", "track", "tracking", "kpi", "measure", "does it work", "will it work", "work for us", "work for my clinic"],
+    keywords: ["proof", "prove", "results", "result", "guarantee", "guaranteed", "roi", "works", "working", "evidence", "numbers", "track", "tracking", "kpi", "measure", "does it work", "will it work", "work for us", "work for my clinic", "investment", "return on investment"],
     link: { href: "/engine.html", label: "Inside the engine" },
   },
   {
@@ -123,7 +123,7 @@ export const ANSWERS: Answer[] = [
     short: "Cancelling",
     question: "Can I cancel?",
     answer: "Intelligence is month to month with thirty days' notice. The Engine has a three-month minimum.",
-    keywords: ["cancel", "cancellation", "stop", "quit", "leave", "notice", "contract", "commitment", "minimum", "lock in", "locked", "term", "terms"],
+    keywords: ["cancel", "cancellation", "stop", "quit", "leave", "if we leave", "notice", "contract", "commitment", "minimum", "lock in", "locked", "term", "terms"],
     link: { href: "/pricing.html", label: "Ask for your plan" },
   },
   {
@@ -180,7 +180,7 @@ export const ANSWERS: Answer[] = [
     short: "What we measure",
     question: "What do you measure?",
     answer: "Six rooms: first response, the booking push, follow-through, your Google and Instagram front door, reviews and reputation, and the website reality. One score across all six.",
-    keywords: ["six rooms", "rooms", "room", "dimensions", "dimension", "six dimensions", "what do you measure", "what do you check", "what do you score", "score us on", "criteria", "categories", "what do you look at", "what do you test", "do you score", "do you measure", "do you check"],
+    keywords: ["six rooms", "rooms", "room", "dimensions", "dimension", "six dimensions", "what do you measure", "what do you check", "what do you score", "score us on", "criteria", "categories", "what do you look at", "what do you test", "do you score", "do you measure", "do you check", "google", "reviews", "review", "instagram profile"],
     link: { href: "/diagnose.html", label: "The six rooms" },
   },
   {
@@ -260,7 +260,7 @@ export const ANSWERS: Answer[] = [
     short: "Real appointments?",
     question: "Does the shopper book a real appointment?",
     answer: "The shop happens on WhatsApp. We never hold a real appointment, so no real patient loses a slot.",
-    keywords: ["fake appointment", "fake booking", "fake bookings", "real appointment", "waste", "wasted", "our slots", "waste a slot", "block a slot", "no show on purpose", "in person", "visit in person", "walk in", "come to the clinic", "visit the clinic", "physically", "come in", "come by", "real slot", "real booking"],
+    keywords: ["fake appointment", "fake booking", "fake bookings", "real appointment", "waste", "wasted", "our slots", "waste a slot", "block a slot", "no show on purpose", "in person", "visit in person", "walk in", "come to the clinic", "visit the clinic", "physically", "come in", "come by", "real slot", "real booking", "appointment"],
     link: { href: "/diagnose.html", label: "How the shop works" },
   },
   {
@@ -294,7 +294,7 @@ export const ANSWERS: Answer[] = [
     short: "Booking a treatment",
     question: "I want to book a treatment",
     answer: "We're not a clinic: we work with clinics. To book a treatment or ask its price, please contact your clinic directly.",
-    keywords: ["book me", "i want to book", "appointment for me", "how much is botox", "consultation for me", "have a slot", "for botox", "for filler", "for fillers", "botox price", "filler price", "can i get an appointment", "i want an appointment", "i need an appointment", "much is botox", "much is filler", "much is lip", "i want botox", "i want filler", "i want lip", "want to book", "my lips", "price of botox", "price for botox", "cost of botox", "botox cost", "slot for hydrafacial"],
+    keywords: ["book me", "i want to book", "appointment", "appointment for me", "how much is botox", "consultation for me", "have a slot", "for botox", "for filler", "for fillers", "botox price", "filler price", "can i get an appointment", "i want an appointment", "i need an appointment", "much is botox", "much is filler", "much is lip", "i want botox", "i want filler", "i want lip", "want to book", "my lips", "price of botox", "price for botox", "cost of botox", "botox cost", "slot for hydrafacial"],
     link: { href: "mailto:hello@vaydin.agency", label: "hello@vaydin.agency" },
   },
   {
@@ -383,3 +383,15 @@ export const UNKNOWN: Line = {
   audio: "/voice/x-unknown.mp3",
 };
 export const HELLO: Line = { id: "x-hello", text: "Hi. Tap a chapter, or ask me anything about Vaydin.", audio: "/voice/x-hello.mp3" };
+
+/* What the More chip lists, by subject. The rest are reached only by asking:
+   a hand-off or a polite no reads oddly as a question to tap. */
+export const GROUPS: { title: string; ids: string[] }[] = [
+  { title: "About Vaydin", ids: ["what", "where", "legit", "team", "who", "clients", "scope", "you"] },
+  { title: "The diagnostic", ids: ["diagnostic", "unannounced", "often", "rooms", "brief", "slots", "lawful", "bot", "sample", "alone"] },
+  { title: "The Engine and results", ids: ["engine", "ads", "markup", "compliance", "proof", "chatgpt", "rivals"] },
+  { title: "Starting", ids: ["price", "cancel", "time", "need", "branches", "contact"] },
+  { title: "Your data", ids: ["privacy", "confidential", "tech", "delete"] },
+  { title: "Something else", ids: ["patient", "business", "jobs", "write"] },
+];
+export const UNLISTED = ["askus", "medical", "legal", "rate"];

@@ -3,7 +3,8 @@
    greeting), talking (lines, one after another), quip (a poke reply), done
    (a run finished; the card stays). `run` changes whenever a new sound must
    start, so tapping the active chip again replays it. The last poke's quip
-   ends with her asleep again. */
+   ends with her asleep again. More opens the list of questions on the card
+   and leaves what she is saying alone. */
 
 import { CHOOSE, HELLO, UNKNOWN, answerLine } from "./answers.ts";
 import type { Reply } from "./match.ts";
@@ -14,7 +15,8 @@ export type Shown =
   | { kind: "chapter"; id: ChapterId }
   | { kind: "answer"; id: string }
   | { kind: "choose"; ids: string[] }
-  | { kind: "unknown" };
+  | { kind: "unknown" }
+  | { kind: "more" };
 export type State = {
   phase: Phase;
   lines: Line[];
@@ -33,6 +35,7 @@ export type Event =
   | { type: "line_ended" }
   | { type: "cloud_at"; seconds: number }
   | { type: "poke"; index: number }
+  | { type: "more" }
   | { type: "stop" };
 
 export const START: State = {
@@ -114,6 +117,8 @@ export function reduce(s: State, e: Event): State {
       const quip = POKES[Math.min(e.index, POKES.length - 1)];
       return { ...s, phase: "quip", cloud: quip, run: s.run + 1 };
     }
+    case "more":
+      return { ...s, shown: { kind: "more" } };
     case "stop": {
       if (s.phase === "opener") return { ...s, phase: "done", met: true };
       if (s.phase === "talking" || s.phase === "quip") return { ...s, phase: s.met ? "done" : "idle" };

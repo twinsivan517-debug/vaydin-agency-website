@@ -56,7 +56,8 @@ body {
 .hero-cloud { grid-area: cloud; align-self: end; }
 .hero-guide { grid-area: guide; align-self: end; }
 .hero-chips { grid-area: chips; }
-.hero-card { grid-area: card; }
+/* Clear of the fixed header when the list is scrolled up to it. */
+.hero-card { grid-area: card; scroll-margin-top: 5rem; }
 .hero-ask { grid-area: ask; }
 .hero-bar { grid-area: bar; }
 

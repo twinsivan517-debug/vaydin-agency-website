@@ -1,15 +1,15 @@
 "use client";
 
 /* The hero: her, large, with a navy cloud by her head; beside her the five
-   questions, the folder she pulls out for each, and a box to ask her
-   anything. She sleeps until a tap wakes her, and the page sleeps with her:
+   questions and a sixth that lists the rest, the folder she pulls out for
+   each, and a box to ask her anything. She sleeps until a tap wakes her, and the page sleeps with her:
    it lights up the moment she stands. That first tap unlocks sound for every
    line after it. */
 
 import { useEffect, useEffectEvent, useReducer, useRef, useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
 import { Guide, type GuideHandle, type LineOutcome } from "@/components/Guide";
-import { UNKNOWN, type Answer } from "@/lib/answers";
+import { UNKNOWN, answerLine, type Answer } from "@/lib/answers";
 import { match } from "@/lib/match";
 import { BULB_FLIGHT, OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, chapter, lineClip, talkTime, type ChapterId, type Line } from "@/lib/pitch";
 import { START, mode, pokeable, reduce, replyLines, speaking } from "@/lib/pitchMachine";
@@ -22,6 +22,8 @@ const ICONS: Record<string, string> = { what: "?", how: "\u2699", gain: "\u25B2"
 /* How long a line is, for the phone's cloud: it keeps one height, so a long
    line takes a smaller size rather than more room. */
 const long = (text: string) => (text.length > 250 ? "3" : text.length > 170 ? "2" : text.length > 110 ? "1" : undefined);
+
+const glide = (): ScrollBehavior => (window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth");
 
 /* The page dims while she sleeps and lights up when she stands. */
 function lightUp() {
@@ -42,6 +44,8 @@ export function Stage() {
   const guide = useRef<GuideHandle>(null);
   const voice = useRef<Speaker | null>(null);
   const pokes = useRef({ count: 0, at: 0 });
+  const hero = useRef<HTMLElement>(null);
+  const card = useRef<HTMLDivElement>(null);
   const busy = speaking(state);
   /* The questions light one by one once the greeting has handed over to them. */
   const offered = state.met || (state.phase !== "asleep" && state.phase !== "opener");
@@ -66,6 +70,15 @@ export function Stage() {
     document.body.classList.remove("site-awake");
     document.body.classList.add("site-asleep");
   }, [state.phase, state.met]);
+
+  /* On a phone the card sits below the fold, and More says nothing aloud:
+     the list is brought up to where it can be seen. */
+  useEffect(() => {
+    const list = card.current;
+    if (state.shown.kind === "more" && list && list.getBoundingClientRect().top > window.innerHeight * 0.6) {
+      list.scrollIntoView({ behavior: glide(), block: "start" });
+    }
+  }, [state.shown.kind]);
 
   /* A line is spoken by her clip when it has one; otherwise its recording
      plays, and when that cannot play either, the words stay up for reading time. */
@@ -199,9 +212,18 @@ export function Stage() {
     dispatch({ type: "ask", reply: match(text) });
   }
 
+  /* The list opens on the card; asleep, she wakes as for any other chip. */
+  function more() {
+    if (state.phase === "asleep") wake();
+    else unlock();
+    dispatch({ type: "more" });
+  }
+
   function pick(a: Answer) {
     unlock();
     lightUp();
+    /* Picked from a list scrolled up past her: back to her, to see her answer. */
+    if ((hero.current?.getBoundingClientRect().top ?? 0) < 0) window.scrollTo({ top: 0, behavior: glide() });
     dispatch({ type: "ask", reply: { kind: "answer", answer: a } });
   }
 
@@ -247,7 +269,7 @@ export function Stage() {
   }
 
   return (
-    <section aria-label="The guide" className={`hero ${offered ? "offered" : ""}`}>
+    <section ref={hero} aria-label="The guide" className={`hero ${offered ? "offered" : ""}`}>
       <div className="hero-guide md:sticky md:top-16">
         <div className="guide-floor relative aspect-[9/16] w-full md:aspect-auto md:h-[min(76vh,620px)]">
           {busy && (
@@ -290,20 +312,26 @@ export function Stage() {
       <ul className="hero-chips" aria-label="Questions">
         {QUESTIONS.map((c, i) => (
           <li key={c.id} style={{ "--i": i } as React.CSSProperties}>
-            <button type="button" onClick={() => tap(c.id)} aria-pressed={c.id === state.chapter} className="chip">
+            <button type="button" onClick={() => tap(c.id)} aria-pressed={c.id === state.chapter && state.shown.kind === "chapter"} className="chip">
               <i aria-hidden="true">{ICONS[c.id] ?? "?"}</i>
               {c.label}
             </button>
           </li>
         ))}
+        <li style={{ "--i": QUESTIONS.length } as React.CSSProperties}>
+          <button type="button" onClick={more} aria-pressed={state.shown.kind === "more"} className="chip">
+            <i aria-hidden="true">{"…"}</i>
+            More questions
+          </button>
+        </li>
       </ul>
 
-      <div className="hero-card wakes min-w-0">
+      <div ref={card} className="hero-card wakes min-w-0">
         {/* The key remounts the card, so each answer's folder is pulled out afresh. */}
-        <Card key={state.run} shown={state.shown} onPick={pick} />
+        <Card key={`${state.run}-${state.shown.kind}`} shown={state.shown} onPick={pick} onSoon={(a) => ready(answerLine(a))} onMore={more} />
       </div>
 
-      <div className="hero-ask min-w-0" style={{ "--i": QUESTIONS.length } as React.CSSProperties}>
+      <div className="hero-ask min-w-0" style={{ "--i": QUESTIONS.length + 1 } as React.CSSProperties}>
         <div>
           <form onSubmit={submit} className="flex gap-2">
             <label htmlFor="ask" className="sr-only">
