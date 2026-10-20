@@ -1,10 +1,10 @@
 /* Run with `npm test`. Each case is a sequence of events and the state it must end in. */
 
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync } from "node:fs";
-import { ANSWERS, CHOOSE, UNKNOWN } from "./answers.ts";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { ANSWERS, CHOOSE, HELLO, UNKNOWN, answerLine } from "./answers.ts";
 import { match } from "./match.ts";
-import { CHAPTERS, POKES, SLEEPING } from "./pitch.ts";
+import { CHAPTERS, POKES, SLEEPING, lineClip } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
 
 const run = (events: Event[], from: State = START) => events.reduce(reduce, from);
@@ -182,6 +182,20 @@ check("nothing a visitor reads carries a long dash or a price", () => {
   }
   const said = [...CHAPTERS.flatMap((c) => [...c.lines.map((l) => l.text), ...c.card.facts]), ...ANSWERS.map((a) => a.answer)];
   for (const text of said) assert.ok(!/thousand|dirham|AED|\d,\d{3}/i.test(text), text);
+});
+
+/* 2026-10-20: two clips were deleted while lines still named them, and "How
+   much?" hung. Every line she can speak must have its recording and its clip
+   in public/ before the site ships. */
+check("every line she can speak has its recording and its clip", () => {
+  const root = new URL("../../", import.meta.url);
+  const lines = [...CHAPTERS.flatMap((c) => c.lines), ...POKES, ...ANSWERS.map(answerLine), CHOOSE, UNKNOWN, HELLO];
+  const missing: string[] = [];
+  for (const l of lines) {
+    if (!l.audio) continue;
+    for (const path of [l.audio, lineClip(l)]) if (path && !existsSync(new URL(`public${path}`, root))) missing.push(path);
+  }
+  assert.deepEqual([...new Set(missing)], []);
 });
 
 console.log(`${cases} cases passed`);
