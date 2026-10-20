@@ -228,11 +228,11 @@ export function Stage() {
     dispatch({ type: "ask", reply });
   }
 
-  /* The list opens on the card; asleep, she wakes as for any other chip. */
+  /* The list opens on the card, and the same chip closes it; asleep, she wakes as for any other chip. */
   function more() {
     if (state.phase === "asleep") wake();
     else unlock();
-    dispatch({ type: "more" });
+    dispatch({ type: state.shown.kind === "more" && state.phase !== "asleep" ? "less" : "more" });
   }
 
   function pick(a: Answer) {
@@ -240,7 +240,8 @@ export function Stage() {
     lightUp();
     /* Picked from a list scrolled up past her: back to her, to see her answer. */
     if ((hero.current?.getBoundingClientRect().top ?? 0) < 0) window.scrollTo({ top: 0, behavior: glide() });
-    dispatch({ type: "ask", reply: { kind: "answer", answer: a } });
+    /* From the list, the list stays open for the next question. */
+    dispatch({ type: "ask", reply: { kind: "answer", answer: a }, keep: state.shown.kind === "more" });
   }
 
   /* `at` is the tap's own timestamp: pokes within eight seconds escalate. */
@@ -344,7 +345,15 @@ export function Stage() {
 
       <div ref={card} className="hero-card wakes min-w-0">
         {/* The key remounts the card, so each answer's folder is pulled out afresh. */}
-        <Card key={`${state.run}-${state.shown.kind}`} shown={state.shown} onPick={pick} onSoon={(a) => ready(answerLine(a))} onMore={more} />
+        <Card
+          key={state.shown.kind === "more" ? "more" : `${state.run}-${state.shown.kind}`}
+          shown={state.shown}
+          onPick={pick}
+          onSoon={(a) => ready(answerLine(a))}
+          onMore={more}
+          onLess={() => dispatch({ type: "less" })}
+          current={busy ? state.cloud.id.replace(/^a-/, "") : undefined}
+        />
       </div>
 
       <div className="hero-ask min-w-0" style={{ "--i": QUESTIONS.length + 1 } as React.CSSProperties}>

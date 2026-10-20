@@ -203,7 +203,7 @@ export const ANSWERS: Answer[] = [
     id: "legit",
     short: "Real company?",
     question: "Is Vaydin a real company?",
-    answer: "Vaydin is a Dubai free-zone company, licensed under IFZA, based in Dubai Silicon Oasis.",
+    answer: "We're very real, promise! A licensed Dubai free-zone company in Dubai Silicon Oasis. Say hi on WhatsApp, write to hello at vaydin dot agency, or give us a call.",
     keywords: ["legit", "legitimate", "real company", "scam", "scammer", "fraud", "licensed", "license", "licence", "registered", "registered in", "registration", "trade license", "trust you", "trustworthy", "ifza", "free zone", "fake company", "real business", "company real"],
     link: { href: "/terms/", label: "Our terms" },
   },

@@ -124,6 +124,10 @@ export function Corner() {
     dispatch({ type: "more" });
   }
 
+  function less() {
+    dispatch({ type: "less" });
+  }
+
   function summarise() {
     const summary = pageSummary();
     if (!summary) return more();
@@ -181,7 +185,8 @@ export function Corner() {
   function pick(a: Answer) {
     unlock();
     setOffering(false);
-    dispatch({ type: "ask", reply: { kind: "answer", answer: a } });
+    /* From the list, the list stays open for the next question. */
+    dispatch({ type: "ask", reply: { kind: "answer", answer: a }, keep: state.shown.kind === "more" });
   }
 
   function submit(event: FormEvent) {
@@ -237,7 +242,15 @@ export function Corner() {
               card && (
                 /* Room above the card for its folder tab. */
                 <div className="pt-2">
-                  <Card key={`${state.run}-${state.shown.kind}`} shown={state.shown} onPick={pick} onSoon={(a) => ready(answerLine(a))} onMore={more} />
+                  <Card
+                    key={state.shown.kind === "more" ? "more" : `${state.run}-${state.shown.kind}`}
+                    shown={state.shown}
+                    onPick={pick}
+                    onSoon={(a) => ready(answerLine(a))}
+                    onMore={more}
+                    onLess={less}
+                    current={busy ? state.cloud.id.replace(/^a-/, "") : undefined}
+                  />
                 </div>
               )
             )}

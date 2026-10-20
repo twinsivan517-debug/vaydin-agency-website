@@ -244,6 +244,22 @@ check("a yes to Did you mean answers the first offer, an ordinal its own, a no a
   assert.equal(followUp("yes", []), null);
 });
 
+/* The owner's word of 2026-10-21: the list stays open while she answers a
+   question picked from it, until the visitor closes it. */
+check("a question picked from the list keeps the list open; closing it shows the answer she gave", () => {
+  const list = run([{ type: "more" }], awake);
+  const picked = run([{ type: "ask", reply: { kind: "answer", answer: answer("legit") }, keep: true }], list);
+  assert.deepEqual(picked.shown, { kind: "more" });
+  assert.equal(picked.cloud.id, "a-legit");
+  assert.equal(picked.phase, "talking");
+  assert.deepEqual(run([{ type: "less" }], picked).shown, { kind: "answer", id: "legit" });
+  assert.deepEqual(run([{ type: "less" }], list).shown, { kind: "chapter", id: "meet" });
+  assert.equal(run([{ type: "less" }], awake), awake);
+  const typed = run([{ type: "ask", reply: { kind: "answer", answer: answer("legit") } }], list);
+  assert.deepEqual(typed.shown, { kind: "answer", id: "legit" });
+  assert.notEqual(answer("legit").answer, answer("where").answer);
+});
+
 check("pokes only while she rests awake, and they escalate to the last quip", () => {
   assert.equal(pokeable(awake), true);
   const quip = run([{ type: "poke", index: 0 }], awake);

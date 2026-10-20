@@ -15,11 +15,18 @@ const LINK = "label inline-block border-b border-transparent text-gold-bright tr
 /* A finger landing on a question starts her answer loading before it lifts. */
 type Pick = { onPick: (a: Answer) => void; onSoon: (a: Answer) => void };
 
-function Chips({ answers, onPick, onSoon, full }: Pick & { answers: Answer[]; full?: boolean }) {
+function Chips({ answers, onPick, onSoon, full, current }: Pick & { answers: Answer[]; full?: boolean; current?: string }) {
   return (
     <div className="mt-3 flex flex-wrap gap-2">
       {answers.map((a) => (
-        <button key={a.id} type="button" onPointerDown={() => onSoon(a)} onClick={() => onPick(a)} className="rounded-2xl border border-gold/40 px-3 py-1.5 text-left text-sm text-gold-bright">
+        <button
+          key={a.id}
+          type="button"
+          onPointerDown={() => onSoon(a)}
+          onClick={() => onPick(a)}
+          aria-pressed={a.id === current}
+          className="rounded-2xl border border-gold/40 px-3 py-1.5 text-left text-sm text-gold-bright aria-pressed:bg-gold/20"
+        >
           {full ? a.question : a.short}
         </button>
       ))}
@@ -27,9 +34,10 @@ function Chips({ answers, onPick, onSoon, full }: Pick & { answers: Answer[]; fu
   );
 }
 
-type Props = Pick & { shown: Shown; onMore: () => void };
+/* `current` is the answer she is giving, marked in the list. */
+type Props = Pick & { shown: Shown; onMore: () => void; onLess?: () => void; current?: string };
 
-export function Card({ shown, onPick, onSoon, onMore }: Props) {
+export function Card({ shown, onPick, onSoon, onMore, onLess, current }: Props) {
   if (shown.kind === "unknown") {
     return (
       <div className={CARD}>
@@ -60,15 +68,22 @@ export function Card({ shown, onPick, onSoon, onMore }: Props) {
   if (shown.kind === "more") {
     return (
       <div className={CARD}>
-        <p className="font-display text-xl text-gold-bright">More questions</p>
-        <p className="mt-2 leading-7 text-muted">Tap one, or type your own.</p>
-        {/* One subject open at a time, so the list stays short on a phone. */}
-        {GROUPS.map((group, index) => (
-          <details key={group.title} name="more" open={index === 0} className="mt-3 border-t border-gold/15 pt-3">
+        <div className="flex items-start justify-between gap-3">
+          <p className="font-display text-xl text-gold-bright">More questions</p>
+          {onLess && (
+            <button type="button" onClick={onLess} className="label shrink-0 pt-1.5 text-muted">
+              Close {"\u00D7"}
+            </button>
+          )}
+        </div>
+        <p className="mt-2 leading-7 text-muted">Pick a subject, then a question, or type your own.</p>
+        {/* All shut at first, so the visitor picks the subject; one open at a time. */}
+        {GROUPS.map((group) => (
+          <details key={group.title} name="more" className="mt-3 border-t border-gold/15 pt-3">
             <summary className="label cursor-pointer text-gold-bright">
               {group.title} ({group.ids.length})
             </summary>
-            <Chips answers={group.ids.map(answer)} onPick={onPick} onSoon={onSoon} full />
+            <Chips answers={group.ids.map(answer)} onPick={onPick} onSoon={onSoon} full current={current} />
           </details>
         ))}
         <a href={WHATSAPP} className={`${LINK} mt-4`}>

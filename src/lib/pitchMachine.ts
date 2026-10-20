@@ -6,9 +6,11 @@
    ends with her asleep again. More opens the list of questions on the card,
    and she says so, unless she is still giving the greeting. Small talk is
    answered with its line, and the list is offered unless it was thanks or
-   goodbye. Say speaks lines of the page's own, leaving the card as it is. */
+   goodbye. Say speaks lines of the page's own, leaving the card as it is. A
+   question picked from the list is answered with the list kept open; less
+   closes it onto the answer she gave, or her first chapter. */
 
-import { CHOOSE, HELLO, MORE, UNKNOWN, answerLine } from "./answers.ts";
+import { ANSWERS, CHOOSE, HELLO, MORE, UNKNOWN, answerLine } from "./answers.ts";
 import type { Reply } from "./match.ts";
 import { CHAPTERS, POKES, SLEEPING, chapter, type ChapterId, type Line } from "./pitch.ts";
 import { TALK } from "./talk.ts";
@@ -34,11 +36,12 @@ export type State = {
 export type Event =
   | { type: "wake" }
   | { type: "tap"; chapter: ChapterId }
-  | { type: "ask"; reply: Reply }
+  | { type: "ask"; reply: Reply; keep?: boolean }
   | { type: "line_ended" }
   | { type: "cloud_at"; seconds: number }
   | { type: "poke"; index: number }
   | { type: "more" }
+  | { type: "less" }
   | { type: "say"; lines: Line[] }
   | { type: "stop" };
 
@@ -95,7 +98,7 @@ export function reduce(s: State, e: Event): State {
     case "ask": {
       const r = e.reply;
       const said = replyLines(r);
-      if (r.kind === "answer") return speak(s, said, { kind: "answer", id: r.answer.id }, null);
+      if (r.kind === "answer") return speak(s, said, e.keep ? s.shown : { kind: "answer", id: r.answer.id }, null);
       if (r.kind === "choose") return speak(s, said, { kind: "choose", ids: r.options.map((a) => a.id) }, null);
       if (r.kind === "greeting") return speak(s, said, s.shown, null);
       if (r.kind === "talk") return speak(s, said, r.talk === "thanks" || r.talk === "bye" ? s.shown : { kind: "more" }, null);
@@ -133,6 +136,12 @@ export function reduce(s: State, e: Event): State {
     case "more":
       if (s.phase === "asleep" || s.phase === "opener") return { ...s, shown: { kind: "more" } };
       return speak(s, [MORE], { kind: "more" }, null);
+    case "less": {
+      if (s.shown.kind !== "more") return s;
+      const id = s.cloud.id.replace(/^a-/, "");
+      const said = s.cloud.id.startsWith("a-") && ANSWERS.some((a) => a.id === id);
+      return { ...s, shown: said ? { kind: "answer", id } : { kind: "chapter", id: s.chapter ?? CHAPTERS[0].id } };
+    }
     case "say":
       return speak(s, e.lines, s.shown, null);
     case "stop": {
