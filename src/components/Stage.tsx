@@ -9,15 +9,19 @@
 import { useEffect, useEffectEvent, useReducer, useRef, useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
 import { Guide, type GuideHandle, type LineOutcome } from "@/components/Guide";
-import { type Answer } from "@/lib/answers";
+import { UNKNOWN, type Answer } from "@/lib/answers";
 import { match } from "@/lib/match";
-import { BULB_FLIGHT, OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, chapter, lineClip, talkTime, type ChapterId } from "@/lib/pitch";
-import { START, mode, pokeable, reduce, speaking } from "@/lib/pitchMachine";
+import { BULB_FLIGHT, OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, chapter, lineClip, talkTime, type ChapterId, type Line } from "@/lib/pitch";
+import { START, mode, pokeable, reduce, replyLines, speaking } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
 import { WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
 
 /* A small sign on each question's chip. */
 const ICONS: Record<string, string> = { what: "?", how: "\u2699", gain: "\u25B2", start: "\u25B6", price: "$" };
+
+/* How long a line is, for the phone's cloud: it keeps one height, so a long
+   line takes a smaller size rather than more room. */
+const long = (text: string) => (text.length > 250 ? "3" : text.length > 170 ? "2" : text.length > 110 ? "1" : undefined);
 
 /* The page dims while she sleeps and lights up when she stands. */
 function lightUp() {
@@ -114,6 +118,13 @@ export function Stage() {
 
   function unlock() {
     (voice.current ??= speaker()).arm();
+    guide.current?.unlock();
+  }
+
+  /* A line's clip, loaded ahead: its header, or all of it. */
+  function ready(line: Line | undefined, full = false) {
+    const clip = line && lineClip(line);
+    if (clip && !noClip.includes(clip)) guide.current?.prime(clip, full);
   }
 
   function wake() {
@@ -121,16 +132,17 @@ export function Stage() {
     thrown.current = false;
     dispatch({ type: "tap", chapter: "meet" });
     guide.current?.opener().then((ok) => setSpoken(!ok));
-    /* The headers of the five questions' first clips, so a tap starts on the right frame. */
-    for (const q of QUESTIONS) {
-      const first = lineClip(q.lines[0]);
-      if (first) guide.current?.prime(first, false);
-    }
-    /* The whole of the first line she speaks after the greeting: it follows
-       with no tap, and nothing else loads it while the greeting plays. */
-    const after = chapter("meet").lines.find((l) => l.audio);
-    const afterClip = after && lineClip(after);
-    if (afterClip) guide.current?.prime(afterClip, true);
+    /* After the greeting, in the order she may need them: the whole of the
+       line that follows it with no tap, the headers of the five questions'
+       first lines, her first poke reply, and her answer to a question she
+       does not know. */
+    ready(
+      chapter("meet").lines.find((l) => l.audio),
+      true,
+    );
+    for (const q of QUESTIONS) ready(q.lines[0]);
+    ready(POKES[0]);
+    ready(UNKNOWN);
   }
 
   /* While she sleeps, a tap anywhere on the page wakes her; a control keeps
@@ -195,6 +207,7 @@ export function Stage() {
     pokes.current = { count, at };
     unlock();
     dispatch({ type: "poke", index: count });
+    ready(POKES[Math.min(count + 1, POKES.length - 1)]);
   }
 
   /* The greeting as sound alone, when its clip is missing or refused. */
@@ -259,7 +272,9 @@ export function Stage() {
 
       <div aria-live="polite" className="hero-cloud md:pt-12">
         <div key={state.cloud.id} className="cloud">
-          <p className="text-[1.05rem] leading-snug md:text-lg">{state.cloud.text}</p>
+          <p data-long={long(state.cloud.text)} className="text-[1.05rem] leading-snug md:text-lg">
+            {state.cloud.text}
+          </p>
           <span aria-hidden="true" className="cloud-tail">
             <i />
             <i />
@@ -292,7 +307,11 @@ export function Stage() {
             <input
               id="ask"
               value={draft}
-              onChange={(event) => setDraft(event.target.value)}
+              onChange={(event) => {
+                setDraft(event.target.value);
+                /* Her reply to what is typed so far loads while the visitor types. */
+                if (event.target.value.trim().length > 2) ready(replyLines(match(event.target.value))[0]);
+              }}
               placeholder="Ask her…"
               autoComplete="off"
               enterKeyHint="send"

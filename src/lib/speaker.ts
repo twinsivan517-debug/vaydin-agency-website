@@ -13,7 +13,7 @@ export type Speaker = {
 };
 
 /* A valid, silent WAV of 16 frames: enough to unlock the element. */
-const SILENCE =
+export const SILENCE =
   "data:audio/wav;base64,UklGRkQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==";
 
 export function speaker(): Speaker {

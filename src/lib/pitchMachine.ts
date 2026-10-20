@@ -59,6 +59,10 @@ const speak = (s: State, lines: Line[], shown: Shown, chapter: ChapterId | null,
   run: s.run + 1,
 });
 
+/* What she says to a typed question; the page also readies it while it is typed. */
+export const replyLines = (r: Reply): Line[] =>
+  r.kind === "answer" ? [answerLine(r.answer)] : r.kind === "choose" ? [CHOOSE] : r.kind === "greeting" ? [HELLO] : [UNKNOWN];
+
 const opener = (s: State) => {
   const c = CHAPTERS[0];
   return speak(s, c.lines, { kind: "chapter", id: c.id }, c.id, "opener");
@@ -75,10 +79,11 @@ export function reduce(s: State, e: Event): State {
     }
     case "ask": {
       const r = e.reply;
-      if (r.kind === "answer") return speak(s, [answerLine(r.answer)], { kind: "answer", id: r.answer.id }, null);
-      if (r.kind === "choose") return speak(s, [CHOOSE], { kind: "choose", ids: r.options.map((a) => a.id) }, null);
-      if (r.kind === "greeting") return speak(s, [HELLO], s.shown, null);
-      return speak(s, [UNKNOWN], { kind: "unknown" }, null);
+      const said = replyLines(r);
+      if (r.kind === "answer") return speak(s, said, { kind: "answer", id: r.answer.id }, null);
+      if (r.kind === "choose") return speak(s, said, { kind: "choose", ids: r.options.map((a) => a.id) }, null);
+      if (r.kind === "greeting") return speak(s, said, s.shown, null);
+      return speak(s, said, { kind: "unknown" }, null);
     }
     case "line_ended": {
       if (s.phase === "opener") {

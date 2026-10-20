@@ -3,9 +3,9 @@
 /* The guide herself: green-screen clips keyed onto one canvas. She is asleep
    as the page opens, wakes on a tap into the opener (a clip that carries its
    own sound), then rests in the idle loop. A spoken line is a clip of that
-   same loop with her lips on the line, voice included: it starts at the
-   loop's current phase and hands the phase back when it ends, so only her
-   mouth changes. Every other change of clip is a short cross-fade. With
+   same loop with her lips on the line, voice included: it starts at its
+   first word, crossing over from wherever the loop was, and hands the phase
+   back when it ends. Every other change of clip is a short cross-fade. With
    reduced motion, or without a canvas that can key, she is one still picture
    and the page plays the recordings instead. */
 
@@ -13,6 +13,7 @@ import Image from "next/image";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { painter, type Layer } from "@/lib/chroma";
 import { BASE_LOOP, OPENER_VIDEO, type Mood } from "@/lib/pitch";
+import { pool, type Pool } from "@/lib/pool";
 
 export type Mode = "sleep" | "idle" | "talk" | "opener";
 export type LineOutcome = "ended" | "failed";
@@ -20,8 +21,14 @@ export type LineOutcome = "ended" | "failed";
    `exit()` is where the bulb she tossed is at `THROW_AT` (read off the keyed
    canvas), in page pixels, with her frame's width so the page's bulb can match
    the clip's in size; `prime()` starts loading a line's clip ahead of time,
-   the whole clip or only its header. */
-export type GuideHandle = { opener(): Promise<boolean>; exit(): { x: number; y: number; width: number } | null; prime(src: string, full?: boolean): void };
+   its header, or the whole clip once the one playing has arrived; `unlock()`,
+   called inside a tap, readies elements her later lines may play from. */
+export type GuideHandle = {
+  opener(): Promise<boolean>;
+  exit(): { x: number; y: number; width: number } | null;
+  prime(src: string, full?: boolean): void;
+  unlock(): void;
+};
 type Clip = Mode;
 type Props = {
   mode: Mode;
@@ -51,6 +58,24 @@ const REST_MS = 450;
 const BODIES = "/guide/lines/bodies.json";
 /* How many line clips stay loaded at once; the rest are released. */
 const KEEP = 8;
+/* The greeting gets the connection to itself until it can play through, or
+   this long at most; then the rest arrives one piece at a time. */
+const GREETING_FIRST_MS = 4000;
+
+/* Work for a quiet moment: the next idle callback, or a short timer where there is none (Safari). */
+const later = (fn: () => void) => ("requestIdleCallback" in window ? requestIdleCallback(() => fn(), { timeout: 600 }) : setTimeout(fn, 150));
+
+/* Frames each clip has actually put on screen, counted by the browser, so a
+   frame is keyed and uploaded once, not on every repaint between frames. */
+const presented = new WeakMap<HTMLVideoElement, number>();
+const countFrames = (video: HTMLVideoElement) => {
+  if (!("requestVideoFrameCallback" in video)) return;
+  const tick = () => {
+    presented.set(video, (presented.get(video) ?? 0) + 1);
+    video.requestVideoFrameCallback(tick);
+  };
+  video.requestVideoFrameCallback(tick);
+};
 
 export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   const { mode, run, lineSrc, mood, pokeable, onPoke } = props;
@@ -69,6 +94,8 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   const asked = useRef(0);
   const stillRef = useRef(false);
   const openerRun = useRef(0);
+  const spare = useRef<Pool | null>(null);
+  const greeting = useRef<Promise<void>>(Promise.resolve());
   const [still, setStill] = useState(false);
   const [shown, setShown] = useState(false);
 
@@ -85,21 +112,23 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
     }
     const layer: Layer = { video };
     layers.current[name] = layer;
+    countFrames(video);
     return layer;
   }, []);
 
-  /* A line's clip. `full` loads the whole clip ahead (the next line); otherwise
-     only its header, enough to start on the right frame without a wait. */
+  /* A line's clip, on an element from the pool. `full` loads the whole clip;
+     otherwise only its header, enough to start without a wait. */
   const makeLine = useCallback((src: string, full = true) => {
     const have = lines.current[src];
     if (have) {
       if (full) have.video.preload = "auto";
       return have;
     }
-    const video = document.createElement("video");
+    const elements = (spare.current ??= pool(KEEP + 2));
+    const video = elements.take();
     video.src = src;
-    video.playsInline = true;
     video.preload = full ? "auto" : "metadata";
+    countFrames(video);
     const layer: Layer = { video };
     lines.current[src] = layer;
     /* Phones allow only so many media pipelines at once: the oldest clips
@@ -109,9 +138,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       if (keys.length - (keys.indexOf(k) + 1) < KEEP) break;
       const l = lines.current[k];
       if (l === current.current || l === previous.current) continue;
-      l.video.pause();
-      l.video.removeAttribute("src");
-      l.video.load();
+      elements.give(l.video);
       delete lines.current[k];
     }
     return layer;
@@ -123,12 +150,6 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
     const src = Object.keys(lines.current).find((k) => lines.current[k] === layer);
     return !!src && bodies.current.has(src.replace(/^.*\//, "").replace(/\.mp4$/, ""));
   }, []);
-  /* Where the body is in its loop: known for the loop and for a line's clip. */
-  const phase = useCallback(() => {
-    const c = current.current;
-    return c && (c === layers.current.idle || isLine(c)) ? c.video.currentTime % BASE_LOOP : 0;
-  }, [isLine]);
-
   /* Bring a layer to the front. A layer with a voice stops the moment it is
      replaced, not when the fade has painted it out (a hidden tab never
      paints); the fade still shows its last frame. */
@@ -163,7 +184,8 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
     [make, show],
   );
 
-  /* A line's clip, started at the body's phase so nothing but the mouth moves. */
+  /* A line's clip, from its first frame: the voice starts there, so a clip
+     entered at the loop's phase lost its opening words (up to 4.5 s). */
   const speak = useCallback(
     (src: string) => {
       if (stillRef.current) return latest.current.onLineEnd("failed");
@@ -181,12 +203,9 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       const mine = ++asked.current;
       const start = () => {
         if (mine !== asked.current) return;
-        /* The phase is read here, not when the line was asked for: the body
-           kept moving while the clip's header loaded. */
-        const at = ownBody(layer) ? 0 : phase();
         video.onended = () => latest.current.onLineEnd("ended");
         video.onerror = () => latest.current.onLineEnd("failed");
-        video.currentTime = video.duration > at + 0.25 ? at : 0;
+        video.currentTime = 0;
         video.muted = false;
         video.play().then(
           () => (mine === asked.current ? show(layer) : video.pause()),
@@ -199,7 +218,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         video.onerror = () => mine === asked.current && latest.current.onLineEnd("failed");
       }
     },
-    [isLine, makeLine, ownBody, phase, show],
+    [isLine, makeLine, show],
   );
 
   useImperativeHandle(
@@ -207,10 +226,19 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
     () => ({
       opener() {
         const layer = layers.current.opener ?? make("opener");
-        for (const name of ["idle", "talk"] as const) if (!layers.current[name]) make(name);
         const video = layer.video;
         video.muted = false;
         video.currentTime = 0;
+        /* Nothing else loads until the greeting can play through: on a slow
+           line, the clips fetched beside it made it stall four times. The
+           talk loop is made only if a clip is ever refused. */
+        greeting.current = new Promise<void>((resolve) => {
+          if (video.readyState >= 4) return resolve();
+          video.addEventListener("canplaythrough", () => resolve(), { once: true });
+          video.addEventListener("error", () => resolve(), { once: true });
+          setTimeout(resolve, GREETING_FIRST_MS);
+        });
+        greeting.current.then(() => later(() => layers.current.idle ?? make("idle")));
         const mine = ++openerRun.current;
         const started = video.play().then(
           () => {
@@ -240,7 +268,21 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         return box ? { x: box.left + box.width * 0.18, y: box.top + box.height * 0.07, width: box.width } : null;
       },
       prime(src, full = true) {
-        if (!stillRef.current) makeLine(src, full);
+        if (stillRef.current) return;
+        greeting.current.then(() =>
+          later(() => {
+            const layer = makeLine(src, false);
+            if (!full) return;
+            /* The whole clip once the one playing has arrived, so the two never share the line. */
+            const now = current.current?.video;
+            const all = () => (layer.video.preload = "auto");
+            if (!now || now === layer.video || now.readyState >= 4) all();
+            else now.addEventListener("canplaythrough", all, { once: true });
+          }),
+        );
+      },
+      unlock() {
+        (spare.current ??= pool(KEEP + 2)).unlock();
       },
     }),
     [make, makeLine, swap],
@@ -285,15 +327,15 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         setStill(true);
         return;
       }
-      make("sleep");
       fetch(BODIES)
         .then((r) => (r.ok ? r.json() : []))
         .then((ids: string[]) => {
           bodies.current = new Set(ids);
         })
         .catch(() => {});
-      let lastTime = -1;
+      let lastFrame = -1;
       let lastLayer: Layer | null = null;
+      let drawnAt = 0;
       const draw = () => {
         frame = requestAnimationFrame(draw);
         const c = current.current;
@@ -304,10 +346,15 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
           fadeAt.current = performance.now();
           return;
         }
-        if (!p && !resized.current && c.video.currentTime === lastTime && c === lastLayer) return;
+        /* A new frame only when the clip shows one; where the browser cannot
+           say, by its clock, and never more than a quarter second without one. */
+        const at = presented.get(c.video) ?? c.video.currentTime;
+        const now = performance.now();
+        if (!p && !resized.current && at === lastFrame && c === lastLayer && now - drawnAt < 250) return;
         resized.current = false;
-        lastTime = c.video.currentTime;
+        lastFrame = at;
         lastLayer = c;
+        drawnAt = now;
         if (p && p.video.readyState >= 2) {
           const mix = Math.min(1, (performance.now() - fadeAt.current) / fadeMs.current);
           paint(p, c, mix);
