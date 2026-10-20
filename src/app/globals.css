@@ -227,6 +227,23 @@ body.site-asleep header {
   transition: filter 1.1s ease;
 }
 
+/* The questions wait in the dark after the room lights, then light one by one
+   as she offers them, the ask box last; they dim together. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-chips li,
+  .hero-ask {
+    transition: filter 0.7s ease calc(var(--i, 0) * 0.22s);
+  }
+
+  .hero:not(.offered) .hero-chips li,
+  .hero:not(.offered) .hero-ask,
+  body.site-asleep .hero-chips li,
+  body.site-asleep .hero-ask {
+    filter: brightness(0.5) saturate(0.5);
+    transition-delay: 0s;
+  }
+}
+
 /* The bulb flies on from the top of her frame to the mark, full size from the
    first frame so it reads as the same bulb; then the mark burns, and stays lit. */
 .bulb {

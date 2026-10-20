@@ -31,7 +31,7 @@ export const BASE_LOOP = 4.5;
 export const lineClip = (line: Line) => (line.audio ? line.audio.replace("/voice/", "/guide/lines/").replace(/\.mp3$/, ".mp4") : null);
 
 /* In the cloud while she sleeps. Not spoken: no sound may start before a tap. */
-export const SLEEPING: Line = { id: "00", text: "Zzz… Tap me to wake me up." };
+export const SLEEPING: Line = { id: "00", text: "Zzz… Tap anywhere to wake me up." };
 
 export const CHAPTERS: Chapter[] = [
   {

@@ -6,7 +6,7 @@
    it lights up the moment she stands. That first tap unlocks sound for every
    line after it. */
 
-import { useEffect, useReducer, useRef, useState, type FormEvent } from "react";
+import { useEffect, useEffectEvent, useReducer, useRef, useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
 import { Guide, type GuideHandle, type LineOutcome } from "@/components/Guide";
 import { type Answer } from "@/lib/answers";
@@ -39,6 +39,8 @@ export function Stage() {
   const voice = useRef<Speaker | null>(null);
   const pokes = useRef({ count: 0, at: 0 });
   const busy = speaking(state);
+  /* The questions light one by one once the greeting has handed over to them. */
+  const offered = state.met || (state.phase !== "asleep" && state.phase !== "opener");
   /* Line clips that would not play here: those lines fall back to the recording. */
   const [noClip, setNoClip] = useState<string[]>([]);
 
@@ -131,6 +133,19 @@ export function Stage() {
     if (afterClip) guide.current?.prime(afterClip, true);
   }
 
+  /* While she sleeps, a tap anywhere on the page wakes her; a control keeps
+     its own job, and her own button already wakes her. */
+  const wakeFrom = useEffectEvent((event: MouseEvent) => {
+    if (event.target instanceof Element && event.target.closest("a, button, input, textarea, select, summary, label")) return;
+    wake();
+  });
+  useEffect(() => {
+    if (state.phase !== "asleep") return;
+    const anywhere = (event: MouseEvent) => wakeFrom(event);
+    document.addEventListener("click", anywhere);
+    return () => document.removeEventListener("click", anywhere);
+  }, [state.phase]);
+
   /* The bulb she tossed leaves her frame and flies on to the mark; when it lands, the page lights. */
   function throwBulb() {
     if (thrown.current) return;
@@ -214,7 +229,7 @@ export function Stage() {
   }
 
   return (
-    <section aria-label="The guide" className="hero">
+    <section aria-label="The guide" className={`hero ${offered ? "offered" : ""}`}>
       <div className="hero-guide md:sticky md:top-16">
         <div className="guide-floor relative aspect-[9/16] w-full md:aspect-auto md:h-[min(76vh,620px)]">
           {busy && (
@@ -252,9 +267,9 @@ export function Stage() {
         </div>
       </div>
 
-      <ul className="hero-chips wakes" aria-label="Questions">
-        {QUESTIONS.map((c) => (
-          <li key={c.id}>
+      <ul className="hero-chips" aria-label="Questions">
+        {QUESTIONS.map((c, i) => (
+          <li key={c.id} style={{ "--i": i } as React.CSSProperties}>
             <button type="button" onClick={() => tap(c.id)} aria-pressed={c.id === state.chapter} className="chip">
               <i aria-hidden="true">{ICONS[c.id] ?? "?"}</i>
               {c.label}
@@ -268,7 +283,7 @@ export function Stage() {
         <Card key={state.run} shown={state.shown} onPick={pick} />
       </div>
 
-      <div className="hero-ask wakes min-w-0">
+      <div className="hero-ask min-w-0" style={{ "--i": QUESTIONS.length } as React.CSSProperties}>
         <div>
           <form onSubmit={submit} className="flex gap-2">
             <label htmlFor="ask" className="sr-only">
