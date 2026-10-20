@@ -23,5 +23,5 @@ export const PAGES: [string, string][] = [
   ["Fix", "/fix.html"],
   ["Grow", "/grow.html"],
   ["Engine", "/engine.html"],
-  ["Pricing", "/pricing.html"],
+  ["Your plan", "/pricing.html"],
 ];

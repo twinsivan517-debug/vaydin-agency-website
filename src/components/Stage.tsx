@@ -341,7 +341,7 @@ export function Stage() {
           <span className="hidden md:inline">WhatsApp · {WHATSAPP_SHOWN}</span>
         </a>
         <a href="/pricing.html" className="rounded-full border border-gold px-4 py-2 text-sm text-gold-bright md:px-6 md:py-3 md:text-base">
-          See the plans
+          Ask for your plan
         </a>
       </div>
     </section>

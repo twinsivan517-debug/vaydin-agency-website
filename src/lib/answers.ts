@@ -19,10 +19,9 @@ export const ANSWERS: Answer[] = [
     id: "price",
     short: "Price",
     question: "How much does it cost?",
-    answer:
-      "Intelligence is two thousand five hundred dirhams a month per location. The Engine is twenty thousand a month with a five thousand install, Intelligence included, three months minimum; on an annual plan, eighteen thousand and no install. Growth: demand at fifteen percent of ad spend, presence kits from three thousand. Your plan arrives on WhatsApp.",
+    answer: "Every clinic gets its own plan, and every plan starts with the measurement. Message us on WhatsApp and a person sends yours.",
     keywords: ["price", "prices", "cost", "costs", "how much", "fee", "fees", "charge", "charges", "pricing", "plan", "plans", "expensive", "cheap", "budget", "aed", "dirham", "dirhams", "dollar", "dollars", "pay", "payment", "monthly", "retainer", "install"],
-    link: { href: "/pricing.html", label: "Build your plan" },
+    link: { href: "/pricing.html", label: "Ask for your plan" },
   },
   {
     id: "diagnostic",
@@ -105,9 +104,9 @@ export const ANSWERS: Answer[] = [
     id: "branches",
     short: "Many branches",
     question: "One branch or many?",
-    answer: "Both. Intelligence is per location. The Engine adds five thousand a month per extra branch; the install is waived on an annual plan.",
+    answer: "Both. Intelligence runs per location, and the Engine runs every branch. Your plan is built for your group: ask us on WhatsApp and a person sends it.",
     keywords: ["branch", "branches", "location", "locations", "multiple", "chain", "several", "two", "three", "group", "sites", "extra"],
-    link: { href: "/pricing.html", label: "Build your plan" },
+    link: { href: "/pricing.html", label: "Ask for your plan" },
   },
   {
     id: "contact",
@@ -115,7 +114,7 @@ export const ANSWERS: Answer[] = [
     question: "How do I start?",
     answer: "WhatsApp us, or write to hello at vaydin dot agency. Your plan arrives on WhatsApp, no forms.",
     keywords: ["start", "begin", "contact", "talk", "call", "phone", "email", "reach", "number", "meeting", "demo", "sign up", "signup", "apply", "join", "get started"],
-    link: { href: "/pricing.html", label: "See the plans" },
+    link: { href: "/pricing.html", label: "Ask for your plan" },
   },
   {
     id: "cancel",
@@ -123,7 +122,7 @@ export const ANSWERS: Answer[] = [
     question: "Can I cancel?",
     answer: "Intelligence is month to month with thirty days' notice. The Engine has a three-month minimum.",
     keywords: ["cancel", "cancellation", "stop", "quit", "leave", "notice", "contract", "commitment", "minimum", "lock in", "locked", "term", "terms"],
-    link: { href: "/pricing.html", label: "See the plans" },
+    link: { href: "/pricing.html", label: "Ask for your plan" },
   },
   {
     id: "clients",

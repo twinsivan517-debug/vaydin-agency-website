@@ -155,16 +155,16 @@ export const CHAPTERS: Chapter[] = [
     lines: [
       {
         id: "a-price",
-        text: "Intelligence is two thousand five hundred dirhams a month per location. The Engine is twenty thousand a month with a five thousand install, Intelligence included, three months minimum; on an annual plan, eighteen thousand and no install. Growth: demand at fifteen percent of ad spend, presence kits from three thousand. Your plan arrives on WhatsApp.",
+        text: "Every clinic gets its own plan, and every plan starts with the measurement. Message us on WhatsApp and a person sends yours.",
         audio: "/voice/a-price.mp3",
       },
       { id: "a-cancel", text: "Intelligence is month to month with thirty days' notice. The Engine has a three-month minimum.", audio: "/voice/a-cancel.mp3" },
     ],
     card: {
-      title: "What it costs",
-      body: "Every plan starts with the measurement. Add the Engine when you want it fixed and run for you.",
-      facts: ["Intelligence: AED 2,500 a month per location", "The Engine: AED 20,000 a month plus 5,000 install; annual 18,000, no install", "Growth: 15% of ad spend; presence kits from 3,000"],
-      links: [{ href: "/pricing.html", label: "Build your plan" }],
+      title: "Your plan",
+      body: "Every plan is built for your clinic. Add the Engine when you want it fixed and run for you.",
+      facts: ["Every plan starts with the measurement", "A person sends yours on WhatsApp, no forms", "Intelligence month to month; the Engine three months minimum"],
+      links: [{ href: "/pricing.html", label: "Ask for your plan" }],
     },
   },
 ];
