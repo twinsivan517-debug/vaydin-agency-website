@@ -24,6 +24,8 @@ export type Reply =
   | { kind: "unknown" };
 
 const GREETING = /^(hi|hello|hey|salam|salaam|marhaba|good (morning|afternoon|evening))\b/;
+/* How a question opens. */
+const ASKS = /^(?:what|who|how|why|where|which|when|is|are|do|does|can)\b/;
 
 /* A keyword word counts this many times an answer-text word. */
 const KEYWORD = 1.5;
@@ -146,11 +148,12 @@ export function match(input: string): Reply {
   /* Small talk alone is met as small talk; beside a question, the question
      is answered: "thanks, what is the diagnostic?" is about the diagnostic. */
   const said = talk(text);
-  /* A question can be all common words ("what do you do", "who are you"): a keyword phrase in what is left is a question too. */
+  /* A question can be all common words ("what do you do", "who are you"): a
+     keyword phrase shaped as a question in what is left is a question too. */
   const aside =
     said &&
     content(said.rest).every((w) => !KNOWN.has(w) && !KNOWN.has(w.replace(/s$/, ""))) &&
-    !ANSWERS.some((a) => a.keywords.some((k) => hasWord(said.rest, k)));
+    !ANSWERS.some((a) => a.keywords.some((k) => ASKS.test(k) && hasWord(said.rest, k)));
   if (said && aside) return { kind: "talk", talk: said.kind };
 
   const ranked = scores(text);
@@ -179,7 +182,7 @@ const AND = new Set("please pls that this these those them one it is the i mean 
 
 /* A reply that is only a yes or only a no, to any question she asked. */
 export function yesNo(input: string): "yes" | "no" | null {
-  const words = normalise(input).split(" ");
+  const words = normalise(input).replace(/\bwhy not\b/, "yes").split(" ");
   if (words.length > 6) return null;
   const said = words.filter((w) => !AND.has(w));
   if (said.length > 0 && said.every((w) => YES.has(w))) return "yes";

@@ -368,6 +368,9 @@ check("a business question is never met as rudeness or small talk, and courtesy 
   assert.equal(id("thanks, what do you do?"), "what");
   assert.equal(id("thank you, who are you?"), "you");
   assert.equal(kind("thanks for the quick reply"), "thanks");
+  /* The fourth review: a sign-off's common words are not a question. */
+  assert.equal(kind("thanks, that's all from me"), "thanks");
+  assert.equal(kind("thanks from me"), "thanks");
   assert.equal(kind("what time is it in london"), "personal");
   assert.notEqual(kind("what day is it delivered"), "personal");
   const after = (text: string, last: string) => {
@@ -379,7 +382,7 @@ check("a business question is never met as rudeness or small talk, and courtesy 
   assert.equal(after("yes", "x-howareyou"), "more");
   assert.equal(after("what is the engine", "x-thanks"), null);
   assert.equal(after("yes", "a-price"), null);
-  for (const go of ["tell me more", "go on", "yes, tell me"]) assert.equal(yesNo(go), "yes", go);
+  for (const go of ["tell me more", "go on", "yes, tell me", "sure, why not", "why not"]) assert.equal(yesNo(go), "yes", go);
   assert.equal(yesNo("tell me about price"), null);
 });
 
