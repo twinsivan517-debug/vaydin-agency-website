@@ -1,4 +1,4 @@
-/* Her, small, in the corner of this page: a frame added once the page has
+/* Her, small, in the bottom-left corner of this page: a frame added once the page has
    loaded, so the page is never slower for her. The frame is her size until
    she is opened, then the panel's; the frame says which. Her side of it is
    src/components/Corner.tsx. */
@@ -15,7 +15,7 @@
     frame.src = "/corner.html?p=" + encodeURIComponent(page);
     frame.title = "Ask Vaydin";
     frame.setAttribute("allow", "autoplay");
-    frame.style.cssText = "position:fixed;right:4px;bottom:4px;border:0;background:transparent;z-index:45;color-scheme:normal";
+    frame.style.cssText = "position:fixed;left:4px;bottom:4px;border:0;background:transparent;z-index:45;color-scheme:normal";
     size(frame, CLOSED);
     document.body.appendChild(frame);
     addEventListener("message", function (event) {

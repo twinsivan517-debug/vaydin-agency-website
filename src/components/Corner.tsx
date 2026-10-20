@@ -4,8 +4,10 @@
    page adds once it has loaded (public/guide/corner.js). A tap opens a
    panel: she welcomes the visitor and offers the page's summary; a yes plays
    it, a no opens the list. Questions, the list and small talk work as on the
-   home page. The frame is told when the panel opens and closes, and sizes
-   itself; a link opens in the page, not in the frame. */
+   home page. Hiding the panel, scrolling or tapping her leaves her talking:
+   only Stop, or leaving the page, ends a line. The frame is told when the
+   panel opens and closes, and sizes itself; a link opens in the page, not
+   in the frame. */
 
 import { useEffect, useReducer, useRef, useState, type FormEvent, type MouseEvent } from "react";
 import { Card } from "@/components/Card";
@@ -113,6 +115,8 @@ export function Corner() {
       setOpen(true);
       tell(true);
     }
+    /* Mid-line, the panel opens on what she is saying. */
+    if (busy) return;
     const summary = pageSummary();
     if (!summary) return more();
     setOffering(true);
@@ -120,11 +124,13 @@ export function Corner() {
     ready(summary);
   }
 
-  function close() {
-    dispatch({ type: "stop" });
+  function hide() {
     setOpen(false);
-    setOffering(false);
     tell(false);
+  }
+
+  function stop() {
+    dispatch({ type: "stop" });
   }
 
   /* A typed line: a yes or no to the summary, a reply to "Did you mean", or a question. */
@@ -168,18 +174,25 @@ export function Corner() {
   }
 
   return (
-    <div className="flex h-dvh flex-col items-end justify-end gap-2 overflow-hidden p-1">
+    <div className="flex h-dvh flex-col items-start justify-end gap-2 overflow-hidden p-1">
       {open && (
         <section
           aria-label="Ask Vaydin"
           onClickCapture={lead}
-          onKeyDown={(event) => event.key === "Escape" && close()}
+          onKeyDown={(event) => event.key === "Escape" && hide()}
           className="relative flex max-h-full min-h-0 w-full flex-col gap-3 overflow-y-auto rounded-3xl border border-gold/30 bg-[#120c08] p-4 shadow-[0_10px_40px_rgba(0,0,0,0.6)]"
         >
-          <button type="button" onClick={close} aria-label="Close" className="absolute right-3 top-3 text-xl leading-none text-muted">
-            {"×"}
-          </button>
-          <p aria-live="polite" className={echoed ? "sr-only" : "pr-6 text-[0.95rem] leading-snug"}>
+          <div className="absolute right-3 top-3 flex items-center gap-3">
+            {busy && (
+              <button type="button" onClick={stop} className="rounded-full border border-gold/40 px-2.5 py-0.5 text-xs text-gold-bright">
+                {"■"} Stop
+              </button>
+            )}
+            <button type="button" onClick={hide} aria-label="Hide" className="text-xl leading-none text-muted">
+              {"×"}
+            </button>
+          </div>
+          <p aria-live="polite" className={echoed ? "sr-only" : `${busy ? "pr-24" : "pr-6"} text-[0.95rem] leading-snug`}>
             {state.cloud.text}
           </p>
           {offering ? (
@@ -228,11 +241,20 @@ export function Corner() {
         </section>
       )}
       <div className="relative h-[180px] w-[101px] shrink-0">
-        {!open && (
-          <span aria-hidden="true" className="absolute -top-6 right-0 whitespace-nowrap rounded-full bg-gold px-2.5 py-0.5 text-xs font-medium text-[#120c08]">
-            Ask me
-          </span>
-        )}
+        {!open &&
+          (busy ? (
+            <button
+              type="button"
+              onClick={stop}
+              className="absolute -top-7 left-0 z-40 whitespace-nowrap rounded-full bg-gold px-2.5 py-0.5 text-xs font-medium text-[#120c08]"
+            >
+              {"■"} Stop
+            </button>
+          ) : (
+            <span aria-hidden="true" className="absolute -top-6 left-0 whitespace-nowrap rounded-full bg-gold px-2.5 py-0.5 text-xs font-medium text-[#120c08]">
+              Ask me
+            </span>
+          ))}
         <Guide
           ref={guide}
           small
@@ -248,8 +270,8 @@ export function Corner() {
         />
         <button
           type="button"
-          onClick={busy ? () => dispatch({ type: "stop" }) : openUp}
-          aria-label={busy ? "Stop her" : "Ask Vaydin about this page"}
+          onClick={openUp}
+          aria-label="Ask Vaydin about this page"
           className="absolute inset-0 z-30 cursor-pointer rounded-full"
         />
       </div>
