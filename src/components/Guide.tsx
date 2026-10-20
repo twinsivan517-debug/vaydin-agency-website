@@ -7,7 +7,8 @@
    first word, crossing over from wherever the loop was, and hands the phase
    back when it ends. Every other change of clip is a short cross-fade. With
    reduced motion, or without a canvas that can key, she is one still picture
-   and the page plays the recordings instead. */
+   and the page plays the recordings instead. In a page's corner she starts
+   standing, on a small copy of the idle loop. */
 
 import Image from "next/image";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
@@ -41,9 +42,13 @@ type Props = {
   onOpenerEnd: () => void;
   onLineEnd: (outcome: LineOutcome) => void;
   onPoke: (at: number) => void;
+  /* Standing in a page's corner rather than asleep on the home page. */
+  small?: boolean;
 };
 
 const STILL = "/guide/still.webp";
+/* The idle loop at a third of the size, frame for frame, for her figure in a corner. */
+const SMALL_IDLE = "/guide/idle-small.mp4";
 /* The most the canvas her clips are drawn into may be: the bodies are 1172 px
    wide, so nothing below that is thrown away before the screen. On screen it
    is sized to the figure's own pixels, which on a phone is a tenth of this:
@@ -142,7 +147,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
 
   const make = useCallback((name: Clip) => {
     const video = document.createElement("video");
-    video.src = name === "opener" ? OPENER_VIDEO : `/guide/${name}.mp4`;
+    video.src = name === "opener" ? OPENER_VIDEO : name === "idle" && latest.current.small ? SMALL_IDLE : `/guide/${name}.mp4`;
     video.muted = name !== "opener";
     video.loop = name !== "opener";
     video.playsInline = true;
@@ -417,7 +422,8 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         }
       };
       frame = requestAnimationFrame(draw);
-      swap("sleep");
+      const first: Clip = latest.current.small ? "idle" : "sleep";
+      show(list[first] ?? make(first));
       /* A tap may have come before this moment (the chips show before she
          does): the page's present wish is replayed, not lost. */
       const { mode: now, lineSrc: src } = latest.current;
@@ -442,7 +448,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         layer?.video.removeAttribute("src");
       }
     };
-  }, [make, speak, swap]);
+  }, [make, show, speak, swap]);
 
   useEffect(() => {
     if (mode === "opener") return;

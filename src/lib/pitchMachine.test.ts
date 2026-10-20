@@ -6,6 +6,7 @@ import { ANSWERS, CHOOSE, GROUPS, HELLO, MORE, UNKNOWN, UNLISTED, answer, answer
 import { followUp, match } from "./match.ts";
 import { CHAPTERS, POKES, SLEEPING, lineClip } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
+import { SUMMARIES, WELCOME } from "./pages.ts";
 import { TALK } from "./talk.ts";
 
 const run = (events: Event[], from: State = START) => events.reduce(reduce, from);
@@ -302,7 +303,7 @@ check("nothing a visitor reads carries a long dash or a price", () => {
     assert.ok(!/[\u2014\u2013]/.test(text), `${path} has a long dash`);
     assert.ok(!/AED\s?\d|\d[\d,]*\s?AED|dirhams? a month/i.test(text), `${path} names a price`);
   }
-  const said = [...CHAPTERS.flatMap((c) => [...c.lines.map((l) => l.text), ...c.card.facts]), ...ANSWERS.map((a) => a.answer)];
+  const said = [...CHAPTERS.flatMap((c) => [...c.lines.map((l) => l.text), ...c.card.facts]), ...ANSWERS.map((a) => a.answer), ...Object.values(SUMMARIES).map((l) => l.text)];
   for (const text of said) assert.ok(!/thousand|dirham|AED|\d,\d{3}/i.test(text), text);
 });
 
@@ -311,13 +312,24 @@ check("nothing a visitor reads carries a long dash or a price", () => {
    in public/ before the site ships. */
 check("every line she can speak has its recording and its clip", () => {
   const root = new URL("../../", import.meta.url);
-  const lines = [...CHAPTERS.flatMap((c) => c.lines), ...POKES, ...ANSWERS.map(answerLine), CHOOSE, UNKNOWN, HELLO, MORE, ...Object.values(TALK)];
+  const lines = [...CHAPTERS.flatMap((c) => c.lines), ...POKES, ...ANSWERS.map(answerLine), CHOOSE, UNKNOWN, HELLO, MORE, ...Object.values(TALK), WELCOME, ...Object.values(SUMMARIES)];
   const missing: string[] = [];
   for (const l of lines) {
     if (!l.audio) continue;
     for (const path of [l.audio, lineClip(l)]) if (path && !existsSync(new URL(`public${path}`, root))) missing.push(path);
   }
   assert.deepEqual([...new Set(missing)], []);
+});
+
+/* The owner's word of 2026-10-20: a small her in the corner of every other
+   page, who offers that page's summary. */
+check("every page that carries her has its summary, and the frame's page and its small loop exist", () => {
+  const root = new URL("../../", import.meta.url);
+  const carrying = readdirSync(new URL("public/", root)).filter(
+    (f) => f.endsWith(".html") && readFileSync(new URL(`public/${f}`, root), "utf8").includes('src="/guide/corner.js"'),
+  );
+  assert.deepEqual(carrying.map((f) => f.replace(/\.html$/, "")).sort(), Object.keys(SUMMARIES).sort());
+  for (const path of ["public/guide/corner.js", "public/guide/idle-small.mp4", "src/app/corner/page.tsx"]) assert.ok(existsSync(new URL(path, root)), path);
 });
 
 console.log(`${cases} cases passed`);

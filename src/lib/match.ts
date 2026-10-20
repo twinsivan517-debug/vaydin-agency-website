@@ -171,6 +171,16 @@ const NO = new Set("n no nope nah neither none wrong".split(" "));
 const PLACE: Record<string, number> = { first: 0, "1st": 0, "1": 0, second: 1, "2nd": 1, "2": 1, third: 2, "3rd": 2, "3": 2, last: -1 };
 const AND = new Set("please pls that this these those them one it is the i mean meant did do number thanks thank you of thing".split(" "));
 
+/* A reply that is only a yes or only a no, to any question she asked. */
+export function yesNo(input: string): "yes" | "no" | null {
+  const words = normalise(input).split(" ");
+  if (words.length > 6) return null;
+  const said = words.filter((w) => !AND.has(w));
+  if (said.length > 0 && said.every((w) => YES.has(w))) return "yes";
+  if (said.length > 0 && said.every((w) => NO.has(w))) return "no";
+  return null;
+}
+
 export function followUp(input: string, offered: Answer[]): Reply | "more" | null {
   const words = normalise(input).split(" ");
   if (offered.length === 0 || words.length > 6) return null;

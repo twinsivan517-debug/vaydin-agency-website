@@ -6,7 +6,7 @@
    ends with her asleep again. More opens the list of questions on the card,
    and she says so, unless she is still giving the greeting. Small talk is
    answered with its line, and the list is offered unless it was thanks or
-   goodbye. */
+   goodbye. Say speaks lines of the page's own, leaving the card as it is. */
 
 import { CHOOSE, HELLO, MORE, UNKNOWN, answerLine } from "./answers.ts";
 import type { Reply } from "./match.ts";
@@ -39,6 +39,7 @@ export type Event =
   | { type: "cloud_at"; seconds: number }
   | { type: "poke"; index: number }
   | { type: "more" }
+  | { type: "say"; lines: Line[] }
   | { type: "stop" };
 
 export const START: State = {
@@ -132,6 +133,8 @@ export function reduce(s: State, e: Event): State {
     case "more":
       if (s.phase === "asleep" || s.phase === "opener") return { ...s, shown: { kind: "more" } };
       return speak(s, [MORE], { kind: "more" }, null);
+    case "say":
+      return speak(s, e.lines, s.shown, null);
     case "stop": {
       if (s.phase === "opener") return { ...s, phase: "done", met: true };
       if (s.phase === "talking" || s.phase === "quip") return { ...s, phase: s.met ? "done" : "idle" };
