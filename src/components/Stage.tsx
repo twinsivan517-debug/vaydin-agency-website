@@ -9,7 +9,7 @@
 import { useEffect, useEffectEvent, useReducer, useRef, useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
 import { Guide, type GuideHandle, type LineOutcome } from "@/components/Guide";
-import { UNKNOWN, answerLine, type Answer } from "@/lib/answers";
+import { MORE, UNKNOWN, answerLine, type Answer } from "@/lib/answers";
 import { match } from "@/lib/match";
 import { BULB_FLIGHT, OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, chapter, lineClip, talkTime, type ChapterId, type Line } from "@/lib/pitch";
 import { START, mode, pokeable, reduce, replyLines, speaking } from "@/lib/pitchMachine";
@@ -319,7 +319,7 @@ export function Stage() {
           </li>
         ))}
         <li style={{ "--i": QUESTIONS.length } as React.CSSProperties}>
-          <button type="button" onClick={more} aria-pressed={state.shown.kind === "more"} className="chip">
+          <button type="button" onPointerDown={() => ready(MORE)} onClick={more} aria-pressed={state.shown.kind === "more"} className="chip">
             <i aria-hidden="true">{"…"}</i>
             More questions
           </button>

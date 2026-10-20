@@ -1,0 +1,552 @@
+{
+  "answers": [
+    { "id": "price", "asks": [
+      "how much u charge",
+      "whats the damage per month for a clinic like mine",
+      "pricing?",
+      "Hello, please share me the price list of your services",
+      "how much is the fee for the mystery shoping and the other package",
+      "I am manager of clinic in JLT, my owner ask me to find out what is your cost",
+      "is it expensive? whats the montly fee roughly",
+      "ok so I've been reading the whole site and it sounds interesting but nowhere does it say a number, like are we talking a few thousand dirhams a month or more, because I need to take it to my partner before we decide anything"
+    ]},
+    { "id": "diagnostic", "asks": [
+      "what is this mystery shopper thing exactly",
+      "how does ur diagnostic work",
+      "secret shopper service?",
+      "So you send someone to message my clinic pretending to be patient? explain me how it works",
+      "what happens in the diagnoctic, step by step",
+      "Good day po, may I know what is included in the diagnostic service",
+      "wat do u actually do in the mistery shop",
+      "My friend who owns a skin clinic in Jumeirah told me you guys pretend to be a new patient on WhatsApp and then send a report, I didn't really get the full picture, how does the whole thing work from start to finish"
+    ]},
+    { "id": "engine", "asks": [
+      "whats included in the engine package",
+      "what does the Engine actually do for us",
+      "engine meaning?",
+      "Tell me about the full service where you manage our WhatsApp bookings and reviews",
+      "wats inside ur engine plan, booking, reviews, wat else",
+      "Please explain the Engine servise, we are clinic in Deira",
+      "do u guys handle our bookings and follow ups and google reviews for us",
+      "we already have a receptionist and an agency doing instagram but bookings keep falling through and no one follows up with old patients, I saw something called the Engine on your site, what exactly do you run for us and what parts are included"
+    ]},
+    { "id": "bot", "asks": [
+      "is the mystery shopper a real person or AI",
+      "will a bot be talking to my patients?",
+      "shopper a bot?",
+      "Is your WhatsApp replies automatic? I don't want robot answering patients",
+      "does AI send the mesages to patients or someone checks first",
+      "is the person who messages my clinic a chatbot",
+      "r ur shoppers real ppl or automated",
+      "honestly my biggest worry is that patients will feel they are talking to a robot, we tried one of those AI chat tools last year and people hated it, so with your system who actually writes and sends the replies and do my staff still confirm things"
+    ]},
+    { "id": "time", "asks": [
+      "how fast will I see results",
+      "when do I get the first report",
+      "timeline pls",
+      "How many days until you start and give us results?",
+      "how long b4 the engine starts working properly",
+      "whats the setup time, how quikly can u start",
+      "Kindly let me know the duration of the process",
+      "we have a big Ramadan campaign coming in about six weeks and I'm trying to work out if signing up now makes sense, how long does it take from the first shop until we actually have a report in our hands, and how long is the hands-on part of the engine"
+    ]},
+    { "id": "where", "asks": [
+      "where r u based",
+      "where is your office",
+      "location?",
+      "Are you in Dubai or outside UAE?",
+      "do you work with clinics in Riyadh or Bahrian or only dubai",
+      "which city ur company is",
+      "wher are you located exactly",
+      "I run a clinic in Abu Dhabi and before I go further I wanted to check where you guys actually are, are you local or somewhere overseas, and do you cover the rest of the gulf too"
+    ]},
+    { "id": "who", "asks": [
+      "whos ur ideal custmer",
+      "is this for clinic owners or for patients",
+      "who's it for?",
+      "Is this suitable for small clinic with only one doctor?",
+      "what type of clincs do you work with",
+      "who is ur target market",
+      "Sir is this only for big hospitals or also for aesthetic clinic like ours",
+      "I'm not sure if we're the right fit, we're a small wellness place, IV drips, some facials, the owner works in the clinic every day, is this kind of thing actually meant for businesses like us or more for the big chains"
+    ]},
+    { "id": "ads", "asks": [
+      "do u do meta ads",
+      "can you run our google and instagram ads",
+      "advertisment?",
+      "Do you make reels and stories for our Instagram also?",
+      "can u handle paid campains for us",
+      "we want more leads from facebook adverts, is that something you offer",
+      "Do you do the marketing ads also or only the whatsapp part",
+      "our last agency burned through our budget on ads and filled our page with fake looking content, if we come to you do you also run the paid side and create the content or is that separate"
+    ]},
+    { "id": "proof", "asks": [
+      "what proof do u have it works",
+      "why should i trust your results",
+      "garantee?",
+      "How can I be sure the score is real and not made up?",
+      "show me evidance this isnt a waste of money",
+      "Kindly explain how we will measure if your service is giving results",
+      "how do u prove ur worth it",
+      "I've paid for so many consultants who send a nice PDF and nothing changes, so honestly what is the evidence behind your score and how would I see for myself that something improved month after month"
+    ]},
+    { "id": "need", "asks": [
+      "what do u need from our side",
+      "do I need to give you our pasword",
+      "requirments?",
+      "What access you need from our clinic? Instagram, Google, everything?",
+      "do we need to prepare anything before the mystery shop",
+      "what info shud we send u for onboarding",
+      "Does our team have to do anything, like meetings or training?",
+      "my receptionist is already overloaded so I need to know honestly how much work this is for us, what do you need us to hand over, logins, the WhatsApp number, meetings, all of it"
+    ]},
+    { "id": "branches", "asks": [
+      "we have 3 branches, does it work for all",
+      "can you cover multiple locations",
+      "multi branch?",
+      "We are a group of 5 clinics in Dubai and Sharjah, how does it work for us?",
+      "do u do each brnach seperately or together",
+      "Is it per location or for the whole group?",
+      "we're opning a second clinic next year, can it handle both",
+      "I'm the operations manager for a chain, we have branches in Marina, Jumeirah and Al Barsha and each one performs very differently, would you shop each location and run all of them or just the main one"
+    ]},
+    { "id": "contact", "asks": [
+      "how do i sign up",
+      "how can I get in touch",
+      "whatsapp number?",
+      "Please share your contact, I want to start with you",
+      "whats ur emial",
+      "i want to go ahead, what is the next step",
+      "how do I regster, is there a form",
+      "ok I'm convinced enough to at least talk to someone, I don't want to fill a long form or book a sales call with five people, what's the simplest way to get started with you guys"
+    ]},
+    { "id": "cancel", "asks": [
+      "can I stop anytime",
+      "is there a lock in contarct",
+      "notice period?",
+      "If I am not happy after one month I can leave?",
+      "how do i cancle the subscription",
+      "whats the minimum contract length",
+      "can we pause or end it if it doesnt work out",
+      "the last software we signed up for locked us into a twelve month contract and we couldn't get out even though nobody used it, so before anything else tell me how easy it is to get out of your plans if we change our mind"
+    ]},
+    { "id": "clients", "asks": [
+      "who do you work with now",
+      "which clinics are using you already",
+      "references?",
+      "Can you give names of some clinics you work with?",
+      "do u have any existing custmers in dubai",
+      "how many clinics have signed up so far",
+      "who r ur cliants",
+      "before I commit I would normally call one or two of your current clients and ask them how it's going, can you tell me which clinics you already work with or put me in touch with one"
+    ]},
+    { "id": "chatgpt", "asks": [
+      "why cant i just use chatgpt for this",
+      "can't I do this myself with AI",
+      "just use AI?",
+      "My nephew say ChatGPT can do all this for free, why I need you?",
+      "isnt chat gpt cheeper and does the same",
+      "we already use an AI tool for our whatsapp replies, why would we need u",
+      "whats the diffrence between you and chatGPT",
+      "honestly with all these AI tools around now I could probably ask Gemini or ChatGPT to review my Instagram and write my replies, so what do you actually give me that I couldn't get from just typing into one of those"
+    ]},
+    { "id": "what", "asks": [
+      "what does vaydin do",
+      "what is this company",
+      "what's vaydin?",
+      "Sorry I don't understand, what service you are giving exactly?",
+      "wat do u guys do exatcly",
+      "what kind of agency are you",
+      "can someone explain what this website is abuot",
+      "I clicked on an ad and landed here and I'm still a bit confused, are you a marketing agency, a software, a consultancy, what do you actually do for clinics in simple words"
+    ]},
+    { "id": "unannounced", "asks": [
+      "will my receptionist know it's you",
+      "do you tell us the date of the shop",
+      "surprise test?",
+      "My staff will be informed before or not?",
+      "can i warn my staf before u message them",
+      "do u let the clinic knw when the shopper is coming",
+      "is it a surprise or scheduled",
+      "I'm worried my front desk will figure out it's a test and suddenly be extra polite that one day, so do they get any warning or do you just show up like a normal patient with no notice"
+    ]},
+    { "id": "often", "asks": [
+      "isnt every 2 months too rare",
+      "only one shop every month or two? is that enuf",
+      "frequency enough?",
+      "One test in 60 days is very less no? what you do in between",
+      "what happens between the shops",
+      "can one mystery shop really show the full picture",
+      "do u do anything betwen shops or just wait",
+      "I like the idea but one message every month or two feels like a small sample, my reception changes shifts and staff, so how do you make sure you're not missing what happens the rest of the time"
+    ]},
+    { "id": "sample", "asks": [
+      "can i see an example report",
+      "do you have a demo of the reprot",
+      "sample pls",
+      "Please send me one example of your monthly report",
+      "what does the report look like",
+      "show me a samle",
+      "can u share a pdf of a past report",
+      "before I talk to my partner I'd love to see what we would actually receive each month, is there an example verdict or mock report somewhere on the site that I can look at"
+    ]},
+    { "id": "rooms", "asks": [
+      "what do you chek exactly",
+      "what's in the score",
+      "six rooms?",
+      "Which things you are measuring in our clinic?",
+      "what areas does the report cover",
+      "what are the categries you score",
+      "do u check google reviews and website too or only whatsapp",
+      "when you say one score I want to know what goes into it, is it just how fast my reception answers or are you also looking at our reviews, our Google page, the website and how hard we push for the booking"
+    ]},
+    { "id": "rivals", "asks": [
+      "do you check my competitors too",
+      "will i see how i compare to clinics near me",
+      "competitor analysis?",
+      "You can compare us with other clinic in our area?",
+      "do u track the clinic next door",
+      "can you spy on my competiters",
+      "what do the top clinics around me do diffrently",
+      "there are three other skin clinics on our street and I'm always wondering how they answer patients and why they get more reviews, does your report actually show me how we stack up against them"
+    ]},
+    { "id": "alone", "asks": [
+      "can i only buy the diagnostic",
+      "do I have to take the engine too",
+      "diagnostic only?",
+      "Is it possible to take only the mystery shopping without other package?",
+      "can we try just the report first without commiting to the whole thing",
+      "is the engine compulsory",
+      "can i do the mystery shop by itslef",
+      "I'm not ready to hand over our WhatsApp and Instagram to anyone yet, but I am curious how we score, so can I just start with the measurement part on its own and decide about the rest later"
+    ]},
+    { "id": "legit", "asks": [
+      "is this a scam",
+      "are you a registred company",
+      "licensed?",
+      "You have trade license? Which authority?",
+      "r u guys legit",
+      "is vaydin a real buisness",
+      "how do i know ur company isnt fake",
+      "I've never heard of Vaydin before and I get a lot of random agencies messaging me, so before I share anything about my clinic I want to know if you are an actual registered company with a license and an address"
+    ]},
+    { "id": "privacy", "asks": [
+      "will you see our patient records",
+      "do you acess our patient database",
+      "data security?",
+      "Our patients information will be shared with you? This is problem for us",
+      "do u import our clients files into ur system",
+      "is patient info kept privat",
+      "what happens to the patient data in our CRM",
+      "we are very strict about confidentiality because of the type of treatments we do, some patients are well known people, so I need to understand if any of their records or phone numbers ever leave our system when you work with us"
+    ]},
+    { "id": "compliance", "asks": [
+      "do your ads folow DHA rules",
+      "do you handle the ad permit",
+      "DHA permit?",
+      "Your advertisement is following MOH guidelines or not?",
+      "can u make ads that dont break the dubai health authority rules",
+      "will u get the marketing permit for our campains",
+      "is it allowed to post before after photos in your ads",
+      "we got a warning last year because an influencer posted something about our treatment without approval, so if you run our ads I need to know who takes care of the permits and the health authority rules"
+    ]},
+    { "id": "markup", "asks": [
+      "do you take a cut of our ad budget",
+      "is there commission on ad spend",
+      "commission on ads?",
+      "Who will pay to Facebook, us or you? You add extra on it?",
+      "do u charge a % on top of the ads",
+      "will we own the ad acount and pay meta direct",
+      "is the media budget seperate from ur fee",
+      "our previous agency was charging us 20 percent on top of everything we spent on Google and Meta and we only found out later, so how does the billing for the ad spend work with you and do you add anything on top"
+    ]},
+    { "id": "brief", "asks": [
+      "can i pick wich treatment you ask about",
+      "can we tell the shopper what to test",
+      "custom test?",
+      "Can you ask specifically about laser hair removal when you message us?",
+      "what kind of questions does the shopper ask",
+      "do u ask about prices and availability or what",
+      "do u send the shoper on weekends or evenings too",
+      "we just launched a new skin booster and I'm not sure the team even knows the price yet, can I ask you to test that specifically, or do you decide what the patient asks"
+    ]},
+    { "id": "you", "asks": [
+      "who am i talking to",
+      "are you a real person",
+      "ur AI?",
+      "You are robot or human? Your face look real",
+      "is this vidoe of you real or generated",
+      "who r u",
+      "are you an avatar or an actual staf member",
+      "sorry this is a bit weird, I'm typing to a face on a website and it's talking back, are you a recording, an AI, a chatbot, or is someone from the company actually answering me live"
+    ]},
+    { "id": "scope", "asks": [
+      "do u work with dentists",
+      "we are a dermatology clinic, is that ok",
+      "dental?",
+      "Hair transplant center also you can do?",
+      "does it work for a physiotherapy clinik",
+      "what about IVF or fertility clinics",
+      "im a dentsit, would the diagnostic work for my practice",
+      "my brother has a dental practice and I run a physio and sports rehab clinic, your site talks mostly about aesthetics, so would this work for clinics like ours or is it only for botox and filler places"
+    ]},
+    { "id": "slots", "asks": [
+      "will the shopper actually book an appointment",
+      "do you take real slots from our calender",
+      "fake booking?",
+      "Your person will come to clinic or only message?",
+      "will u waste our appointment times with fake bookings",
+      "does the mystery patient show up in person",
+      "will there be a no show on our side becuase of u",
+      "our calendar is fully booked most weeks so if your shopper reserves a slot and never comes, that's real money lost for us and a real patient who couldn't get in, does that happen"
+    ]},
+    { "id": "lawful", "asks": [
+      "is mystery shopping legal in uae",
+      "is this allowed by law here",
+      "secret shopping allowed?",
+      "In UAE it is permitted to test clinics secretly like this?",
+      "can you get in trouble for doing this undercover stuff",
+      "isnt it ilegal to pretend to be a patient",
+      "is it ok legaly to message clinics undercover",
+      "my partner is a lawyer and she asked me whether pretending to be a patient and messaging staff without telling them is even legal in Dubai, what do I tell her"
+    ]},
+    { "id": "team", "asks": [
+      "who runs vaydin",
+      "who is the fonder",
+      "founders?",
+      "Who is the owner of this company? I want to know the people",
+      "how many ppl work there",
+      "whos behind this compny",
+      "is there a real team or just one guy",
+      "I like to know who I'm dealing with before I sign anything, can you tell me a bit about the people running Vaydin, their background, and how I can talk to one of them"
+    ]},
+    { "id": "confidential", "asks": [
+      "will my competitors see my score",
+      "do you publish the results",
+      "results private?",
+      "Our report you will show to other clinics or no?",
+      "is my report kept confidental",
+      "will u mention our clinic name in marketing",
+      "who else gets to see our findngs",
+      "if the report says my reception is terrible, I really don't want that floating around, could it end up with another clinic, an investor or on your website as a case study"
+    ]},
+    { "id": "patient", "asks": [
+      "i want botox",
+      "how much is lip filer",
+      "book appointment",
+      "Hello I want to do hydrafacial tomorrow, any slot available?",
+      "can i book a laser sesion for friday",
+      "do u have a dermatologist i can see",
+      "whats the price for hair removal full body",
+      "hi I found you on google while looking for a clinic near Business Bay, I've been wanting to get my under eyes done for a while, can I book a consultation with one of your doctors this week"
+    ]},
+    { "id": "medical", "asks": [
+      "is botox safe during pregnancy",
+      "what shoud i do for my acne scars",
+      "skin advice?",
+      "I have redness after laser, it is normal? what I should apply?",
+      "which filler suits my face shape",
+      "can u tell me if prp works for hair loss",
+      "my lips are swolen after filler is that dangerous",
+      "I had a chemical peel three days ago and my skin is still peeling and a bit itchy, my clinic is closed today, can you tell me whether I should put something on it or wait"
+    ]},
+    { "id": "rate", "asks": [
+      "which clinic is the best for botox in dubai",
+      "can you recommend a good derm clinic",
+      "top clinic?",
+      "Which is the most good aesthetic clinic in Jumeirah, please suggest",
+      "whats the highest rated clinc on ur list",
+      "which clinic should i go to for fillers",
+      "do u have a ranking of dubai clinics",
+      "I'm moving to Dubai next month and want to find a trustworthy place for skin treatments, since you test all these clinics you must know which ones are good, which would you recomend"
+    ]},
+    { "id": "jobs", "asks": [
+      "any vacancies",
+      "can I work for you",
+      "careers?",
+      "I am looking for job in marketing, you have opening?",
+      "where do i send my cv",
+      "do u need mystery shoppers, i want to aply",
+      "are u hirng receptionists or sales",
+      "hi, I've worked as a clinic coordinator for four years and I really like what you're building, I'd love to be part of it if there's any role or internship, who should I contact"
+    ]},
+    { "id": "write", "asks": [
+      "I'm a journalist, can I interview you",
+      "we'd like to invest",
+      "partnership?",
+      "We are software company and want partnership with you, whom to contact?",
+      "do u take investors",
+      "i write for a magzine and want to feature vaydin",
+      "we're an agency and want to colaborate or refer clients",
+      "I run a fund that backs small healthtech businesses in the GCC and came across your site, I'd like to understand more about the company and whether you're raising, what's the best way to reach the right person"
+    ]},
+    { "id": "business", "asks": [
+      "do you work with resturants",
+      "can you do this for my real estate agency",
+      "other industries?",
+      "I have car showroom, can you do same service for us?",
+      "do u only do clinics or other businesses too",
+      "would this work for a hotel or travel agancy",
+      "we own a cafe and a furniture store, can u mystery shop them",
+      "your idea is great and I think it would work brilliantly for my chain of mobile phone shops, customers message us on WhatsApp all day and half of them never get a reply, do you only work with clinics or could you do the same for a retail business"
+    ]},
+    { "id": "tech", "asks": [
+      "which model powers this",
+      "is it gpt or claude behind it",
+      "what software?",
+      "Which tecnology you are using for this system?",
+      "what tools do u guys use to run the engine",
+      "do you build your own AI or use openai",
+      "whats the tech stak behind vaydin",
+      "I'm a bit of a tech nerd and curious, the WhatsApp drafts, the scoring, the dashboard, what platforms and AI models are you actually using under the hood"
+    ]},
+    { "id": "legal", "asks": [
+      "can you help me with a legal question about my clinic",
+      "what license do i need to offer iv drips",
+      "lawyer advice?",
+      "I need advise about DHA license renewal for my clinic, can you help?",
+      "is my contract with the doctor legaly ok",
+      "what are the regulations for opening a clinic in dubai",
+      "can u tell me if a nurse can do botox under uae law",
+      "we're having a dispute with our landlord and also a question about whether our beauty therapist is allowed to do certain treatments under our license, could you advise me on what the rules say"
+    ]},
+    { "id": "askus", "asks": [
+      "who are your competitors",
+      "how are you diffrent from other agencys",
+      "vs other agencies?",
+      "Other company also do mystery shopping in Dubai, why you better?",
+      "do u also work for my competitor clinic down the road",
+      "can you give us exclusivity in our area",
+      "how do u compare to other mistery shopping companys",
+      "I've already spoken to two other marketing agencies in Dubai who promised similar things, what makes you different from them and who else is doing what you do"
+    ]},
+    { "id": "delete", "asks": [
+      "remove my info pls",
+      "how do I get my number removed from your system",
+      "erase my data",
+      "Please delete all information you have about me",
+      "i want my personal data deleted under gdpr",
+      "stop storing my details, how do i request deleteion",
+      "how to remov my email from ur records",
+      "I messaged you a while ago out of curiosity and now I'd like everything you have on me wiped, my phone number, my email, any chats, how do I make that request properly"
+    ]}
+  ],
+  "talk": [
+    { "kind": "hello", "asks": [
+      "hi",
+      "hello",
+      "salam",
+      "assalamu alaikum",
+      "good evening",
+      "hey there",
+      "heyyy",
+      "good morning",
+      "marhaba",
+      "hii :)"
+    ]},
+    { "kind": "howareyou", "asks": [
+      "how are you",
+      "how r u",
+      "hows it going",
+      "how is your day",
+      "how are you doing today?",
+      "kaif halek",
+      "wassup how u doing",
+      "you good?",
+      "how's your day been so far",
+      "are you doing well"
+    ]},
+    { "kind": "thanks", "asks": [
+      "thank you",
+      "thx",
+      "thanks a lot",
+      "appreciate it",
+      "great thanks",
+      "shukran",
+      "ty",
+      "thank u so much",
+      "thanks for the help",
+      "ok cool thanks"
+    ]},
+    { "kind": "bye", "asks": [
+      "goodbye",
+      "bye",
+      "see you",
+      "ok bye",
+      "that's all",
+      "see ya later",
+      "gotta go",
+      "bye bye",
+      "ok im done for now",
+      "take care"
+    ]},
+    { "kind": "compliment", "asks": [
+      "you're beautiful",
+      "nice voice",
+      "love this site",
+      "you're smart",
+      "great job",
+      "you look amazing",
+      "very nice website",
+      "wow ur so pretty",
+      "this is really cool",
+      "you explain things really well"
+    ]},
+    { "kind": "rude", "asks": [
+      "you're sexy",
+      "ur hot",
+      "send nudes",
+      "date me",
+      "will u marry me",
+      "you're stupid",
+      "useless bot",
+      "fuck off",
+      "shut up you dumb ai",
+      "ur so hot babe give me ur number"
+    ]},
+    { "kind": "personal", "asks": [
+      "how old are you",
+      "are you married",
+      "where do you live",
+      "tell me a joke",
+      "can you sing",
+      "whats your favourite food",
+      "do you have a boyfriend",
+      "what's your star sign",
+      "do you like football",
+      "what music do u listen to"
+    ]}
+  ],
+  "offtopic": [
+    "what's the weather in dubai tomorrow",
+    "who won the match last night barca vs real",
+    "recipe for chicken machboos",
+    "is bitcoin going up this week",
+    "how do i renew my uae residence visa",
+    "cheap car rental in dubai",
+    "best restaurant in dubai marina",
+    "how much is a taxi to the airport",
+    "book a flight to london",
+    "google translate this: shukran jazeelan",
+    "write a python function to reverse a string",
+    "help me with my math homework, solve 3x + 5 = 20",
+    "what time is it in london",
+    "convert 500 aed to usd",
+    "nearest metro station to dubai mall",
+    "when is eid this year",
+    "what is the capital of australia",
+    "recommend a good netflix series",
+    "how long does it take to drive to abu dhabi",
+    "where is the burj khalifa",
+    "who is the president of america",
+    "my instagram got hacked how do i recover it",
+    "how do i make whatsapp stickers",
+    "cancel my emirates booking",
+    "what's the price of an iphone 17 pro",
+    "write me an essay about climate change",
+    "salik toll price per gate",
+    "best school in dubai for my kids",
+    "how do i start a youtube channel",
+    "what is 15 percent of 240"
+  ]
+}

@@ -269,6 +269,11 @@
   "base": "b0b733744cd03f33",
   "model": "wav2lip_gan"
  },
+ "x-bye": {
+  "audio": "6a3589641593ef10",
+  "base": "7f66834b4facad16",
+  "model": "wav2lip_gan"
+ },
  "x-choose": {
   "audio": "7db18a5c08836757",
   "base": "7f66834b4facad16",
@@ -276,6 +281,36 @@
  },
  "x-hello": {
   "audio": "9fbeb0da35ca099d",
+  "base": "7f66834b4facad16",
+  "model": "wav2lip_gan"
+ },
+ "x-howareyou": {
+  "audio": "b31b21490c10985a",
+  "base": "7f66834b4facad16",
+  "model": "wav2lip_gan"
+ },
+ "x-kind": {
+  "audio": "e394bf81f06680f9",
+  "base": "7f66834b4facad16",
+  "model": "wav2lip_gan"
+ },
+ "x-more": {
+  "audio": "a2af47f525f0af06",
+  "base": "7f66834b4facad16",
+  "model": "wav2lip_gan"
+ },
+ "x-personal": {
+  "audio": "054b9e1a6d3b2bbf",
+  "base": "7f66834b4facad16",
+  "model": "wav2lip_gan"
+ },
+ "x-rude": {
+  "audio": "b16660b5f2a6d467",
+  "base": "7f66834b4facad16",
+  "model": "wav2lip_gan"
+ },
+ "x-thanks": {
+  "audio": "e2707d3f88c42d6d",
   "base": "7f66834b4facad16",
   "model": "wav2lip_gan"
  },

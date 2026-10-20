@@ -3,12 +3,15 @@
    greeting), talking (lines, one after another), quip (a poke reply), done
    (a run finished; the card stays). `run` changes whenever a new sound must
    start, so tapping the active chip again replays it. The last poke's quip
-   ends with her asleep again. More opens the list of questions on the card
-   and leaves what she is saying alone. */
+   ends with her asleep again. More opens the list of questions on the card,
+   and she says so, unless she is still giving the greeting. Small talk is
+   answered with its line, and the list is offered unless it was thanks or
+   goodbye. */
 
-import { CHOOSE, HELLO, UNKNOWN, answerLine } from "./answers.ts";
+import { CHOOSE, HELLO, MORE, UNKNOWN, answerLine } from "./answers.ts";
 import type { Reply } from "./match.ts";
 import { CHAPTERS, POKES, SLEEPING, chapter, type ChapterId, type Line } from "./pitch.ts";
+import { TALK } from "./talk.ts";
 
 export type Phase = "asleep" | "idle" | "opener" | "talking" | "quip" | "done";
 export type Shown =
@@ -64,7 +67,15 @@ const speak = (s: State, lines: Line[], shown: Shown, chapter: ChapterId | null,
 
 /* What she says to a typed question; the page also readies it while it is typed. */
 export const replyLines = (r: Reply): Line[] =>
-  r.kind === "answer" ? [answerLine(r.answer)] : r.kind === "choose" ? [CHOOSE] : r.kind === "greeting" ? [HELLO] : [UNKNOWN];
+  r.kind === "answer"
+    ? [answerLine(r.answer)]
+    : r.kind === "choose"
+      ? [CHOOSE]
+      : r.kind === "talk"
+        ? [TALK[r.talk]]
+        : r.kind === "greeting"
+          ? [HELLO]
+          : [UNKNOWN];
 
 const opener = (s: State) => {
   const c = CHAPTERS[0];
@@ -86,6 +97,7 @@ export function reduce(s: State, e: Event): State {
       if (r.kind === "answer") return speak(s, said, { kind: "answer", id: r.answer.id }, null);
       if (r.kind === "choose") return speak(s, said, { kind: "choose", ids: r.options.map((a) => a.id) }, null);
       if (r.kind === "greeting") return speak(s, said, s.shown, null);
+      if (r.kind === "talk") return speak(s, said, r.talk === "thanks" || r.talk === "bye" ? s.shown : { kind: "more" }, null);
       return speak(s, said, { kind: "unknown" }, null);
     }
     case "line_ended": {
@@ -118,7 +130,8 @@ export function reduce(s: State, e: Event): State {
       return { ...s, phase: "quip", cloud: quip, run: s.run + 1 };
     }
     case "more":
-      return { ...s, shown: { kind: "more" } };
+      if (s.phase === "asleep" || s.phase === "opener") return { ...s, shown: { kind: "more" } };
+      return speak(s, [MORE], { kind: "more" }, null);
     case "stop": {
       if (s.phase === "opener") return { ...s, phase: "done", met: true };
       if (s.phase === "talking" || s.phase === "quip") return { ...s, phase: s.met ? "done" : "idle" };

@@ -377,6 +377,7 @@ export const answer = (id: string) => ANSWERS.find((a) => a.id === id)!;
 export const answerLine = (a: Answer): Line => ({ id: `a-${a.id}`, text: a.answer, audio: a.voice ?? `/voice/a-${a.id}.mp3` });
 
 export const CHOOSE: Line = { id: "x-choose", text: "Did you mean one of these?", audio: "/voice/x-choose.mp3" };
+export const MORE: Line = { id: "x-more", text: "Here's everything clinic owners ask me. Tap one.", audio: "/voice/x-more.mp3" };
 export const UNKNOWN: Line = {
   id: "x-unknown",
   text: "I don't have that one yet. Try a chapter, or ask us on WhatsApp; a person answers.",

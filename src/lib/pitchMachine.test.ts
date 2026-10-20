@@ -2,10 +2,11 @@
 
 import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { ANSWERS, CHOOSE, GROUPS, HELLO, UNKNOWN, UNLISTED, answerLine } from "./answers.ts";
+import { ANSWERS, CHOOSE, GROUPS, HELLO, MORE, UNKNOWN, UNLISTED, answerLine } from "./answers.ts";
 import { match } from "./match.ts";
 import { CHAPTERS, POKES, SLEEPING, lineClip } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
+import { TALK } from "./talk.ts";
 
 const run = (events: Event[], from: State = START) => events.reduce(reduce, from);
 /* The greeting: the clip (two timed lines), then its spoken third line, then rest. */
@@ -127,7 +128,7 @@ check("the matcher finds the obvious ones and keeps a greeting apart", () => {
 check("a misspelt question is offered its nearest answers; nonsense still hands over", () => {
   const offered = (text: string) => {
     const r = match(text);
-    return r.kind === "choose" ? r.options.map((a) => a.id) : [r.kind];
+    return r.kind === "choose" ? r.options.map((a) => a.id) : r.kind === "answer" ? [r.answer.id] : [r.kind];
   };
   const typos: [string, string][] = [
     ["pirce", "price"],
@@ -144,23 +145,85 @@ check("a misspelt question is offered its nearest answers; nonsense still hands 
     ["staf know", "unannounced"],
   ];
   for (const [text, id] of typos) assert.ok(offered(text).includes(id), `${text} -> ${offered(text)}`);
-  for (const text of ["zzz qqq", "what is the meaning of life", "tell me a joke", "how old are you", "football", "make me a sandwich"]) {
+  for (const text of ["zzz qqq", "what is the meaning of life", "football", "make me a sandwich"]) {
     assert.deepEqual(offered(text), ["unknown"], text);
   }
   assert.deepEqual(offered("good morning"), ["greeting"]);
   assert.ok(offered("whats the prise").length <= 3);
 });
 
-check("More lists every answer once, except the hand-offs, and leaves her speaking", () => {
+check("More lists every answer once, except the hand-offs, and she says so, unless she is greeting", () => {
   const listed = GROUPS.flatMap((g) => g.ids);
   assert.deepEqual([...listed, ...UNLISTED].sort(), ANSWERS.map((a) => a.id).sort());
   assert.equal(new Set(listed).size, listed.length);
   const see = run([{ type: "tap", chapter: "how" }], awake);
   const list = run([{ type: "more" }], see);
   assert.deepEqual(list.shown, { kind: "more" });
-  assert.equal(list.phase, "talking");
-  assert.equal(list.cloud, see.cloud);
-  assert.equal(list.run, see.run);
+  assert.equal(list.cloud, MORE);
+  assert.equal(list.run, see.run + 1);
+  const greeting = run([{ type: "wake" }]);
+  const early = run([{ type: "more" }], greeting);
+  assert.deepEqual(early.shown, { kind: "more" });
+  assert.equal(early.cloud, greeting.cloud);
+  assert.equal(early.phase, "opener");
+});
+
+/* The owner's word of 2026-10-20: small talk and rudeness get a line of
+   their own that steers back to Vaydin, and rudeness wins over a question. */
+check("small talk is met, rudeness first, and a real question still wins over courtesy", () => {
+  const kind = (text: string) => {
+    const r = match(text);
+    return r.kind === "talk" ? r.talk : r.kind === "answer" ? r.answer.id : r.kind;
+  };
+  assert.equal(kind("hi how are you"), "howareyou");
+  assert.equal(kind("you are so hot"), "rude");
+  assert.equal(kind("hi sexy how much"), "rude");
+  assert.equal(kind("you're beautiful"), "kind");
+  assert.equal(kind("how old are you"), "personal");
+  assert.equal(kind("tell me a joke"), "personal");
+  assert.equal(kind("thanks"), "thanks");
+  assert.equal(kind("ok bye"), "bye");
+  assert.equal(kind("thank you, how much is it?"), "price");
+  const rude = run([{ type: "ask", reply: match("you're stupid") }], awake);
+  assert.equal(rude.cloud, TALK.rude);
+  assert.deepEqual(rude.shown, { kind: "more" });
+  const thanks = run([{ type: "ask", reply: match("thanks") }], run([{ type: "tap", chapter: "how" }], awake));
+  assert.equal(thanks.cloud, TALK.thanks);
+  assert.deepEqual(thanks.shown, { kind: "chapter", id: "how" });
+});
+
+/* 444 things visitors might type, written on 2026-10-20 by a reader who never
+   saw the keywords. A keyword edit that makes her answer wrongly more often,
+   or find the right answer less often, fails here. */
+check("visitors' own phrasings: she finds the right answer often and is rarely wrong", () => {
+  const asked: { answers: { id: string; asks: string[] }[]; talk: { kind: string; asks: string[] }[]; offtopic: string[] } = JSON.parse(
+    readFileSync(new URL("./asked.json", import.meta.url), "utf8"),
+  );
+  let found = 0;
+  let wrong = 0;
+  let total = 0;
+  for (const { id, asks } of asked.answers) {
+    for (const text of asks) {
+      const r = match(text);
+      total++;
+      if ((r.kind === "answer" && r.answer.id === id) || (r.kind === "choose" && r.options.some((a) => a.id === id))) found++;
+      else if (r.kind === "answer") wrong++;
+    }
+  }
+  assert.equal(total, 344);
+  assert.ok(found >= 245, `right or offered ${found} of ${total}`);
+  assert.ok(wrong <= 32, `wrong ${wrong} of ${total}`);
+  const talks: Record<string, string> = { hello: "greeting", howareyou: "howareyou", thanks: "thanks", bye: "bye", compliment: "kind", rude: "rude", personal: "personal" };
+  let met = 0;
+  for (const { kind, asks } of asked.talk) {
+    for (const text of asks) {
+      const r = match(text);
+      if ((r.kind === "talk" ? r.talk : r.kind) === talks[kind]) met++;
+    }
+  }
+  assert.ok(met >= 55, `small talk met ${met} of 70`);
+  const answered = asked.offtopic.filter((text) => match(text).kind === "answer").length;
+  assert.ok(answered <= 8, `off-topic answered ${answered} of ${asked.offtopic.length}`);
 });
 
 check("pokes only while she rests awake, and they escalate to the last quip", () => {
@@ -231,7 +294,7 @@ check("nothing a visitor reads carries a long dash or a price", () => {
    in public/ before the site ships. */
 check("every line she can speak has its recording and its clip", () => {
   const root = new URL("../../", import.meta.url);
-  const lines = [...CHAPTERS.flatMap((c) => c.lines), ...POKES, ...ANSWERS.map(answerLine), CHOOSE, UNKNOWN, HELLO];
+  const lines = [...CHAPTERS.flatMap((c) => c.lines), ...POKES, ...ANSWERS.map(answerLine), CHOOSE, UNKNOWN, HELLO, MORE, ...Object.values(TALK)];
   const missing: string[] = [];
   for (const l of lines) {
     if (!l.audio) continue;
