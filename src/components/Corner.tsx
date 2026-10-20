@@ -185,8 +185,11 @@ export function Corner() {
   function pick(a: Answer) {
     unlock();
     setOffering(false);
-    /* From the list, the list stays open for the next question. */
-    dispatch({ type: "ask", reply: { kind: "answer", answer: a }, keep: state.shown.kind === "more" });
+    /* From the list, the list stays open for the next question, and the
+       panel goes back to its top, where her words appear. */
+    const keep = state.shown.kind === "more";
+    if (keep) panel.current?.scrollTo({ top: 0 });
+    dispatch({ type: "ask", reply: { kind: "answer", answer: a }, keep });
   }
 
   function submit(event: FormEvent) {
@@ -255,7 +258,8 @@ export function Corner() {
               )
             )}
             <div className="flex flex-col gap-2">
-              {state.shown.kind !== "more" && (
+              {/* Whenever the list is not on screen, including while she gives the page's summary over it. */}
+              {!(card && state.shown.kind === "more") && (
                 <button type="button" onClick={more} className={`${BUTTON} self-start`}>
                   {"…"} More questions
                 </button>
