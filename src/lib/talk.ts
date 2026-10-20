@@ -47,6 +47,10 @@ const KIND = new RegExp(
 
 const HOW = /\b(?:how are (?:you|u)|how r (?:you|u)|how ?(?:'s|s| is) (?:it going(?! to)|your day|everything|life)|how you doing|how are you doing|what'?s up|wassup|sup|how do (?:you|u) do$|are (?:you|u) (?:ok|okay|good|well|fine)|kaifak|kaifik|kif halak|keef halak)\b/;
 const THANKS = /\b(?:thanks?|thank (?:you|u)|thx|thnx|tnx|ty|tysm|shukran|appreciate (?:it|that)|much appreciated|cheers)\b/;
+/* What goes with a thank-you or a goodbye and asks nothing. It leaves with
+   the small talk, so "thanks for your time" is thanks, not a question about time. */
+const COURTESY =
+  /\b(?:(?:so|very) much|a lot|a ton|for (?:your|the|all the|all your|this|that) (?:time|help|answers?|repl(?:y|ies)|info|information|explanation|report|chat|support)|have a (?:good|nice|great|lovely|wonderful) (?:day|one|evening|night|weekend)|(?:talk|speak|see you) (?:soon|later)|that (?:works|helps|helped)|that'?s (?:helpful|great|perfect|clear)|got it|understood|perfect|great|good|nice|cool|awesome|ok|okay)\b/g;
 const BYE = /\b(?:bye|byee+|goodbye|good bye|see (?:you|u|ya)|cya|good night|take care|ma ?'?a ?salama|(?:that'?s|that is) all(?: for now| thanks?| thank you)?$|gotta go)\b/;
 const PERSONAL = new RegExp(
   [
@@ -57,7 +61,7 @@ const PERSONAL = new RegExp(
     "\\b(?:a joke|joke|favou?rite|zodiac|horoscope|your hobby|your hobbies|sing for me|sing a song|dance for me)\\b",
     "\\b(?:can|do|will) (?:you|u) (?:sing|dance)\\b",
     "\\bdo (?:you|u) (?:eat|sleep|dream|drink|like|love|feel|cook)\\b",
-    "\\bwhat (?:time|day) is it\\b",
+    "\\bwhat (?:time|day) is it(?: now| today| in \\w+)?$",
     "\\b(?:the weather|weather today)\\b",
   ].join("|"),
 );
@@ -76,7 +80,10 @@ const KINDS: [RegExp, TalkKind][] = [
 export function talk(text: string): { kind: TalkKind; rest: string } | null {
   for (const [pattern, kind] of KINDS) {
     const found = pattern.exec(text);
-    if (found) return { kind, rest: `${text.slice(0, found.index)} ${text.slice(found.index + found[0].length)}`.trim() };
+    if (found) {
+      const rest = `${text.slice(0, found.index)} ${text.slice(found.index + found[0].length)}`;
+      return { kind, rest: rest.replace(COURTESY, " ").replace(/\s+/g, " ").trim() };
+    }
   }
   return null;
 }

@@ -19,15 +19,17 @@
     });
   }
 
-  /* How far above the bottom she must stand to clear what shows there. */
+  /* How far above the bottom she must stand to clear what shows there: an
+     element reaching the bottom of the screen, on her side, that does not
+     start at the top (the bar across the top, a background behind it all). */
   function clearance() {
     var most = 0;
-    var right = frame.getBoundingClientRect().right;
+    var right = 4 + (want === null ? CLOSED[0] : Math.min(380, innerWidth - 8));
     docked.forEach(function (el) {
       var style = getComputedStyle(el);
       if (style.display === "none" || style.visibility === "hidden" || parseFloat(style.opacity) < 0.05) return;
       var box = el.getBoundingClientRect();
-      if (box.height === 0 || box.top < innerHeight * 0.5 || box.left > right || box.right < 0) return;
+      if (box.height === 0 || box.top <= 80 || box.bottom < innerHeight - 60 || box.left > right || box.right < 0) return;
       most = Math.max(most, Math.ceil(innerHeight - box.top) + GAP);
     });
     return most;
@@ -35,6 +37,8 @@
 
   function place() {
     var lift = clearance();
+    /* No room for her above what the page shows: she steps aside until it goes. */
+    frame.style.visibility = innerHeight - 76 - lift < CLOSED[1] ? "hidden" : "visible";
     frame.style.bottom = Math.max(4, lift) + "px";
     if (want === null) {
       frame.style.width = CLOSED[0] + "px";

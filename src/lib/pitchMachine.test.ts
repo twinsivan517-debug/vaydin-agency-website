@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { ANSWERS, CHOOSE, GROUPS, HELLO, MORE, UNKNOWN, UNLISTED, answer, answerLine } from "./answers.ts";
-import { afterTalk, followUp, match, type Reply } from "./match.ts";
+import { afterTalk, followUp, match, yesNo, type Reply } from "./match.ts";
 import { CHAPTERS, POKES, SLEEPING, lineClip } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
 import { SUMMARIES, WELCOME, inCorner } from "./pages.ts";
@@ -355,6 +355,17 @@ check("a business question is never met as rudeness or small talk, and courtesy 
   assert.equal(id("thanks, what is the diagnostic?"), "diagnostic");
   assert.equal(id("thank you, can I cancel"), "cancel");
   assert.equal(id("thanks! where are you based"), "where");
+  /* The second review: a thank-you's own ending is not a question. */
+  const kind = (text: string) => {
+    const r = match(text);
+    return r.kind === "talk" ? r.talk : r.kind;
+  };
+  for (const text of ["thanks for your time", "thanks, that works", "thanks for the answer", "thank you for the report", "thanks, have a good day"]) {
+    assert.equal(kind(text), "thanks", text);
+  }
+  assert.equal(kind("take care, talk soon"), "bye");
+  assert.equal(kind("what time is it in london"), "personal");
+  assert.notEqual(kind("what day is it delivered"), "personal");
   const after = (text: string, last: string) => {
     const r = afterTalk(text, last);
     return r === null ? null : r === "more" ? "more" : r.kind === "talk" ? r.talk : r.kind;
@@ -364,6 +375,8 @@ check("a business question is never met as rudeness or small talk, and courtesy 
   assert.equal(after("yes", "x-howareyou"), "more");
   assert.equal(after("what is the engine", "x-thanks"), null);
   assert.equal(after("yes", "a-price"), null);
+  for (const go of ["tell me more", "go on", "yes, tell me"]) assert.equal(yesNo(go), "yes", go);
+  assert.equal(yesNo("tell me about price"), null);
 });
 
 check("in the corner she never points at chapter chips", () => {

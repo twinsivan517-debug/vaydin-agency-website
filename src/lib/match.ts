@@ -180,6 +180,8 @@ export function yesNo(input: string): "yes" | "no" | null {
   const said = words.filter((w) => !AND.has(w));
   if (said.length > 0 && said.every((w) => YES.has(w))) return "yes";
   if (said.length > 0 && said.every((w) => NO.has(w))) return "no";
+  /* "tell me more", "go on": only asking her to go ahead. */
+  if (said.every((w) => w === "on") && words.some((w) => w === "tell" || w === "go" || w === "more")) return "yes";
   return null;
 }
 
