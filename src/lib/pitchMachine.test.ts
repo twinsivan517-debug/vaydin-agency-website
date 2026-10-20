@@ -1,6 +1,7 @@
 /* Run with `npm test`. Each case is a sequence of events and the state it must end in. */
 
 import assert from "node:assert/strict";
+import { readdirSync, readFileSync } from "node:fs";
 import { ANSWERS, CHOOSE, UNKNOWN } from "./answers.ts";
 import { match } from "./match.ts";
 import { CHAPTERS, POKES, SLEEPING } from "./pitch.ts";
@@ -165,6 +166,22 @@ check("every line has a sound or a time, the five questions cover eleven lines, 
   }
   for (const p of POKES) assert.ok(p.audio && p.mood, p.id);
   for (const a of ANSWERS) assert.ok(a.keywords.length > 3 && a.link.href, a.id);
+});
+
+/* The owner's word of 2026-10-20: a long dash reads as machine-written, and
+   a plan is asked for, never priced on the page. */
+check("nothing a visitor reads carries a long dash or a price", () => {
+  const root = new URL("../../", import.meta.url);
+  const read = (dir: string, ext: RegExp) =>
+    readdirSync(new URL(dir, root), { recursive: true, encoding: "utf8" })
+      .filter((f) => ext.test(f))
+      .map((f) => [`${dir}${f}`, readFileSync(new URL(`${dir}${f}`, root), "utf8")] as const);
+  for (const [path, text] of [...read("public/", /\.(html|txt)$/), ...read("src/", /\.(tsx?|css)$/)]) {
+    assert.ok(!/[\u2014\u2013]/.test(text), `${path} has a long dash`);
+    assert.ok(!/AED\s?\d|\d[\d,]*\s?AED|dirhams? a month/i.test(text), `${path} names a price`);
+  }
+  const said = [...CHAPTERS.flatMap((c) => [...c.lines.map((l) => l.text), ...c.card.facts]), ...ANSWERS.map((a) => a.answer)];
+  for (const text of said) assert.ok(!/thousand|dirham|AED|\d,\d{3}/i.test(text), text);
 });
 
 console.log(`${cases} cases passed`);

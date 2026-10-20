@@ -8,7 +8,7 @@ const display = Marcellus({ variable: "--font-marcellus", subsets: ["latin"], we
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  title: { default: `${SITE.name} — we find the patients your clinic never saw`, template: `%s · ${SITE.name}` },
+  title: { default: `${SITE.name}: we find the patients your clinic never saw`, template: `%s · ${SITE.name}` },
   description: SITE.description,
   openGraph: {
     title: SITE.name,
@@ -28,7 +28,8 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
    policy is the one that works as a meta tag. */
 const REFERRER = "strict-origin-when-cross-origin";
 
-/* The organisation record the live home page carries, word for word. */
+/* The organisation record, saying what the page itself says: the shopper is
+   a person, so no bots in it. */
 const ORGANISATION = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -46,7 +47,7 @@ const ORGANISATION = {
   logo: `${SITE.url}/vaydin-icon-512.png`,
   image: `${SITE.url}/vaydin-og.png`,
   description:
-    "Vaydin builds the operating system for aesthetic clinics — diagnostic-led mystery shopping, AI response bots, booking integration, attribution-tracked acquisition. Designed in Dubai. Built for MENA. Operated for you.",
+    "Vaydin is a Dubai company for aesthetic and wellness clinics in the UAE and the GCC. We measure how a clinic looks to a new patient, then run its front door: WhatsApp, Google, reviews, Instagram and the website.",
   areaServed: { "@type": "Place", name: "MENA" },
   email: SITE.email,
   /* Profiles that are ours and answer: they tell a search engine which
