@@ -58,12 +58,40 @@ const REST_MS = 450;
 const BODIES = "/guide/lines/bodies.json";
 /* How many line clips stay loaded at once; the rest are released. */
 const KEEP = 8;
-/* The greeting gets the connection to itself until it can play through, or
-   this long at most; then the rest arrives one piece at a time. */
-const GREETING_FIRST_MS = 4000;
+/* The greeting gets the connection to itself until all of it has arrived, or
+   this long at most (Chrome calls a clip "can play through" the moment it
+   starts, so that event is no gate). Then the rest arrives one piece at a
+   time, this far apart: nine media elements made in one idle period froze
+   her canvas for most of a second. */
+const GREETING_FIRST_MS = 6000;
+const SPACING_MS = 400;
+/* A line whose header has not come by now is given up on; the page then
+   plays its recording, rather than hold her silent with Stop showing. */
+const HEADER_MS = 6000;
 
 /* Work for a quiet moment: the next idle callback, or a short timer where there is none (Safari). */
 const later = (fn: () => void) => ("requestIdleCallback" in window ? requestIdleCallback(() => fn(), { timeout: 600 }) : setTimeout(fn, 150));
+
+/* `fn` once the whole clip has arrived, or fails, or after `most` ms. */
+const arrived = (video: HTMLVideoElement, fn: () => void, most: number) => {
+  let done = false;
+  const check = () => {
+    const b = video.buffered;
+    if (video.error || (video.duration > 0 && b.length > 0 && b.end(b.length - 1) >= video.duration - 0.25)) finish();
+  };
+  const finish = () => {
+    if (done) return;
+    done = true;
+    clearTimeout(timer);
+    video.removeEventListener("progress", check);
+    video.removeEventListener("error", finish);
+    fn();
+  };
+  const timer = setTimeout(finish, most);
+  video.addEventListener("progress", check);
+  video.addEventListener("error", finish);
+  check();
+};
 
 /* Frames each clip has actually put on screen, counted by the browser, so a
    frame is keyed and uploaded once, not on every repaint between frames. */
@@ -95,8 +123,21 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   const stillRef = useRef(false);
   const openerRun = useRef(0);
   const spare = useRef<Pool | null>(null);
-  const greeting = useRef<Promise<void>>(Promise.resolve());
+  /* Loading work waits its turn here: the greeting first, then one piece per SPACING_MS. */
+  const queue = useRef<Promise<void>>(Promise.resolve());
   const [still, setStill] = useState(false);
+
+  const enqueue = useCallback((fn: () => void) => {
+    queue.current = queue.current.then(
+      () =>
+        new Promise<void>((done) =>
+          later(() => {
+            fn();
+            setTimeout(done, SPACING_MS);
+          }),
+        ),
+    );
+  }, []);
   const [shown, setShown] = useState(false);
 
   const make = useCallback((name: Clip) => {
@@ -197,6 +238,14 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       if (isLine(old)) old.video.onended = null;
       const layer = lines.current[src] ?? makeLine(src);
       const video = layer.video;
+      /* A clip that failed while it loaded ahead fires no event again: it is
+         dropped at once (a later ask makes it afresh), and the page plays
+         the recording. */
+      if (video.error || video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+        delete lines.current[src];
+        spare.current?.give(video);
+        return latest.current.onLineEnd("failed");
+      }
       /* Each request owns a number: a Stop or another line while this one's
          header still loads leaves it unplayed, rather than played with no
          Stop sign and nothing to end it. */
@@ -216,6 +265,11 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       else {
         video.onloadedmetadata = start;
         video.onerror = () => mine === asked.current && latest.current.onLineEnd("failed");
+        setTimeout(() => {
+          if (mine !== asked.current || video.readyState >= 1) return;
+          video.onloadedmetadata = null;
+          latest.current.onLineEnd("failed");
+        }, HEADER_MS);
       }
     },
     [isLine, makeLine, show],
@@ -229,16 +283,11 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         const video = layer.video;
         video.muted = false;
         video.currentTime = 0;
-        /* Nothing else loads until the greeting can play through: on a slow
-           line, the clips fetched beside it made it stall four times. The
-           talk loop is made only if a clip is ever refused. */
-        greeting.current = new Promise<void>((resolve) => {
-          if (video.readyState >= 4) return resolve();
-          video.addEventListener("canplaythrough", () => resolve(), { once: true });
-          video.addEventListener("error", () => resolve(), { once: true });
-          setTimeout(resolve, GREETING_FIRST_MS);
-        });
-        greeting.current.then(() => later(() => layers.current.idle ?? make("idle")));
+        /* Nothing else loads until the greeting has arrived: on a slow line,
+           the clips fetched beside it made it stall four times. The talk
+           loop is made only if a clip is ever refused. */
+        queue.current = new Promise<void>((resolve) => arrived(video, resolve, GREETING_FIRST_MS));
+        enqueue(() => layers.current.idle ?? make("idle"));
         const mine = ++openerRun.current;
         const started = video.play().then(
           () => {
@@ -269,23 +318,24 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       },
       prime(src, full = true) {
         if (stillRef.current) return;
-        greeting.current.then(() =>
-          later(() => {
-            const layer = makeLine(src, false);
-            if (!full) return;
-            /* The whole clip once the one playing has arrived, so the two never share the line. */
-            const now = current.current?.video;
-            const all = () => (layer.video.preload = "auto");
-            if (!now || now === layer.video || now.readyState >= 4) all();
-            else now.addEventListener("canplaythrough", all, { once: true });
-          }),
-        );
+        enqueue(() => {
+          const layer = makeLine(src, false);
+          if (!full) return;
+          /* The whole clip once the line she is speaking (not the loop under
+             it, long since loaded) has arrived, so the two never share the
+             connection. */
+          const speaking = latest.current.lineSrc;
+          const now = (speaking && lines.current[speaking]?.video) || current.current?.video;
+          const all = () => (layer.video.preload = "auto");
+          if (!now || now === layer.video) all();
+          else arrived(now, all, GREETING_FIRST_MS);
+        });
       },
       unlock() {
         (spare.current ??= pool(KEEP + 2)).unlock();
       },
     }),
-    [make, makeLine, swap],
+    [enqueue, make, makeLine, swap],
   );
 
   useEffect(() => {

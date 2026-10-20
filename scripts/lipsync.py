@@ -26,6 +26,8 @@ import tempfile
 import time
 from pathlib import Path
 
+import numpy as np
+
 ROOT = Path(__file__).resolve().parents[1]
 VOICE = ROOT / "public" / "voice"
 BASES = {"idle": ROOT / "media" / "guide" / "base-loop.mp4", "talk": ROOT / "media" / "guide" / "talk-loop.mp4"}
@@ -108,23 +110,52 @@ def frames(path: Path) -> int:
     return int(out.stdout.strip())
 
 
-# The longest she takes to finish a gesture after her voice ends; a longer rest is played faster, at most twice.
+# The longest she takes to reach her still after her voice ends; a longer way is played faster, at most half again.
 REST_MAX = 2.0
+# Her still: a body frame within this mean grey difference of its first (measured 2026-10-20: the bodies
+# rest for frames 0 to about 15 and from about 145 to their end, their last frame about 0.8 off).
+STILL_GAP = 2.0
+
+
+def still_frames(body: Path) -> set[int]:
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", str(body), "-vf", "scale=72:128,format=gray", "-f", "rawvideo", "-"],
+                         capture_output=True, check=True).stdout
+    f = np.frombuffer(raw, dtype=np.uint8).reshape(-1, 128, 72).astype(np.float32)
+    gap = np.abs(f - f[0]).mean(axis=(1, 2))
+    return {int(k) for k in np.nonzero(gap <= max(STILL_GAP, 1.5 * gap[-1]))[0]}
+
+
+def rest_way(n: int, body: Path):
+    """How a clip of n frames over this body gets back to her still: None when its
+    last frame already is one, else (first, last, backward), the body frames to
+    append. Wav2Lip loops the body, so the clip's frame k is the body's k mod its
+    length. Forward finishes the gesture, backward undoes it to where it began;
+    the shorter wins."""
+    still, cycle = still_frames(body), frames(body)
+    shown = (n - 1) % cycle
+    if shown in still:
+        return None
+    ahead = min((k for k in still if k > shown), default=cycle - 1)
+    behind = max((k for k in still if k < shown), default=0)
+    return (shown + 1, ahead, False) if ahead - shown <= shown - behind else (behind, shown - 1, True)
 
 
 def with_rest(video: Path, body: Path, audio: Path, final: Path, encode: list[str]) -> None:
     """A line on its own body stops where its voice stops, often mid-gesture, and
-    the page then crossed to her still with two pairs of arms showing. Wav2Lip
-    loops the body, so frame n of the clip is frame n mod the body's length:
-    the rest of that cycle, lips closed as the body was made, is appended
-    silent, and the clip ends on the still the body ends on."""
-    n, cycle = frames(video), frames(body)
-    start = n % cycle
-    left = (cycle - start) % cycle
-    speed = min(2.0, max(1.0, left / FPS / REST_MAX))
-    total = n / FPS + left / FPS / speed
-    tail = (f"[0:v]setpts=PTS-STARTPTS[h];[1:v]trim=start_frame={start}:end_frame={cycle},setpts=(PTS-STARTPTS)/{speed:.4f}[t];"
-            f"[h][t]concat=n=2:v=1:a=0,fps={FPS}[v]") if left else "[0:v]setpts=PTS-STARTPTS[v]"
+    the page then crossed to her still with two pairs of arms showing. The way
+    back to her still (rest_way), silent, lips closed as the body was made, is
+    appended, so the clip ends on it."""
+    n = frames(video)
+    way = rest_way(n, body)
+    count = 0 if way is None else way[1] - way[0] + 1
+    speed = min(1.5, max(1.0, count / FPS / REST_MAX))
+    total = n / FPS + count / FPS / speed
+    if way:
+        turn = ",reverse" if way[2] else ""
+        tail = (f"[0:v]setpts=PTS-STARTPTS[h];[1:v]trim=start_frame={way[0]}:end_frame={way[1] + 1}{turn},"
+                f"setpts=(PTS-STARTPTS)/{speed:.4f}[t];[h][t]concat=n=2:v=1:a=0,fps={FPS}[v]")
+    else:
+        tail = "[0:v]setpts=PTS-STARTPTS[v]"
     graph = f"{tail};[2:a]apad=whole_dur={total:.4f}[a]"
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(video), "-i", str(body), "-i", str(audio),
                     "-filter_complex", graph, "-map", "[v]", "-map", "[a]", *encode, "-t", f"{total:.4f}", str(final)], check=True)
@@ -137,17 +168,17 @@ def seconds(path: Path) -> float:
 
 
 def rest_all() -> int:
-    """Ends every gesture clip already made on her still. A clip that already
-    runs past its voice has its rest (a played-faster rest is no whole cycle,
-    so the frame count cannot tell), and is left alone."""
-    encode = ["-c:v", "libx264", "-crf", "20", "-preset", "medium", "-g", "12", "-pix_fmt", "yuv420p", "-r", str(FPS),
+    """Ends every gesture clip already made on her still. A clip that runs past
+    its voice has its rest already and is left alone; so is one that ends on
+    her still. Encoded as the clips are (crf 23): at crf 20 they grew by half."""
+    encode = ["-c:v", "libx264", "-crf", "23", "-preset", "medium", "-g", "12", "-pix_fmt", "yuv420p", "-r", str(FPS),
               "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart"]
     with tempfile.TemporaryDirectory() as tmp:
         for i in ordered_ids():
             clip, body = OUT / f"{i}.mp4", body_of(i)
-            if body == BASE or front_frames(i) or not clip.exists() or frames(clip) % frames(body) == 0:
+            if body == BASE or front_frames(i) or not clip.exists():
                 continue
-            if frames(clip) / FPS > seconds(VOICE / f"{i}.mp3") + 0.1:
+            if frames(clip) / FPS > seconds(VOICE / f"{i}.mp3") + 0.1 or rest_way(frames(clip), body) is None:
                 continue
             before = frames(clip)
             out = Path(tmp) / f"{i}.mp4"

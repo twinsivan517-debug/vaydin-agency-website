@@ -155,7 +155,12 @@ export function Stage() {
     if (state.phase !== "asleep") return;
     const anywhere = (event: MouseEvent) => wakeFrom(event);
     document.addEventListener("click", anywhere);
-    return () => document.removeEventListener("click", anywhere);
+    /* iPhones send a tap on plain page as a click only where it looks tappable. */
+    document.body.style.cursor = "pointer";
+    return () => {
+      document.removeEventListener("click", anywhere);
+      document.body.style.cursor = "";
+    };
   }, [state.phase]);
 
   /* The bulb she tossed leaves her frame and flies on to the mark; when it lands, the page lights. */

@@ -212,10 +212,15 @@ body::before {
    the questions below it never jump between lines; the cloud sits at its
    foot, and a long line takes a smaller size (Stage marks it). */
 @media (max-width: 767px) {
-  .hero-cloud { height: 11rem; display: flex; flex-direction: column; justify-content: flex-end; }
+  /* Measured 2026-10-20: the longest answer needs 11.5rem at 390 px wide, 12.75rem at 360 px. */
+  .hero-cloud { height: 11.5rem; display: flex; flex-direction: column; justify-content: flex-end; }
   .cloud p[data-long="1"] { font-size: 0.95rem; }
   .cloud p[data-long="2"] { font-size: 0.86rem; }
   .cloud p[data-long="3"] { font-size: 0.78rem; }
+}
+
+@media (max-width: 380px) {
+  .hero-cloud { height: 12.75rem; }
 }
 
 .cloud::before { width: 3.4rem; height: 3.4rem; top: -1.3rem; left: 1.4rem; }
