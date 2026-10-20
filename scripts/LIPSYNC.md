@@ -28,6 +28,14 @@ Four one-line patches to the checkout, for current libraries and safe loading:
 `face_detection/utils.py`; keyword arguments `sr=`, `n_fft=` in
 `librosa.filters.mel` in `audio.py`.
 
+A fifth, since 2026-10-20: `face_detect` in `inference.py` keeps each face
+video's padded boxes, before smoothing, in `lipsync/boxcache/<video sha>-<pads,
+resize, crop, rotate>.npy` and reuses them when it holds enough frames (a
+`box_cache()` helper, about 15 lines; the unpatched file is kept beside it as
+`inference.orig.py`). Detection was nearly all of a line's time, about 5 to
+10 s a frame on this CPU, and every line over one body detects the same faces.
+A 21-frame line took 225 s, then 27 s from the cache, frame for frame the same.
+
 ## The base loop
 
 From the generated idle clip (job id in `media/prompt-log.md`), its last half
@@ -54,9 +62,11 @@ says which it was made with.
 
 ## Cost and time
 
-Zero credits. On this PC's CPU (Ryzen 7 7730U) a 13 s line takes about 5
-minutes; the whole set is a couple of hours, unattended. A changed line or a
-changed base is redone on the next run; nothing else is touched.
+Zero credits. On this PC's CPU (Ryzen 7 7730U), without the box cache, a line
+took 10 to 19 minutes on 2026-10-20 (the face search, per frame); with it, the
+first line over a body still searches once, and the rest take a minute or two.
+A changed line or a changed base is redone on the next run; nothing else is
+touched.
 
 ## One run at a time means one call
 
