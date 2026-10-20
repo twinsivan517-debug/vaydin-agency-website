@@ -50,7 +50,7 @@ const THANKS = /\b(?:thanks?|thank (?:you|u)|thx|thnx|tnx|ty|tysm|shukran|apprec
 /* What goes with a thank-you or a goodbye and asks nothing. It leaves with
    the small talk, so "thanks for your time" is thanks, not a question about time. */
 const COURTESY =
-  /\b(?:(?:so|very) much|a lot|a ton|for (?:your|the|all the|all your|this|that) (?:time|help|answers?|repl(?:y|ies)|info|information|explanation|report|chat|support)|have a (?:good|nice|great|lovely|wonderful) (?:day|one|evening|night|weekend)|(?:talk|speak|see you) (?:soon|later)|that (?:works|helps|helped)|that'?s (?:helpful|great|perfect|clear)|got it|understood|perfect|great|good|nice|cool|awesome|ok|okay)\b/g;
+  /\b(?:(?:so|very) much|a lot|a ton|for (?:your|the|all the|all your|this|that)(?: quick| fast| kind| great)? (?:time|help|answers?|repl(?:y|ies)|info|information|explanation|report|chat|support)|have a (?:good|nice|great|lovely|wonderful) (?:day|one|evening|night|weekend)|(?:talk|speak|see you) (?:soon|later)|that (?:works|helps|helped)|that'?s (?:helpful|great|perfect|clear)|got it|understood|perfect|great|good|nice|cool|awesome|ok|okay)\b/g;
 const BYE = /\b(?:bye|byee+|goodbye|good bye|see (?:you|u|ya)|cya|good night|take care|ma ?'?a ?salama|(?:that'?s|that is) all(?: for now| thanks?| thank you)?$|gotta go)\b/;
 const PERSONAL = new RegExp(
   [

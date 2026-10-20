@@ -10,6 +10,7 @@
   var GAP = 6;
   var frame;
   var want = null;
+  var talking = false;
   var docked = [];
 
   /* The page's own fixed elements, found once and again on a resize. */
@@ -37,8 +38,12 @@
 
   function place() {
     var lift = clearance();
-    /* No room for her above what the page shows: she steps aside until it goes. */
-    frame.style.visibility = innerHeight - 76 - lift < CLOSED[1] ? "hidden" : "visible";
+    /* No room for her above what the page shows: quiet and closed, she steps
+       aside until it goes; speaking or open, she stays where she was, over
+       it, so her Stop stays in reach. */
+    var fits = innerHeight - 76 - lift >= CLOSED[1];
+    if (!fits) lift = 0;
+    frame.style.visibility = fits || talking || want !== null ? "visible" : "hidden";
     frame.style.bottom = Math.max(4, lift) + "px";
     if (want === null) {
       frame.style.width = CLOSED[0] + "px";
@@ -70,9 +75,9 @@
     place();
     addEventListener("message", function (event) {
       if (event.origin !== location.origin || event.source !== frame.contentWindow || !event.data) return;
+      if (typeof event.data.vaydinTalking === "boolean") talking = event.data.vaydinTalking;
       var said = event.data.vaydinCorner;
-      if (!said) return;
-      want = said === "closed" ? null : Math.round(event.data.height || 640);
+      if (said) want = said === "closed" ? null : Math.round(event.data.height || 640);
       place();
     });
     addEventListener("scroll", soonPlace, { passive: true });

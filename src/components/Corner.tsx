@@ -45,6 +45,11 @@ export function Corner() {
   const inner = useRef<HTMLDivElement>(null);
   const busy = speaking(state);
 
+  /* The page keeps her in sight while she speaks, even where it would move her aside. */
+  useEffect(() => {
+    window.parent.postMessage({ vaydinTalking: busy }, location.origin);
+  }, [busy]);
+
   /* The frame is only as tall as the panel's content, so the page under its
      empty part stays tappable. */
   useEffect(() => {

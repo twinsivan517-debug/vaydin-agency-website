@@ -364,6 +364,10 @@ check("a business question is never met as rudeness or small talk, and courtesy 
     assert.equal(kind(text), "thanks", text);
   }
   assert.equal(kind("take care, talk soon"), "bye");
+  /* The third review: a question of common words after a thank-you is still a question. */
+  assert.equal(id("thanks, what do you do?"), "what");
+  assert.equal(id("thank you, who are you?"), "you");
+  assert.equal(kind("thanks for the quick reply"), "thanks");
   assert.equal(kind("what time is it in london"), "personal");
   assert.notEqual(kind("what day is it delivered"), "personal");
   const after = (text: string, last: string) => {

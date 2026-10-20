@@ -146,7 +146,11 @@ export function match(input: string): Reply {
   /* Small talk alone is met as small talk; beside a question, the question
      is answered: "thanks, what is the diagnostic?" is about the diagnostic. */
   const said = talk(text);
-  const aside = said && content(said.rest).every((w) => !KNOWN.has(w) && !KNOWN.has(w.replace(/s$/, "")));
+  /* A question can be all common words ("what do you do", "who are you"): a keyword phrase in what is left is a question too. */
+  const aside =
+    said &&
+    content(said.rest).every((w) => !KNOWN.has(w) && !KNOWN.has(w.replace(/s$/, ""))) &&
+    !ANSWERS.some((a) => a.keywords.some((k) => hasWord(said.rest, k)));
   if (said && aside) return { kind: "talk", talk: said.kind };
 
   const ranked = scores(text);
