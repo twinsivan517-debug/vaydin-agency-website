@@ -12,6 +12,7 @@ the Wav2Lip checkout, models/wav2lip_gan.pth. Setup is in scripts/LIPSYNC.md.
     python scripts/lipsync.py            # everything stale, chapters first
     python scripts/lipsync.py w1 poke-1  # only these ids
     python scripts/lipsync.py --check    # list stale ids, run nothing
+    python scripts/lipsync.py --rest     # end every made gesture clip on her still
     python scripts/lipsync.py --base talk --out L:/lipsync/out w1   # her talk loop
                                          # (hands moving) as the body, written
                                          # elsewhere: a try, not the page's clip
@@ -101,6 +102,61 @@ def front_frames(i: str) -> int:
     return int(f.read_text().strip()) if f.exists() else 0
 
 
+def frames(path: Path) -> int:
+    out = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-count_packets", "-show_entries",
+                          "stream=nb_read_packets", "-of", "csv=p=0", str(path)], capture_output=True, text=True, check=True)
+    return int(out.stdout.strip())
+
+
+# The longest she takes to finish a gesture after her voice ends; a longer rest is played faster, at most twice.
+REST_MAX = 2.0
+
+
+def with_rest(video: Path, body: Path, audio: Path, final: Path, encode: list[str]) -> None:
+    """A line on its own body stops where its voice stops, often mid-gesture, and
+    the page then crossed to her still with two pairs of arms showing. Wav2Lip
+    loops the body, so frame n of the clip is frame n mod the body's length:
+    the rest of that cycle, lips closed as the body was made, is appended
+    silent, and the clip ends on the still the body ends on."""
+    n, cycle = frames(video), frames(body)
+    start = n % cycle
+    left = (cycle - start) % cycle
+    speed = min(2.0, max(1.0, left / FPS / REST_MAX))
+    total = n / FPS + left / FPS / speed
+    tail = (f"[0:v]setpts=PTS-STARTPTS[h];[1:v]trim=start_frame={start}:end_frame={cycle},setpts=(PTS-STARTPTS)/{speed:.4f}[t];"
+            f"[h][t]concat=n=2:v=1:a=0,fps={FPS}[v]") if left else "[0:v]setpts=PTS-STARTPTS[v]"
+    graph = f"{tail};[2:a]apad=whole_dur={total:.4f}[a]"
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(video), "-i", str(body), "-i", str(audio),
+                    "-filter_complex", graph, "-map", "[v]", "-map", "[a]", *encode, "-t", f"{total:.4f}", str(final)], check=True)
+
+
+def seconds(path: Path) -> float:
+    out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(path)],
+                         capture_output=True, text=True, check=True)
+    return float(out.stdout.strip())
+
+
+def rest_all() -> int:
+    """Ends every gesture clip already made on her still. A clip that already
+    runs past its voice has its rest (a played-faster rest is no whole cycle,
+    so the frame count cannot tell), and is left alone."""
+    encode = ["-c:v", "libx264", "-crf", "20", "-preset", "medium", "-g", "12", "-pix_fmt", "yuv420p", "-r", str(FPS),
+              "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart"]
+    with tempfile.TemporaryDirectory() as tmp:
+        for i in ordered_ids():
+            clip, body = OUT / f"{i}.mp4", body_of(i)
+            if body == BASE or front_frames(i) or not clip.exists() or frames(clip) % frames(body) == 0:
+                continue
+            if frames(clip) / FPS > seconds(VOICE / f"{i}.mp3") + 0.1:
+                continue
+            before = frames(clip)
+            out = Path(tmp) / f"{i}.mp4"
+            with_rest(clip, body, VOICE / f"{i}.mp3", out, encode)
+            out.replace(clip)
+            print(f"{i}: {before} -> {frames(clip)} frames, body {frames(body)}", flush=True)
+    return 0
+
+
 def run_one(i: str, work: Path) -> float:
     wav = work / f"{i}.wav"
     raw = work / f"{i}.raw.mp4"
@@ -129,6 +185,8 @@ def run_one(i: str, work: Path) -> float:
                  f"[h][t]concat=n=2:v=1:a=0,fps={FPS}[v]")
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(raw), "-i", str(body), "-i", str(VOICE / f"{i}.mp3"),
                         "-filter_complex", graph, "-map", "[v]", "-map", "2:a:0", *encode, str(final)], check=True)
+    elif body != BASE:
+        with_rest(raw, body, VOICE / f"{i}.mp3", final, encode)
     else:
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(raw), "-i", str(VOICE / f"{i}.mp3"), "-map", "0:v:0", "-map", "1:a:0",
                         *encode, "-shortest", str(final)], check=True)
@@ -138,6 +196,8 @@ def run_one(i: str, work: Path) -> float:
 def main(argv: list[str]) -> int:
     global BASE, OUT, MANIFEST
     check = "--check" in argv
+    if "--rest" in argv:
+        return rest_all()
     if "--base" in argv:
         BASE = BASES[argv[argv.index("--base") + 1]]
     if "--out" in argv:
