@@ -280,6 +280,16 @@ export const ANSWERS: Answer[] = [
     link: { href: "mailto:hello@vaydin.agency", label: "hello@vaydin.agency" },
   },
   {
+    id: "confidential",
+    short: "Your results",
+    question: "Will you share my results with anyone?",
+    /* The owner's word of 2026-10-20 (option A): findings are never shown,
+       which holds while cross-clinic patterns stay the paid product. */
+    answer: "Your findings are never shown to anyone else, and we name nobody.",
+    keywords: ["confidential", "confidentiality", "nda", "non disclosure", "share my", "share my results", "report confidential", "share our", "share results", "anyone see", "other clinics see", "publish findings", "publish results", "public", "results private", "keep my results"],
+    link: { href: "/terms/", label: "Our terms" },
+  },
+  {
     id: "patient",
     short: "Booking a treatment",
     question: "I want to book a treatment",
