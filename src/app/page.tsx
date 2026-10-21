@@ -20,10 +20,10 @@ export default function Home() {
         </div>
         <Doors />
         <section className="wakes mx-auto w-full max-w-6xl px-5 py-12 sm:px-12">
-          <p className="label text-gold-bright">Vaydin · Dubai</p>
+          <p className="label text-gold-bright">Vaydin Agency · Dubai</p>
           <h1 className="mt-2 max-w-3xl font-display text-2xl leading-tight sm:text-3xl">We find the patients your clinic never saw.</h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
-            Vaydin is a Dubai company for aesthetic and wellness clinics in the UAE and the GCC. We measure how your
+            Vaydin Agency is a Dubai company for aesthetic and wellness clinics in the UAE and the GCC. We measure how your
             clinic looks to a new patient, then run its front door for you: WhatsApp, Google, reviews, Instagram and
             the website, answered and kept current, with your reception approving by a tap.
           </p>
@@ -52,7 +52,7 @@ export default function Home() {
             {" · "}
             <a href="/data-deletion/">Data deletion</a>
           </p>
-          <p className="mt-1">VAYDIN PARTNERS INVESTMENTS - FZCO · DSO-IFZA, IFZA Properties, Dubai Silicon Oasis, Dubai, UAE · Licensed under IFZA</p>
+          <p className="mt-1">Vaydin Agency · VAYDIN PARTNERS INVESTMENTS - FZCO · DSO-IFZA, IFZA Properties, Dubai Silicon Oasis, Dubai, UAE · Licensed under IFZA</p>
         </footer>
       </main>
     </>

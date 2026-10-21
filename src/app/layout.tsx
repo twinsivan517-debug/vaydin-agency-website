@@ -8,7 +8,7 @@ const display = Marcellus({ variable: "--font-marcellus", subsets: ["latin"], we
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  title: { default: `${SITE.name}: we find the patients your clinic never saw`, template: `%s · ${SITE.name}` },
+  title: { default: `${SITE.name} Agency, Dubai: we find the patients your clinic never saw`, template: `%s · ${SITE.name}` },
   description: SITE.description,
   openGraph: {
     title: SITE.name,
@@ -34,7 +34,7 @@ const ORGANISATION = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: SITE.name,
-  alternateName: "VAYDIN PARTNERS INVESTMENTS - FZCO",
+  alternateName: ["Vaydin Agency", "VAYDIN PARTNERS INVESTMENTS - FZCO"],
   telephone: "+971505553148",
   address: {
     "@type": "PostalAddress",
@@ -47,7 +47,7 @@ const ORGANISATION = {
   logo: `${SITE.url}/vaydin-icon-512.png`,
   image: `${SITE.url}/vaydin-og.png`,
   description:
-    "Vaydin is a Dubai company for aesthetic and wellness clinics in the UAE and the GCC. We measure how a clinic looks to a new patient, then run its front door: WhatsApp, Google, reviews, Instagram and the website.",
+    "Vaydin Agency is a Dubai company for aesthetic and wellness clinics in the UAE and the GCC. We measure how a clinic looks to a new patient, then run its front door: WhatsApp, Google, reviews, Instagram and the website.",
   areaServed: { "@type": "Place", name: "MENA" },
   email: SITE.email,
   /* Profiles that are ours and answer: they tell a search engine which
