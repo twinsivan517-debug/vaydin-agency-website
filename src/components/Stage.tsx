@@ -4,7 +4,8 @@
    questions and a sixth that lists the rest, the folder she pulls out for
    each, and a box to ask her anything. She sleeps until a tap wakes her, and the page sleeps with her:
    it lights up the moment she stands. That first tap unlocks sound for every
-   line after it. */
+   line after it, and is answered at once, before her clip has arrived: a
+   ring at the finger, a torch from there onto her face, her cloud stirring. */
 
 import { useEffect, useEffectEvent, useReducer, useRef, useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
@@ -15,6 +16,25 @@ import { BULB_FLIGHT, OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, chapter, lineCli
 import { START, mode, pokeable, reduce, replyLines, speaking } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
 import { WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
+
+/* Where her face lies in the sleep loop's frame, as a share of its width and
+   height; the torch lands there. Measured on the clip, 2026-10-21. */
+const HEAD = { x: 0.2, y: 0.56 };
+
+type Point = { x: number; y: number };
+/* The torch, in the hero's own pixels: the finger (NaN when the tap was on
+   her, or had no place), her face, and the beam's half-width there. */
+type Torch = Point & { hx: number; hy: number; r: number };
+
+/* The cone from the finger to her face: its far edge lies across the beam at her head. */
+function beam({ x, y, hx, hy, r }: Torch) {
+  const dx = hx - x;
+  const dy = hy - y;
+  const len = Math.hypot(dx, dy) || 1;
+  const px = (-dy / len) * r;
+  const py = (dx / len) * r;
+  return `${x},${y} ${hx + px},${hy + py} ${hx - px},${hy - py}`;
+}
 
 /* A small sign on each question's chip. */
 const ICONS: Record<string, string> = { what: "?", how: "\u2699", gain: "\u25B2", start: "\u25B6", price: "$" };
@@ -51,6 +71,13 @@ export function Stage() {
   const offered = state.met || (state.phase !== "asleep" && state.phase !== "opener");
   /* Line clips that would not play here: those lines fall back to the recording. */
   const [noClip, setNoClip] = useState<string[]>([]);
+  /* From the tap that wakes her until her clip plays; over with the
+     greeting, however it ends, as is the torch. */
+  const [stirring, setWaking] = useState(false);
+  const waking = stirring && state.phase === "opener";
+  const [ripple, setRipple] = useState<(Point & { key: number }) | null>(null);
+  const [torch, setTorch] = useState<Torch | null>(null);
+  const lit = torch && state.phase === "opener" ? torch : null;
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -147,11 +174,16 @@ export function Stage() {
     if (clip && !noClip.includes(clip)) guide.current?.prime(clip, full);
   }
 
-  function wake() {
+  function wake(point?: Point) {
     unlock();
     thrown.current = false;
     dispatch({ type: "tap", chapter: "meet" });
-    guide.current?.opener().then((ok) => setSpoken(!ok));
+    setWaking(true);
+    signal(point);
+    guide.current?.opener().then((ok) => {
+      setSpoken(!ok);
+      setWaking(false);
+    });
     /* After the greeting, in the order she may need them: the whole of the
        line that follows it with no tap, the headers of the five questions'
        first lines, her first poke reply, and her answer to a question she
@@ -165,11 +197,38 @@ export function Stage() {
     ready(UNKNOWN);
   }
 
+  /* What the tap shows at once: a ring at the finger, and the visitor's torch
+     from there onto her face, lying in the dark; a tap on her herself lights
+     her face alone. Not under reduced motion. */
+  function signal(point?: Point) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const box = hero.current?.getBoundingClientRect();
+    const figure = document.querySelector(".guide-figure")?.getBoundingClientRect();
+    if (!box || !figure) return;
+    if (point) setRipple({ ...point, key: Date.now() });
+    const onHer = point && point.x > figure.left && point.x < figure.right && point.y > figure.top && point.y < figure.bottom;
+    const from = point && !onHer ? point : null;
+    setTorch({
+      x: from ? from.x - box.left : NaN,
+      y: from ? from.y - box.top : NaN,
+      hx: figure.left + figure.width * HEAD.x - box.left,
+      hy: figure.top + figure.height * HEAD.y - box.top,
+      r: figure.width * 0.2,
+    });
+  }
+
+  /* The ring is gone once it has spread. */
+  useEffect(() => {
+    if (!ripple) return;
+    const timer = window.setTimeout(() => setRipple(null), 1200);
+    return () => window.clearTimeout(timer);
+  }, [ripple]);
+
   /* While she sleeps, a tap anywhere on the page wakes her; a control keeps
      its own job, and her own button already wakes her. */
   const wakeFrom = useEffectEvent((event: MouseEvent) => {
     if (event.target instanceof Element && event.target.closest("a, button, input, textarea, select, summary, label")) return;
-    wake();
+    wake({ x: event.clientX, y: event.clientY });
   });
   useEffect(() => {
     if (state.phase !== "asleep") return;
@@ -245,8 +304,8 @@ export function Stage() {
   }
 
   /* `at` is the tap's own timestamp: pokes within eight seconds escalate. */
-  function poke(at: number) {
-    if (state.phase === "asleep") return wake();
+  function poke(at: number, point: Point) {
+    if (state.phase === "asleep") return wake(point);
     const count = at - pokes.current.at > 8000 ? 0 : Math.min(pokes.current.count + 1, POKES.length - 1);
     pokes.current = { count, at };
     unlock();
@@ -286,7 +345,13 @@ export function Stage() {
   }
 
   return (
-    <section ref={hero} aria-label="The guide" className={`hero ${offered ? "offered" : ""}`}>
+    <section
+      ref={hero}
+      aria-label="The guide"
+      className={`hero relative ${offered ? "offered" : ""}`}
+      /* A pointer that can hover is a tap coming: her greeting loads while it is over her. */
+      onPointerEnter={(event) => event.pointerType === "mouse" && state.phase === "asleep" && guide.current?.warm()}
+    >
       <div className="hero-guide md:sticky md:top-16">
         <div className="guide-floor relative aspect-[9/16] w-full md:aspect-auto md:h-[min(76vh,620px)]">
           {busy && (
@@ -303,7 +368,9 @@ export function Stage() {
             lineSrc={clipSrc}
             mood={state.phase === "quip" && !clipSrc ? (state.cloud.mood ?? null) : null}
             pokeable={pokeable(state)}
+            waking={waking}
             onOpenerTime={(seconds) => {
+              setWaking(false);
               if (seconds >= THROW_AT) throwBulb();
               dispatch({ type: "cloud_at", seconds });
             }}
@@ -316,8 +383,19 @@ export function Stage() {
 
       <div aria-live="polite" className="hero-cloud md:pt-12">
         <div key={state.cloud.id} className="cloud">
-          <p data-long={long(state.cloud.text)} className="text-[1.05rem] leading-snug md:text-lg">
-            {state.cloud.text}
+          <p data-long={waking ? undefined : long(state.cloud.text)} className="text-[1.05rem] leading-snug md:text-lg">
+            {waking ? (
+              <>
+                Mmm
+                <span className="dots" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+              </>
+            ) : (
+              state.cloud.text
+            )}
           </p>
           <span aria-hidden="true" className="cloud-tail">
             <i />
@@ -387,6 +465,30 @@ export function Stage() {
         </div>
       </div>
 
+      {ripple && <span key={ripple.key} aria-hidden="true" className="ripple" style={{ left: ripple.x, top: ripple.y }} />}
+
+      {lit && (
+        <svg aria-hidden="true" className="torch" width="100%" height="100%">
+          <defs>
+            <radialGradient id="torch-pool">
+              <stop offset="0" stopColor="#f5d978" stopOpacity="0.55" />
+              <stop offset="1" stopColor="#f5d978" stopOpacity="0" />
+            </radialGradient>
+            {!Number.isNaN(lit.x) && (
+              <linearGradient id="torch-beam" gradientUnits="userSpaceOnUse" x1={lit.x} y1={lit.y} x2={lit.hx} y2={lit.hy}>
+                <stop offset="0" stopColor="#f5d978" stopOpacity="0.45" />
+                <stop offset="1" stopColor="#f5d978" stopOpacity="0.08" />
+              </linearGradient>
+            )}
+            <filter id="torch-soft" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="6" />
+            </filter>
+          </defs>
+          {!Number.isNaN(lit.x) && <polygon points={beam(lit)} fill="url(#torch-beam)" filter="url(#torch-soft)" />}
+          <ellipse cx={lit.hx} cy={lit.hy} rx={lit.r * 1.5} ry={lit.r} fill="url(#torch-pool)" />
+        </svg>
+      )}
+
       {bulb && (
         <svg
           aria-hidden="true"
@@ -410,7 +512,8 @@ export function Stage() {
         </svg>
       )}
 
-      {/* On a phone the bar is one slim row, WhatsApp as an icon, so it covers little of her. */}
+      {/* On a phone the bar is one slim row, WhatsApp as an icon, so it covers
+          little of her; at its right, the way down to the five pages. */}
       <div className={`hero-bar wakes sticky bottom-0 -mx-5 mt-6 flex items-center gap-3 border-t border-gold/15 bg-background/95 px-5 py-2 backdrop-blur sm:-mx-12 sm:px-12 md:py-3 ${state.lit ? "cta-lit" : ""}`}>
         <a href={WHATSAPP} aria-label={`WhatsApp ${WHATSAPP_SHOWN}`} className="flex items-center gap-2 rounded-full bg-gold-bright p-2.5 text-base font-medium text-background md:px-6 md:py-3">
           <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
@@ -420,6 +523,13 @@ export function Stage() {
         </a>
         <a href="/pricing.html" className="rounded-full border border-gold px-4 py-2 text-sm text-gold-bright md:px-6 md:py-3 md:text-base">
           Ask for your plan
+        </a>
+        <a href="#pages" className="label ml-auto flex items-center gap-1.5 whitespace-nowrap text-gold-bright">
+          <span className="hidden sm:inline">The five pages</span>
+          <span className="sm:hidden">Pages</span>
+          <svg aria-hidden="true" viewBox="0 0 12 12" width="12" height="12">
+            <path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+          </svg>
         </a>
       </div>
     </section>

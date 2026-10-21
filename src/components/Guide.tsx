@@ -29,6 +29,8 @@ export type GuideHandle = {
   exit(): { x: number; y: number; width: number } | null;
   prime(src: string, full?: boolean): void;
   unlock(): void;
+  /* Loads the whole greeting ahead of the tap: for a pointer hovering over her. */
+  warm(): void;
 };
 type Clip = Mode;
 type Props = {
@@ -38,10 +40,12 @@ type Props = {
   lineSrc: string | null;
   mood: Mood | null;
   pokeable: boolean;
+  /* From the tap that wakes her until her clip plays: her letters blow away and she stirs. */
+  waking: boolean;
   onOpenerTime: (seconds: number) => void;
   onOpenerEnd: () => void;
   onLineEnd: (outcome: LineOutcome) => void;
-  onPoke: (at: number) => void;
+  onPoke: (at: number, point: { x: number; y: number }) => void;
   /* Standing in a page's corner rather than asleep on the home page. */
   small?: boolean;
 };
@@ -111,7 +115,7 @@ const countFrames = (video: HTMLVideoElement) => {
 };
 
 export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
-  const { mode, run, lineSrc, mood, pokeable, onPoke } = props;
+  const { mode, run, lineSrc, mood, pokeable, waking, onPoke } = props;
   const latest = useRef(props);
   latest.current = props;
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -145,13 +149,14 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
   }, []);
   const [shown, setShown] = useState(false);
 
-  const make = useCallback((name: Clip) => {
+  const make = useCallback((name: Clip, preload: "auto" | "metadata" = "auto") => {
     const video = document.createElement("video");
-    video.src = name === "opener" ? OPENER_VIDEO : name === "idle" && latest.current.small ? SMALL_IDLE : `/guide/${name}.mp4`;
+    /* Before the source: the load begins the moment the source is set. */
+    video.preload = preload;
     video.muted = name !== "opener";
     video.loop = name !== "opener";
     video.playsInline = true;
-    video.preload = "auto";
+    video.src = name === "opener" ? OPENER_VIDEO : name === "idle" && latest.current.small ? SMALL_IDLE : `/guide/${name}.mp4`;
     if (name === "opener") {
       video.ontimeupdate = () => latest.current.onOpenerTime(video.currentTime);
       video.onended = () => latest.current.onOpenerEnd();
@@ -287,6 +292,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       opener() {
         const layer = layers.current.opener ?? make("opener");
         const video = layer.video;
+        video.preload = "auto";
         video.muted = false;
         video.currentTime = 0;
         /* Nothing else loads until the greeting has arrived: on a slow line,
@@ -339,6 +345,10 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       },
       unlock() {
         (spare.current ??= pool(KEEP + 2)).unlock();
+      },
+      warm() {
+        if (stillRef.current) return;
+        (layers.current.opener ?? make("opener")).video.preload = "auto";
       },
     }),
     [enqueue, make, makeLine, swap],
@@ -424,6 +434,21 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       frame = requestAnimationFrame(draw);
       const first: Clip = latest.current.small ? "idle" : "sleep";
       show(list[first] ?? make(first));
+      /* The greeting's header, once the sleep loop is in and the page has
+         settled: the tap then starts the clip from a known layout rather
+         than a cold request. Not with data saving on. */
+      if (first === "sleep" && list.sleep) {
+        arrived(
+          list.sleep.video,
+          () =>
+            window.setTimeout(() => {
+              const saving = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+              if (list.opener || latest.current.mode !== "sleep" || saving) return;
+              make("opener", "metadata");
+            }, 2500),
+          10000,
+        );
+      }
       /* A tap may have come before this moment (the chips show before she
          does): the page's present wish is replayed, not lost. */
       const { mode: now, lineSrc: src } = latest.current;
@@ -472,7 +497,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       <div
         ref={figure}
         aria-hidden="true"
-        className="guide-figure absolute bottom-0 left-1/2 z-10 aspect-[9/16] h-full -translate-x-1/2 transition-opacity duration-700"
+        className={`guide-figure absolute bottom-0 left-1/2 z-10 aspect-[9/16] h-full -translate-x-1/2 transition-opacity duration-700 ${waking ? "guide-stir" : ""}`}
         style={{ opacity: shown ? 1 : 0 }}
       >
         {still ? (
@@ -480,8 +505,8 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         ) : (
           <canvas ref={canvas} width={WIDTH} height={HEIGHT} className="h-full w-full drop-shadow-[0_10px_12px_rgba(0,0,0,0.5)]" />
         )}
-        {mode === "sleep" && (
-          <span className="guide-zzz absolute left-[30%] top-[60%] font-display text-2xl text-gold-bright">
+        {(mode === "sleep" || waking) && (
+          <span className={`guide-zzz ${waking ? "away" : ""} absolute left-[30%] top-[60%] font-display text-2xl text-gold-bright`}>
             <i className="not-italic">z</i>
             <i className="not-italic">z</i>
             <i className="not-italic">Z</i>
@@ -490,7 +515,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       </div>
       <button
         type="button"
-        onClick={(event) => onPoke(event.timeStamp)}
+        onClick={(event) => onPoke(event.timeStamp, { x: event.clientX, y: event.clientY })}
         disabled={!pokeable || !shown}
         aria-label={mode === "sleep" ? "Wake her up" : "Poke her"}
         className="absolute bottom-0 left-1/2 z-20 aspect-[9/16] h-full -translate-x-1/2 cursor-pointer rounded-full disabled:cursor-default"

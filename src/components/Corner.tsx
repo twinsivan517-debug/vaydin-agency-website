@@ -311,6 +311,7 @@ export function Corner() {
           lineSrc={clipSrc}
           mood={null}
           pokeable={false}
+          waking={false}
           onOpenerTime={() => {}}
           onOpenerEnd={() => {}}
           onLineEnd={lineEnded}

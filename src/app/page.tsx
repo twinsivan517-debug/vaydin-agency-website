@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Doors } from "@/components/Doors";
 import { Header } from "@/components/Header";
 import { Stage } from "@/components/Stage";
 import { CHAPTERS } from "@/lib/pitch";
@@ -6,8 +7,9 @@ import { SITE, WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
-/* The home page is the guide. The title and a transcript sit under her, so
-   the page reads, and is found, before any script or clip arrives. */
+/* The home page is the guide. Under her, the five pages in their own words,
+   then the title and a transcript, so the page reads, and is found, before
+   any script or clip arrives, and a visitor who scrolls finds the site. */
 export default function Home() {
   return (
     <>
@@ -16,6 +18,7 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl px-5 pt-20 sm:px-12 md:pt-24">
           <Stage />
         </div>
+        <Doors />
         <section className="wakes mx-auto w-full max-w-6xl px-5 py-12 sm:px-12">
           <p className="label text-gold-bright">Vaydin · Dubai</p>
           <h1 className="mt-2 max-w-3xl font-display text-2xl leading-tight sm:text-3xl">We find the patients your clinic never saw.</h1>
