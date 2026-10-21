@@ -433,6 +433,8 @@ body.site-awake .mark::before {
   /* The tap that wakes her: a ring where the finger landed, her letters blown
      away, a stir in her sleep, and the dots of her waking cloud. */
   .ripple { animation: ripple 0.9s ease-out forwards; }
+  .floor-shine::before { animation: floor-shine 1.3s ease-in-out infinite alternate; }
+  body.site-awake .floor-shine::before { animation: none; }
   .guide-zzz.away i { animation: zzz-away 0.6s ease-in forwards; }
   .guide-stir canvas { animation: guide-stir 0.9s ease-in-out 2; transform-origin: 50% 85%; }
   .dots i { animation: dots 1.2s ease-in-out infinite; }
@@ -454,10 +456,10 @@ body.site-awake .mark::before {
 .menu summary { list-style: none; cursor: pointer; }
 .menu summary::-webkit-details-marker { display: none; }
 
-/* The wake signal. The ring at the finger; the visitor's torch, a beam from
-   the tap to her face while she lies there in the dark, going out as her own
-   bulb lights the room; the dots in her cloud until the clip plays. Under
-   reduced motion the ring, the beam and the stir are not made. */
+/* The wake signal. The ring at the finger; the pool of light under her
+   coming up and breathing while she wakes, settling as her own bulb lights
+   the room; the dots in her cloud until the clip plays. No light on her: she
+   wakes complaining of the dark. Under reduced motion none of it is made. */
 .ripple {
   position: fixed;
   z-index: 45;
@@ -475,22 +477,15 @@ body.site-awake .mark::before {
   100% { transform: scale(2.4); opacity: 0; }
 }
 
-.torch {
-  position: absolute;
-  inset: 0;
-  z-index: 15;
-  overflow: visible;
-  pointer-events: none;
-  opacity: 1;
-  transition: opacity 0.9s ease;
-  animation: torch-in 0.5s ease;
+.guide-floor::before {
+  transition: transform 0.9s ease, filter 0.9s ease;
+  transform-origin: 50% 50%;
 }
 
-@keyframes torch-in {
-  from { opacity: 0; }
+@keyframes floor-shine {
+  from { transform: scale(1.15, 1.3); filter: blur(4px) brightness(1.5); }
+  to { transform: scale(1.4, 1.8); filter: blur(6px) brightness(2.1); }
 }
-
-body.site-awake .torch { opacity: 0; }
 
 .dots i {
   display: inline-block;

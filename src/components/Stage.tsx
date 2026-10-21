@@ -5,7 +5,8 @@
    each, and a box to ask her anything. She sleeps until a tap wakes her, and the page sleeps with her:
    it lights up the moment she stands. That first tap unlocks sound for every
    line after it, and is answered at once, before her clip has arrived: a
-   ring at the finger, a torch from there onto her face, her cloud stirring. */
+   ring at the finger, the floor under her shining, her cloud stirring. No
+   light falls on her: she wakes complaining of the dark. */
 
 import { useEffect, useEffectEvent, useReducer, useRef, useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
@@ -17,24 +18,7 @@ import { START, mode, pokeable, reduce, replyLines, speaking } from "@/lib/pitch
 import { speaker, type Speaker } from "@/lib/speaker";
 import { WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
 
-/* Where her face lies in the sleep loop's frame, as a share of its width and
-   height; the torch lands there. Measured on the clip, 2026-10-21. */
-const HEAD = { x: 0.2, y: 0.56 };
-
 type Point = { x: number; y: number };
-/* The torch, in the hero's own pixels: the finger (NaN when the tap was on
-   her, or had no place), her face, and the beam's half-width there. */
-type Torch = Point & { hx: number; hy: number; r: number };
-
-/* The cone from the finger to her face: its far edge lies across the beam at her head. */
-function beam({ x, y, hx, hy, r }: Torch) {
-  const dx = hx - x;
-  const dy = hy - y;
-  const len = Math.hypot(dx, dy) || 1;
-  const px = (-dy / len) * r;
-  const py = (dx / len) * r;
-  return `${x},${y} ${hx + px},${hy + py} ${hx - px},${hy - py}`;
-}
 
 /* A small sign on each question's chip. */
 const ICONS: Record<string, string> = { what: "?", how: "\u2699", gain: "\u25B2", start: "\u25B6", price: "$" };
@@ -72,13 +56,13 @@ export function Stage() {
   /* Line clips that would not play here: those lines fall back to the recording. */
   const [noClip, setNoClip] = useState<string[]>([]);
   /* From the tap that wakes her until her clip plays; over with the
-     greeting, however it ends, as is the torch. */
+     greeting, however it ends, as is the shine on the floor. */
   const [stirring, setWaking] = useState(false);
   const waking = stirring && state.phase === "opener";
   const [ripple, setRipple] = useState<(Point & { key: number }) | null>(null);
   const ripples = useRef(0);
-  const [torch, setTorch] = useState<Torch | null>(null);
-  const lit = torch && state.phase === "opener" ? torch : null;
+  const [shine, setShine] = useState(false);
+  const lit = shine && state.phase === "opener";
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -179,7 +163,6 @@ export function Stage() {
     unlock();
     thrown.current = false;
     dispatch({ type: "tap", chapter: "meet" });
-    setTorch(null);
     /* Under reduced motion her first line shows at once, as before. */
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setWaking(true);
@@ -203,23 +186,11 @@ export function Stage() {
     ready(UNKNOWN);
   }
 
-  /* What the tap shows at once: a ring at the finger, and the visitor's torch
-     from there onto her face, lying in the dark; a tap on her herself lights
-     her face alone. A wake with no pointer (a key) has no ring and no beam. */
+  /* What the tap shows at once: a ring at the finger, and the pool of light
+     under her coming up. A wake with no pointer (a key) has no ring. */
   function signal(point?: Point) {
-    const box = hero.current?.getBoundingClientRect();
-    const figure = document.querySelector(".guide-figure")?.getBoundingClientRect();
-    if (!box || !figure) return;
     if (point) setRipple({ ...point, key: ++ripples.current });
-    const onHer = point && point.x > figure.left && point.x < figure.right && point.y > figure.top && point.y < figure.bottom;
-    const from = point && !onHer ? point : null;
-    setTorch({
-      x: from ? from.x - box.left : NaN,
-      y: from ? from.y - box.top : NaN,
-      hx: figure.left + figure.width * HEAD.x - box.left,
-      hy: figure.top + figure.height * HEAD.y - box.top,
-      r: figure.width * 0.2,
-    });
+    setShine(true);
   }
 
   /* The ring is gone once it has spread. */
@@ -358,7 +329,7 @@ export function Stage() {
       onPointerEnter={(event) => event.pointerType === "mouse" && state.phase === "asleep" && guide.current?.warm()}
     >
       <div className="hero-guide md:sticky md:top-16">
-        <div className="guide-floor relative aspect-[9/16] w-full md:aspect-auto md:h-[min(76vh,620px)]">
+        <div className={`guide-floor relative aspect-[9/16] w-full md:aspect-auto md:h-[min(76vh,620px)] ${lit ? "floor-shine" : ""}`}>
           {busy && (
             <button type="button" onClick={() => dispatch({ type: "stop" })} className="guide-stop" aria-label="Stop her">
               <svg aria-hidden="true" viewBox="0 0 20 20" width="16" height="16">
@@ -470,28 +441,6 @@ export function Stage() {
       </div>
 
       {ripple && <span key={ripple.key} aria-hidden="true" className="ripple" style={{ left: ripple.x, top: ripple.y }} />}
-
-      {lit && (
-        <svg aria-hidden="true" className="torch" width="100%" height="100%">
-          <defs>
-            <radialGradient id="torch-pool">
-              <stop offset="0" stopColor="#f5d978" stopOpacity="0.55" />
-              <stop offset="1" stopColor="#f5d978" stopOpacity="0" />
-            </radialGradient>
-            {!Number.isNaN(lit.x) && (
-              <linearGradient id="torch-beam" gradientUnits="userSpaceOnUse" x1={lit.x} y1={lit.y} x2={lit.hx} y2={lit.hy}>
-                <stop offset="0" stopColor="#f5d978" stopOpacity="0.45" />
-                <stop offset="1" stopColor="#f5d978" stopOpacity="0.08" />
-              </linearGradient>
-            )}
-            <filter id="torch-soft" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="6" />
-            </filter>
-          </defs>
-          {!Number.isNaN(lit.x) && <polygon points={beam(lit)} fill="url(#torch-beam)" filter="url(#torch-soft)" />}
-          <ellipse cx={lit.hx} cy={lit.hy} rx={lit.r * 1.5} ry={lit.r} fill="url(#torch-pool)" />
-        </svg>
-      )}
 
       {bulb && (
         <svg
