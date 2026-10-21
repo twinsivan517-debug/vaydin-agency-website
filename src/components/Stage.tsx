@@ -328,6 +328,12 @@ export function Stage() {
       /* A pointer that can hover is a tap coming: her greeting loads while it is over her. */
       onPointerEnter={(event) => event.pointerType === "mouse" && state.phase === "asleep" && guide.current?.warm()}
     >
+      {/* The page's first words and its headline: who this is, before her cloud. */}
+      <h1 className="hero-name wakes font-display text-base leading-snug text-muted md:text-lg">
+        <span className="label mr-3 text-gold-bright">Vaydin Agency · Dubai</span>
+        We find the patients your clinic never saw.
+      </h1>
+
       <div className="hero-guide md:sticky md:top-16">
         <div className={`guide-floor relative aspect-[9/16] w-full md:aspect-auto md:h-[min(76vh,620px)] ${lit ? "floor-shine" : ""}`}>
           {busy && (

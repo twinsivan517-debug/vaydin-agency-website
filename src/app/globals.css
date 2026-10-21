@@ -42,20 +42,21 @@ body {
   text-transform: uppercase;
 }
 
-/* The hero: she stands on the left at every width, with the questions and
-   the typing box beside her. On a phone her cloud is a wide row above her,
+/* The hero: her headline across the top, then she stands on the left at
+   every width, with the questions and the typing box beside her. On a phone her cloud is a wide row above her,
    its tail pointing down at her, so a long line grows sideways, not into a
    tower; on a wider screen the cloud sits beside her head. The card sits
    under them on a phone and in her column's neighbour on a wider screen. */
 .hero {
   display: grid;
   grid-template-columns: 50% minmax(0, 1fr);
-  grid-template-areas: "cloud cloud" "guide chips" "guide ask" "card card" "bar bar";
+  grid-template-areas: "name name" "cloud cloud" "guide chips" "guide ask" "card card" "bar bar";
   column-gap: 0.6rem;
   row-gap: 0.6rem;
   align-items: start;
 }
 
+.hero-name { grid-area: name; }
 .hero-cloud { grid-area: cloud; align-self: end; }
 .hero-guide { grid-area: guide; align-self: end; }
 .hero-chips { grid-area: chips; }
@@ -67,7 +68,7 @@ body {
 @media (min-width: 768px) {
   .hero {
     grid-template-columns: minmax(0, 26rem) 1fr;
-    grid-template-areas: "guide cloud" "guide chips" "guide card" "guide ask" "bar bar";
+    grid-template-areas: "name name" "guide cloud" "guide chips" "guide card" "guide ask" "bar bar";
     column-gap: 2.5rem;
     row-gap: 1.25rem;
   }
