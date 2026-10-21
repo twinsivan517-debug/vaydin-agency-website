@@ -433,8 +433,8 @@ body.site-awake .mark::before {
   /* The tap that wakes her: a ring where the finger landed, her letters blown
      away, a stir in her sleep, and the dots of her waking cloud. */
   .ripple { animation: ripple 0.9s ease-out forwards; }
-  .floor-shine::before { animation: floor-shine 1.3s ease-in-out infinite alternate; }
-  body.site-awake .floor-shine::before { animation: none; }
+  .floor-shine::after { animation: floor-shine 1.3s ease-in-out infinite alternate; }
+  body.site-awake .floor-shine::after { animation: none; }
   .guide-zzz.away i { animation: zzz-away 0.6s ease-in forwards; }
   .guide-stir canvas { animation: guide-stir 0.9s ease-in-out 2; transform-origin: 50% 85%; }
   .dots i { animation: dots 1.2s ease-in-out infinite; }
@@ -456,10 +456,10 @@ body.site-awake .mark::before {
 .menu summary { list-style: none; cursor: pointer; }
 .menu summary::-webkit-details-marker { display: none; }
 
-/* The wake signal. The ring at the finger; the pool of light under her
-   coming up and breathing while she wakes, settling as her own bulb lights
-   the room; the dots in her cloud until the clip plays. No light on her: she
-   wakes complaining of the dark. Under reduced motion none of it is made. */
+/* The wake signal. The ring at the finger; the floor where she lies glowing
+   and breathing while she wakes, going out as her own bulb lights the room;
+   the dots in her cloud until the clip plays. No light on her: she wakes
+   complaining of the dark. Under reduced motion none of it is made. */
 .ripple {
   position: fixed;
   z-index: 45;
@@ -477,14 +477,30 @@ body.site-awake .mark::before {
   100% { transform: scale(2.4); opacity: 0; }
 }
 
-.guide-floor::before {
-  transition: transform 0.9s ease, filter 0.9s ease;
-  transform-origin: 50% 50%;
+/* The floor where she lies: the sleep loop frames her above the bottom
+   pool, so the glow under her body is its own, wide and soft, shown only
+   while she wakes. Under the figure (z 10). */
+.guide-floor::after {
+  content: "";
+  position: absolute;
+  left: 2%;
+  right: 2%;
+  top: 48%;
+  height: 32%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgb(245 217 120 / 0.42), rgb(201 164 74 / 0.16) 48%, transparent 72%);
+  filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.9s ease;
 }
 
+.floor-shine::after { opacity: 1; }
+body.site-awake .floor-shine::after { opacity: 0; }
+
 @keyframes floor-shine {
-  from { transform: scale(1.15, 1.3); filter: blur(4px) brightness(1.5); }
-  to { transform: scale(1.4, 1.8); filter: blur(6px) brightness(2.1); }
+  from { transform: scale(0.96); filter: blur(8px) brightness(1); }
+  to { transform: scale(1.06, 1.14); filter: blur(10px) brightness(1.5); }
 }
 
 .dots i {
@@ -533,17 +549,65 @@ body.site-awake .mark::before {
   .door-side { grid-column: span 3; }
 }
 
+/* Each door wears its page's colour (--accent, set on the tile): a thread of
+   it along the top edge, its sign in a tinted square, the dots of its facts,
+   and the whole frame and a glow in it when the pointer is over it. */
 .door {
+  position: relative;
   display: block;
   height: 100%;
+  overflow: hidden;
   border-radius: 1.5rem;
-  border: 1px solid rgb(201 164 74 / 0.2);
-  background: #161009;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  background:
+    radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%),
+    #161009;
   padding: 1.25rem 1.4rem 1.4rem;
   color: var(--foreground);
-  transition: border-color 0.25s ease, transform 0.25s ease;
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.door:hover { border-color: var(--gold-bright); transform: translateY(-2px); }
-.door-open { border-bottom: 1px solid transparent; transition: border-color 0.25s ease; }
-.door:hover .door-open { border-bottom-color: var(--gold-bright); }
+.door::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 1.4rem;
+  width: 3.5rem;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--accent);
+}
+
+.door:hover,
+.door:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 1rem 2.5rem color-mix(in srgb, var(--accent) 18%, transparent);
+  outline: none;
+}
+
+.door-sign {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 0.8rem;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent);
+}
+
+.door-dot {
+  flex: none;
+  width: 0.4rem;
+  height: 0.4rem;
+  margin-top: 0.7rem;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.door-open {
+  color: var(--accent);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.25s ease;
+}
+
+.door:hover .door-open { border-bottom-color: var(--accent); }
