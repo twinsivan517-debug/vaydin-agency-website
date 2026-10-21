@@ -29,7 +29,9 @@ export type GuideHandle = {
   exit(): { x: number; y: number; width: number } | null;
   prime(src: string, full?: boolean): void;
   unlock(): void;
-  /* Loads the whole greeting ahead of the tap: for a pointer hovering over her. */
+  /* For a pointer hovering over her: the whole greeting, once its header has
+     been fetched by the settled page (so never beside the sleep loop, never
+     with data saving on). */
   warm(): void;
 };
 type Clip = Mode;
@@ -45,7 +47,7 @@ type Props = {
   onOpenerTime: (seconds: number) => void;
   onOpenerEnd: () => void;
   onLineEnd: (outcome: LineOutcome) => void;
-  onPoke: (at: number, point: { x: number; y: number }) => void;
+  onPoke: (at: number, point?: { x: number; y: number }) => void;
   /* Standing in a page's corner rather than asleep on the home page. */
   small?: boolean;
 };
@@ -347,8 +349,8 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
         (spare.current ??= pool(KEEP + 2)).unlock();
       },
       warm() {
-        if (stillRef.current) return;
-        (layers.current.opener ?? make("opener")).video.preload = "auto";
+        const have = layers.current.opener;
+        if (have && !stillRef.current) have.video.preload = "auto";
       },
     }),
     [enqueue, make, makeLine, swap],
@@ -515,7 +517,7 @@ export const Guide = forwardRef<GuideHandle, Props>(function Guide(props, ref) {
       </div>
       <button
         type="button"
-        onClick={(event) => onPoke(event.timeStamp, { x: event.clientX, y: event.clientY })}
+        onClick={(event) => onPoke(event.timeStamp, event.detail ? { x: event.clientX, y: event.clientY } : undefined)}
         disabled={!pokeable || !shown}
         aria-label={mode === "sleep" ? "Wake her up" : "Poke her"}
         className="absolute bottom-0 left-1/2 z-20 aspect-[9/16] h-full -translate-x-1/2 cursor-pointer rounded-full disabled:cursor-default"

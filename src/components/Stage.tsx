@@ -76,6 +76,7 @@ export function Stage() {
   const [stirring, setWaking] = useState(false);
   const waking = stirring && state.phase === "opener";
   const [ripple, setRipple] = useState<(Point & { key: number }) | null>(null);
+  const ripples = useRef(0);
   const [torch, setTorch] = useState<Torch | null>(null);
   const lit = torch && state.phase === "opener" ? torch : null;
 
@@ -178,8 +179,13 @@ export function Stage() {
     unlock();
     thrown.current = false;
     dispatch({ type: "tap", chapter: "meet" });
-    setWaking(true);
-    signal(point);
+    setTorch(null);
+    /* Under reduced motion her first line shows at once, as before. */
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setWaking(true);
+      signal(point);
+    }
+    /* Only the clip playing ends the waking: the seek before play fires a time event at zero. */
     guide.current?.opener().then((ok) => {
       setSpoken(!ok);
       setWaking(false);
@@ -199,13 +205,12 @@ export function Stage() {
 
   /* What the tap shows at once: a ring at the finger, and the visitor's torch
      from there onto her face, lying in the dark; a tap on her herself lights
-     her face alone. Not under reduced motion. */
+     her face alone. A wake with no pointer (a key) has no ring and no beam. */
   function signal(point?: Point) {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const box = hero.current?.getBoundingClientRect();
     const figure = document.querySelector(".guide-figure")?.getBoundingClientRect();
     if (!box || !figure) return;
-    if (point) setRipple({ ...point, key: Date.now() });
+    if (point) setRipple({ ...point, key: ++ripples.current });
     const onHer = point && point.x > figure.left && point.x < figure.right && point.y > figure.top && point.y < figure.bottom;
     const from = point && !onHer ? point : null;
     setTorch({
@@ -228,7 +233,7 @@ export function Stage() {
      its own job, and her own button already wakes her. */
   const wakeFrom = useEffectEvent((event: MouseEvent) => {
     if (event.target instanceof Element && event.target.closest("a, button, input, textarea, select, summary, label")) return;
-    wake({ x: event.clientX, y: event.clientY });
+    wake(event.detail ? { x: event.clientX, y: event.clientY } : undefined);
   });
   useEffect(() => {
     if (state.phase !== "asleep") return;
@@ -304,7 +309,7 @@ export function Stage() {
   }
 
   /* `at` is the tap's own timestamp: pokes within eight seconds escalate. */
-  function poke(at: number, point: Point) {
+  function poke(at: number, point?: Point) {
     if (state.phase === "asleep") return wake(point);
     const count = at - pokes.current.at > 8000 ? 0 : Math.min(pokes.current.count + 1, POKES.length - 1);
     pokes.current = { count, at };
@@ -370,7 +375,6 @@ export function Stage() {
             pokeable={pokeable(state)}
             waking={waking}
             onOpenerTime={(seconds) => {
-              setWaking(false);
               if (seconds >= THROW_AT) throwBulb();
               dispatch({ type: "cloud_at", seconds });
             }}

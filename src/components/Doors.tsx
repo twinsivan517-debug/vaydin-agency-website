@@ -2,8 +2,9 @@
 
 /* The floor under her: the five pages, each in its own words, so a visitor
    who scrolls instead of tapping finds the site. The room is dark while she
-   sleeps; a visitor who scrolls down to these lights it, softly, without
-   waking her: her bulb is for the one who taps. */
+   sleeps; a visitor who scrolls down to these lifts the dimming, softly,
+   without waking her and without the mark's glow: her bulb, and that glow,
+   are for the one who taps. */
 
 import { useEffect, useRef } from "react";
 import { DOORS } from "@/lib/doors";
@@ -14,23 +15,27 @@ export function Doors() {
   useEffect(() => {
     const el = section.current;
     if (!el || !("IntersectionObserver" in window)) return;
-    const light = () => {
-      if (!document.body.classList.contains("site-asleep")) return;
-      document.body.classList.remove("site-asleep");
-      document.body.classList.add("site-awake");
+    const light = () => document.body.classList.remove("site-asleep");
+    /* Only on a scroll: a screen tall enough to show the doors at once still
+       opens dark, and lights on the first scroll instead (the observer would
+       not speak again, the doors being in view already). */
+    const onScroll = () => {
+      light();
+      watch.disconnect();
     };
-    /* Only on a scroll: a screen tall enough to show the doors at once still opens dark. */
     const watch = new IntersectionObserver(
       (entries) => {
-        if (entries.some((e) => e.isIntersecting) && window.scrollY > 40) {
-          light();
-          watch.disconnect();
-        }
+        if (!entries.some((e) => e.isIntersecting)) return;
+        if (window.scrollY > 40) onScroll();
+        else window.addEventListener("scroll", onScroll, { once: true, passive: true });
       },
       { threshold: 0.25 },
     );
     watch.observe(el);
-    return () => watch.disconnect();
+    return () => {
+      watch.disconnect();
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   return (
