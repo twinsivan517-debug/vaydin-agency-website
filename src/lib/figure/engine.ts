@@ -23,8 +23,9 @@ const EYE_SAD: [number, number, number] = [0.62, 0.72, 1];
 /* What his eyes do while each poke line plays: friendly, then less so. */
 const POKED: Record<string, Eyes> = { "poke-1": "happy", "poke-2": "wide", "poke-3": "cross", "poke-4": "sad", "poke-5": "cross", "poke-6": "line" };
 
-const VS = `attribute vec3 aPos; attribute vec2 aInfo; uniform mat4 uProj; uniform float uCamZ, uSize; varying float vB, vT;
-  void main(){ vec4 p = vec4(aPos.xy, aPos.z - uCamZ, 1.0); gl_Position = uProj * p;
+/* uOff shakes the whole of him at once, faster than his dots could follow. */
+const VS = `attribute vec3 aPos; attribute vec2 aInfo; uniform mat4 uProj; uniform float uCamZ, uSize; uniform vec2 uOff; varying float vB, vT;
+  void main(){ vec4 p = vec4(aPos.xy + uOff, aPos.z - uCamZ, 1.0); gl_Position = uProj * p;
     gl_PointSize = uSize * (uCamZ / -p.z) * (0.62 + 0.55 * clamp(aInfo.x, 0.0, 1.4)); vB = aInfo.x; vT = aInfo.y; }`;
 /* vT above 0 mixes in his eye colour, below 0 the colour of the shape he shows. */
 const FS = `precision mediump float; varying float vB, vT; uniform vec3 uTint, uShape; uniform float uGain;
@@ -65,7 +66,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
   attr("aPos", bufP, 3, P);
   attr("aInfo", bufI, 2, INFO);
   const U = (n: string) => gl.getUniformLocation(prog, n);
-  const uProj = U("uProj"), uCamZ = U("uCamZ"), uSize = U("uSize"), uTint = U("uTint"), uShape = U("uShape"), uGain = U("uGain");
+  const uProj = U("uProj"), uCamZ = U("uCamZ"), uSize = U("uSize"), uTint = U("uTint"), uShape = U("uShape"), uGain = U("uGain"), uOff = U("uOff");
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.ONE, gl.ONE);
   gl.clearColor(0, 0, 0, 0);
@@ -128,13 +129,23 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     doorShown = d;
   }
 
-  /* Where he was pressed: a dent that heals within a breath. Spinning the pointer around his head makes him dizzy. */
-  const holes: { x: number; y: number; t: number }[] = [];
-  let spin = 0, lastAng: number | null = null, dizzyUntil = 0, flinch = 0;
+  /* Where he was pressed: a dent that heals within a breath. Pokes within
+     eight seconds of each other annoy him more each time, up to five: a
+     deeper dent that heals slower, a harder flinch, a shake, eyes going red.
+     Spinning the pointer around his head makes him dizzy. */
+  const holes: { x: number; y: number; t: number; r: number; life: number }[] = [];
+  let spin = 0, lastAng: number | null = null, dizzyUntil = 0, flinch = 0, annoy = 0, lastPoke = -99, shakeUntil = 0;
   function poke(sx: number, sy: number) {
     const [x, y] = toWorld(sx, sy);
     const hit = Math.abs(x - cx) < S * 0.6 && y < cy + S * 1.0 && y > cy - S * 1.0;
-    if (hit) { holes.push({ x, y, t: performance.now() / 1000 }); flinch = 1; }
+    if (hit) {
+      const t = performance.now() / 1000;
+      annoy = t - lastPoke < 8 ? Math.min(annoy + 1, 5) : 0;
+      lastPoke = t;
+      holes.push({ x, y, t, r: S * (0.16 + 0.05 * annoy), life: 0.6 + 0.15 * annoy });
+      flinch = 0.8 + 0.16 * annoy;
+      if (annoy > 0 && !reduce) shakeUntil = t + 0.2 + 0.08 * annoy;
+    }
     return hit;
   }
   let tYaw = 0, tPitch = 0;
@@ -216,7 +227,10 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     if (expr === "scan") lx = 0.07 * Math.sin(t * 6);
     if (expr === "think") { lx = 0.05; ly = 0.05; }
     lookX += (lx - lookX) * 0.12; lookY += (ly - lookY) * 0.12;
-    const eyeTgt = door >= 0 ? ACCENT[door] : expr === "sad" ? EYE_SAD : expr === "cross" ? ACCENT[0] : shape ? shape.color : EYE_REST;
+    /* His annoyance, fading over the eight seconds after the last poke: it reddens his resting eyes. */
+    const irk = annoy * Math.max(0, 1 - (t - lastPoke) / 8), redden = Math.min(1, irk / 4);
+    const rest: [number, number, number] = [0, 1, 2].map((k) => EYE_REST[k] + (ACCENT[0][k] - EYE_REST[k]) * redden) as [number, number, number];
+    const eyeTgt = door >= 0 ? ACCENT[door] : expr === "sad" ? EYE_SAD : expr === "cross" ? ACCENT[0] : shape ? shape.color : rest;
     for (let k = 0; k < 3; k++) {
       eyeCol[k] += (eyeTgt[k] - eyeCol[k]) * Math.min(1, dt * 4);
       shapeCol[k] += ((door >= 0 ? ACCENT[door][k] : shape ? shape.color[k] : shapeCol[k]) - shapeCol[k]) * Math.min(1, dt * 6);
@@ -227,6 +241,8 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     /* His pose: floating, turning toward the visitor, a tilt when he wonders, a wobble when dizzy, a flinch when pressed. */
     const still = reduce ? 0 : 1;
     flinch = Math.max(0, flinch - dt * 3);
+    const shake = t < shakeUntil ? 0.006 * (1 + annoy) * S * Math.sin(t * 58) : 0;
+    gl!.uniform2f(uOff, shake, 0);
     yaw += ((tYaw + 0.1 * Math.sin(t * 0.33) + (dizzy ? 0.35 * Math.sin(t * 5) : 0)) * still - yaw) * 0.05;
     pitch += ((tPitch + 0.04 * Math.sin(t * 0.27) + beat * 0.02 - flinch * 0.25) * still - pitch) * 0.08;
     roll += (((expr === "wide" || expr === "think" ? 0.14 : expr === "happy" || expr === "wink" ? -0.06 : expr === "sad" ? 0.08 : 0) +
@@ -238,8 +254,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     const eyeH = 1 + beat * 0.18, eyeB = 1.15 + beat * 0.45;
     const isz = S * (shape === SH.skyline ? 0.56 : 0.5), icy = cy + S * (shape === SH.skyline ? -0.45 : -0.4);
     const logoR = inp.logo ? inp.logo.getBoundingClientRect() : null;
-    const holeR = S * 0.22;
-    while (holes.length && t - holes[0].t > 0.7) holes.shift();
+    for (let k = holes.length - 1; k >= 0; k--) if (t - holes[k].t > holes[k].life) holes.splice(k, 1);
 
     for (let i = 0; i < N; i++) {
       const i3 = i * 3, p = B.part[i], body = p >= 4, j = B.rb[i];
@@ -298,7 +313,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
       }
       /* A dent where he was pressed pushes his dots out of it; it closes as the dent heals. */
       for (const h of holes) {
-        const dx = tx - h.x, dy = ty - h.y, d = Math.hypot(dx, dy), r = holeR * (1 - (t - h.t) / 0.7);
+        const dx = tx - h.x, dy = ty - h.y, d = Math.hypot(dx, dy), r = h.r * (1 - (t - h.t) / h.life);
         if (d < r && d > 1e-4) { tx = h.x + (dx / d) * r; ty = h.y + (dy / d) * r; sp2 = Math.max(sp2, 8); }
       }
       let px = P[i3], py = P[i3 + 1], pz = P[i3 + 2];

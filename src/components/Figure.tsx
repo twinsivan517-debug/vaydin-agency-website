@@ -79,8 +79,9 @@ export const Figure = forwardRef<GuideHandle, Props>(function Figure(props, ref)
       ref={stage}
       className="figure-stage absolute inset-0"
       onPointerDown={(event) => {
-        if (!latest.current.pokeable) return;
-        if (engine.current?.poke(event.clientX, event.clientY)) latest.current.onPoke(event.timeStamp, { x: event.clientX, y: event.clientY });
+        /* A press always dents him; he answers it only when he is free to. */
+        const hit = engine.current?.poke(event.clientX, event.clientY);
+        if (hit && latest.current.pokeable) latest.current.onPoke(event.timeStamp, { x: event.clientX, y: event.clientY });
       }}
     />
   );
