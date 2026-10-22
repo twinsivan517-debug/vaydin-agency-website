@@ -10,10 +10,11 @@
 
 import { useEffect, useEffectEvent, useReducer, useRef, useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
-import { Guide, type GuideHandle, type LineOutcome } from "@/components/Guide";
+import { Figure } from "@/components/Figure";
+import type { GuideHandle, LineOutcome } from "@/components/Guide";
 import { MORE, UNKNOWN, answer, answerLine, type Answer } from "@/lib/answers";
 import { afterTalk, followUp, match, type Reply } from "@/lib/match";
-import { BULB_FLIGHT, OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, chapter, lineClip, talkTime, type ChapterId, type Line } from "@/lib/pitch";
+import { BULB_FLIGHT, OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, chapter, talkTime, type ChapterId, type Line } from "@/lib/pitch";
 import { START, mode, pokeable, reduce, replyLines, speaking } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
 import { WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
@@ -26,6 +27,9 @@ const ICONS: Record<string, string> = { what: "?", how: "\u2699", gain: "\u25B2"
 /* How long a line is, for the phone's cloud: it keeps one height, so a long
    line takes a smaller size rather than more room. */
 const long = (text: string) => (text.length > 250 ? "3" : text.length > 170 ? "2" : text.length > 110 ? "1" : undefined);
+
+/* He has no clips: every line he says is its recording. */
+const lineClip = (line?: Line): string | null => (line ? null : null);
 
 const glide = (): ScrollBehavior => (window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth");
 
@@ -337,28 +341,13 @@ export function Stage() {
       <div className="hero-guide md:sticky md:top-16">
         <div className={`guide-floor relative aspect-[9/16] w-full md:aspect-auto md:h-[min(76vh,620px)] ${lit ? "floor-shine" : ""}`}>
           {busy && (
-            <button type="button" onClick={() => dispatch({ type: "stop" })} className="guide-stop" aria-label="Stop her">
+            <button type="button" onClick={() => dispatch({ type: "stop" })} className="guide-stop" aria-label="Stop him">
               <svg aria-hidden="true" viewBox="0 0 20 20" width="16" height="16">
                 <rect x="4" y="4" width="12" height="12" rx="2" fill="currentColor" />
               </svg>
             </button>
           )}
-          <Guide
-            ref={guide}
-            mode={mode(state)}
-            run={state.run}
-            lineSrc={clipSrc}
-            mood={state.phase === "quip" && !clipSrc ? (state.cloud.mood ?? null) : null}
-            pokeable={pokeable(state)}
-            waking={waking}
-            onOpenerTime={(seconds) => {
-              if (seconds >= THROW_AT) throwBulb();
-              dispatch({ type: "cloud_at", seconds });
-            }}
-            onOpenerEnd={() => dispatch({ type: "line_ended" })}
-            onLineEnd={lineEnded}
-            onPoke={poke}
-          />
+          <Figure ref={guide} mode={mode(state)} audio={() => voice.current?.audio ?? null} pokeable={pokeable(state)} onPoke={poke} />
         </div>
       </div>
 
@@ -430,7 +419,7 @@ export function Stage() {
                 const reply = event.target.value.trim().length > 2 ? heard(event.target.value) : null;
                 if (reply && reply !== "more") ready(replyLines(reply)[0]);
               }}
-              placeholder="Ask her…"
+              placeholder="Ask him…"
               autoComplete="off"
               enterKeyHint="send"
               maxLength={200}
@@ -441,7 +430,7 @@ export function Stage() {
             </button>
           </form>
           <p className="mt-2 text-xs leading-relaxed text-muted">
-            She answers only from Vaydin&apos;s own pages. Nothing you type is saved or sent.
+            He answers only from Vaydin&apos;s own pages. Nothing you type is saved or sent.
           </p>
         </div>
       </div>

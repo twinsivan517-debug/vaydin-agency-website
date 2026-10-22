@@ -6,6 +6,8 @@
 
 export type Outcome = "ended" | "failed" | "stopped";
 export type Speaker = {
+  /* The element itself, for the guide to follow what plays and where. */
+  audio: HTMLAudioElement;
   arm(): void;
   say(src: string, onTime?: (seconds: number) => void): Promise<Outcome>;
   prefetch(src: string): void;
@@ -34,6 +36,7 @@ export function speaker(): Speaker {
   };
 
   return {
+    audio: el,
     arm() {
       if (armed) return;
       armed = true;
