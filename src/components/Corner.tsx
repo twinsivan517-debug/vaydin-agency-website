@@ -1,21 +1,22 @@
 "use client";
 
-/* Her, small, in the corner of the site's other pages, inside a frame the
-   page adds once it has loaded (public/guide/corner.js). A tap opens a
-   panel: she welcomes the visitor and offers the page's summary; a yes plays
+/* Him, small, in gold dots, in the corner of the site's other pages, inside a
+   frame the page adds once it has loaded (public/guide/corner.js). A tap opens a
+   panel: he welcomes the visitor and offers the page's summary; a yes plays
    it, a no opens the list. Questions, the list and small talk work as on the
-   home page. Hiding the panel, scrolling or tapping her leaves her talking:
+   home page. Hiding the panel, scrolling or tapping him leaves him talking:
    only Stop, or leaving the page, ends a line. The frame is told when the
    panel opens and closes, and sizes itself; a link opens in the page, not
    in the frame. */
 
 import { useEffect, useReducer, useRef, useState, type FormEvent, type MouseEvent } from "react";
 import { Card } from "@/components/Card";
-import { Guide, type GuideHandle, type LineOutcome } from "@/components/Guide";
+import { Figure } from "@/components/Figure";
+import type { GuideHandle } from "@/components/Guide";
 import { answer, answerLine, type Answer } from "@/lib/answers";
 import { afterTalk, followUp, match, yesNo, type Reply } from "@/lib/match";
 import { SUMMARIES, WELCOME, inCorner } from "@/lib/pages";
-import { lineClip, talkTime, type Line } from "@/lib/pitch";
+import { talkTime, type Line } from "@/lib/pitch";
 import { START, mode, reduce, replyLines, speaking, type State } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
 
@@ -24,10 +25,10 @@ const AWAKE: State = { ...START, phase: "done", met: true, cloud: WELCOME };
 /* The page around the frame sizes it: to the panel and her, or back to her alone. */
 const tell = (height: number | null) =>
   window.parent.postMessage(height === null ? { vaydinCorner: "closed" } : { vaydinCorner: "open", height }, location.origin);
-/* Her figure, the gap above it and the frame's padding, under the panel. */
+/* His figure, the gap above it and the frame's padding, under the panel. */
 const BELOW = 180 + 8 + 8;
 
-/* Which page she sits on, from the frame's address. */
+/* Which page he sits on, from the frame's address. */
 const pageSummary = () => SUMMARIES[new URLSearchParams(location.search).get("p") ?? ""];
 
 const BUTTON = "rounded-2xl border border-gold/40 px-3 py-1.5 text-sm text-gold-bright";
@@ -38,7 +39,6 @@ export function Corner() {
   /* True while she waits for a yes or no to the page's summary. */
   const [offering, setOffering] = useState(false);
   const [draft, setDraft] = useState("");
-  const [noClip, setNoClip] = useState<string[]>([]);
   const guide = useRef<GuideHandle>(null);
   const voice = useRef<Speaker | null>(null);
   const panel = useRef<HTMLElement>(null);
@@ -62,21 +62,19 @@ export function Corner() {
     watch.observe(content);
     return () => watch.disconnect();
   }, [open]);
-  /* The card under her words, unless she is offering or saying the page's own lines. */
+  /* The card under his words, unless he is offering or saying the page's own lines. */
   const pageLine = state.cloud.id === WELCOME.id || Object.values(SUMMARIES).includes(state.cloud);
   const card = !offering && !pageLine && state.shown.kind !== "chapter";
-  /* Her words above the card, unless the card already says them. */
+  /* His words above the card, unless the card already says them. */
   const echoed =
     card &&
     (["x-choose", "x-more", "x-unknown"].includes(state.cloud.id) || (state.shown.kind === "answer" && state.cloud.id === `a-${state.shown.id}`));
 
-  /* As on the home page: her clip when the line has one, else its recording, else reading time. */
+  /* As on the home page: he has no clips, so a line is its recording, else reading time. */
   const { phase, run, cloud } = state;
   const talking = phase === "talking";
-  const clip = talking ? lineClip(cloud) : null;
-  const clipSrc = clip && !noClip.includes(clip) ? clip : null;
   useEffect(() => {
-    if (!talking || clipSrc) return;
+    if (!talking) return;
     const sound = voice.current;
     let live = true;
     let timer = 0;
@@ -95,12 +93,7 @@ export function Corner() {
       window.clearTimeout(timer);
       sound?.stop();
     };
-  }, [talking, run, cloud, clipSrc]);
-
-  function lineEnded(outcome: LineOutcome) {
-    if (outcome === "ended") dispatch({ type: "line_ended" });
-    else if (clipSrc) setNoClip((list) => (list.includes(clipSrc) ? list : [...list, clipSrc]));
-  }
+  }, [talking, run, cloud]);
 
   useEffect(() => {
     const hide = () => document.hidden && dispatch({ type: "stop" });
@@ -113,9 +106,9 @@ export function Corner() {
     guide.current?.unlock();
   }
 
+  /* A line he may say next starts loading. */
   function ready(line: Line | undefined) {
-    const clip = line && lineClip(line);
-    if (clip && !noClip.includes(clip)) guide.current?.prime(clip, false);
+    if (line?.audio) (voice.current ??= speaker()).prefetch(line.audio);
   }
 
   function more() {
@@ -139,7 +132,7 @@ export function Corner() {
   function openUp() {
     unlock();
     if (!open) setOpen(true);
-    /* Mid-line, the panel opens on what she is saying. */
+    /* Mid-line, the panel opens on what he is saying. */
     if (!busy) welcome();
   }
 
@@ -161,7 +154,7 @@ export function Corner() {
     dispatch({ type: "stop" });
   }
 
-  /* A typed line: a yes or no to the summary or to her last question, a reply to "Did you mean", or a question. */
+  /* A typed line: a yes or no to the summary or to his last question, a reply to "Did you mean", or a question. */
   function heard(text: string): Reply | "more" | "summary" | "welcome" {
     if (offering) {
       const said = yesNo(text);
@@ -258,7 +251,7 @@ export function Corner() {
               )
             )}
             <div className="flex flex-col gap-2">
-              {/* Whenever the list is not on screen, including while she gives the page's summary over it. */}
+              {/* Whenever the list is not on screen, including while he gives the page's summary over it. */}
               {!(card && state.shown.kind === "more") && (
                 <button type="button" onClick={more} className={`${BUTTON} self-start`}>
                   {"…"} More questions
@@ -276,7 +269,7 @@ export function Corner() {
                     const reply = event.target.value.trim().length > 2 ? heard(event.target.value) : null;
                     if (reply && typeof reply !== "string") ready(replyLines(reply)[0]);
                   }}
-                  placeholder="Ask her…"
+                  placeholder="Ask him…"
                   maxLength={200}
                   className="min-w-0 flex-1 rounded-full border border-gold/30 bg-transparent px-4 py-2 text-base"
                 />
@@ -303,20 +296,7 @@ export function Corner() {
               Ask me
             </span>
           ))}
-        <Guide
-          ref={guide}
-          small
-          mode={mode(state)}
-          run={state.run}
-          lineSrc={clipSrc}
-          mood={null}
-          pokeable={false}
-          waking={false}
-          onOpenerTime={() => {}}
-          onOpenerEnd={() => {}}
-          onLineEnd={lineEnded}
-          onPoke={() => {}}
-        />
+        <Figure ref={guide} small mode={mode(state)} audio={() => voice.current?.audio ?? null} pokeable={false} onPoke={() => {}} />
         <button
           type="button"
           onClick={openUp}
