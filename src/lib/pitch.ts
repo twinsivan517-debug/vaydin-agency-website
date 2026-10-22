@@ -19,7 +19,7 @@ export const OPENER_AUDIO = "/voice/opener.mp3";
    the one she tossed (in her hand from 9.4, released at 10.4, out of the frame
    by 11.2, measured on the frames and the keyed canvas); it lands on the mark
    `BULB_FLIGHT` later, when the page lights up. */
-export const THROW_AT = 10.8;
+export const THROW_AT = 2.58;
 export const BULB_FLIGHT = 1;
 
 /* One body, many mouths: every line with a recording also has a clip of the
@@ -39,8 +39,9 @@ export const CHAPTERS: Chapter[] = [
     label: "Hello",
     clip: "opener",
     lines: [
-      { id: "00b", text: "Mmm… hi. It's so dark in here.", at: 0 },
-      { id: "01", text: "There. Thank you for waking me. I'm Vaydin's voice.", at: 8.8 },
+      { id: "00b", text: "Mmm… oh, hello there.", at: 0 },
+      { id: "01", text: "Thank you for waking me. I'm Vaydin's guide.", at: 2.58 },
+      { id: "tag", text: "Dubai never sleeps. Neither do your patients. With Vaydin, your clinic never misses them.", at: 5.64 },
       {
         id: "02",
         text: "Pick a question or ask me anything, and I'll show you how patients find a clinic, and how a clinic loses them without ever knowing.",
