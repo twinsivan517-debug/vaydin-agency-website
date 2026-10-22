@@ -671,3 +671,14 @@ His word 2026-10-22: she goes; in her place a man made of gold dots, powerful (h
 - One frame for all three: a calm guardian bust, exactly frontal and symmetrical, a faceless helmet with a warm white visor line, brushed matte gold, "powerful but not threatening: no weapons, no spikes, no fire, no teeth", soft studio light on plain dark charcoal, no text. Then each: Sentinel a smooth knight's helm and shoulder plates overlapping like feathers; Falcon a helm like an Arabian falconry hood with mashrabiya lattice on cheeks and shoulders; Crown upright fins fanning like a crown, a cross of light on the faceplate and a round core in the chest.
 - What came back: all three as asked, first take. The Crown's cross of light reads as a religious cross once it is dots; on the pick page its vertical seam is thinned out of the dots. If the Crown is chosen, its picture is remade without the seam before it goes to 3D.
 - Shown as dots on a private page, https://claude.ai/artifact/GimzVEgpUEZLu6e1v2otVa (`lab/particle-guide/pick/`). Verdict: OWED, the owner's pick.
+
+# His voice (the particle guide)
+
+His word 2026-10-22: a male voice, deep, a teacher explaining, a little robotic for an AI, able to be serious, funny and sceptical; ElevenLabs direct. The key is read at run time from the clinic-growth-bot house's `.env` on his word ("yes yes"), never printed or copied. Tools in `lab/particle-guide/voice/`.
+
+- Account: Creator, active, commercial licence; 8,614 of 363,000 characters used before, 10,183 after: 1,569 for everything below.
+- Library: 210 male English middle-aged and older voices (educational, narrative, conversational), plus searches for "robot", "AI assistant", "android". Pitch measured on every sample after a check on known ones (her recording 213 Hz, two male samples 112 and 124 Hz).
+- One test line with emotion tags ([warm] [curious] [skeptical] [laughs] [serious]), never for the site, recorded with Eleven v3 in Russ, The Professor, Clyde, Jon (AI assistant), Paul, Marcus (robotic, deep), Sigma (AI system), Benjamin (slightly robotic), and Paul on Eleven v4. No take reads a tag aloud (checked by transcribing each). Every take is heard as "Vadon" by the transcriber: the name's sound is OWED, the owner's ear.
+- Voice Design, 3 previews each: "deep, warm male AI guide, teacher-like, a subtle synthetic shimmer" and "friendly futuristic AI companion, deep, lightly robotic, warm and full of feeling". Not saved to the account yet.
+- Russ with our own robotic layer (ffmpeg, phase-zeroed copy mixed in at about a fifth and two fifths).
+- All 17 on a private page, https://claude.ai/artifact/4JrAauqe9pjKsT5P4h6ACg (`lab/particle-guide/voices.html`). Verdict: OWED, the owner's ear.
