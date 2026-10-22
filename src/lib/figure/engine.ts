@@ -73,7 +73,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
   let W = 0, H = 0, halfW = 1;
   function resize() {
     const dpr = Math.min(devicePixelRatio || 1, 2);
-    W = innerWidth; H = innerHeight;
+    W = cv.clientWidth || innerWidth; H = cv.clientHeight || innerHeight;
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
     gl!.viewport(0, 0, cv.width, cv.height);
     const asp = W / H, f = 1 / Math.tan(FOV / 2), n = 0.1, fa = 50;
@@ -87,10 +87,11 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
   const toWorld = (sx: number, sy: number): [number, number] => [((sx / W) * 2 - 1) * halfW, (1 - (sy / H) * 2) * HALF];
   const toScreen = (x: number, y: number): [number, number] => [((x / halfW + 1) / 2) * W, ((1 - y / HALF) / 2) * H];
 
-  let cx = 0, cy = 0, S = 1;
+  let cx = 0, cy = 0, S = 1, seen = true, drawn = false;
   const layout = (stage: HTMLElement | null) => {
     if (!stage) return;
     const r = stage.getBoundingClientRect();
+    seen = r.bottom > 0 && r.top < H && r.width > 0;
     [cx, cy] = toWorld(r.left + r.width / 2, r.top + r.height * 0.52);
     S = Math.min((r.height / H) * HALF, (r.width / W) * 2 * halfW * 0.6);
   };
@@ -156,7 +157,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
   function frame(now: number) {
     const dt = Math.min(0.05, (now - last) / 1000), t = now / 1000;
     last = now;
-    if (innerWidth !== W || innerHeight !== H) resize();
+    if (cv.clientWidth !== W || cv.clientHeight !== H) resize();
     const inp = read();
     layout(inp.stage);
     if (inp.mode !== "sleep" && phaseWas === "sleep") { wakeT = t; logoUntil = t + 3.6; }
@@ -183,6 +184,14 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     /* The logo moment: right after he wakes, part of his body lights the logo and comes back. */
     const logoOn = !reduce && inp.logo && t < logoUntil && sinceWake > 1.4;
     if (inp.logo) inp.logo.classList.toggle("figure-lit", !!logoOn);
+
+    /* Scrolled away, he is not drawn: a phone does no work for dots nobody sees. */
+    if (!seen && !logoOn) {
+      if (drawn) { gl!.clear(gl!.COLOR_BUFFER_BIT); drawn = false; }
+      raf = requestAnimationFrame(frame);
+      return;
+    }
+    drawn = true;
 
     spin *= Math.exp(-dt / 1.3);
     if (Math.abs(spin) > 4 * Math.PI && !reduce) { dizzyUntil = t + 3.6; spin = 0; }
