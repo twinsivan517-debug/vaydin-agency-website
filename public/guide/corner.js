@@ -1,8 +1,8 @@
-/* Her, small, in the bottom-left corner of this page: a frame added once the
-   page has loaded, so the page is never slower for her. The frame is her size
+/* Him, small, in the bottom-left corner of this page: a frame added once the
+   page has loaded, so the page is never slower for him. The frame is her size
    until she is opened, then as tall as her panel needs; the frame says which.
    A bar or panel the page fixes along its bottom, on her side and showing,
-   lifts her above it. Her side of it is src/components/Corner.tsx. */
+   lifts him above it. His side of it is src/components/Corner.tsx. */
 (function () {
   var page = location.pathname.replace(/^.*\//, "").replace(/\.html$/, "");
   var CLOSED = [112, 222];
