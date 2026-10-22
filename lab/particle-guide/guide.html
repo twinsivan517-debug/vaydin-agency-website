@@ -1,0 +1,372 @@
+<title>Vaydin Particle Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Marcellus&display=swap">
+<style>
+/* Layout: one dark room. The guide stands in the upper stage, his words run under him, the five doors sit at the foot. The particle field is one fixed canvas behind everything, so his light can reach the doors. */
+:root {
+  --bg: #0d0807;
+  --fg: #f3ead9;
+  --muted: #b9b0a2;
+  --gold: #c9a44a;
+  --gold-bright: #f5d978;
+  --line: rgb(201 164 74 / 0.26);
+  --font-display: "Marcellus", "Cormorant Garamond", Georgia, serif;
+  --font-body: "Geist", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); overflow-x: hidden; }
+#field { position: fixed; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; z-index: 0; }
+.room {
+  position: relative; z-index: 1; box-sizing: border-box; min-height: 100%;
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-rows: auto minmax(300px, 1fr) auto auto auto; gap: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 14px 16px;
+}
+.top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.mark { font-family: var(--font-display); font-size: 1.35rem; letter-spacing: 0.04em; color: var(--fg); }
+.tag { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+.stage { position: relative; display: grid; place-items: center; }
+.wake {
+  font: 500 1rem var(--font-body); color: var(--gold-bright); background: rgb(13 8 7 / 0.55);
+  border: 1px solid var(--gold); border-radius: 999px; padding: 12px 22px; cursor: pointer;
+  backdrop-filter: blur(2px); transition: background 0.2s ease, transform 0.15s ease;
+}
+.wake:hover { background: rgb(201 164 74 / 0.14); }
+.wake:active { transform: scale(0.97); }
+.wake:focus-visible, .door:focus-visible, .again:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 3px; }
+.words {
+  min-height: 3.6em; max-width: 40rem; margin: 0 auto; text-align: center; text-wrap: balance;
+  font-family: var(--font-display); font-size: clamp(1.02rem, 2.1vw, 1.32rem); line-height: 1.45; color: rgb(185 176 162 / 0.55);
+}
+.words span { transition: color 0.18s ease; }
+.words span.on { color: var(--fg); }
+.doors { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.door {
+  --accent: var(--gold);
+  display: grid; gap: 4px; align-content: start; min-width: 0;
+  text-decoration: none; color: var(--fg); border-radius: 14px; padding: 10px 10px 11px;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  background: color-mix(in srgb, var(--accent) 6%, rgb(13 8 7 / 0.7));
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+.door b { font-weight: 500; font-size: 0.95rem; }
+.door small { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.door span { font-size: 0.8rem; line-height: 1.35; color: var(--muted); }
+.door.lit, .door:hover { border-color: var(--accent); box-shadow: 0 0 26px -6px var(--accent); background: color-mix(in srgb, var(--accent) 12%, rgb(13 8 7 / 0.7)); }
+.foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; font-size: 0.72rem; line-height: 1.4; color: rgb(185 176 162 / 0.7); }
+.again { font: 500 0.82rem var(--font-body); color: var(--gold-bright); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+@media (max-width: 720px) {
+  .door span { display: none; }
+  .door { padding: 8px 6px 9px; text-align: center; border-radius: 12px; }
+  .door b { font-size: 0.8rem; }
+  .door small { font-size: 0.58rem; letter-spacing: 0.06em; }
+  .room { grid-template-rows: auto minmax(280px, 1fr) auto auto auto; gap: 10px; }
+}
+</style>
+
+<canvas id="field" aria-hidden="true"></canvas>
+<div class="room">
+  <div class="top">
+    <span class="mark">Vaydin</span>
+    <span class="tag">Particle guide · test 1</span>
+  </div>
+  <div class="stage" id="stage">
+    <button class="wake" id="wake" type="button">He is asleep. Tap to wake him</button>
+  </div>
+  <p class="words" id="words" aria-live="polite">Gold dust in a dark room. One tap and it becomes him.</p>
+  <nav class="doors" aria-label="The five pages">
+    <a class="door" style="--accent:#f87171" href="https://vaydin.agency/diagnose.html" target="_blank" rel="noopener"><small>Step 01</small><b>Diagnose</b><span>We measure your clinic the way a patient meets it.</span></a>
+    <a class="door" style="--accent:#f5d978" href="https://vaydin.agency/fix.html" target="_blank" rel="noopener"><small>Step 02</small><b>Fix</b><span>We stop reporting the leaks. We start running the machine.</span></a>
+    <a class="door" style="--accent:#4ade80" href="https://vaydin.agency/grow.html" target="_blank" rel="noopener"><small>Step 03</small><b>Grow</b><span>Everything fixed? Time to spread.</span></a>
+    <a class="door" style="--accent:#a78bfa" href="https://vaydin.agency/engine.html" target="_blank" rel="noopener"><small>System</small><b>Engine</b><span>One engine. Thirteen jobs. Working while you sleep.</span></a>
+    <a class="door" style="--accent:#34e3f0" href="https://vaydin.agency/pricing.html" target="_blank" rel="noopener"><small>Plans</small><b>Your plan</b><span>Every plan is built for your clinic.</span></a>
+  </nav>
+  <div class="foot">
+    <span>Test only. Stand-in head: “Infinite” 3D head scan by Lee Perry-Smith, CC BY 3.0. Stand-in voice: today's recording; his own voice comes last.</span>
+    <button class="again" id="again" type="button" hidden>Play again</button>
+  </div>
+</div>
+<audio id="voice" preload="auto"></audio>
+
+<script src="head.js"></script>
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const cv = $("#field"), stage = $("#stage"), wakeBtn = $("#wake"), againBtn = $("#again"), wordsEl = $("#words"), au = $("#voice");
+  const doors = [...document.querySelectorAll(".door")];
+  const ACCENT = ["#f87171", "#f5d978", "#4ade80", "#a78bfa", "#34e3f0"].map((h) => [1, 3, 5].map((k) => parseInt(h.slice(k, k + 2), 16) / 255));
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const small = Math.min(screen.width, screen.height) < 700;
+  const N = small ? 9000 : 16000;
+
+  const gl = cv.getContext("webgl", { antialias: false, alpha: false, powerPreference: "high-performance" });
+  if (!gl) { wordsEl.textContent = "This browser cannot draw the guide (WebGL is off)."; wakeBtn.hidden = true; return; }
+
+  // --- The head: model space, x and y within [-1, 1], facing +z.
+  const bin = (s) => { const b = atob(s), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u.buffer; };
+  const HP = new Int16Array(bin(HEAD.pos)), HN = new Int8Array(bin(HEAD.nrm));
+  const M = new Float32Array(N * 3), NR = new Float32Array(N * 3);
+  for (let i = 0; i < N * 3; i++) { M[i] = HP[i] / 32767; NR[i] = HN[i] / 127; }
+
+  const MOUTH = [0, 0.12, 0.54], FACE = [0, 0.3, 0.35], EYE = [0.11, 0.4, 0.46];
+  const eye = new Float32Array(N), rate = new Float32Array(N), delay = new Float32Array(N), seed = new Float32Array(N), mouthD = new Float32Array(N), jaw = new Float32Array(N), dust = new Float32Array(N * 3);
+  let rs = 12345; const rnd = () => ((rs = (rs * 16807) % 2147483647) / 2147483647);
+  for (let i = 0; i < N; i++) {
+    const x = M[i * 3], y = M[i * 3 + 1], z = M[i * 3 + 2];
+    rate[i] = 2.0 + rnd() * 2.6;
+    seed[i] = rnd();
+    const fd = Math.hypot(x - FACE[0], y - FACE[1], z - FACE[2]);
+    delay[i] = 0.12 + fd * 0.95 + rnd() * 0.4;
+    mouthD[i] = Math.hypot(x - MOUTH[0], y - MOUTH[1], z - MOUTH[2]);
+    const de = Math.hypot(Math.abs(x) - EYE[0], y - EYE[1], z - EYE[2]); eye[i] = z > 0.3 ? Math.exp(-((de / 0.034) ** 2)) : 0;
+    jaw[i] = (z > 0.25 && Math.abs(x) < 0.3 && y < 0.11 && y > -0.12) ? Math.min(1, (0.11 - y) / 0.1) : 0;
+    const u = rnd() * 2 - 1, th = rnd() * Math.PI * 2, r = 0.7 + Math.pow(rnd(), 0.7) * 1.7, q = Math.sqrt(1 - u * u);
+    dust[i * 3] = q * Math.cos(th) * r * 1.25; dust[i * 3 + 1] = u * r * 0.85; dust[i * 3 + 2] = q * Math.sin(th) * r * 0.6;
+  }
+  // Who leaves the face to draw a shape, and who flies to a door. The points are shuffled, so a stride is a fair sample.
+  const iconIdx = [], doorIdx = [];
+  for (let i = 0; i < N; i++) { const m = i % 100; if (m < 44) iconIdx.push(i); else if (m < 72) doorIdx.push(i); }
+  const role = new Int32Array(N).fill(-1); // index within its set
+  iconIdx.forEach((i, j) => (role[i] = j)); doorIdx.forEach((i, j) => (role[i] = j));
+  const isIcon = new Uint8Array(N); iconIdx.forEach((i) => (isIcon[i] = 1));
+  const isDoor = new Uint8Array(N); doorIdx.forEach((i) => (isDoor[i] = 1));
+
+  // --- Shapes he draws, sampled from strokes on a small canvas.
+  function shape(draw) {
+    const S = 220, c = document.createElement("canvas"); c.width = c.height = S;
+    const g = c.getContext("2d"); g.strokeStyle = g.fillStyle = "#fff"; g.lineWidth = 11; g.lineCap = g.lineJoin = "round";
+    draw(g, S);
+    const d = g.getImageData(0, 0, S, S).data, px = [];
+    for (let y = 0; y < S; y += 1) for (let x = 0; x < S; x += 1) if (d[(y * S + x) * 4 + 3] > 140) px.push(x, y);
+    const K = iconIdx.length, out = new Float32Array(K * 3), n = px.length / 2;
+    for (let j = 0; j < K; j++) {
+      const p = Math.floor(rnd() * n);
+      out[j * 3] = (px[p * 2] + rnd() - 0.5) / S * 2 - 1;
+      out[j * 3 + 1] = 1 - (px[p * 2 + 1] + rnd() - 0.5) / S * 2;
+      out[j * 3 + 2] = (rnd() - 0.5) * 0.08;
+    }
+    return out;
+  }
+  const rr = (g, x, y, w, h, r) => { g.beginPath(); g.roundRect ? g.roundRect(x, y, w, h, r) : g.rect(x, y, w, h); };
+  const SHAPES = {
+    chat: shape((g) => { rr(g, 30, 40, 160, 110, 34); g.stroke(); g.beginPath(); g.moveTo(66, 150); g.lineTo(52, 186); g.lineTo(100, 150); g.stroke(); [78, 110, 142].forEach((x) => { g.beginPath(); g.arc(x, 95, 9, 0, 7); g.fill(); }); }),
+    search: shape((g) => { g.beginPath(); g.arc(92, 92, 56, 0, 7); g.stroke(); g.lineWidth = 16; g.beginPath(); g.moveTo(134, 134); g.lineTo(186, 186); g.stroke(); }),
+    star: shape((g) => { g.beginPath(); for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? 40 : 92; g.lineTo(110 + Math.cos(a) * r, 116 + Math.sin(a) * r); } g.closePath(); g.stroke(); }),
+    camera: shape((g) => { rr(g, 32, 32, 156, 156, 44); g.stroke(); g.beginPath(); g.arc(110, 110, 38, 0, 7); g.stroke(); g.beginPath(); g.arc(152, 68, 8, 0, 7); g.fill(); }),
+    web: shape((g) => { rr(g, 24, 38, 172, 144, 18); g.stroke(); g.beginPath(); g.moveTo(24, 78); g.lineTo(196, 78); g.stroke(); [46, 68, 90].forEach((x) => { g.beginPath(); g.arc(x, 58, 6, 0, 7); g.fill(); }); g.lineWidth = 8; [[48, 110, 172], [48, 136, 150], [48, 160, 120]].forEach(([a, y, b]) => { g.beginPath(); g.moveTo(a, y); g.lineTo(b, y); g.stroke(); }); }),
+    person: shape((g) => { g.beginPath(); g.arc(110, 72, 38, 0, 7); g.stroke(); g.beginPath(); g.arc(110, 196, 74, Math.PI * 1.08, Math.PI * 1.92); g.stroke(); }),
+  };
+
+  // --- What he says, word by word, and what he shows while he says it (times measured on the recordings).
+  const LINES = [
+    { src: "w1.mp3", dur: 13.01,
+      text: "Vaydin is a Dubai company for aesthetic and wellness clinics. We measure how your clinic looks to a new patient, then run its front door for you: WhatsApp, Google, reviews, Instagram and the website.",
+      at: [0, 0.5, 0.68, 0.84, 0.92, 1.5, 1.88, 2.14, 2.58, 2.9, 4.06, 4.08, 4.34, 4.66, 4.82, 5.1, 5.46, 5.76, 5.88, 5.98, 6.92, 7.06, 7.48, 7.66, 7.86, 8.1, 8.4, 9.18, 9.92, 10.78, 11.62, 12.14, 12.22, 12.38],
+      cues: [{ from: 4.1, to: 6.85, door: 0 }, { from: 6.95, to: 8.95, door: 1 }, { from: 8.98, to: 9.74, icon: "chat" }, { from: 9.74, to: 10.6, icon: "search" }, { from: 10.6, to: 11.44, icon: "star" }, { from: 11.44, to: 12.2, icon: "camera" }, { from: 12.2, to: 13.5, icon: "web" }] },
+    { src: "02.mp3", dur: 5.83,
+      text: "And I'll show you how patients find a clinic, and how a clinic loses them without ever knowing.",
+      at: [0, 0.08, 0.22, 0.4, 0.6, 0.84, 1.24, 1.64, 1.86, 2.18, 2.74, 3.02, 3.12, 3.4, 3.8, 4.22, 4.5, 5.04],
+      cues: [{ from: 0.8, to: 3.38, icon: "person" }, { from: 3.38, to: 5.5, icon: "person", lost: 3.38 }] },
+  ];
+
+  // --- GL
+  const vs = `attribute vec3 aPos; attribute vec2 aInfo; uniform mat4 uProj; uniform float uCamZ, uSize; varying float vB, vT;
+    void main(){ vec4 p = vec4(aPos.xy, aPos.z - uCamZ, 1.0); gl_Position = uProj * p; float d = -p.z;
+      gl_PointSize = uSize * (uCamZ / d) * (0.62 + 0.55 * clamp(aInfo.x, 0.0, 1.4)); vB = aInfo.x; vT = aInfo.y; }`;
+  const fs = `precision mediump float; varying float vB, vT; uniform vec3 uTint; uniform float uGain;
+    void main(){ vec2 c = gl_PointCoord - 0.5; float a = smoothstep(0.5, 0.05, length(c)); a *= a;
+      vec3 gold = mix(vec3(0.79, 0.62, 0.27), vec3(1.0, 0.88, 0.55), clamp(vB - 0.35, 0.0, 1.0));
+      vec3 col = mix(gold, uTint, clamp(vT, 0.0, 1.0)); gl_FragColor = vec4(col * a * vB * uGain, 1.0); }`;
+  const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+  const prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(prog); gl.useProgram(prog);
+  const P = new Float32Array(N * 3), INFO = new Float32Array(N * 2);
+  const bufP = gl.createBuffer(), bufI = gl.createBuffer();
+  const aPos = gl.getAttribLocation(prog, "aPos"), aInfo = gl.getAttribLocation(prog, "aInfo");
+  gl.bindBuffer(gl.ARRAY_BUFFER, bufP); gl.bufferData(gl.ARRAY_BUFFER, P.byteLength, gl.DYNAMIC_DRAW); gl.enableVertexAttribArray(aPos); gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, bufI); gl.bufferData(gl.ARRAY_BUFFER, INFO.byteLength, gl.DYNAMIC_DRAW); gl.enableVertexAttribArray(aInfo); gl.vertexAttribPointer(aInfo, 2, gl.FLOAT, false, 0, 0);
+  const U = (n) => gl.getUniformLocation(prog, n);
+  const uProj = U("uProj"), uCamZ = U("uCamZ"), uSize = U("uSize"), uTint = U("uTint"), uGain = U("uGain");
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE); gl.clearColor(13 / 255, 8 / 255, 7 / 255, 1);
+  const CAMZ = 6, FOV = 30 * Math.PI / 180, HALF = CAMZ * Math.tan(FOV / 2);
+  let W = 0, H = 0, dpr = 1, halfW = 1;
+  function resize() {
+    dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); gl.viewport(0, 0, cv.width, cv.height);
+    const asp = W / H, f = 1 / Math.tan(FOV / 2), n = 0.1, fa = 50; halfW = HALF * asp;
+    gl.uniformMatrix4fv(uProj, false, new Float32Array([f / asp, 0, 0, 0, 0, f, 0, 0, 0, 0, (fa + n) / (n - fa), -1, 0, 0, 2 * fa * n / (n - fa), 0]));
+    gl.uniform1f(uCamZ, CAMZ); gl.uniform1f(uSize, (small ? 2.5 : 2.1) * dpr); gl.uniform1f(uGain, small ? 0.9 : 0.8);
+  }
+  addEventListener("resize", resize); resize();
+  const toWorld = (sx, sy) => [(sx / W * 2 - 1) * halfW, (1 - sy / H * 2) * HALF];
+
+  // Place him in the stage; start every point somewhere in the dust around where he will stand.
+  let cx = 0, cy = 0, S = 1, narrow = false;
+  function layout() {
+    const r = stage.getBoundingClientRect();
+    const tall = r.height > r.width * 1.1;
+    [cx, cy] = toWorld(r.left + r.width / 2, r.top + r.height * (tall ? 0.54 : 0.5));
+    const sw = r.width / W * 2 * halfW, shh = r.height / H * 2 * HALF;
+    S = Math.min(shh * 0.5, sw * (tall ? 0.5 : 0.46));
+    narrow = cx + S * 2.2 > halfW - 0.05;
+  }
+  layout();
+  for (let i = 0; i < N; i++) { P[i * 3] = cx + S * dust[i * 3]; P[i * 3 + 1] = cy + S * dust[i * 3 + 1]; P[i * 3 + 2] = S * dust[i * 3 + 2]; }
+
+  // --- Sound: one element, read by an analyser, so his light follows the real voice.
+  let actx = null, an = null, tbuf = null, amp = 0, usingAudio = false, silentFor = 0;
+  const HIST = 96, hist = new Float32Array(HIST); let hp = 0;
+  function initAudio() {
+    if (actx) return; try {
+      actx = new (window.AudioContext || window.webkitAudioContext)();
+      const src = actx.createMediaElementSource(au); an = actx.createAnalyser(); an.fftSize = 1024; tbuf = new Float32Array(an.fftSize);
+      src.connect(an); an.connect(actx.destination);
+    } catch (e) { an = null; }
+  }
+
+  // --- The story of one visit.
+  let phase = "asleep", wakeT = 0, li = -1, lineStart = 0, ended = false, hoverDoor = -1;
+  let yaw = 0, pitch = 0, tYaw = 0, tPitch = 0;
+  const doorTgt = new Float32Array(doorIdx.length * 3); let doorShown = -1;
+  function aimDoor(d) {
+    const r = doors[d].getBoundingClientRect(), K = doorIdx.length;
+    const [x0, y1] = toWorld(r.left + 2, r.top + 2), [x1, y0] = toWorld(r.right - 2, r.bottom - 2);
+    // The tile's own rounded outline: four edges and four quarter arcs, walked by length.
+    const w = x1 - x0, h = y1 - y0, px1 = 2 * HALF / H, ra = Math.min(parseFloat(getComputedStyle(doors[d]).borderTopLeftRadius) * px1, w / 2, h / 2);
+    const segs = [[x0 + ra, y1, x1 - ra, y1], [x1 - ra, y1 - ra, Math.PI / 2, 0], [x1, y1 - ra, x1, y0 + ra], [x1 - ra, y0 + ra, 0, -Math.PI / 2],
+      [x1 - ra, y0, x0 + ra, y0], [x0 + ra, y0 + ra, -Math.PI / 2, -Math.PI], [x0, y0 + ra, x0, y1 - ra], [x0 + ra, y1 - ra, Math.PI, Math.PI / 2]];
+    const len = segs.map((s, k) => (k % 2 ? ra * Math.PI / 2 : Math.hypot(s[2] - s[0], s[3] - s[1]))), per = len.reduce((p, q) => p + q, 0);
+    for (let j = 0; j < K; j++) {
+      let t = ((j + rnd()) / K) * per, k = 0; while (k < 7 && t > len[k]) t -= len[k++];
+      const s = segs[k], f = len[k] ? t / len[k] : 0, inset = rnd() * 0.01; let x, y;
+      if (k % 2) { const a = s[2] + (s[3] - s[2]) * f; x = s[0] + Math.cos(a) * (ra - inset); y = s[1] + Math.sin(a) * (ra - inset); }
+      else { x = s[0] + (s[2] - s[0]) * f; y = s[1] + (s[3] - s[1]) * f; if (k === 0) y -= inset; else if (k === 2) x -= inset; else if (k === 4) y += inset; else x += inset; }
+      doorTgt[j * 3] = x; doorTgt[j * 3 + 1] = y; doorTgt[j * 3 + 2] = (rnd() - 0.5) * 0.02;
+    }
+    doorShown = d;
+  }
+  function renderWords(L) { wordsEl.innerHTML = ""; L.text.split(" ").forEach((w) => { const s = document.createElement("span"); s.textContent = w + " "; wordsEl.appendChild(s); }); }
+  function playLine(i) {
+    li = i; ended = false; const L = LINES[i]; renderWords(L);
+    au.src = L.src; lineStart = performance.now(); usingAudio = false; silentFor = 0;
+    const p = au.play(); if (p && p.then) p.then(() => { usingAudio = true; lineStart = performance.now() - au.currentTime * 1000; }).catch(() => { usingAudio = false; });
+  }
+  let frozen = -1;
+  function lineTime(now) { if (frozen >= 0) return frozen; return usingAudio && !au.paused ? au.currentTime : (now - lineStart) / 1000; }
+  function nextLine() { if (ended) return; ended = true; setTimeout(() => { if (li + 1 < LINES.length) playLine(li + 1); else finish(); }, 550); }
+  au.addEventListener("ended", nextLine);
+  function finish() { li = -1; phase = "idle"; againBtn.hidden = false; wordsEl.innerHTML = "<span class=\"on\">Ask me anything, or open a door.</span>"; }
+  function wake() {
+    initAudio(); if (actx && actx.state === "suspended") actx.resume();
+    // Phones only let a sound start inside the tap: play and pause it here so the later lines may start on their own.
+    au.src = LINES[0].src; const u = au.play(); if (u && u.then) u.then(() => au.pause()).catch(() => {});
+    wakeBtn.hidden = true; againBtn.hidden = true; phase = "waking"; wakeT = performance.now() / 1000;
+    wordsEl.textContent = "";
+    setTimeout(() => { phase = "awake"; playLine(0); }, reduce ? 300 : 2500);
+  }
+  wakeBtn.addEventListener("click", wake);
+  againBtn.addEventListener("click", () => { au.pause(); li = -1; wake(); });
+  doors.forEach((d, k) => {
+    const on = () => { if (phase === "idle") { hoverDoor = k; aimDoor(k); } };
+    const off = () => { if (hoverDoor === k) hoverDoor = -1; };
+    d.addEventListener("pointerenter", on); d.addEventListener("focus", on); d.addEventListener("pointerleave", off); d.addEventListener("blur", off);
+  });
+  addEventListener("pointermove", (e) => { tYaw = (e.clientX / W * 2 - 1) * 0.32; tPitch = (e.clientY / H * 2 - 1) * 0.12; });
+
+  // --- Each frame: decide where every point wants to be, ease it there, light it.
+  let last = performance.now();
+  const LX = -0.42, LY = 0.5, LZ = 0.76;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now; const t = now / 1000;
+    if (innerWidth !== W || innerHeight !== H) resize();
+    layout();
+
+    // Where the story is.
+    let icon = null, door = -1, lostK = 0, lt = 0, speaking = false;
+    if (li >= 0) {
+      const L = LINES[li]; lt = lineTime(now); speaking = lt < L.dur;
+      if (!usingAudio && frozen < 0 && lt > L.dur + 0.2) nextLine();
+      for (const c of L.cues) if (lt >= c.from && lt < c.to) { if (c.icon) icon = c.icon; if (c.door != null) door = c.door; if (c.lost != null) lostK = Math.min(1, (lt - c.lost) / 1.6); }
+      const spans = wordsEl.children; for (let k = 0; k < spans.length && k < L.at.length; k++) spans[k].classList.toggle("on", lt >= L.at[k]);
+    }
+    if (door < 0 && hoverDoor >= 0) door = hoverDoor;
+    if (door >= 0 && door !== doorShown) aimDoor(door);
+    if (door < 0) doorShown = -1;
+    doors.forEach((d, k) => d.classList.toggle("lit", k === door));
+    if (door >= 0) gl.uniform3fv(uTint, ACCENT[door]);
+
+    // His voice, as loudness.
+    let a = 0;
+    if (an && speaking && usingAudio) { an.getFloatTimeDomainData(tbuf); let s = 0; for (let k = 0; k < tbuf.length; k += 2) s += tbuf[k] * tbuf[k]; a = Math.min(1, Math.max(0, (Math.sqrt(s / (tbuf.length / 2)) - 0.012) * 7)); silentFor = a > 0.02 ? 0 : silentFor + dt; }
+    if (speaking && (!usingAudio || !an || silentFor > 0.8)) { const L = LINES[li]; let w = 0; for (const s of L.at) if (lt >= s && lt < s + 0.3) w = 1; a = w * (0.55 + 0.3 * Math.sin(t * 23)); }
+    amp += (a - amp) * (a > amp ? 0.5 : 0.12);
+    hp = (hp + 1) % HIST; hist[hp] = amp;
+
+    // His pose: a slow breath, turning toward the visitor's pointer, nodding a little as he talks.
+    const still = reduce ? 0 : 1;
+    yaw += ((tYaw + 0.16 * Math.sin(t * 0.33)) * still - yaw) * 0.04;
+    pitch += ((tPitch + 0.05 * Math.sin(t * 0.27) + amp * 0.035) * still - pitch) * 0.06;
+    const cyw = Math.cos(yaw), syw = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+    const r00 = cyw, r01 = syw * sp, r02 = syw * cp, r11 = cp, r12 = -sp, r20 = -syw, r21 = cyw * sp, r22 = cyw * cp;
+    const breath = 1 + 0.007 * Math.sin(t * 1.15) * still, s = S * breath;
+
+    const waking = phase === "waking" || phase === "awake" || phase === "idle";
+    const sinceWake = t - wakeT;
+    const icx = narrow ? cx : cx + S * 1.62, icy = narrow ? cy - S * 0.18 : cy + S * 0.18, icz = narrow ? S * 0.9 : 0, isz = narrow ? S * 0.52 : S * 0.5;
+    const ish = icon ? SHAPES[icon] : null;
+    const headDim = icon ? (narrow ? 0.22 : 0.5) + (narrow ? 0.78 : 0.5) * lostK : 1;
+    const kFast = reduce ? 1 : 0;
+    const bl = (t % 5.3) / 5.3, blink = reduce ? 1 : (bl > 0.97 ? 0.15 : 1);
+
+    for (let i = 0; i < N; i++) {
+      const i3 = i * 3; let tx, ty, tz, b, tint = 0, sp2 = 1;
+      const mx = M[i3], my = M[i3 + 1], mz = M[i3 + 2];
+      const onHead = waking && (reduce || sinceWake > delay[i]);
+      if (ish && isIcon[i]) {
+        const j = role[i] * 3; tx = icx + ish[j] * isz; ty = icy + ish[j + 1] * isz; tz = icz + ish[j + 2] * isz;
+        b = 1.05 + 0.12 * Math.sin(t * 4 + seed[i] * 40); sp2 = 4.5;
+        if (lostK > 0) { const dx = ish[j], dy = ish[j + 1], f = lostK * lostK * (0.9 + seed[i] * 1.6); tx += dx * f * S * 1.2; ty += (dy * f * 1.2 - f * 0.7) * S; b *= 1 - lostK * 0.92; }
+      } else if (door >= 0 && isDoor[i]) {
+        const j = role[i] * 3; tx = doorTgt[j]; ty = doorTgt[j + 1]; tz = doorTgt[j + 2]; b = 1.0 + 0.15 * Math.sin(t * 5 + seed[i] * 30); sp2 = 1.5;
+        const dd = Math.hypot(tx - P[i3], ty - P[i3 + 1]); tint = Math.max(0, 1 - dd * 2.2);
+      } else if (onHead) {
+        let ox = mx, oy = my, oz = mz;
+        if (speaking) { if (mouthD[i] < 0.14) { const k = amp * 0.03 * (1 - mouthD[i] / 0.14); ox += NR[i3] * k; oy += NR[i3 + 1] * k; oz += NR[i3 + 2] * k; } oy -= jaw[i] * amp * 0.022; }
+        tx = cx + s * (r00 * ox + r01 * oy + r02 * oz); ty = cy + s * (r11 * oy + r12 * oz); tz = s * (r20 * ox + r21 * oy + r22 * oz);
+        const nx = r00 * NR[i3] + r01 * NR[i3 + 1] + r02 * NR[i3 + 2], ny = r11 * NR[i3 + 1] + r12 * NR[i3 + 2], nz = r20 * NR[i3] + r21 * NR[i3 + 1] + r22 * NR[i3 + 2];
+        const lam = Math.max(0, nx * LX + ny * LY + nz * LZ), rim = Math.pow(1 - Math.min(1, Math.abs(nz)), 3);
+        b = 0.14 + 0.6 * lam + 0.28 * rim + 0.34 * Math.max(0, nz) ** 2 + eye[i] * 0.55 * blink; if (nz < -0.15) b *= 0.4;
+        const fy = Math.min(1, Math.max(0, (my + 0.93) / 0.55)); b *= fy * fy;
+        const k = Math.min(HIST - 1, Math.floor(mouthD[i] * 34)); b += hist[(hp - k + HIST) % HIST] * 0.7 * Math.max(0, 1 - mouthD[i] / 1.3);
+        b *= headDim * (0.92 + 0.08 * Math.sin(t * 2.6 + seed[i] * 60));
+      } else {
+        const ph = seed[i] * 6.283;
+        tx = cx + S * (dust[i3] + 0.07 * Math.sin(t * 0.21 + ph)); ty = cy + S * (dust[i3 + 1] + 0.06 * Math.cos(t * 0.17 + ph * 1.3)); tz = S * dust[i3 + 2];
+        b = 0.3 + 0.4 * (0.5 + 0.5 * Math.sin(t * 0.9 + ph * 3)); sp2 = 0.35;
+      }
+      let px = P[i3], py = P[i3 + 1], pz = P[i3 + 2];
+      const dx = tx - px, dy = ty - py, dz = tz - pz, dist = Math.hypot(dx, dy, dz);
+      const k = kFast || 1 - Math.exp(-dt * rate[i] * sp2);
+      px += dx * k; py += dy * k; pz += dz * k;
+      if (!reduce && dist > 0.06) { const sw = Math.min(1, dist * 1.4) * dt * 1.1; px += -dy * sw; py += dx * sw; b = b * (1 - Math.min(0.5, dist)) + 0.55 * Math.min(0.5, dist); }
+      P[i3] = px; P[i3 + 1] = py; P[i3 + 2] = pz;
+      INFO[i * 2] = b; INFO[i * 2 + 1] = tint;
+    }
+
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufP); gl.bufferSubData(gl.ARRAY_BUFFER, 0, P);
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufI); gl.bufferSubData(gl.ARRAY_BUFFER, 0, INFO);
+    gl.drawArrays(gl.POINTS, 0, N);
+    requestAnimationFrame(frame);
+  }
+  if (reduce) { phase = "idle"; wakeBtn.textContent = "Tap to hear him"; wakeT = -99; }
+  requestAnimationFrame(frame);
+  window.__guide = { state: () => ({ phase, li, amp, usingAudio, N }), wake,
+    freeze: (i, s) => { if (li !== i) playLine(i); au.pause(); frozen = s; },
+    jump: (i, s) => { if (li !== i) playLine(i); if (usingAudio) au.currentTime = s; lineStart = performance.now() - s * 1000; } };
+})();
+</script>
