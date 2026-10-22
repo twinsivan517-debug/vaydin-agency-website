@@ -661,3 +661,13 @@ mouth; (2) when a line ends or is stopped she snaps into the loop, read as lag. 
   spliced before frame 180 onto the tail already made: 361 frames, 4428 KB. The "patch" was
   her white top, present in the original. Page screenshots, 52 over the first 11 s, show
   nothing stray.
+
+# The particle guide's armour
+
+His word 2026-10-22: she goes; in her place a man made of gold dots, powerful (his reference: the Destroyer from the film Thor, with his own helmet). Three concepts to pick from before anything is made in 3D. Sources `media/stills/armour-*.png` (not in git).
+
+- Date 2026-10-22 · GPT Image 2.5 (flare) · high · 2K · 3:4 · 2.75 credits each, quoted exactly before; 8.25 in all (balance 635.14 before)
+- Jobs: Sentinel `d737a291-5e9a-49f9-98b0-d877ff686506` · Falcon `3fb37f45-7ac2-48eb-9ad7-552c519d8e76` · Crown `a6f05b13-a2a0-4738-8ae7-05876760f480`
+- One frame for all three: a calm guardian bust, exactly frontal and symmetrical, a faceless helmet with a warm white visor line, brushed matte gold, "powerful but not threatening: no weapons, no spikes, no fire, no teeth", soft studio light on plain dark charcoal, no text. Then each: Sentinel a smooth knight's helm and shoulder plates overlapping like feathers; Falcon a helm like an Arabian falconry hood with mashrabiya lattice on cheeks and shoulders; Crown upright fins fanning like a crown, a cross of light on the faceplate and a round core in the chest.
+- What came back: all three as asked, first take. The Crown's cross of light reads as a religious cross once it is dots; on the pick page its vertical seam is thinned out of the dots. If the Crown is chosen, its picture is remade without the seam before it goes to 3D.
+- Shown as dots on a private page, https://claude.ai/artifact/GimzVEgpUEZLu6e1v2otVa (`lab/particle-guide/pick/`). Verdict: OWED, the owner's pick.

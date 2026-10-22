@@ -1,0 +1,165 @@
+<title>Pick His Armour</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Marcellus&display=swap">
+<style>
+/* Layout: the same dark room as the guide. He stands in the middle in gold dust; under him the three armours to choose from, each with its picture; the light in his armour takes the colour of what he talks about. */
+:root {
+  --bg: #0d0807;
+  --fg: #f3ead9;
+  --muted: #b9b0a2;
+  --gold: #c9a44a;
+  --gold-bright: #f5d978;
+  --line: rgb(201 164 74 / 0.26);
+  --topic: #f87171;
+  --font-display: "Marcellus", "Cormorant Garamond", Georgia, serif;
+  --font-body: "Geist", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); overflow-x: hidden; }
+#field { position: fixed; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; z-index: 0; }
+.room {
+  position: relative; z-index: 1; box-sizing: border-box; min-height: 100%; max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-rows: auto minmax(320px, 1fr) auto auto auto; gap: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 14px 16px;
+}
+.top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.mark { font-family: var(--font-display); font-size: 1.35rem; letter-spacing: 0.04em; }
+.tag { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+.stage { position: relative; }
+.topic { position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.topic b { color: var(--topic); font-weight: 500; transition: color 0.4s ease; }
+.cloud {
+  max-width: 34rem; margin: 0 auto; text-align: center; text-wrap: balance;
+  font-family: var(--font-display); font-size: clamp(1.05rem, 2.2vw, 1.4rem); line-height: 1.45;
+  border: 1px solid var(--line); border-radius: 22px; padding: 12px 20px; background: rgb(13 8 7 / 0.6);
+}
+.cloud small { display: block; margin-top: 4px; font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(185 176 162 / 0.75); }
+.picks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.pick {
+  display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px; align-items: center; text-align: left;
+  font: inherit; color: var(--fg); cursor: pointer; border-radius: 14px; padding: 8px;
+  border: 1px solid var(--line); background: rgb(13 8 7 / 0.7); transition: border-color 0.25s ease, background 0.25s ease;
+}
+.pick img { width: 64px; height: 85px; object-fit: cover; border-radius: 8px; display: block; }
+.pick b { display: block; font-family: var(--font-display); font-weight: 400; font-size: 1.1rem; }
+.pick span { display: block; font-size: 0.8rem; line-height: 1.35; color: var(--muted); }
+.pick[aria-pressed="true"] { border-color: var(--gold-bright); background: rgb(201 164 74 / 0.1); }
+.pick:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 3px; }
+.foot { font-size: 0.74rem; line-height: 1.45; color: rgb(185 176 162 / 0.75); max-width: 46rem; }
+@media (max-width: 720px) {
+  .picks { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .pick { grid-template-columns: 1fr; text-align: center; padding: 6px; gap: 6px; }
+  .pick img { width: 100%; height: 72px; }
+  .pick span { display: none; }
+  .pick b { font-size: 0.95rem; }
+}
+</style>
+
+<canvas id="field" aria-hidden="true"></canvas>
+<div class="room">
+  <div class="top">
+    <span class="mark">Vaydin</span>
+    <span class="tag">His armour · pick one</span>
+  </div>
+  <div class="stage" id="stage"><p class="topic" id="topic">The light in him: <b id="topicName">Diagnose</b></p></div>
+  <p class="cloud">Dubai never sleeps. Neither do your patients. With Vaydin, neither does your clinic.<small>Draft opening line, in his cloud</small></p>
+  <div class="picks" role="group" aria-label="Three armours">
+    <button class="pick" type="button" data-k="0" aria-pressed="false"><img src="sentinel.jpg" alt="Sentinel concept: a smooth knight's helm with one visor of light"><span><b>Sentinel</b><span>A knight's calm. One line of light, plates like feathers.</span></span></button>
+    <button class="pick" type="button" data-k="1" aria-pressed="false"><img src="falcon.jpg" alt="Falcon concept: a helm like a falconry hood with Arabic lattice"><span><b>Falcon</b><span>A falconry hood with Arabic lattice. The most ours.</span></span></button>
+    <button class="pick" type="button" data-k="2" aria-pressed="true"><img src="crown.jpg" alt="Crown concept: a crown of fins, a visor of light, a core in the chest"><span><b>Crown</b><span>Fins like a crown, a visor of light, a core in the chest.</span></span></button>
+  </div>
+  <p class="foot">Tap an armour and watch him change into it. These dots are drawn straight from the flat pictures; the chosen one becomes a real 3D shape next (6 to 7 credits), so he can turn his head like the test man. Dots keep the outline and the big forms; fine engraving, like the Falcon's lattice, mostly melts away.</p>
+</div>
+
+<script src="concepts.js"></script>
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const cv = $("#field"), stage = $("#stage"), topicName = $("#topicName");
+  const picks = [...document.querySelectorAll(".pick")];
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const small = Math.min(screen.width, screen.height) < 700;
+  const N = small ? 9000 : CONCEPTS.n;
+  const gl = cv.getContext("webgl", { antialias: false, alpha: false });
+  if (!gl) return;
+
+  const bin = (s) => { const b = atob(s), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u.buffer; };
+  const SHAPES = CONCEPTS.items.map((it) => { const p = new Int16Array(bin(it.pos)), c = new Uint8Array(bin(it.core)), f = new Float32Array(N * 3); for (let i = 0; i < N * 3; i++) f[i] = p[i] / 32767; return { p: f, c }; });
+  const TOPICS = [["Diagnose", "#f87171"], ["Fix", "#f5d978"], ["Grow", "#4ade80"], ["Engine", "#a78bfa"], ["Your plan", "#34e3f0"]];
+  const rgb = (h) => [1, 3, 5].map((k) => parseInt(h.slice(k, k + 2), 16) / 255);
+
+  let rs = 99; const rnd = () => ((rs = (rs * 16807) % 2147483647) / 2147483647);
+  const rate = new Float32Array(N), seed = new Float32Array(N), P = new Float32Array(N * 3), INFO = new Float32Array(N * 2);
+  for (let i = 0; i < N; i++) { rate[i] = 1.8 + rnd() * 2.4; seed[i] = rnd(); }
+
+  const vs = `attribute vec3 aPos; attribute vec2 aInfo; uniform mat4 uProj; uniform float uCamZ, uSize; varying float vB, vT;
+    void main(){ vec4 p = vec4(aPos.xy, aPos.z - uCamZ, 1.0); gl_Position = uProj * p; gl_PointSize = uSize * (uCamZ / -p.z) * (0.6 + 0.5 * clamp(aInfo.x, 0.0, 1.5)); vB = aInfo.x; vT = aInfo.y; }`;
+  const fs = `precision mediump float; varying float vB, vT; uniform vec3 uTint; uniform float uGain;
+    void main(){ vec2 c = gl_PointCoord - 0.5; float a = smoothstep(0.5, 0.05, length(c)); a *= a;
+      vec3 gold = mix(vec3(0.79, 0.62, 0.27), vec3(1.0, 0.88, 0.55), clamp(vB - 0.35, 0.0, 1.0));
+      gl_FragColor = vec4(mix(gold, uTint, vT) * a * vB * uGain, 1.0); }`;
+  const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return o; };
+  const prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(prog); gl.useProgram(prog);
+  const bufP = gl.createBuffer(), bufI = gl.createBuffer(), aPos = gl.getAttribLocation(prog, "aPos"), aInfo = gl.getAttribLocation(prog, "aInfo");
+  gl.bindBuffer(gl.ARRAY_BUFFER, bufP); gl.bufferData(gl.ARRAY_BUFFER, P.byteLength, gl.DYNAMIC_DRAW); gl.enableVertexAttribArray(aPos); gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, bufI); gl.bufferData(gl.ARRAY_BUFFER, INFO.byteLength, gl.DYNAMIC_DRAW); gl.enableVertexAttribArray(aInfo); gl.vertexAttribPointer(aInfo, 2, gl.FLOAT, false, 0, 0);
+  const U = (n) => gl.getUniformLocation(prog, n), uProj = U("uProj"), uCamZ = U("uCamZ"), uSize = U("uSize"), uTint = U("uTint"), uGain = U("uGain");
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE); gl.clearColor(13 / 255, 8 / 255, 7 / 255, 1);
+  const CAMZ = 6, FOV = 30 * Math.PI / 180, HALF = CAMZ * Math.tan(FOV / 2);
+  let W = 0, H = 0, halfW = 1;
+  function resize() {
+    const dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); gl.viewport(0, 0, cv.width, cv.height);
+    const asp = W / H, f = 1 / Math.tan(FOV / 2), n = 0.1, fa = 50; halfW = HALF * asp;
+    gl.uniformMatrix4fv(uProj, false, new Float32Array([f / asp, 0, 0, 0, 0, f, 0, 0, 0, 0, (fa + n) / (n - fa), -1, 0, 0, 2 * fa * n / (n - fa), 0]));
+    gl.uniform1f(uCamZ, CAMZ); gl.uniform1f(uSize, (small ? 2.4 : 2.0) * dpr); gl.uniform1f(uGain, small ? 0.8 : 0.66);
+  }
+  resize();
+  const toWorld = (sx, sy) => [(sx / W * 2 - 1) * halfW, (1 - sy / H * 2) * HALF];
+  let cx = 0, cy = 0, S = 1;
+  function layout() { const r = stage.getBoundingClientRect(); [cx, cy] = toWorld(r.left + r.width / 2, r.top + r.height * 0.47); S = (r.height - 30) / H * HALF; }
+  layout();
+  for (let i = 0; i < N; i++) { const a = rnd() * 6.283, d = 0.4 + rnd() * 1.6; P[i * 3] = cx + Math.cos(a) * d * S; P[i * 3 + 1] = cy + Math.sin(a) * d * S; P[i * 3 + 2] = (rnd() - 0.5) * S; }
+
+  let cur = 2, topic = 0, topicT = 0, yaw = 0, tYaw = 0, tint = rgb(TOPICS[0][1]), tgtTint = tint.slice();
+  function choose(k) { cur = k; picks.forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.k === k))); }
+  picks.forEach((b) => b.addEventListener("click", () => choose(+b.dataset.k)));
+  addEventListener("pointermove", (e) => { tYaw = (e.clientX / W * 2 - 1) * 0.3; });
+  function setTopic(k) { topic = k; topicName.textContent = TOPICS[k][0]; document.documentElement.style.setProperty("--topic", TOPICS[k][1]); tgtTint = rgb(TOPICS[k][1]); }
+  setTopic(0);
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now; const t = now / 1000;
+    if (innerWidth !== W || innerHeight !== H) resize();
+    layout();
+    topicT += dt; if (topicT > 2.6) { topicT = 0; setTopic((topic + 1) % TOPICS.length); }
+    for (let k = 0; k < 3; k++) tint[k] += (tgtTint[k] - tint[k]) * Math.min(1, dt * 3);
+    gl.uniform3fv(uTint, tint);
+    yaw += ((reduce ? 0 : tYaw + 0.12 * Math.sin(t * 0.4)) - yaw) * 0.04;
+    const cyw = Math.cos(yaw), syw = Math.sin(yaw), breath = 1 + (reduce ? 0 : 0.006 * Math.sin(t * 1.1));
+    const sh = SHAPES[cur], pulse = 0.75 + 0.25 * Math.sin(t * 2.2);
+    for (let i = 0; i < N; i++) {
+      const i3 = i * 3, mx = sh.p[i3], my = sh.p[i3 + 1], mz = sh.p[i3 + 2];
+      const tx = cx + S * breath * (cyw * mx + syw * mz), ty = cy + S * breath * my, tz = S * (-syw * mx + cyw * mz);
+      let px = P[i3], py = P[i3 + 1], pz = P[i3 + 2];
+      const dx = tx - px, dy = ty - py, dz = tz - pz, dist = Math.hypot(dx, dy, dz), k = reduce ? 1 : 1 - Math.exp(-dt * rate[i]);
+      px += dx * k; py += dy * k; pz += dz * k;
+      if (!reduce && dist > 0.05) { const sw = Math.min(1, dist * 1.3) * dt * 1.2; px += -dy * sw; py += dx * sw; }
+      P[i3] = px; P[i3 + 1] = py; P[i3 + 2] = pz;
+      const core = sh.c[i];
+      INFO[i * 2] = core ? 0.8 * pulse + 0.15 : 0.95 + 0.12 * Math.sin(t * 2.4 + seed[i] * 50);
+      INFO[i * 2 + 1] = core ? 0.95 : 0;
+    }
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufP); gl.bufferSubData(gl.ARRAY_BUFFER, 0, P);
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufI); gl.bufferSubData(gl.ARRAY_BUFFER, 0, INFO);
+    gl.drawArrays(gl.POINTS, 0, N);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  window.__pick = { choose, setTopic };
+})();
+</script>
