@@ -16,6 +16,8 @@ type Props = {
   audio: () => HTMLAudioElement | null;
   pokeable: boolean;
   onPoke: (at: number, point?: { x: number; y: number }) => void;
+  /* His light has reached the logo: the page may light. */
+  onLit?: () => void;
   small?: boolean;
 };
 
@@ -45,6 +47,7 @@ export const Figure = forwardRef<GuideHandle, Props>(function Figure(props, ref)
       }),
       reduce,
       !!latest.current.small,
+      () => latest.current.onLit?.(),
     );
     engine.current = run;
     let live = true;

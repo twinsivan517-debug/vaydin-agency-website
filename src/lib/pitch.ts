@@ -32,6 +32,8 @@ export const lineClip = (line: Line) => (line.audio ? line.audio.replace("/voice
 
 /* In the cloud while she sleeps. Not spoken: no sound may start before a tap. */
 export const SLEEPING: Line = { id: "00", text: "Zzz… Tap anywhere to wake me up." };
+/* In the cloud once he has woken by himself on a first visit: a phone lets him speak only after a touch. */
+export const WAITING: Line = { id: "00w", text: "Hello. Tap anywhere and I'll talk you through it." };
 
 export const CHAPTERS: Chapter[] = [
   {

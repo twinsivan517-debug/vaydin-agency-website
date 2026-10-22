@@ -1,21 +1,21 @@
 "use client";
 
-/* The hero: her, large, with a navy cloud by her head; beside her the five
-   questions and a sixth that lists the rest, the folder she pulls out for
-   each, and a box to ask her anything. She sleeps until a tap wakes her, and the page sleeps with her:
-   it lights up the moment she stands. That first tap unlocks sound for every
-   line after it, and is answered at once, before her clip has arrived: a
-   ring at the finger, the floor under her shining, her cloud stirring. No
-   light falls on her: she wakes complaining of the dark. */
+/* The hero: him, in gold dots, with his cloud and the card he shows on one
+   side and the five doors on the other; under him a box to ask him anything
+   and the questions. On a first visit he wakes by himself in the dark room:
+   his dots gather, part of his light flies to the logo, and as it lands a
+   shimmer crosses the page and lights it. He stays silent until the first
+   touch, which unlocks sound for every line after it; a tap on plain page or
+   on him starts his greeting, a question starts its answer. */
 
 import { useEffect, useEffectEvent, useReducer, useRef, useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
 import { Figure } from "@/components/Figure";
 import { DOORS } from "@/lib/doors";
-import type { GuideHandle, LineOutcome } from "@/components/Guide";
+import type { GuideHandle } from "@/components/Guide";
 import { MORE, UNKNOWN, answer, answerLine, type Answer } from "@/lib/answers";
 import { afterTalk, followUp, match, type Reply } from "@/lib/match";
-import { BULB_FLIGHT, OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, chapter, talkTime, type ChapterId, type Line } from "@/lib/pitch";
+import { OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, WAITING, chapter, talkTime, type ChapterId, type Line } from "@/lib/pitch";
 import { START, mode, pokeable, reduce, replyLines, speaking } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
 import { WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
@@ -34,22 +34,29 @@ const lineClip = (line?: Line): string | null => (line ? null : null);
 
 const glide = (): ScrollBehavior => (window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth");
 
-/* The page dims while she sleeps and lights up when she stands. */
+/* The page dims while he sleeps and lights up when his light reaches the logo. */
 function lightUp() {
   document.body.classList.remove("site-asleep");
   document.body.classList.add("site-awake");
 }
 
+/* The shimmer that crosses the page as it lights, once per waking. */
+function shimmer() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  document.body.classList.add("site-shimmer");
+  window.setTimeout(() => document.body.classList.remove("site-shimmer"), 1800);
+}
+
 export function Stage() {
   const [state, dispatch] = useReducer(reduce, START);
   const [draft, setDraft] = useState("");
-  /* True when the greeting clip could not play and her recording speaks instead. */
+  /* True when the greeting clip could not play and his recording speaks instead (always, for him). */
   const [spoken, setSpoken] = useState(false);
-  /* The bulb in flight, in page pixels: where it starts, where the clip's bulb
-     would be once it has left her frame (the page's bulb rides with it that
-     far, covering it as it crosses the edge), where it lands, and its width. */
-  const [bulb, setBulb] = useState<{ x0: number; y0: number; xm: number; ym: number; x1: number; y1: number; w: number } | null>(null);
   const thrown = useRef(false);
+  /* He has woken by himself: set a moment after the page first paints, so the gathering is seen. */
+  const [up, setUp] = useState(false);
+  /* A first visit, before any touch: he is up, silent, and his cloud says how to hear him. */
+  const first = state.phase === "asleep" && !state.met;
   const guide = useRef<GuideHandle>(null);
   const voice = useRef<Speaker | null>(null);
   const pokes = useRef({ count: 0, at: 0 });
@@ -59,26 +66,26 @@ export function Stage() {
   /* The questions light one by one once the greeting has handed over to them. */
   const offered = state.met || (state.phase !== "asleep" && state.phase !== "opener");
   /* Line clips that would not play here: those lines fall back to the recording. */
-  const [noClip, setNoClip] = useState<string[]>([]);
-  /* From the tap that wakes her until her clip plays; over with the
-     greeting, however it ends, as is the shine on the floor. */
+  const [noClip] = useState<string[]>([]);
+  /* From the tap that wakes him until his greeting plays; over with the greeting, however it ends. */
   const [stirring, setWaking] = useState(false);
   const waking = stirring && state.phase === "opener";
   const [ripple, setRipple] = useState<(Point & { key: number }) | null>(null);
   const ripples = useRef(0);
-  const [shine, setShine] = useState(false);
-  const lit = shine && state.phase === "opener";
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    document.body.classList.add("site-asleep");
-    return () => document.body.classList.remove("site-asleep", "site-awake");
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!still) document.body.classList.add("site-asleep");
+    const timer = window.setTimeout(() => setUp(true), still ? 0 : 450);
+    return () => {
+      window.clearTimeout(timer);
+      document.body.classList.remove("site-asleep", "site-awake", "site-shimmer");
+    };
   }, []);
 
-  /* She lay back down after the last poke: the page dims with her, and the pokes start over.
-     And once she has been met and is up, the page is lit: the bulb lights it
-     mid-greeting, but a greeting stopped early (Stop, a tab switch) must not
-     leave the page dimmed with her standing awake. */
+  /* He went back to sleep after the last poke: the page dims with him, and the pokes start over.
+     And once he has been met and is up, the page is lit, even after a greeting
+     stopped early (Stop, a tab switch). */
   useEffect(() => {
     if (state.met && state.phase !== "asleep" && state.phase !== "opener") lightUp();
     if (state.phase !== "asleep" || !state.met) return;
@@ -138,11 +145,6 @@ export function Stage() {
     };
   }, [talking, phase, run, lineAt, cloud, lines, clipSrc, noClip]);
 
-  function lineEnded(outcome: LineOutcome) {
-    if (outcome === "ended") dispatch({ type: "line_ended" });
-    else if (clipSrc) setNoClip((list) => (list.includes(clipSrc) ? list : [...list, clipSrc]));
-  }
-
   useEffect(() => {
     const hide = () => document.hidden && dispatch({ type: "stop" });
     document.addEventListener("visibilitychange", hide);
@@ -191,11 +193,9 @@ export function Stage() {
     ready(UNKNOWN);
   }
 
-  /* What the tap shows at once: a ring at the finger, and the pool of light
-     under her coming up. A wake with no pointer (a key) has no ring. */
+  /* What the tap shows at once: a ring at the finger. A wake with no pointer (a key) has none. */
   function signal(point?: Point) {
     if (point) setRipple({ ...point, key: ++ripples.current });
-    setShine(true);
   }
 
   /* The ring is gone once it has spread. */
@@ -222,29 +222,6 @@ export function Stage() {
       document.body.style.cursor = "";
     };
   }, [state.phase]);
-
-  /* The bulb she tossed leaves her frame and flies on to the mark; when it lands, the page lights. */
-  function throwBulb() {
-    if (thrown.current) return;
-    thrown.current = true;
-    const from = guide.current?.exit();
-    const mark = document.querySelector(".mark img")?.getBoundingClientRect();
-    if (from && mark && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      /* The clip's bulb drifts 0.03 widths left and 0.085 heights up in the 0.4 s it takes to leave the frame. */
-      const h = (from.width * 16) / 9;
-      setBulb({
-        x0: from.x,
-        y0: from.y,
-        xm: from.x - from.width * 0.03,
-        ym: from.y - h * 0.085,
-        x1: mark.left + mark.width / 2,
-        y1: mark.top + mark.height / 2,
-        w: from.width * 0.13,
-      });
-      window.setTimeout(() => setBulb(null), BULB_FLIGHT * 1000 + 600);
-      window.setTimeout(lightUp, BULB_FLIGHT * 1000);
-    } else lightUp();
-  }
 
   function tap(id: ChapterId) {
     if (chapter(id).clip === "opener") return wake();
@@ -303,7 +280,7 @@ export function Stage() {
     sound
       .say(OPENER_AUDIO, (seconds) => {
         if (!live) return;
-        /* No clip, so no bulb to take over from: the page simply lights at the same second. */
+        /* The page lights at this second if his light has not lit it already. */
         if (seconds >= THROW_AT && !thrown.current) {
           thrown.current = true;
           lightUp();
@@ -341,7 +318,7 @@ export function Stage() {
 
       <div aria-live="polite" className="hero-cloud">
         <div key={state.cloud.id} className="cloud">
-          <p data-long={waking ? undefined : long(state.cloud.text)} className="text-[1.05rem] leading-snug md:text-lg">
+          <p data-long={waking || first ? undefined : long(state.cloud.text)} className="text-[1.05rem] leading-snug md:text-lg">
             {waking ? (
               <>
                 Mmm
@@ -352,7 +329,7 @@ export function Stage() {
                 </span>
               </>
             ) : (
-              state.cloud.text
+              (first ? WAITING : state.cloud).text
             )}
           </p>
           <span aria-hidden="true" className="cloud-tail">
@@ -363,7 +340,7 @@ export function Stage() {
       </div>
 
       <div className="hero-guide">
-        <div className={`guide-floor relative ${lit ? "floor-shine" : ""}`}>
+        <div className="guide-floor relative">
           {busy && (
             <button type="button" onClick={() => dispatch({ type: "stop" })} className="guide-stop" aria-label="Stop him">
               <svg aria-hidden="true" viewBox="0 0 20 20" width="16" height="16">
@@ -371,7 +348,17 @@ export function Stage() {
               </svg>
             </button>
           )}
-          <Figure ref={guide} mode={mode(state)} audio={() => voice.current?.audio ?? null} pokeable={pokeable(state)} onPoke={poke} />
+          <Figure
+            ref={guide}
+            mode={first ? (up ? "idle" : "sleep") : mode(state)}
+            audio={() => voice.current?.audio ?? null}
+            pokeable={pokeable(state)}
+            onPoke={poke}
+            onLit={() => {
+              lightUp();
+              shimmer();
+            }}
+          />
         </div>
       </div>
 
@@ -445,29 +432,6 @@ export function Stage() {
       </div>
 
       {ripple && <span key={ripple.key} aria-hidden="true" className="ripple" style={{ left: ripple.x, top: ripple.y }} />}
-
-      {bulb && (
-        <svg
-          aria-hidden="true"
-          className="bulb"
-          viewBox="0 0 24 34"
-          style={
-            {
-              "--x0": `${bulb.x0}px`,
-              "--y0": `${bulb.y0}px`,
-              "--xm": `${bulb.xm}px`,
-              "--ym": `${bulb.ym}px`,
-              "--x1": `${bulb.x1}px`,
-              "--y1": `${bulb.y1}px`,
-              "--w": `${bulb.w}px`,
-            } as React.CSSProperties
-          }
-        >
-          <path d="M12 2a9 9 0 0 0-5 16.5V23h10v-4.5A9 9 0 0 0 12 2Z" fill="#f5d978" />
-          <rect x="8" y="24" width="8" height="3" rx="1" fill="#c9a44a" />
-          <rect x="9" y="28" width="6" height="3" rx="1" fill="#c9a44a" />
-        </svg>
-      )}
 
       {/* On a phone the bar is one slim row, WhatsApp as an icon, so it covers
           little of her; at its right, the way down to the five pages. */}

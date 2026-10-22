@@ -33,7 +33,8 @@ const FS = `precision mediump float; varying float vB, vT; uniform vec3 uTint, u
     vec3 col = mix(mix(gold, uTint, clamp(vT, 0.0, 1.0)), uShape, clamp(-vT, 0.0, 1.0));
     float k = clamp(a * vB * uGain, 0.0, 1.0); gl_FragColor = vec4(col * k, k); }`;
 
-export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce: boolean, small: boolean) {
+/* `onLit` is called once per waking, when his light reaches the logo (at once under reduced motion). */
+export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce: boolean, small: boolean, onLit?: () => void) {
   const gl = cv.getContext("webgl", { antialias: false, alpha: true, premultipliedAlpha: true });
   if (!gl) return null;
   const N = small ? 3000 : Math.min(screen.width, screen.height) < 700 ? 8000 : 14000;
@@ -150,7 +151,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
   addEventListener("resize", resize);
 
   let phaseWas = read().mode, wakeT = phaseWas === "sleep" ? -1 : -99, last = performance.now(), raf = 0, nextBlink = 3, blinkUntil = 0;
-  let yaw = 0, pitch = 0, roll = 0, lookX = 0, lookY = 0, logoUntil = 0;
+  let yaw = 0, pitch = 0, roll = 0, lookX = 0, lookY = 0, logoUntil = 0, litFired = false;
   const eyeCol: [number, number, number] = [...EYE_REST], shapeCol: [number, number, number] = [1, 0.85, 0.5];
   const LX = -0.42, LY = 0.5, LZ = 0.76;
 
@@ -160,9 +161,11 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     if (cv.clientWidth !== W || cv.clientHeight !== H) resize();
     const inp = read();
     layout(inp.stage);
-    if (inp.mode !== "sleep" && phaseWas === "sleep") { wakeT = t; logoUntil = t + 3.6; }
+    if (inp.mode !== "sleep" && phaseWas === "sleep") { wakeT = t; logoUntil = t + 3.6; litFired = false; }
     phaseWas = inp.mode;
     const asleep = inp.mode === "sleep", sinceWake = t - wakeT;
+    /* His light lands on the logo about half a second after it leaves him. */
+    if (!asleep && !litFired && (reduce || !inp.logo || sinceWake > 1.9)) { litFired = true; onLit?.(); }
 
     /* What plays, and where in it: the cues of that recording, now. */
     const a = inp.audio, src = a && !a.paused && a.src ? a.src.replace(/^.*\//, "").replace(/\.mp3.*$/, "") : "", lt = a ? a.currentTime : 0;
