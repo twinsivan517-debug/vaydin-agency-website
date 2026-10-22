@@ -73,7 +73,7 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); o
 <div class="room">
   <div class="top">
     <span class="mark">Vaydin</span>
-    <span class="tag">Floating guide · test 2</span>
+    <span class="tag">Floating guide · test 3</span>
   </div>
   <div class="stage" id="stage">
     <button class="wake" id="wake" type="button">He is asleep. Tap to wake him</button>
@@ -87,7 +87,7 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); o
     <a class="door" style="--accent:#34e3f0" href="https://vaydin.agency/pricing.html" target="_blank" rel="noopener"><small>Plans</small><b>Your plan</b><span>Every plan is built for your clinic.</span></a>
   </nav>
   <div class="foot">
-    <span>Test 2. Our own floating guide, drawn by code from simple shapes: no picture, no credits. Stand-in voice: today's recording; his own voice comes last.</span>
+    <span>Test 3. Our own floating guide, drawn by code from simple shapes: no picture, no credits. His head never leaves; his body shows and points. Stand-in voice: today's recording; his own voice comes last.</span>
     <button class="again" id="again" type="button" hidden>Play again</button>
   </div>
 </div>
@@ -100,7 +100,7 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); o
   const doors = [...document.querySelectorAll(".door")];
   const hex = (h) => [1, 3, 5].map((k) => parseInt(h.slice(k, k + 2), 16) / 255);
   const ACCENT = ["#f87171", "#f5d978", "#4ade80", "#a78bfa", "#34e3f0"].map(hex);
-  const EYE_REST = hex("#ffe7b0"), EYE_ICON = hex("#f5d978");
+  const EYE_REST = hex("#ffe7b0"), EYE_GOLD = hex("#f5d978"), EYE_SAD = hex("#9fb8ff");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const small = Math.min(screen.width, screen.height) < 700;
   const N = small ? 9000 : 16000;
@@ -112,19 +112,20 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); o
   const gauss = () => Math.sqrt(-2 * Math.log(rnd() + 1e-9)) * Math.cos(6.283185 * rnd());
 
   // --- His body, from simple shapes: a floating head with a dark visor, two eyes of light, an egg of a body, two arms that hover beside it.
-  // Parts: 0 head, 1 visor rim, 2 left eye, 3 right eye, 4 body, 5 left arm, 6 right arm.
+  // Parts: 0 head, 1 visor rim, 2 left eye, 3 right eye, 4 body, 5 left arm, 6 right arm. The head (0-3) always stays; the body (4-6) is what he shows with.
   const HEAD = { cy: 0.55, rx: 0.46, ry: 0.37, rz: 0.43 }, VIS = { cy: 0.54, rx: 0.37, ry: 0.235 };
   const headZ = (x, y) => { const q = 1 - (x / HEAD.rx) ** 2 - ((y - HEAD.cy) / HEAD.ry) ** 2; return q > 0 ? HEAD.rz * Math.sqrt(q) : 0; };
   const inVisor = (x, y, z) => z > 0 && (x / VIS.rx) ** 2 + ((y - VIS.cy) / VIS.ry) ** 2 < 1;
   const bodyR = (t) => (t < 0.18 ? 0.35 * Math.sqrt(Math.max(0, 1 - ((0.18 - t) / 0.18) ** 2)) : 0.35 * Math.max(0.02, 1 - ((t - 0.18) / 0.82) ** 1.7));
   const BODY_TOP = 0.14, BODY_LEN = 1.08;
 
-  const part = new Uint8Array(N), M = new Float32Array(N * 3), NR = new Float32Array(N * 3), EA = new Float32Array(N * 2);
+  const part = new Uint8Array(N), rb = new Int32Array(N), M = new Float32Array(N * 3), NR = new Float32Array(N * 3), EA = new Float32Array(N * 2);
   const rate = new Float32Array(N), delay = new Float32Array(N), seed = new Float32Array(N), dust = new Float32Array(N * 3);
+  let NB = 0;
   for (let i = 0; i < N; i++) {
     const m = i % 100; let x = 0, y = 0, z = 0, nx = 0, ny = 0, nz = 1, p;
     if (m < 5) p = 2; else if (m < 10) p = 3; else if (m < 16) p = 1; else if (m < 46) p = 0; else if (m < 86) p = 4; else if (m < 93) p = 5; else p = 6;
-    part[i] = p;
+    part[i] = p; rb[i] = p >= 4 ? NB++ : -1;
     if (p === 0) {
       do { const a = gauss(), b = gauss(), c = gauss(), l = Math.hypot(a, b, c); x = a / l * HEAD.rx; y = HEAD.cy + b / l * HEAD.ry; z = c / l * HEAD.rz; } while (inVisor(x, y, z));
       nx = x / HEAD.rx ** 2; ny = (y - HEAD.cy) / HEAD.ry ** 2; nz = z / HEAD.rz ** 2;
@@ -154,28 +155,54 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); o
   }
   const isEye = (i) => part[i] === 2 || part[i] === 3;
 
-  // --- His eyes: where an eye dot sits for each look. a and r are its fixed place inside the eye.
-  function eyeLocal(expr, a, r) {
-    if (expr === "open") return [Math.cos(a) * r * 0.085, Math.sin(a) * r * 0.105];
-    if (expr === "wide") return [Math.cos(a) * r * 0.1, Math.sin(a) * r * 0.13];
-    if (expr === "happy") { const f = a / 2, R = 0.072 + (r - 0.5) * 0.022; return [Math.cos(f) * R, Math.sin(f) * R - 0.03]; }
-    if (expr === "blink") return [Math.cos(a) * r * 0.095, Math.sin(a) * r * 0.01];
-    return [Math.cos(a) * r * 0.16, Math.sin(a) * r * 0.008]; // "line": a calm visor line, the two eyes meeting in the middle
+  // --- His eyes: where an eye dot sits for each look. a and r are its fixed place inside the eye; side is -1 left, 1 right.
+  function eyeLocal(expr, a, r, side) {
+    const c = Math.cos(a), s = Math.sin(a);
+    switch (expr) {
+      case "wide": return [c * r * 0.1, s * r * 0.13];
+      case "happy": { const f = a / 2, R = 0.072 + (r - 0.5) * 0.022; return [Math.cos(f) * R, Math.sin(f) * R - 0.03]; }
+      case "blink": return [c * r * 0.095, s * r * 0.01];
+      case "line": return [c * r * 0.16, s * r * 0.008];
+      case "sad": { const u = c * r * 0.085, v = s * r * 0.095, lid = 0.035 - 0.5 * u * side; return [u, Math.min(v, lid) - 0.01]; }
+      case "sparkle": { const R = 0.12 * (0.28 + 0.72 * Math.pow(Math.abs(Math.cos(2 * a)), 5)); return [c * r * R, s * r * R]; }
+      case "star": { const R = 0.105 * (0.42 + 0.58 * Math.pow(Math.abs(Math.cos(2.5 * (a - Math.PI / 2))), 2.5)); return [c * r * R, s * r * R]; }
+      case "think": return [c * r * 0.07, s * r * (side > 0 ? 0.045 : 0.085)];
+      case "scan": return [c * r * 0.055, s * r * 0.07];
+      case "wink": return side < 0 ? [c * r * 0.095, s * r * 0.01] : eyeLocal("happy", a, r, side);
+      default: return [c * r * 0.085, s * r * 0.105]; // "open"
+    }
   }
 
-  // --- Shapes he draws, sampled from strokes on a small canvas (all of him becomes the shape).
+  // --- Shapes he shows, sampled from a small canvas: outlines dense, fills sparse.
   function shape(draw) {
     const S = 220, c = document.createElement("canvas"); c.width = c.height = S;
     const g = c.getContext("2d"); g.strokeStyle = g.fillStyle = "#fff"; g.lineWidth = 11; g.lineCap = g.lineJoin = "round";
     draw(g, S);
     const d = g.getImageData(0, 0, S, S).data, px = [];
-    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) if (d[(y * S + x) * 4 + 3] > 140) px.push(x, y);
+    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) if (d[(y * S + x) * 4 + 3] > 30) px.push(x, y);
     const out = new Float32Array(N * 3), n = px.length / 2;
-    for (let j = 0; j < N; j++) { const p = Math.floor(rnd() * n); out[j * 3] = (px[p * 2] + rnd() - 0.5) / S * 2 - 1; out[j * 3 + 1] = 1 - (px[p * 2 + 1] + rnd() - 0.5) / S * 2; out[j * 3 + 2] = (rnd() - 0.5) * 0.08; }
+    for (let j = 0; j < N; j++) {
+      let p; do { p = Math.floor(rnd() * n); } while (rnd() * 255 > d[(px[p * 2 + 1] * S + px[p * 2]) * 4 + 3]);
+      out[j * 3] = (px[p * 2] + rnd() - 0.5) / S * 2 - 1; out[j * 3 + 1] = 1 - (px[p * 2 + 1] + rnd() - 0.5) / S * 2; out[j * 3 + 2] = (rnd() - 0.5) * 0.08;
+    }
     return out;
   }
   const rr = (g, x, y, w, h, r) => { g.beginPath(); g.roundRect ? g.roundRect(x, y, w, h, r) : g.rect(x, y, w, h); };
   const SHAPES = {
+    skyline: shape((g) => {
+      // A city at night: towers of different heights, the tallest stepping up to a needle.
+      const towers = [[8, 150, 20, 60], [32, 122, 18, 88], [54, 140, 22, 70], [80, 112, 16, 98], [134, 118, 18, 92], [156, 138, 16, 72], [176, 100, 18, 110], [198, 148, 16, 62]];
+      const tall = [[94, 150, 32, 60], [97, 112, 26, 40], [100, 80, 20, 34], [103, 54, 14, 28], [106, 34, 8, 22], [108.5, 6, 3, 30]];
+      g.lineWidth = 3; g.globalAlpha = 0.28; for (const [x, y, w, h] of towers.concat(tall)) g.fillRect(x, y, w, h);
+      g.globalAlpha = 1; for (const [x, y, w, h] of towers.concat(tall)) g.strokeRect(x, y, w, h);
+      g.lineWidth = 4; g.beginPath(); g.moveTo(0, 210); g.lineTo(220, 210); g.stroke();
+    }),
+    clinic: shape((g) => {
+      g.lineWidth = 9; rr(g, 34, 66, 152, 138, 10); g.stroke(); g.beginPath(); g.moveTo(24, 66); g.lineTo(196, 66); g.stroke();
+      g.beginPath(); g.moveTo(92, 204); g.lineTo(92, 160); g.arc(110, 160, 18, Math.PI, 0); g.lineTo(128, 204); g.stroke();
+      rr(g, 52, 96, 30, 30, 5); g.stroke(); rr(g, 138, 96, 30, 30, 5); g.stroke();
+      g.beginPath(); g.moveTo(110, 42); g.bezierCurveTo(98, 26, 78, 40, 110, 58); g.bezierCurveTo(142, 40, 122, 26, 110, 42); g.fill();
+    }),
     chat: shape((g) => { rr(g, 30, 40, 160, 110, 34); g.stroke(); g.beginPath(); g.moveTo(66, 150); g.lineTo(52, 186); g.lineTo(100, 150); g.stroke(); [78, 110, 142].forEach((x) => { g.beginPath(); g.arc(x, 95, 9, 0, 7); g.fill(); }); }),
     search: shape((g) => { g.beginPath(); g.arc(92, 92, 56, 0, 7); g.stroke(); g.lineWidth = 16; g.beginPath(); g.moveTo(134, 134); g.lineTo(186, 186); g.stroke(); }),
     star: shape((g) => { g.beginPath(); for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? 40 : 92; g.lineTo(110 + Math.cos(a) * r, 116 + Math.sin(a) * r); } g.closePath(); g.stroke(); }),
@@ -184,16 +211,20 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); o
     person: shape((g) => { g.beginPath(); g.arc(110, 72, 38, 0, 7); g.stroke(); g.beginPath(); g.arc(110, 196, 74, Math.PI * 1.08, Math.PI * 1.92); g.stroke(); }),
   };
 
-  // --- What he says, word by word; what he shows; how his eyes react (times measured on the recordings).
+  // --- What he says, word by word; what he holds; how his eyes react (times measured on the recordings).
+  // A shape is held by his body under his head; a door gets his body while his head watches it. His head never leaves.
   const LINES = [
     { src: "w1.mp3", dur: 13.01,
       text: "Vaydin is a Dubai company for aesthetic and wellness clinics. We measure how your clinic looks to a new patient, then run its front door for you: WhatsApp, Google, reviews, Instagram and the website.",
       at: [0, 0.5, 0.68, 0.84, 0.92, 1.5, 1.88, 2.14, 2.58, 2.9, 4.06, 4.08, 4.34, 4.66, 4.82, 5.1, 5.46, 5.76, 5.88, 5.98, 6.92, 7.06, 7.48, 7.66, 7.86, 8.1, 8.4, 9.18, 9.92, 10.78, 11.62, 12.14, 12.22, 12.38],
-      cues: [{ from: 2.85, to: 3.9, eyes: "happy" }, { from: 4.1, to: 6.85, door: 0 }, { from: 6.95, to: 8.95, door: 1 }, { from: 8.98, to: 9.74, icon: "chat" }, { from: 9.74, to: 10.6, icon: "search" }, { from: 10.6, to: 11.44, icon: "star" }, { from: 11.44, to: 12.2, icon: "camera" }, { from: 12.2, to: 13.3, icon: "web" }, { from: 13.3, to: 14, eyes: "happy" }] },
+      cues: [{ from: 0.78, to: 2.75, icon: "skyline" }, { from: 1.85, to: 2.8, eyes: "sparkle" }, { from: 2.85, to: 3.9, eyes: "happy" },
+        { from: 4.06, to: 4.6, eyes: "scan" }, { from: 4.1, to: 6.85, door: 0 }, { from: 6.95, to: 8.95, door: 1 },
+        { from: 8.98, to: 9.74, icon: "chat" }, { from: 9.74, to: 10.6, icon: "search" }, { from: 10.6, to: 11.44, icon: "star", eyes: "star" }, { from: 11.44, to: 12.2, icon: "camera" }, { from: 12.2, to: 13.3, icon: "web" },
+        { from: 13.3, to: 14, eyes: "happy" }] },
     { src: "02.mp3", dur: 5.83,
       text: "And I'll show you how patients find a clinic, and how a clinic loses them without ever knowing.",
       at: [0, 0.08, 0.22, 0.4, 0.6, 0.84, 1.24, 1.64, 1.86, 2.18, 2.74, 3.02, 3.12, 3.4, 3.8, 4.22, 4.5, 5.04],
-      cues: [{ from: 0.8, to: 3.38, icon: "person" }, { from: 3.38, to: 5.3, icon: "person", lost: 3.38 }, { from: 5.3, to: 6.4, eyes: "wide" }] },
+      cues: [{ from: 0.8, to: 1.8, icon: "person" }, { from: 1.8, to: 3.38, icon: "clinic" }, { from: 3.38, to: 5.3, icon: "person", lost: 3.38 }, { from: 3.38, to: 5.4, eyes: "sad" }, { from: 5.4, to: 6.4, eyes: "wide" }] },
   ];
 
   // --- GL
@@ -247,24 +278,23 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); o
 
   // --- The story of one visit.
   let phase = "asleep", wakeT = 0, li = -1, lineStart = 0, ended = false, hoverDoor = -1, frozen = -1;
-  let yaw = 0, pitch = 0, roll = 0, tYaw = 0, tPitch = 0, lookX = 0, lookY = 0;
-  let nextBlink = 3, blinkUntil = 0;
-  const eyeCol = EYE_REST.slice(); let eyeTgt = EYE_REST;
-  const doorTgt = new Float32Array(N * 3), doorHalo = new Uint8Array(N); let doorShown = -1, doorAll = true;
+  let yaw = 0, pitch = 0, roll = 0, tYaw = 0, tPitch = 0, lookX = 0, lookY = 0, spin = 0, wave = 0;
+  let nextBlink = 3, blinkUntil = 0, nextIdle = 0, idle = null;
+  const eyeCol = EYE_REST.slice();
+  const doorTgt = new Float32Array(N * 3), doorHalo = new Uint8Array(N); let doorShown = -1;
   function aimDoor(d) {
     const r = doors[d].getBoundingClientRect();
     const [x0, y1] = toWorld(r.left + 2, r.top + 2), [x1, y0] = toWorld(r.right - 2, r.bottom - 2);
-    // The tile's own rounded outline: four edges and four quarter arcs, walked by length.
+    // The tile's own rounded outline: four edges and four quarter arcs, walked by length. His body rings it; his head stays.
     const w = x1 - x0, h = y1 - y0, px1 = 2 * HALF / H, ra = Math.min(parseFloat(getComputedStyle(doors[d]).borderTopLeftRadius) * px1, w / 2, h / 2);
     const segs = [[x0 + ra, y1, x1 - ra, y1], [x1 - ra, y1 - ra, Math.PI / 2, 0], [x1, y1 - ra, x1, y0 + ra], [x1 - ra, y0 + ra, 0, -Math.PI / 2],
       [x1 - ra, y0, x0 + ra, y0], [x0 + ra, y0 + ra, -Math.PI / 2, -Math.PI], [x0, y0 + ra, x0, y1 - ra], [x0 + ra, y1 - ra, Math.PI, Math.PI / 2]];
     const len = segs.map((s, k) => (k % 2 ? ra * Math.PI / 2 : Math.hypot(s[2] - s[0], s[3] - s[1]))), per = len.reduce((p, q) => p + q, 0);
-    for (let j = 0; j < N; j++) {
-      let t = ((j + rnd()) / N) * per, k = 0; while (k < 7 && t > len[k]) t -= len[k++];
+    for (let j = 0; j < NB; j++) {
+      let t = ((j + rnd()) / NB) * per, k = 0; while (k < 7 && t > len[k]) t -= len[k++];
       const s = segs[k], f = len[k] ? t / len[k] : 0, inset = rnd() * 0.01; let x, y;
       if (k % 2) { const a = s[2] + (s[3] - s[2]) * f; x = s[0] + Math.cos(a) * (ra - inset); y = s[1] + Math.sin(a) * (ra - inset); }
       else { x = s[0] + (s[2] - s[0]) * f; y = s[1] + (s[3] - s[1]) * f; if (k === 0) y -= inset; else if (k === 2) x -= inset; else if (k === 4) y += inset; else x += inset; }
-      // Most of him rings the tile; the rest hangs around it as a soft glow.
       doorHalo[j] = j % 5 < 2 ? 1 : 0;
       if (doorHalo[j]) { const a = k % 2 ? s[2] + (s[3] - s[2]) * f : [Math.PI / 2, 0, 0, 0, -Math.PI / 2, 0, Math.PI, 0][k], o = Math.pow(rnd(), 2) * 26 * px1; x += Math.cos(a) * o; y += Math.sin(a) * o; }
       doorTgt[j * 3] = x; doorTgt[j * 3 + 1] = y; doorTgt[j * 3 + 2] = (rnd() - 0.5) * 0.02;
@@ -280,19 +310,19 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); o
   function lineTime(now) { if (frozen >= 0) return frozen; return usingAudio && !au.paused ? au.currentTime : (now - lineStart) / 1000; }
   function nextLine() { if (ended) return; ended = true; setTimeout(() => { if (li + 1 < LINES.length) playLine(li + 1); else finish(); }, 650); }
   au.addEventListener("ended", nextLine);
-  function finish() { li = -1; phase = "idle"; againBtn.hidden = false; wordsEl.innerHTML = "<span class=\"on\">Ask me anything, or open a door.</span>"; }
+  function finish() { li = -1; phase = "idle"; againBtn.hidden = false; nextIdle = performance.now() / 1000 + 4; wordsEl.innerHTML = "<span class=\"on\">Ask me anything, or open a door.</span>"; }
   function wake() {
     initAudio(); if (actx && actx.state === "suspended") actx.resume();
     // Phones only let a sound start inside the tap: play and pause it here so the later lines may start on their own.
     au.src = LINES[0].src; const u = au.play(); if (u && u.then) u.then(() => au.pause()).catch(() => {});
-    wakeBtn.hidden = true; againBtn.hidden = true; phase = "waking"; wakeT = performance.now() / 1000; frozen = -1;
+    wakeBtn.hidden = true; againBtn.hidden = true; phase = "waking"; wakeT = performance.now() / 1000; frozen = -1; idle = null;
     wordsEl.textContent = "";
-    setTimeout(() => { phase = "awake"; playLine(0); }, reduce ? 300 : 2900);
+    setTimeout(() => { phase = "awake"; playLine(0); }, reduce ? 300 : 3600);
   }
   wakeBtn.addEventListener("click", wake);
   againBtn.addEventListener("click", () => { au.pause(); li = -1; wake(); });
   doors.forEach((d, k) => {
-    const on = () => { if (phase === "idle") { hoverDoor = k; aimDoor(k); } };
+    const on = () => { if (phase === "idle") { hoverDoor = k; idle = null; } };
     const off = () => { if (hoverDoor === k) hoverDoor = -1; };
     d.addEventListener("pointerenter", on); d.addEventListener("focus", on); d.addEventListener("pointerleave", off); d.addEventListener("blur", off);
   });
@@ -314,27 +344,37 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); o
       for (const c of L.cues) if (lt >= c.from && lt < c.to) { if (c.icon) icon = c.icon; if (c.door != null) door = c.door; if (c.eyes) cueEyes = c.eyes; if (c.lost != null) lostK = Math.min(1, (lt - c.lost) / 1.6); }
       const spans = wordsEl.children; for (let k = 0; k < spans.length && k < L.at.length; k++) spans[k].classList.toggle("on", lt >= L.at[k]);
     }
-    let hover = -1;
-    if (door < 0 && hoverDoor >= 0) hover = hoverDoor;
-    const anyDoor = door >= 0 ? door : hover;
-    if (anyDoor >= 0 && anyDoor !== doorShown) aimDoor(anyDoor);
-    if (anyDoor < 0) doorShown = -1;
-    doors.forEach((d, k) => d.classList.toggle("lit", k === anyDoor));
+    if (door < 0 && hoverDoor >= 0 && phase === "idle") door = hoverDoor;
+    if (door >= 0 && door !== doorShown) aimDoor(door);
+    if (door < 0) doorShown = -1;
+    doors.forEach((d, k) => d.classList.toggle("lit", k === door));
 
-    // His eyes: the look of the moment, a blink now and then, a glance toward the door he means, the colour of what he talks about.
+    // When there is nothing to show, he keeps himself busy: a look around, a wink, a wave, a little spin.
     const sinceWake = t - wakeT;
+    if (phase === "idle" && !reduce && door < 0) {
+      if (!idle && t > nextIdle) { idle = { kind: ["look", "wink", "wave", "spin"][Math.floor(Math.random() * 4)], start: t }; }
+      if (idle && t - idle.start > 2.2) { idle = null; nextIdle = t + 5 + Math.random() * 4; }
+    }
+    const idleK = idle ? idle.kind : null, idleP = idle ? (t - idle.start) / 2.2 : 0;
+
+    // His eyes: the look of the moment, a blink now and then, a glance toward what he means, the colour of what he talks about.
     let expr = "open";
     if (phase === "asleep") expr = "line";
     else if (phase === "waking") expr = sinceWake < 1.3 ? "line" : sinceWake < 1.45 ? "blink" : sinceWake < 1.7 ? "open" : sinceWake < 1.82 ? "blink" : sinceWake < 2.2 ? "open" : "happy";
     else if (cueEyes) expr = cueEyes;
+    else if (idleK === "wink" && idleP < 0.5) expr = "wink";
     if (!reduce && (expr === "open" || expr === "wide") && phase !== "asleep") {
       if (t > nextBlink) { blinkUntil = t + 0.13; nextBlink = t + 2.8 + Math.random() * 3; }
       if (t < blinkUntil) expr = "blink";
     }
     let lx = (tYaw / 0.28) * 0.05, ly = -(tPitch / 0.1) * 0.03;
-    if (hover >= 0) { const r = doors[hover].getBoundingClientRect(), [dx] = toWorld(r.left + r.width / 2, 0); lx = Math.max(-0.07, Math.min(0.07, (dx - cx) * 0.06)); ly = -0.05; }
+    if (door >= 0) { const r = doors[door].getBoundingClientRect(), [dx] = toWorld(r.left + r.width / 2, 0); lx = Math.max(-0.07, Math.min(0.07, (dx - cx) * 0.06)); ly = -0.05; }
+    else if (icon) { lx = 0; ly = -0.045; }
+    if (expr === "scan") lx = 0.07 * Math.sin(t * 6);
+    if (expr === "think") { lx = 0.05; ly = 0.05; }
+    if (idleK === "look") lx = 0.07 * Math.sin(idleP * Math.PI * 2);
     lookX += (lx - lookX) * 0.12; lookY += (ly - lookY) * 0.12;
-    eyeTgt = door >= 0 ? ACCENT[door] : hover >= 0 ? ACCENT[hover] : icon ? EYE_ICON : EYE_REST;
+    const eyeTgt = door >= 0 ? ACCENT[door] : expr === "sad" ? EYE_SAD : icon || expr === "star" || expr === "sparkle" ? EYE_GOLD : EYE_REST;
     for (let k = 0; k < 3; k++) eyeCol[k] += (eyeTgt[k] - eyeCol[k]) * Math.min(1, dt * 4);
     gl.uniform3fv(uTint, eyeCol);
 
@@ -344,49 +384,56 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); o
     if (speaking && (!usingAudio || !an || silentFor > 0.8)) { const L = LINES[li]; let w = 0; for (const s of L.at) if (lt >= s && lt < s + 0.3) w = 1; a = w * (0.55 + 0.3 * Math.sin(t * 23)); }
     amp += (a - amp) * (a > amp ? 0.5 : 0.12);
 
-    // His pose: floating, turning a little toward the visitor, the head bobbing apart from the body, a tilt when he wonders.
+    // His pose: floating, turning toward the visitor, the head bobbing apart from the body, a tilt when he wonders, a wave hello.
     const still = reduce ? 0 : 1;
     yaw += ((tYaw + 0.1 * Math.sin(t * 0.33)) * still - yaw) * 0.04;
     pitch += ((tPitch + 0.04 * Math.sin(t * 0.27) + amp * 0.03) * still - pitch) * 0.06;
-    roll += (((expr === "wide" ? 0.14 : expr === "happy" ? -0.06 : 0) + 0.03 * Math.sin(t * 0.5)) * still - roll) * 0.05;
-    const cyw = Math.cos(yaw), syw = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch), cr = Math.cos(roll), sr = Math.sin(roll);
+    roll += (((expr === "wide" || expr === "think" ? 0.14 : expr === "happy" || expr === "wink" ? -0.06 : expr === "sad" ? 0.08 : 0) + 0.03 * Math.sin(t * 0.5)) * still - roll) * 0.05;
+    const waving = (phase === "waking" && sinceWake > 2.2) || (phase === "awake" && li === 0 && lt < 0.7) || idleK === "wave";
+    wave += ((waving && still ? 1 : 0) - wave) * 0.08;
+    spin = idleK === "spin" && still ? Math.PI * 2 * (1 - Math.cos(Math.min(1, idleP) * Math.PI)) / 2 : 0;
+    const Y = yaw + spin, cyw = Math.cos(Y), syw = Math.sin(Y), cp = Math.cos(pitch), sp = Math.sin(pitch), cr = Math.cos(roll), sr = Math.sin(roll);
     const bob = 0.035 * Math.sin(t * 1.25) * still, headBob = bob + 0.012 * Math.sin(t * 1.25 + 0.9) * still, armSw = 0.06 * Math.sin(t * 1.1) * still;
+    const waveAng = wave * (2.2 + 0.35 * Math.sin(t * 11)), cwv = Math.cos(waveAng), swv = Math.sin(waveAng);
 
     const waking = phase !== "asleep";
     const ish = icon ? SHAPES[icon] : null;
-    const icx = cx, icy = cy + S * 0.12, isz = S * 0.72;
+    const big = icon === "skyline" ? 0.56 : 0.5, icx = cx, icy = cy + S * (icon === "skyline" ? -0.45 : -0.4), isz = S * big;
     const kFast = reduce ? 1 : 0;
     const eyeH = 1 + amp * 0.22, eyeB = 1.15 + amp * 0.6;
 
     for (let i = 0; i < N; i++) {
       const i3 = i * 3, p = part[i]; let tx, ty, tz, b, tint = 0, sp2 = 1;
-      const onBody = waking && (reduce || sinceWake > delay[i]);
-      const toDoor = door >= 0 || (hover >= 0 && i % 4 === 0 && !isEye(i));
-      if (ish) {
-        const j = i3; tx = icx + ish[j] * isz; ty = icy + ish[j + 1] * isz; tz = ish[j + 2] * isz;
-        b = 0.56 + 0.08 * Math.sin(t * 4 + seed[i] * 40); sp2 = 4.5;
+      const onBody = waking && (reduce || sinceWake > delay[i]), bodyPart = p >= 4;
+      if (onBody && bodyPart && ish) {
+        const j = rb[i] * 3; tx = icx + ish[j] * isz; ty = icy + ish[j + 1] * isz; tz = ish[j + 2] * isz;
+        b = 0.78 + 0.1 * Math.sin(t * 4 + seed[i] * 40); sp2 = 4.5;
         if (lostK > 0) { const dx = ish[j], dy = ish[j + 1], f = lostK * lostK * (0.9 + seed[i] * 1.6); tx += dx * f * S * 1.2; ty += (dy * f * 1.2 - f * 0.7) * S; b *= 1 - lostK * 0.92; }
-      } else if (toDoor && doorShown >= 0) {
-        tx = doorTgt[i3]; ty = doorTgt[i3 + 1]; tz = doorTgt[i3 + 2]; b = (doorHalo[i] ? 0.26 : 0.8) + 0.12 * Math.sin(t * 5 + seed[i] * 30); sp2 = 1.5;
+      } else if (onBody && bodyPart && door >= 0 && doorShown >= 0) {
+        const j = rb[i] * 3; tx = doorTgt[j]; ty = doorTgt[j + 1]; tz = doorTgt[j + 2]; b = (doorHalo[rb[i]] ? 0.3 : 0.9) + 0.12 * Math.sin(t * 5 + seed[i] * 30); sp2 = 1.5;
         const dd = Math.hypot(tx - P[i3], ty - P[i3 + 1]); tint = Math.max(0, 1 - dd * 2.2);
       } else if (onBody) {
         let ox, oy, oz, nx = NR[i3], ny = NR[i3 + 1], nz = NR[i3 + 2], head = p <= 3;
         if (p === 2 || p === 3) {
-          const side = p === 2 ? -1 : 1, [u0, v0] = eyeLocal(expr, EA[i * 2], EA[i * 2 + 1]);
+          const side = p === 2 ? -1 : 1, [u0, v0] = eyeLocal(expr, EA[i * 2], EA[i * 2 + 1], side);
           const tilt = side * -0.12, u = u0 * Math.cos(tilt) - v0 * eyeH * Math.sin(tilt), v = u0 * Math.sin(tilt) + v0 * eyeH * Math.cos(tilt);
           const ex = (expr === "line" ? side * 0.085 : side * 0.14) + lookX, ey = VIS.cy + 0.005 + lookY;
           ox = ex + u; oy = ey + v; oz = headZ(ox, oy) + 0.014; nx = 0; ny = 0; nz = 1; sp2 = 6;
         } else { ox = M[i3]; oy = M[i3 + 1]; oz = M[i3 + 2]; }
-        if (p === 5 || p === 6) { const s = p === 5 ? -1 : 1; ox += s * armSw * (oy + 0.5) * 0.3; oy += armSw * 0.2; }
-        // The head turns and tilts on its own; the body follows the turn more softly.
-        const k = head ? 1 : 0.55, yw = yaw * k, cY = head ? cyw : Math.cos(yw), sY = head ? syw : Math.sin(yw);
+        if (p === 5) { ox += -armSw * (oy + 0.5) * 0.3; oy += armSw * 0.2; }
+        if (p === 6) {
+          // The right arm swings up from its shoulder to wave.
+          const px0 = 0.46, py0 = 0.08, vx = ox - px0, vy = oy - py0;
+          ox = px0 + vx * cwv - vy * swv + armSw * (oy + 0.5) * 0.3 * (1 - wave); oy = py0 + vx * swv + vy * cwv + armSw * 0.2 * (1 - wave);
+        }
+        const k = head ? 1 : 0.55, yw = Y * k, cY = head ? cyw : Math.cos(yw), sY = head ? syw : Math.sin(yw);
         let hx = ox, hy = oy - (head ? HEAD.cy : 0), hz = oz;
         if (head) { const rx = hx * cr - hy * sr, ry = hx * sr + hy * cr; hx = rx; hy = ry; const py2 = hy * cp - hz * sp, pz2 = hy * sp + hz * cp; hy = py2; hz = pz2; }
         const wx = hx * cY + hz * sY, wz = -hx * sY + hz * cY, wy = hy + (head ? HEAD.cy + headBob : bob);
         tx = cx + S * wx; ty = cy + S * wy; tz = S * wz;
         if (p === 2 || p === 3) { b = eyeB * (0.92 + 0.08 * Math.sin(t * 7 + seed[i] * 30)); tint = 1; }
         else {
-          let rnx = nx * cY + nz * sY, rny = ny, rnz = -nx * sY + nz * cY;
+          const rnx = nx * cY + nz * sY, rny = ny, rnz = -nx * sY + nz * cY;
           const lam = Math.max(0, rnx * LX + rny * LY + rnz * LZ), rim = Math.pow(1 - Math.min(1, Math.abs(rnz)), 3);
           b = 0.3 + 0.62 * lam + 0.36 * rim + 0.25 * Math.max(0, rnz) ** 2; if (rnz < -0.15) b *= 0.5;
           if (p === 1) b = 0.7 + 0.25 * lam + amp * 0.3;
@@ -416,8 +463,9 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); o
   }
   if (reduce) { phase = "idle"; wakeBtn.textContent = "Tap to hear him"; wakeT = -99; }
   requestAnimationFrame(frame);
-  window.__guide = { state: () => ({ phase, li, amp, usingAudio, N }), wake,
+  window.__guide = { state: () => ({ phase, li, amp, usingAudio, N, NB }), wake,
     freeze: (i, s) => { if (li !== i) playLine(i); au.pause(); frozen = s; },
-    idle: () => { au.pause(); li = -1; frozen = -1; finish(); } };
+    idle: () => { au.pause(); li = -1; frozen = -1; finish(); },
+    act: (kind) => { idle = { kind, start: performance.now() / 1000 }; } };
 })();
 </script>
