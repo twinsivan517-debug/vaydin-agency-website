@@ -207,8 +207,9 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     }
     drawn = true;
 
-    spin *= Math.exp(-dt / 1.3);
-    if (Math.abs(spin) > 4 * Math.PI && !reduce) { dizzyUntil = t + 3.6; spin = 0; }
+    /* About two laps around him at an easy pace (a lap a second or slower) make him dizzy; back and forth cancels out. */
+    spin *= Math.exp(-dt / 4);
+    if (Math.abs(spin) > 3 * Math.PI && !reduce) { dizzyUntil = t + 3.6; spin = 0; }
     const dizzy = t < dizzyUntil;
 
     let expr: Eyes = "open";
