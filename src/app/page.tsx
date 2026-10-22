@@ -29,7 +29,7 @@ export default function Home() {
             the website, answered and kept current, with your reception approving by a tap.
           </p>
           <details className="mt-6 text-muted">
-            <summary className="label cursor-pointer text-gold-bright">Read what she says</summary>
+            <summary className="label cursor-pointer text-gold-bright">Read what he says</summary>
             <ol className="mt-3 space-y-2 text-base leading-7">
               {CHAPTERS.flatMap((c) => c.lines).map((line) => (
                 <li key={line.id}>{line.text}</li>

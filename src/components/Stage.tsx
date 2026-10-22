@@ -11,6 +11,7 @@
 import { useEffect, useEffectEvent, useReducer, useRef, useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
 import { Figure } from "@/components/Figure";
+import { DOORS } from "@/lib/doors";
 import type { GuideHandle, LineOutcome } from "@/components/Guide";
 import { MORE, UNKNOWN, answer, answerLine, type Answer } from "@/lib/answers";
 import { afterTalk, followUp, match, type Reply } from "@/lib/match";
@@ -338,20 +339,7 @@ export function Stage() {
         We find the patients your clinic never saw.
       </h1>
 
-      <div className="hero-guide md:sticky md:top-16">
-        <div className={`guide-floor relative aspect-[9/16] w-full md:aspect-auto md:h-[min(76vh,620px)] ${lit ? "floor-shine" : ""}`}>
-          {busy && (
-            <button type="button" onClick={() => dispatch({ type: "stop" })} className="guide-stop" aria-label="Stop him">
-              <svg aria-hidden="true" viewBox="0 0 20 20" width="16" height="16">
-                <rect x="4" y="4" width="12" height="12" rx="2" fill="currentColor" />
-              </svg>
-            </button>
-          )}
-          <Figure ref={guide} mode={mode(state)} audio={() => voice.current?.audio ?? null} pokeable={pokeable(state)} onPoke={poke} />
-        </div>
-      </div>
-
-      <div aria-live="polite" className="hero-cloud md:pt-12">
+      <div aria-live="polite" className="hero-cloud">
         <div key={state.cloud.id} className="cloud">
           <p data-long={waking ? undefined : long(state.cloud.text)} className="text-[1.05rem] leading-snug md:text-lg">
             {waking ? (
@@ -374,6 +362,56 @@ export function Stage() {
         </div>
       </div>
 
+      <div className="hero-guide">
+        <div className={`guide-floor relative ${lit ? "floor-shine" : ""}`}>
+          {busy && (
+            <button type="button" onClick={() => dispatch({ type: "stop" })} className="guide-stop" aria-label="Stop him">
+              <svg aria-hidden="true" viewBox="0 0 20 20" width="16" height="16">
+                <rect x="4" y="4" width="12" height="12" rx="2" fill="currentColor" />
+              </svg>
+            </button>
+          )}
+          <Figure ref={guide} mode={mode(state)} audio={() => voice.current?.audio ?? null} pokeable={pokeable(state)} onPoke={poke} />
+        </div>
+      </div>
+
+      {/* The five pages beside him, the doors his light rings when he names one. */}
+      <nav className="hero-doors wakes" aria-label="The five pages">
+        {DOORS.map((d) => (
+          <a key={d.href} href={d.href} data-figure-door="" className="hero-door" style={{ "--accent": d.accent } as React.CSSProperties}>
+            <small>{d.step ?? d.tag}</small>
+            <b>{d.word}</b>
+            <span>{d.title}</span>
+          </a>
+        ))}
+      </nav>
+
+      <div className="hero-ask min-w-0" style={{ "--i": QUESTIONS.length + 1 } as React.CSSProperties}>
+        <form onSubmit={submit} className="flex gap-2">
+          <label htmlFor="ask" className="sr-only">
+            Your question
+          </label>
+          <input
+            id="ask"
+            value={draft}
+            onChange={(event) => {
+              setDraft(event.target.value);
+              /* His reply to what is typed so far loads while the visitor types. */
+              const reply = event.target.value.trim().length > 2 ? heard(event.target.value) : null;
+              if (reply && reply !== "more") ready(replyLines(reply)[0]);
+            }}
+            placeholder="Ask me about your clinic…"
+            autoComplete="off"
+            enterKeyHint="send"
+            maxLength={200}
+            className="min-w-0 flex-1 rounded-full border border-gold/40 bg-white/[0.04] px-4 py-3 text-base text-foreground placeholder:text-muted"
+          />
+          <button type="submit" className="rounded-full bg-gold-bright px-5 py-3 text-base font-medium text-background">
+            Ask
+          </button>
+        </form>
+      </div>
+
       <ul className="hero-chips" aria-label="Questions">
         {QUESTIONS.map((c, i) => (
           <li key={c.id} style={{ "--i": i } as React.CSSProperties}>
@@ -391,6 +429,8 @@ export function Stage() {
         </li>
       </ul>
 
+      <p className="hero-note text-center text-xs leading-relaxed text-muted">He answers only from Vaydin&apos;s own pages. Nothing you type is saved or sent.</p>
+
       <div ref={card} className="hero-card wakes min-w-0">
         {/* The key remounts the card, so each answer's folder is pulled out afresh. */}
         <Card
@@ -402,37 +442,6 @@ export function Stage() {
           onLess={() => dispatch({ type: "less" })}
           current={busy ? state.cloud.id.replace(/^a-/, "") : undefined}
         />
-      </div>
-
-      <div className="hero-ask min-w-0" style={{ "--i": QUESTIONS.length + 1 } as React.CSSProperties}>
-        <div>
-          <form onSubmit={submit} className="flex gap-2">
-            <label htmlFor="ask" className="sr-only">
-              Your question
-            </label>
-            <input
-              id="ask"
-              value={draft}
-              onChange={(event) => {
-                setDraft(event.target.value);
-                /* Her reply to what is typed so far loads while the visitor types. */
-                const reply = event.target.value.trim().length > 2 ? heard(event.target.value) : null;
-                if (reply && reply !== "more") ready(replyLines(reply)[0]);
-              }}
-              placeholder="Ask him…"
-              autoComplete="off"
-              enterKeyHint="send"
-              maxLength={200}
-              className="min-w-0 flex-1 rounded-full border border-gold/40 bg-white/[0.04] px-4 py-3 text-base text-foreground placeholder:text-muted"
-            />
-            <button type="submit" className="rounded-full bg-gold-bright px-5 py-3 text-base font-medium text-background">
-              Ask
-            </button>
-          </form>
-          <p className="mt-2 text-xs leading-relaxed text-muted">
-            He answers only from Vaydin&apos;s own pages. Nothing you type is saved or sent.
-          </p>
-        </div>
       </div>
 
       {ripple && <span key={ripple.key} aria-hidden="true" className="ripple" style={{ left: ripple.x, top: ripple.y }} />}

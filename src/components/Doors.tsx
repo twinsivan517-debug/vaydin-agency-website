@@ -58,9 +58,9 @@ export function Doors() {
 
   return (
     <section ref={section} id="pages" aria-labelledby="pages-title" className="doors wakes mx-auto w-full max-w-6xl px-5 pt-24 sm:px-12 md:pt-28">
-      <p className="label text-gold-bright">The site behind her</p>
+      <p className="label text-gold-bright">The site behind him</p>
       <h2 id="pages-title" className="mt-2 max-w-3xl font-display text-2xl leading-tight sm:text-3xl">
-        She tells it in a minute. These five pages tell it in full.
+        He tells it in a minute. These five pages tell it in full.
       </h2>
       <ul className="doors-grid mt-8" aria-label="The five pages">
         {DOORS.map((d) => (

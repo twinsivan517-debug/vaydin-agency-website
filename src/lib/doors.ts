@@ -4,7 +4,7 @@
    disagree. Order and addresses as in PAGES. */
 
 export type Icon = "scan" | "wrench" | "grow" | "engine" | "plan";
-export type Door = { word: string; step?: string; href: string; accent: string; icon: Icon; title: string; line: string; facts: string[] };
+export type Door = { word: string; step?: string; tag?: string; href: string; accent: string; icon: Icon; title: string; line: string; facts: string[] };
 
 export const DOORS: Door[] = [
   {
@@ -39,6 +39,7 @@ export const DOORS: Door[] = [
   },
   {
     word: "Engine",
+    tag: "System",
     href: "/engine.html",
     accent: "#a78bfa",
     icon: "engine",
@@ -48,6 +49,7 @@ export const DOORS: Door[] = [
   },
   {
     word: "Your plan",
+    tag: "Plans",
     href: "/pricing.html",
     accent: "#34e3f0",
     icon: "plan",
