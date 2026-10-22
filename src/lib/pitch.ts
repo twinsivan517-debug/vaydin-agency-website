@@ -180,7 +180,7 @@ export const POKES: Line[] = [
   { id: "p3", text: "Careful, I'm working.", audio: "/voice/poke-3.mp3", mood: "hop" },
   { id: "p4", text: "Okay, okay. What would you like to know?", audio: "/voice/poke-4.mp3", mood: "hop" },
   { id: "p5", text: "I'm a guide, not a button.", audio: "/voice/poke-5.mp3", mood: "shake" },
-  { id: "p6", text: "Fine. I'll just lie back down, then.", audio: "/voice/poke-6.mp3", mood: "shake" },
+  { id: "p6", text: "Fine. I'll just go back to sleep, then.", audio: "/voice/poke-6.mp3", mood: "shake" },
 ];
 
 export const chapter = (id: ChapterId) => CHAPTERS.find((c) => c.id === id)!;

@@ -682,3 +682,11 @@ His word 2026-10-22: a male voice, deep, a teacher explaining, a little robotic 
 - Voice Design, 3 previews each: "deep, warm male AI guide, teacher-like, a subtle synthetic shimmer" and "friendly futuristic AI companion, deep, lightly robotic, warm and full of feeling". Not saved to the account yet.
 - Russ with our own robotic layer (ffmpeg, phase-zeroed copy mixed in at about a fifth and two fifths).
 - All 17 on a private page, https://claude.ai/artifact/4JrAauqe9pjKsT5P4h6ACg (`lab/particle-guide/voices.html`). Verdict: OWED, the owner's ear.
+
+# His voice, every line (Jon)
+
+His pick 2026-10-22: Jon ("Natural Authority, Agent / Assistant", ElevenLabs library), Clyde the backup; the name as written (A); a light AI layer (2). Lines approved by him the same day: his wake ("Mmm… oh, hello there." / "Thank you for waking me. I'm Vaydin's guide."), his poke-6 ("Fine. I'll just go back to sleep, then."), x-personal as "Vaydin's guide", and his line "Dubai never sleeps…" recorded both ways: tag-a "…neither does your clinic", tag-b "…your clinic never misses them". Which one is true waits on his answer: the site says replies are approved by reception with a tap (a-bot, 08, a-engine).
+
+- Eleven v3, emotion tags on 36 of 74 lines (`media/voice/jon/script.json`, raw takes beside it, not in git). Web files: the light AI layer (phase-zeroed copy at 0.24) then the site's chain (trim, 150 ms tail, -16 LUFS, mono 32 kHz 40 kbps), into `public/voice/` on this branch only. Tools: `lab/particle-guide/voice/record.py`, `verify.py`, `extract.mjs`.
+- Every line transcribed back and compared with its words: 7 of 74 flagged, each opened. False: 00b ("Hmm" for "Mmm"), poke-3, x-choose (short lines), a-legit (a second, larger transcriber hears it right, laugh included). Real: x-hello garbled ("Pit ticket chapter" by both), re-recorded clean; x-kind and x-thanks rushed, re-recorded. The larger transcriber hears the name as "Vayden".
+- Characters: 10,183 before, 14,228 after (4,045 for the name tests, the 74 lines and three retakes).

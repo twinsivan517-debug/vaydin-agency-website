@@ -17,7 +17,7 @@ export const TALK: Record<TalkKind, Line> = {
   thanks: line("x-thanks", "You're welcome. Is there anything else I can help with?"),
   bye: line("x-bye", "Thank you for stopping by. We're on WhatsApp whenever you need us."),
   kind: line("x-kind", "That's kind of you, thank you. Now, how can I help with your clinic?"),
-  personal: line("x-personal", "I'm Vaydin's voice, so I only talk about Vaydin. Ask me anything about your clinic."),
+  personal: line("x-personal", "I'm Vaydin's guide, so I only talk about Vaydin. Ask me anything about your clinic."),
 };
 
 /* "You", the way it is typed. */
