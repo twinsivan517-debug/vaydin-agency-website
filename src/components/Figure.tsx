@@ -25,6 +25,8 @@ export const Figure = forwardRef<GuideHandle, Props>(function Figure(props, ref)
   const stage = useRef<HTMLDivElement>(null);
   const latest = useRef(props);
   const engine = useRef<ReturnType<typeof runFigure>>(null);
+  /* A press that landed on him, answered on the click that follows: a phone counts a click, not a press, as the touch that may start sound. */
+  const pressed = useRef(false);
 
   useEffect(() => {
     latest.current = props;
@@ -50,6 +52,10 @@ export const Figure = forwardRef<GuideHandle, Props>(function Figure(props, ref)
       () => latest.current.onLit?.(),
     );
     engine.current = run;
+    /* No WebGL here: no figure, but the page must not stay dark waiting for his
+       light. A turn later, so the page has dimmed itself first. */
+    const unlit = run ? 0 : window.setTimeout(() => latest.current.onLit?.(), 0);
+    if (!run) canvas.remove();
     let live = true;
     fetch("/guide/cues.json")
       .then((r) => (r.ok ? r.json() : {}))
@@ -59,6 +65,7 @@ export const Figure = forwardRef<GuideHandle, Props>(function Figure(props, ref)
       .catch(() => {});
     return () => {
       live = false;
+      window.clearTimeout(unlit);
       run?.stop();
       canvas.remove();
       engine.current = null;
@@ -80,8 +87,11 @@ export const Figure = forwardRef<GuideHandle, Props>(function Figure(props, ref)
       className="figure-stage absolute inset-0"
       onPointerDown={(event) => {
         /* A press always dents him; he answers it only when he is free to. */
-        const hit = engine.current?.poke(event.clientX, event.clientY);
-        if (hit && latest.current.pokeable) latest.current.onPoke(event.timeStamp, { x: event.clientX, y: event.clientY });
+        pressed.current = !!engine.current?.poke(event.clientX, event.clientY);
+      }}
+      onClick={(event) => {
+        if (pressed.current && latest.current.pokeable) latest.current.onPoke(event.timeStamp, { x: event.clientX, y: event.clientY });
+        pressed.current = false;
       }}
     />
   );

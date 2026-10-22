@@ -102,9 +102,9 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
 
   /* A door's own rounded outline, walked by length: most of his body rings it, the rest glows around it. */
   const doorTgt = new Float32Array(B.nb * 3), doorHalo = new Uint8Array(B.nb);
-  let doorShown = -1;
-  function aimDoor(el: HTMLElement, d: number) {
-    const r = el.getBoundingClientRect(), K = B.nb;
+  let doorShown = -1, doorAt = "";
+  function aimDoor(el: HTMLElement, d: number, r: DOMRect) {
+    const K = B.nb;
     const [x0, y1] = toWorld(r.left + 2, r.top + 2), [x1, y0] = toWorld(r.right - 2, r.bottom - 2);
     const w = x1 - x0, h = y1 - y0, px1 = (2 * HALF) / H;
     const ra = Math.min(parseFloat(getComputedStyle(el).borderTopLeftRadius) * px1 || 0, w / 2, h / 2);
@@ -127,6 +127,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
       doorTgt.set([x, y, ((j % 11) - 5) * 0.002], j * 3);
     }
     doorShown = d;
+    doorAt = `${r.left},${r.top},${r.width},${r.height}`;
   }
 
   /* Where he was pressed: a dent that heals within a breath. Pokes within
@@ -142,7 +143,8 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
       const t = performance.now() / 1000;
       annoy = t - lastPoke < 8 ? Math.min(annoy + 1, 5) : 0;
       lastPoke = t;
-      holes.push({ x, y, t, r: S * (0.16 + 0.05 * annoy), life: 0.6 + 0.15 * annoy });
+      /* Kept relative to him, so the dent rides with him if the page scrolls. */
+      holes.push({ x: x - cx, y: y - cy, t, r: S * (0.16 + 0.05 * annoy), life: 0.6 + 0.15 * annoy });
       flinch = 0.8 + 0.16 * annoy;
       if (annoy > 0 && !reduce) shakeUntil = t + 0.2 + 0.08 * annoy;
     }
@@ -191,7 +193,11 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
       for (const b of rec.beats) if (lt >= b && lt < b + 0.28) beat = 1;
     }
     if (src.startsWith("poke-")) cueEyes = POKED[src] ?? cueEyes;
-    if (door >= 0 && door !== doorShown) aimDoor(inp.doors[door], door);
+    /* Aimed again whenever the tile moves on screen, as it does when the page scrolls under him. */
+    if (door >= 0) {
+      const r = inp.doors[door].getBoundingClientRect();
+      if (door !== doorShown || doorAt !== `${r.left},${r.top},${r.width},${r.height}`) aimDoor(inp.doors[door], door, r);
+    }
     if (door < 0) doorShown = -1;
     inp.doors.forEach((d, k) => d.classList.toggle("lit", k === door));
 
@@ -314,8 +320,8 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
       }
       /* A dent where he was pressed pushes his dots out of it; it closes as the dent heals. */
       for (const h of holes) {
-        const dx = tx - h.x, dy = ty - h.y, d = Math.hypot(dx, dy), r = h.r * (1 - (t - h.t) / h.life);
-        if (d < r && d > 1e-4) { tx = h.x + (dx / d) * r; ty = h.y + (dy / d) * r; sp2 = Math.max(sp2, 8); }
+        const hx = cx + h.x, hy = cy + h.y, dx = tx - hx, dy = ty - hy, d = Math.hypot(dx, dy), r = h.r * (1 - (t - h.t) / h.life);
+        if (d < r && d > 1e-4) { tx = hx + (dx / d) * r; ty = hy + (dy / d) * r; sp2 = Math.max(sp2, 8); }
       }
       let px = P[i3], py = P[i3 + 1], pz = P[i3 + 2];
       const dx = tx - px, dy = ty - py, dz = tz - pz, dist = Math.hypot(dx, dy, dz), k = reduce ? 1 : 1 - Math.exp(-dt * B.rate[i] * sp2);

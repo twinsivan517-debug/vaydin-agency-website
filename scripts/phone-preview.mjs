@@ -38,10 +38,13 @@ const files = [];
     /* Scripts and styles resolve against the page that loads them, a page at the root. */
     const depth = name.endsWith(".html") ? rel.split("/").length - 1 : 0;
     const up = depth ? "../".repeat(depth) : "./";
-    /* The bare "/_next/" stays: Next finds its own folder in a script's address by it. */
+    /* Left as they are, being markers the router compares, not addresses: the
+       bare "/_next/" (Next finds its own folder in a script's address by it),
+       "/_next/static/immutable", "/index.txt" and the "_" names. */
     let text = readFileSync(from, "utf8").replace(ROOTED, (m, lead, at, all) => {
       const rest = all.slice(at + lead.length);
-      return /^\/_next\/\\?"/.test(rest) ? m : lead + up + (rest.startsWith("/_next/") ? NEXT : "");
+      if (/^\/(?:_next\/\\?"|_next\/static\/immutable|index\.txt|_(?!next\/))/.test(rest)) return m;
+      return lead + up + (rest.startsWith("/_next/") ? NEXT : "");
     });
     /* The chunk loader's folder, relative as the payload's chunk paths now are:
        the loader knows a chunk by its folder plus its name, so the two must match as text. */

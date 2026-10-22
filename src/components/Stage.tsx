@@ -55,8 +55,10 @@ export function Stage() {
   const thrown = useRef(false);
   /* He has woken by himself: set a moment after the page first paints, so the gathering is seen. */
   const [up, setUp] = useState(false);
-  /* A first visit, before any touch: he is up, silent, and his cloud says how to hear him. */
-  const first = state.phase === "asleep" && !state.met;
+  /* The visitor has touched the page: sound is unlocked, and the visit is no longer a first look. */
+  const [touched, setTouched] = useState(false);
+  /* Before any touch: he is up, silent, and his cloud says how to hear him. */
+  const first = state.phase === "asleep" && !touched;
   const guide = useRef<GuideHandle>(null);
   const voice = useRef<Speaker | null>(null);
   const pokes = useRef({ count: 0, at: 0 });
@@ -88,12 +90,12 @@ export function Stage() {
      stopped early (Stop, a tab switch). */
   useEffect(() => {
     if (state.met && state.phase !== "asleep" && state.phase !== "opener") lightUp();
-    if (state.phase !== "asleep" || !state.met) return;
+    if (state.phase !== "asleep" || !touched) return;
     pokes.current = { count: 0, at: 0 };
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     document.body.classList.remove("site-awake");
     document.body.classList.add("site-asleep");
-  }, [state.phase, state.met]);
+  }, [state.phase, state.met, touched]);
 
   /* On a phone the card sits below the fold: the list is brought up to
      where it can be seen. */
@@ -156,6 +158,7 @@ export function Stage() {
   }, []);
 
   function unlock() {
+    setTouched(true);
     (voice.current ??= speaker()).arm();
     guide.current?.unlock();
   }
@@ -208,7 +211,7 @@ export function Stage() {
   /* While she sleeps, a tap anywhere on the page wakes her; a control keeps
      its own job, and her own button already wakes her. */
   const wakeFrom = useEffectEvent((event: MouseEvent) => {
-    if (event.target instanceof Element && event.target.closest("a, button, input, textarea, select, summary, label")) return;
+    if (event.target instanceof Element && event.target.closest("a, button, input, textarea, select, summary, label, .figure-stage")) return;
     wake(event.detail ? { x: event.clientX, y: event.clientY } : undefined);
   });
   useEffect(() => {
@@ -339,6 +342,19 @@ export function Stage() {
         </div>
       </div>
 
+      <div ref={card} className="hero-card wakes min-w-0">
+        {/* The key remounts the card, so each answer's folder is pulled out afresh. */}
+        <Card
+          key={state.shown.kind === "more" ? "more" : `${state.run}-${state.shown.kind}`}
+          shown={state.shown}
+          onPick={pick}
+          onSoon={(a) => ready(answerLine(a))}
+          onMore={more}
+          onLess={() => dispatch({ type: "less" })}
+          current={busy ? state.cloud.id.replace(/^a-/, "") : undefined}
+        />
+      </div>
+
       <div className="hero-guide">
         <div className="guide-floor relative">
           {busy && (
@@ -417,19 +433,6 @@ export function Stage() {
       </ul>
 
       <p className="hero-note text-center text-xs leading-relaxed text-muted">He answers only from Vaydin&apos;s own pages. Nothing you type is saved or sent.</p>
-
-      <div ref={card} className="hero-card wakes min-w-0">
-        {/* The key remounts the card, so each answer's folder is pulled out afresh. */}
-        <Card
-          key={state.shown.kind === "more" ? "more" : `${state.run}-${state.shown.kind}`}
-          shown={state.shown}
-          onPick={pick}
-          onSoon={(a) => ready(answerLine(a))}
-          onMore={more}
-          onLess={() => dispatch({ type: "less" })}
-          current={busy ? state.cloud.id.replace(/^a-/, "") : undefined}
-        />
-      </div>
 
       {ripple && <span key={ripple.key} aria-hidden="true" className="ripple" style={{ left: ripple.x, top: ripple.y }} />}
 

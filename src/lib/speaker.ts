@@ -41,7 +41,10 @@ export function speaker(): Speaker {
       if (armed) return;
       armed = true;
       el.src = SILENCE;
-      el.play().catch(() => {});
+      /* Refused (a touch the phone did not count as a gesture): the next touch tries again. */
+      el.play().catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "NotAllowedError") armed = false;
+      });
     },
     say(src, onTime) {
       finish("stopped");

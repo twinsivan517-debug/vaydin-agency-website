@@ -83,7 +83,8 @@ body {
   .hero-card {
     contain: size;
     align-self: stretch;
-    min-height: 0;
+    /* A long line in the cloud must not squeeze the card to nothing. */
+    min-height: 10rem;
     overflow-y: auto;
     padding-top: 0.6rem;
     scrollbar-width: thin;
@@ -297,10 +298,11 @@ body::before {
   background: var(--navy);
 }
 
-/* On a phone the cloud's row keeps one height whatever she says, so she and
-   the questions below it never jump between lines; the cloud sits at its
-   foot, and a long line takes a smaller size (Stage marks it). */
-@media (max-width: 767px) {
+/* In one column (a phone, a tablet upright) the cloud's row keeps one height
+   whatever he says, so he and the questions below it never jump between
+   lines; the cloud sits at its foot, and a long line takes a smaller size
+   (Stage marks it). */
+@media (max-width: 899px) {
   /* Measured 2026-10-20: the longest answer needs 11.5rem at 390 px wide, 12.75rem at 360 px. */
   .hero-cloud { height: 11.5rem; display: flex; flex-direction: column; justify-content: flex-end; }
   .cloud p[data-long="1"] { font-size: 0.95rem; }
