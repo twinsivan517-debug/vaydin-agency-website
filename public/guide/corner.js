@@ -20,8 +20,8 @@
     });
   }
 
-  /* How far above the bottom she must stand to clear what shows there: an
-     element reaching the bottom of the screen, on her side, that does not
+  /* How far above the bottom he must stand to clear what shows there: an
+     element reaching the bottom of the screen, on his side, that does not
      start at the top (the bar across the top, a background behind it all). */
   function clearance() {
     var most = 0;
@@ -38,9 +38,9 @@
 
   function place() {
     var lift = clearance();
-    /* No room for her above what the page shows: quiet and closed, she steps
-       aside until it goes; speaking or open, she stays where she was, over
-       it, so her Stop stays in reach. */
+    /* No room for him above what the page shows: quiet and closed, he steps
+       aside until it goes; speaking or open, he stays where he was, over
+       it, so his Stop stays in reach. */
     var fits = innerHeight - 76 - lift >= CLOSED[1];
     if (!fits) lift = 0;
     frame.style.visibility = fits || talking || want !== null ? "visible" : "hidden";
