@@ -110,7 +110,7 @@ export const CHAPTERS: Chapter[] = [
     ],
     card: {
       title: "What you gain",
-      body: "The patients you were losing in public, and the proof.",
+      body: "The patients you are losing in public, and the proof.",
       facts: ["Every inquiry answered and booked", "Every review answered within a day; the quiet ones revived", "Evidence a patient could find themselves, scored on one dashboard"],
       links: [{ href: "/engine.html", label: "Inside the engine" }],
     },

@@ -118,6 +118,7 @@ export const Figure = forwardRef<GuideHandle, Props>(function Figure(props, ref)
       role={props.label ? "button" : undefined}
       tabIndex={props.label ? 0 : undefined}
       aria-label={props.label}
+      aria-disabled={props.label && !props.pokeable ? true : undefined}
       onKeyDown={(event) => {
         if (!props.label || (event.key !== "Enter" && event.key !== " ")) return;
         event.preventDefault();

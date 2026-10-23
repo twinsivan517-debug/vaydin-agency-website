@@ -11,6 +11,13 @@ standalone `.html` files in `public/`.
 - `src/app/page.tsx` — the home page: headline, the stage, the doors, the who-we-are
   paragraph and the transcript ("Read what he says"). `layout.tsx` — titles and the
   organisation record for search engines. `corner/` — the page inside the corner's frame.
+- `src/app/robots.ts` and `sitemap.ts` — what search engines may read and the page list;
+  `src/lib/site.ts` with `site.json` — the site's name, address, description and contacts;
+  `public/llms.txt` — Vaydin in plain words for AI assistants.
+- `public/` — the standalone pages, `assets/` (their pictures and the ambient video),
+  `img/mark.png` (the logo, also sampled into his Vaydin mark), the icons, CNAME.
+- `.github/workflows/pages.yml` — builds `main` and publishes it to GitHub Pages; only its
+  deploy job may publish.
 - `src/components/Stage.tsx` — the hero: his cloud and the card, him, the five door
   tiles, the ask box and the questions, Stop, the bar; his waking by himself.
 - `src/components/Figure.tsx` and `src/lib/figure/` — him: `engine.ts` (the dots frame by
