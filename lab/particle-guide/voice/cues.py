@@ -25,6 +25,8 @@ EYES = {"warm": "happy", "curious": "wide", "skeptical": "think", "laughs": "win
         "confident": "sparkle", "softly": "blink"}
 OPENER = [("00b", 0.0), ("01", 2.58), ("tag-b", 4.39)]
 # The lines that close the greeting, a chapter or a page's summary: he signs off with the Vaydin mark once they end.
+# Lines that show no digits: after "How much?", a big 30 or 3 would read as a price.
+NO_DIGITS = {"a-price", "a-cancel"}
 SIGN_OFF = {"02", "w1", "08", "10", "a-time", "a-cancel", "p-diagnose", "p-fix", "p-grow", "p-engine", "p-pricing"}
 
 
@@ -51,7 +53,7 @@ def norm(w):
     return re.sub(r"[^a-z0-9']", "", w.lower())
 
 
-def plan(text, timed, dur):
+def plan(text, timed, dur, digits=True):
     # The script's words and tags, aligned to the words heard, so a tag or a word in the script gets a time.
     # A hyphen splits a word ("three-month" is heard as two), so each half finds its time.
     tokens = re.findall(r"\[[^\]]+\]|[^\s\[\]-]+", text)
@@ -90,7 +92,7 @@ def plan(text, timed, dur):
         # "Pick a question": his light rings every question chip at once.
         if w == "pick" and nxt == "a" and i + 2 < len(words) and words[i + 2] == "question":
             hit = {"chips": 1}
-        if not hit:
+        if not hit and digits:
             n = number(w, words[i - 1] if i else "", nxt, words[i + 2] if i + 2 < len(words) else "", words[i - 2] if i > 1 else "")
             if n:
                 hit = {"shape": n}
@@ -137,7 +139,7 @@ def main():
     for i, text in script.items():
         if i not in words:
             continue
-        cues, beats = plan(text, words[i]["words"], words[i]["dur"])
+        cues, beats = plan(text, words[i]["words"], words[i]["dur"], digits=i not in NO_DIGITS)
         out[i] = {"dur": words[i]["dur"], "cues": cues, "beats": beats}
         if i in SIGN_OFF:
             out[i]["end"] = "mark"

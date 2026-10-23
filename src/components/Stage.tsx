@@ -33,9 +33,6 @@ const GLOWS: Record<string, string> = { what: "#f5d978", how: "#a78bfa", gain: "
    line takes a smaller size rather than more room. */
 const long = (text: string) => (text.length > 250 ? "3" : text.length > 170 ? "2" : text.length > 110 ? "1" : undefined);
 
-/* He has no clips: every line he says is its recording. */
-const lineClip = (line?: Line): string | null => (line ? null : null);
-
 const glide = (): ScrollBehavior => (window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth");
 
 /* The page dims while he sleeps and lights up when his light reaches the logo. */
@@ -72,8 +69,6 @@ export function Stage() {
   const busy = speaking(state);
   /* The questions light one by one once the greeting has handed over to them. */
   const offered = state.met || (state.phase !== "asleep" && state.phase !== "opener");
-  /* Line clips that would not play here: those lines fall back to the recording. */
-  const [noClip] = useState<string[]>([]);
   /* From the tap that wakes him until his greeting plays; over with the greeting, however it ends. */
   const [stirring, setWaking] = useState(false);
   const waking = stirring && state.phase === "opener";
@@ -120,21 +115,16 @@ export function Stage() {
     if (firstOffer) readyOffer(firstOffer);
   }, [firstOffer]);
 
-  /* A line is spoken by her clip when it has one; otherwise its recording
-     plays, and when that cannot play either, the words stay up for reading time. */
+  /* A line plays its recording, the next one loading meanwhile; when the
+     recording cannot play, the words stay up for reading time. */
   const { phase, run, cloud, lines, line: lineAt } = state;
   const talking = phase === "talking" || phase === "quip";
-  const clip = talking ? lineClip(cloud) : null;
-  const clipSrc = clip && !noClip.includes(clip) ? clip : null;
   useEffect(() => {
     if (!talking) return;
     const line = cloud;
     const next = phase === "talking" ? lines[lineAt + 1] : undefined;
     const sound = voice.current;
-    const nextClip = next && lineClip(next);
-    if (nextClip && !noClip.includes(nextClip)) guide.current?.prime(nextClip);
-    else if (next?.audio) sound?.prefetch(next.audio);
-    if (clipSrc) return;
+    if (next?.audio) sound?.prefetch(next.audio);
     let live = true;
     let timer = 0;
     const read = () => {
@@ -152,7 +142,7 @@ export function Stage() {
       window.clearTimeout(timer);
       sound?.stop();
     };
-  }, [talking, phase, run, lineAt, cloud, lines, clipSrc, noClip]);
+  }, [talking, phase, run, lineAt, cloud, lines]);
 
   useEffect(() => {
     const hide = () => document.hidden && dispatch({ type: "stop" });
@@ -170,10 +160,9 @@ export function Stage() {
     guide.current?.unlock();
   }
 
-  /* A line's clip, loaded ahead: its header, or all of it. */
-  function ready(line: Line | undefined, full = false) {
-    const clip = line && lineClip(line);
-    if (clip && !noClip.includes(clip)) guide.current?.prime(clip, full);
+  /* A line he may say next starts loading, so it plays the moment it is asked for. */
+  function ready(line: Line | undefined) {
+    if (line?.audio) (voice.current ??= speaker()).prefetch(line.audio);
   }
 
   function wake(point?: Point) {
@@ -190,14 +179,10 @@ export function Stage() {
       setSpoken(!ok);
       setWaking(false);
     });
-    /* After the greeting, in the order she may need them: the whole of the
-       line that follows it with no tap, the headers of the five questions'
-       first lines, her first poke reply, and her answer to a question she
-       does not know. */
-    ready(
-      chapter("meet").lines.find((l) => l.audio),
-      true,
-    );
+    /* After the greeting, in the order he may need them: the line that
+       follows it with no tap, the five questions' first lines, his first poke
+       reply, and his answer to a question he does not know. */
+    ready(chapter("meet").lines.find((l) => l.audio));
     for (const q of QUESTIONS) ready(q.lines[0]);
     ready(POKES[0]);
     ready(UNKNOWN);
@@ -390,6 +375,7 @@ export function Stage() {
               shimmer();
             }}
             onSpun={(how) => setSpun((was) => ({ n: (was?.n ?? 0) + 1, how }))}
+            label={first || state.phase === "asleep" ? "Wake him up" : "Poke him"}
           />
           {spun && (
             <span key={spun.n} aria-hidden="true" className="spin-pop">

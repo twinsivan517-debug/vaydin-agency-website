@@ -279,6 +279,13 @@ body::before {
 
 /* His dots: one canvas over the whole window, above the header so his light
    reaches the logo, under the bulb, the ring and Stop; it never takes a tap. */
+/* Reached by keyboard, he shows where focus is. */
+.figure-stage:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: -6px;
+  border-radius: 2rem;
+}
+
 /* His note to a visitor who spins him while he speaks: over his head, shown, never spoken. */
 .spin-pop {
   position: absolute;

@@ -20,6 +20,8 @@ type Props = {
   onLit?: () => void;
   /* He was spun around (or shaken by scrolling, on a phone) while he spoke, and stayed steady. */
   onSpun?: (how: "spin" | "shake") => void;
+  /* Where given, he is a button by that name for a keyboard or a screen reader: Enter or Space presses him. */
+  label?: string;
   small?: boolean;
 };
 
@@ -102,6 +104,17 @@ export const Figure = forwardRef<GuideHandle, Props>(function Figure(props, ref)
       onClick={(event) => {
         if (pressed.current && latest.current.pokeable) latest.current.onPoke(event.timeStamp, { x: event.clientX, y: event.clientY });
         pressed.current = false;
+      }}
+      role={props.label ? "button" : undefined}
+      tabIndex={props.label ? 0 : undefined}
+      aria-label={props.label}
+      onKeyDown={(event) => {
+        if (!props.label || (event.key !== "Enter" && event.key !== " ")) return;
+        event.preventDefault();
+        /* A key presses him in the middle, as a tap there would. */
+        const box = stage.current?.getBoundingClientRect();
+        if (box) engine.current?.poke(box.left + box.width / 2, box.top + box.height * 0.45);
+        if (latest.current.pokeable) latest.current.onPoke(event.timeStamp);
       }}
     />
   );

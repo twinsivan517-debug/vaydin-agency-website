@@ -112,7 +112,7 @@ export const CHAPTERS: Chapter[] = [
     lines: [
       {
         id: "g1",
-        text: "You gain the patients you were losing in public: every inquiry answered and booked, every review answered within a day, the quiet ones revived, and the proof of all of it on one dashboard.",
+        text: "You gain the patients you are losing in public: every inquiry answered and booked, every review answered within a day, the quiet ones revived, and the proof of all of it on one dashboard.",
         audio: "/voice/g1.mp3",
       },
       {
