@@ -54,7 +54,10 @@ export function speaker(): Speaker {
         el.onended = () => finish("ended");
         el.onerror = () => finish("failed");
         if (onTime) el.ontimeupdate = () => onTime(el.currentTime);
-        el.play().catch(() => finish("failed"));
+        /* A refusal counts only while this line is still the one playing: a
+           line replaced while it still loaded has its play refused late, and
+           that is its own news, never the next line's. */
+        el.play().catch(() => settle === resolve && finish("failed"));
       });
     },
     prefetch(src) {
