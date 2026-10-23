@@ -45,12 +45,13 @@ body {
 /* The hero: the headline across the top. On a wide screen his cloud and the
    answer card on the left, him in the middle, the five doors stacked beside
    him; under him the ask box, under that the questions. On a phone one
-   column: cloud, him, the doors in a row, ask, questions, card. His cloud
+   column: cloud, him, the questions right under him (where his light can
+   reach them in view), ask, the doors in a row, card. His cloud
    on a phone keeps one height (below), so a long line grows sideways. */
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: "name" "cloud" "guide" "doors" "ask" "chips" "note" "card" "bar";
+  grid-template-areas: "name" "cloud" "guide" "chips" "ask" "doors" "note" "card" "bar";
   row-gap: 0.6rem;
   align-items: start;
 }
