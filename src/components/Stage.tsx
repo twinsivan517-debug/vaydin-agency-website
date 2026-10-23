@@ -61,7 +61,8 @@ export function Stage() {
   const first = state.phase === "asleep" && !touched;
   const guide = useRef<GuideHandle>(null);
   const voice = useRef<Speaker | null>(null);
-  const pokes = useRef({ count: 0, at: 0 });
+  /* Never poked yet: a first poke in the page's first eight seconds is still the first. */
+  const pokes = useRef({ count: 0, at: -Infinity });
   const hero = useRef<HTMLElement>(null);
   const card = useRef<HTMLDivElement>(null);
   const busy = speaking(state);
@@ -85,17 +86,17 @@ export function Stage() {
     };
   }, []);
 
-  /* He went back to sleep after the last poke: the page dims with him, and the pokes start over.
-     And once he has been met and is up, the page is lit, even after a greeting
-     stopped early (Stop, a tab switch). */
+  /* Once he has been met and is up, the page is lit, even after a greeting
+     stopped early (Stop, a tab switch). He never sleeps again: the last poke
+     only puts him in hibernation, and the page stays lit. */
   useEffect(() => {
     if (state.met && state.phase !== "asleep" && state.phase !== "opener") lightUp();
-    if (state.phase !== "asleep" || !touched) return;
-    pokes.current = { count: 0, at: 0 };
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    document.body.classList.remove("site-awake");
-    document.body.classList.add("site-asleep");
-  }, [state.phase, state.met, touched]);
+  }, [state.phase, state.met]);
+
+  /* Out of hibernation, the pokes start over. */
+  useEffect(() => {
+    if (!state.rest) pokes.current = { count: 0, at: -Infinity };
+  }, [state.rest]);
 
   /* On a phone the card sits below the fold: the list is brought up to
      where it can be seen. */

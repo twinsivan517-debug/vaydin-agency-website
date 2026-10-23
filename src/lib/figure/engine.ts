@@ -2,8 +2,9 @@
    He reads the page's one audio element: which recording plays and where it
    is, and the cues for that recording say what his body shows and how his
    eyes look. His head never leaves; his body becomes the shape, rings the
-   door, or turns to dust while he sleeps. Pressed, he dents; spun around, he
-   gets dizzy. Under reduced motion every dot takes its place at once. */
+   door, or is dust until he gathers. In hibernation his eyes are three slow
+   standby dots and his body dims. Pressed, he dents; spun around, he gets
+   dizzy. Under reduced motion every dot takes its place at once. */
 
 import { ACCENT, makeShapes, type Shape } from "./shapes";
 import { HEAD, VIS, eyeAt, headZ, makeBody, type Eyes } from "./body";
@@ -11,7 +12,7 @@ import { HEAD, VIS, eyeAt, headZ, makeBody, type Eyes } from "./body";
 export type Cue = { t0: number; t1: number; shape?: string; door?: number; eyes?: Eyes | "blink" };
 export type Cues = Record<string, { dur: number; cues: Cue[]; beats: number[] }>;
 export type FigureInput = {
-  mode: "sleep" | "opener" | "talk" | "idle";
+  mode: "sleep" | "opener" | "talk" | "idle" | "rest";
   audio: HTMLAudioElement | null;
   stage: HTMLElement | null;
   doors: HTMLElement[];
@@ -20,8 +21,8 @@ export type FigureInput = {
 
 const EYE_REST: [number, number, number] = [1, 0.906, 0.69];
 const EYE_SAD: [number, number, number] = [0.62, 0.72, 1];
-/* What his eyes do while each poke line plays: friendly, then less so. */
-const POKED: Record<string, Eyes> = { "poke-1": "happy", "poke-2": "wide", "poke-3": "cross", "poke-4": "sad", "poke-5": "cross", "poke-6": "line" };
+/* What his eyes do while each poke line plays: friendly, then less so. The last one's eyes are its own cues. */
+const POKED: Record<string, Eyes> = { "poke-1": "happy", "poke-2": "wide", "poke-3": "cross", "poke-4": "sad", "poke-5": "cross" };
 
 /* uOff shakes the whole of him at once, faster than his dots could follow. */
 const VS = `attribute vec3 aPos; attribute vec2 aInfo; uniform mat4 uProj; uniform float uCamZ, uSize; uniform vec2 uOff; varying float vB, vT;
@@ -176,7 +177,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     layout(inp.stage);
     if (inp.mode !== "sleep" && phaseWas === "sleep") { wakeT = t; logoUntil = t + 3.6; litFired = false; }
     phaseWas = inp.mode;
-    const asleep = inp.mode === "sleep", sinceWake = t - wakeT;
+    const asleep = inp.mode === "sleep", resting = inp.mode === "rest", sinceWake = t - wakeT;
     /* His light lands on the logo about half a second after it leaves him. */
     if (!asleep && !litFired && (reduce || !inp.logo || sinceWake > 1.9)) { litFired = true; onLit?.(); }
 
@@ -223,6 +224,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     else if (sinceWake < 1.3) expr = "line";
     else if (sinceWake < 1.45) expr = "blink";
     else if (dizzy) expr = "spiral";
+    else if (resting) expr = "dots";
     else if (cueEyes) expr = cueEyes;
     if (!reduce && (expr === "open" || expr === "wide") && !asleep) {
       if (t > nextBlink) { blinkUntil = t + 0.13; nextBlink = t + 2.8 + ((t * 7919) % 3); }
@@ -250,8 +252,8 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     flinch = Math.max(0, flinch - dt * 3);
     const shake = t < shakeUntil ? 0.006 * (1 + annoy) * S * Math.sin(t * 58) : 0;
     gl!.uniform2f(uOff, shake, 0);
-    yaw += ((tYaw + 0.1 * Math.sin(t * 0.33) + (dizzy ? 0.35 * Math.sin(t * 5) : 0)) * still - yaw) * 0.05;
-    pitch += ((tPitch + 0.04 * Math.sin(t * 0.27) + beat * 0.02 - flinch * 0.25) * still - pitch) * 0.08;
+    yaw += ((tYaw * (resting ? 0.3 : 1) + 0.1 * Math.sin(t * 0.33) + (dizzy ? 0.35 * Math.sin(t * 5) : 0)) * still - yaw) * 0.05;
+    pitch += ((tPitch + 0.04 * Math.sin(t * 0.27) + beat * 0.02 - flinch * 0.25 + (resting ? 0.12 : 0)) * still - pitch) * 0.08;
     roll += (((expr === "wide" || expr === "think" ? 0.14 : expr === "happy" || expr === "wink" ? -0.06 : expr === "sad" ? 0.08 : 0) +
       (dizzy ? 0.3 * Math.sin(t * 6) : 0) + 0.03 * Math.sin(t * 0.5)) * still - roll) * 0.06;
     const cyw = Math.cos(yaw), syw = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch), cr = Math.cos(roll), sr = Math.sin(roll);
@@ -298,7 +300,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
         tx = cx + S * (hx * cY + hz * sY); ty = cy + S * (hy + (head ? HEAD.cy + headBob : bob)); tz = S * (-hx * sY + hz * cY);
         if (p === 2 || p === 3) {
           b = eyeB * (0.92 + 0.08 * Math.sin(t * 7 + B.seed[i] * 30)); tint = 1;
-          if (expr === "dots") b *= 0.35 + 0.65 * Math.max(0, Math.sin(t * 6 - Math.min(2, Math.floor((B.eye[i * 2] / 6.283185) * 3)) * 1.3));
+          if (expr === "dots") b *= 0.35 + 0.65 * Math.max(0, Math.sin(t * (resting ? 1.6 : 6) - Math.min(2, Math.floor((B.eye[i * 2] / 6.283185) * 3)) * 1.3));
         } else {
           const rnx = nx * cY + nz * sY, rnz = -nx * sY + nz * cY;
           const lam = Math.max(0, rnx * LX + ny * LY + rnz * LZ), rim = Math.pow(1 - Math.min(1, Math.abs(rnz)), 3);
@@ -307,6 +309,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
           if (p === 1) b = 0.7 + 0.25 * lam + beat * 0.25;
           if (p === 4) b *= 0.4 + 0.6 * Math.min(1, Math.max(0, (oy + 0.95) / 0.45));
           b *= 0.94 + 0.06 * Math.sin(t * 2.6 + B.seed[i] * 60);
+          if (resting) b *= 0.7;
         }
         /* Seeing stars: a few body dots circle his head while he is dizzy. */
         if (dizzy && body && j % 60 === 0) {

@@ -175,8 +175,9 @@ export const CHAPTERS: Chapter[] = [
 /* The five the chips show; the greeting replays by tapping her name. */
 export const QUESTIONS = CHAPTERS.filter((c) => c.id !== "meet");
 
-/* What she says when touched, in order; past the last she repeats it. The
-   mood moves her picture: a hop, then a shake once she has had enough. */
+/* What he says when touched, in order. The last never sends him to sleep
+   (Dubai never sleeps): it puts him in hibernation until he is asked
+   something. The mood moved her picture; he has none. */
 export const POKES: Line[] = [
   { id: "p1", text: "Hi there. Tap a question and I'll explain.", audio: "/voice/poke-1.mp3", mood: "hop" },
   { id: "p2", text: "Yes? I'm listening.", audio: "/voice/poke-2.mp3", mood: "hop" },
@@ -185,6 +186,9 @@ export const POKES: Line[] = [
   { id: "p5", text: "I'm a guide, not a button.", audio: "/voice/poke-5.mp3", mood: "shake" },
   { id: "p6", text: "Sleep? In Dubai? Never. Hibernation mode, though. Until you get serious.", audio: "/voice/poke-6.mp3", mood: "shake" },
 ];
+
+/* In the cloud while he hibernates after the last poke. Not spoken. */
+export const RESTING: Line = { id: "00r", text: "Hibernation mode. Ask me something serious." };
 
 export const chapter = (id: ChapterId) => CHAPTERS.find((c) => c.id === id)!;
 

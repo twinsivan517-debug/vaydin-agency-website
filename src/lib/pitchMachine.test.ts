@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { ANSWERS, CHOOSE, GROUPS, HELLO, MORE, UNKNOWN, UNLISTED, answer, answerLine } from "./answers.ts";
 import { afterTalk, followUp, match, yesNo, type Reply } from "./match.ts";
-import { CHAPTERS, POKES, SLEEPING, lineClip } from "./pitch.ts";
+import { CHAPTERS, POKES, RESTING, SLEEPING, lineClip } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
 import { SUMMARIES, WELCOME, inCorner } from "./pages.ts";
 import { TALK } from "./talk.ts";
@@ -274,16 +274,32 @@ check("pokes only while she rests awake, and they escalate to the last quip", ()
   assert.equal(run([{ type: "poke", index: 0 }], run([{ type: "tap", chapter: "how" }], awake)).phase, "talking");
 });
 
-check("the last quip puts her back to sleep, and a tap wakes her into the greeting again", () => {
+check("the last quip never sends him to sleep: he hibernates, deaf to pokes, until he is asked something", () => {
   const last = run([{ type: "poke", index: POKES.length - 1 }], awake);
   assert.equal(last.cloud.id, POKES[POKES.length - 1].id);
-  const asleep = run([{ type: "line_ended" }], last);
-  assert.equal(asleep.phase, "asleep");
-  assert.equal(mode(asleep), "sleep");
-  assert.equal(asleep.cloud, SLEEPING);
-  assert.equal(asleep.met, true);
-  assert.equal(pokeable(asleep), true);
-  assert.equal(run([{ type: "poke", index: 0 }], asleep).phase, "opener");
+  const rest = run([{ type: "line_ended" }], last);
+  assert.equal(rest.phase, "done");
+  assert.equal(rest.rest, true);
+  assert.equal(mode(rest), "rest");
+  assert.equal(rest.cloud, RESTING);
+  assert.equal(rest.met, true);
+  assert.equal(pokeable(rest), false);
+  assert.equal(run([{ type: "poke", index: 0 }], rest), rest);
+  const back = run([{ type: "tap", chapter: "how" }], rest);
+  assert.equal(back.rest, false);
+  assert.equal(back.cloud.id, "07");
+  assert.equal(run([{ type: "ask", reply: match("price") }], rest).rest, false);
+  assert.equal(run([{ type: "more" }], rest).rest, false);
+  const after = run([{ type: "line_ended" }, { type: "line_ended" }], back);
+  assert.equal(mode(after), "idle");
+  assert.equal(pokeable(after), true);
+  /* Unmet, six pokes hibernate him the same way, and a question still brings him back. */
+  const unmet = run([{ type: "tap", chapter: "how" }, { type: "stop" }]);
+  assert.equal(unmet.met, false);
+  const lonely = run([{ type: "poke", index: POKES.length - 1 }, { type: "line_ended" }], unmet);
+  assert.equal(lonely.phase, "idle");
+  assert.equal(lonely.rest, true);
+  assert.equal(mode(lonely), "rest");
   assert.equal(run([{ type: "line_ended" }], run([{ type: "poke", index: 0 }], awake)).phase, "done");
 });
 

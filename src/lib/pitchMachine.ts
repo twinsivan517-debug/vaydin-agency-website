@@ -3,7 +3,8 @@
    greeting), talking (lines, one after another), quip (a poke reply), done
    (a run finished; the card stays). `run` changes whenever a new sound must
    start, so tapping the active chip again replays it. The last poke's quip
-   ends with her asleep again. More opens the list of questions on the card,
+   ends with him in hibernation: awake and lit, but deaf to pokes until he is
+   asked something (`rest`). More opens the list of questions on the card,
    and she says so, unless she is still giving the greeting. Small talk is
    answered with its line, and the list is offered unless it was thanks or
    goodbye. Say speaks lines of the page's own, leaving the card as it is. A
@@ -12,7 +13,7 @@
 
 import { ANSWERS, CHOOSE, HELLO, MORE, UNKNOWN, answerLine } from "./answers.ts";
 import type { Reply } from "./match.ts";
-import { CHAPTERS, POKES, SLEEPING, chapter, type ChapterId, type Line } from "./pitch.ts";
+import { CHAPTERS, POKES, RESTING, SLEEPING, chapter, type ChapterId, type Line } from "./pitch.ts";
 import { TALK } from "./talk.ts";
 
 export type Phase = "asleep" | "idle" | "opener" | "talking" | "quip" | "done";
@@ -32,6 +33,7 @@ export type State = {
   lit: boolean;
   met: boolean;
   run: number;
+  rest: boolean;
 };
 export type Event =
   | { type: "wake" }
@@ -55,6 +57,7 @@ export const START: State = {
   lit: false,
   met: false,
   run: 0,
+  rest: false,
 };
 
 const speak = (s: State, lines: Line[], shown: Shown, chapter: ChapterId | null, phase: Phase = "talking"): State => ({
@@ -67,6 +70,7 @@ const speak = (s: State, lines: Line[], shown: Shown, chapter: ChapterId | null,
   cloud: lines[0],
   lit: false,
   run: s.run + 1,
+  rest: false,
 });
 
 /* What she says to a typed question; the page also readies it while it is typed. */
@@ -112,8 +116,8 @@ export function reduce(s: State, e: Event): State {
         return { ...s, phase: "done", met: true };
       }
       if (s.phase === "quip") {
-        /* The last quip is her lying back down: the page sleeps with her, and the next tap wakes her again. */
-        if (s.cloud.id === POKES[POKES.length - 1].id) return { ...s, phase: "asleep", cloud: SLEEPING, lit: false };
+        /* The last quip is his hibernation: the page stays lit, and only a question brings him back. */
+        if (s.cloud.id === POKES[POKES.length - 1].id) return { ...s, phase: s.met ? "done" : "idle", cloud: RESTING, rest: true };
         return { ...s, phase: s.met ? "done" : "idle" };
       }
       if (s.phase !== "talking") return s;
@@ -129,7 +133,7 @@ export function reduce(s: State, e: Event): State {
     }
     case "poke": {
       if (s.phase === "asleep") return opener(s);
-      if (s.phase !== "idle" && s.phase !== "done") return s;
+      if ((s.phase !== "idle" && s.phase !== "done") || s.rest) return s;
       const quip = POKES[Math.min(e.index, POKES.length - 1)];
       return { ...s, phase: "quip", cloud: quip, run: s.run + 1 };
     }
@@ -152,9 +156,9 @@ export function reduce(s: State, e: Event): State {
   }
 }
 
-/* Which clip the guide shows for a state. */
-export const mode = (s: State): "sleep" | "idle" | "talk" | "opener" =>
-  s.phase === "asleep" ? "sleep" : s.phase === "opener" ? "opener" : s.phase === "talking" || s.phase === "quip" ? "talk" : "idle";
+/* How the guide shows a state. */
+export const mode = (s: State): "sleep" | "idle" | "talk" | "opener" | "rest" =>
+  s.phase === "asleep" ? "sleep" : s.phase === "opener" ? "opener" : s.phase === "talking" || s.phase === "quip" ? "talk" : s.rest ? "rest" : "idle";
 
 export const speaking = (s: State) => s.phase === "opener" || s.phase === "talking" || s.phase === "quip";
-export const pokeable = (s: State) => s.phase === "asleep" || s.phase === "idle" || s.phase === "done";
+export const pokeable = (s: State) => !s.rest && (s.phase === "asleep" || s.phase === "idle" || s.phase === "done");
