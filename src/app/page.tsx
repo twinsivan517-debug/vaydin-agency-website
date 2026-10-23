@@ -2,15 +2,30 @@ import type { Metadata } from "next";
 import { Doors } from "@/components/Doors";
 import { Header } from "@/components/Header";
 import { Stage } from "@/components/Stage";
+import { answer } from "@/lib/answers";
 import { CHAPTERS } from "@/lib/pitch";
 import { SITE, WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
+/* The short FAQ: eight of his own answers, who Vaydin is, as plain text for
+   visitors who read rather than tap and for search engines and AI assistants,
+   and the same words in the page's FAQ record. His spoken address is written. */
+const FAQ = ["what", "who", "where", "legit", "diagnostic", "engine", "bot", "price"].map((id) => {
+  const a = answer(id);
+  return { question: a.question, answer: a.answer.replaceAll("hello at vaydin dot agency", SITE.email) };
+});
+
+const FAQ_RECORD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.question, acceptedAnswer: { "@type": "Answer", text: f.answer } })),
+};
+
 /* The home page is the guide, his headline over him. Under him, the five
-   pages in their own words, then the title and a transcript, so the page
-   reads, and is found, before any script or clip arrives, and a visitor who
-   scrolls finds the site. */
+   pages in their own words, then the title and a transcript, then the FAQ,
+   so the page reads, and is found, before any script or clip arrives, and a
+   visitor who scrolls finds the site. */
 export default function Home() {
   return (
     <>
@@ -38,6 +53,20 @@ export default function Home() {
               ))}
             </ol>
           </details>
+        </section>
+        <section aria-labelledby="faq-title" className="wakes mx-auto w-full max-w-6xl px-5 pb-12 sm:px-12">
+          <h2 id="faq-title" className="label text-gold-bright">
+            Questions clinics ask
+          </h2>
+          <div className="mt-4 grid max-w-4xl gap-x-10 gap-y-6 md:grid-cols-2">
+            {FAQ.map((f) => (
+              <div key={f.question}>
+                <h3 className="font-display text-lg leading-snug">{f.question}</h3>
+                <p className="mt-1 text-base leading-7 text-muted">{f.answer}</p>
+              </div>
+            ))}
+          </div>
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_RECORD) }} />
         </section>
         <footer className="wakes mx-auto w-full max-w-6xl border-t border-gold/15 px-5 py-6 text-sm leading-6 text-muted sm:px-12">
           <p>
