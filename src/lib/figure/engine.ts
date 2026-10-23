@@ -2,20 +2,23 @@
    He reads the page's one audio element: which recording plays and where it
    is, and the cues for that recording say what his body shows and how his
    eyes look. His head never leaves; his body becomes the shape, rings the
-   door, or is dust until he gathers. In hibernation his eyes are three slow
-   standby dots and his body dims. Pressed, he dents; spun around, he gets
-   dizzy. Under reduced motion every dot takes its place at once. */
+   door, rings every question at once each in its own colour, or is dust
+   until he gathers. In hibernation his eyes are three slow standby dots and
+   his body dims. Pressed, he dents; spun around, he gets dizzy. Under
+   reduced motion every dot takes its place at once. */
 
-import { ACCENT, makeShapes, type Shape } from "./shapes";
+import { ACCENT, hex, makeShapes, type Shape } from "./shapes";
 import { HEAD, VIS, eyeAt, headZ, makeBody, type Eyes } from "./body";
 
-export type Cue = { t0: number; t1: number; shape?: string; door?: number; eyes?: Eyes | "blink" };
+export type Cue = { t0: number; t1: number; shape?: string; door?: number; chips?: number; eyes?: Eyes | "blink" };
 export type Cues = Record<string, { dur: number; cues: Cue[]; beats: number[] }>;
 export type FigureInput = {
   mode: "sleep" | "opener" | "talk" | "idle" | "rest";
   audio: HTMLAudioElement | null;
   stage: HTMLElement | null;
   doors: HTMLElement[];
+  /* The question chips, each carrying its colour as `--glow`; at most six. */
+  chips: HTMLElement[];
   logo: HTMLElement | null;
 };
 
@@ -24,15 +27,18 @@ const EYE_SAD: [number, number, number] = [0.62, 0.72, 1];
 /* What his eyes do while each poke line plays: friendly, then less so. The last one's eyes are its own cues. */
 const POKED: Record<string, Eyes> = { "poke-1": "happy", "poke-2": "wide", "poke-3": "cross", "poke-4": "sad", "poke-5": "cross" };
 
-/* uOff shakes the whole of him at once, faster than his dots could follow. */
-const VS = `attribute vec3 aPos; attribute vec2 aInfo; uniform mat4 uProj; uniform float uCamZ, uSize; uniform vec2 uOff; varying float vB, vT;
+/* uOff shakes the whole of him at once, faster than his dots could follow.
+   aPal picks a dot's own colour: 0 the shape he shows, 1 to 6 a chip's. */
+const VS = `attribute vec3 aPos; attribute vec2 aInfo; attribute float aPal; uniform mat4 uProj; uniform float uCamZ, uSize; uniform vec2 uOff;
+  uniform vec3 uShape; uniform vec3 uPal[6]; varying float vB, vT; varying vec3 vS;
   void main(){ vec4 p = vec4(aPos.xy + uOff, aPos.z - uCamZ, 1.0); gl_Position = uProj * p;
-    gl_PointSize = uSize * (uCamZ / -p.z) * (0.62 + 0.55 * clamp(aInfo.x, 0.0, 1.4)); vB = aInfo.x; vT = aInfo.y; }`;
-/* vT above 0 mixes in his eye colour, below 0 the colour of the shape he shows. */
-const FS = `precision mediump float; varying float vB, vT; uniform vec3 uTint, uShape; uniform float uGain;
+    gl_PointSize = uSize * (uCamZ / -p.z) * (0.62 + 0.55 * clamp(aInfo.x, 0.0, 1.4)); vB = aInfo.x; vT = aInfo.y;
+    vS = aPal < 0.5 ? uShape : aPal < 1.5 ? uPal[0] : aPal < 2.5 ? uPal[1] : aPal < 3.5 ? uPal[2] : aPal < 4.5 ? uPal[3] : aPal < 5.5 ? uPal[4] : uPal[5]; }`;
+/* vT above 0 mixes in his eye colour, below 0 the dot's own colour. */
+const FS = `precision mediump float; varying float vB, vT; varying vec3 vS; uniform vec3 uTint; uniform float uGain;
   void main(){ vec2 c = gl_PointCoord - 0.5; float a = smoothstep(0.5, 0.05, length(c)); a *= a;
     vec3 gold = mix(vec3(0.79, 0.62, 0.27), vec3(1.0, 0.88, 0.55), clamp(vB - 0.35, 0.0, 1.0));
-    vec3 col = mix(mix(gold, uTint, clamp(vT, 0.0, 1.0)), uShape, clamp(-vT, 0.0, 1.0));
+    vec3 col = mix(mix(gold, uTint, clamp(vT, 0.0, 1.0)), vS, clamp(-vT, 0.0, 1.0));
     float k = clamp(a * vB * uGain, 0.0, 1.0); gl_FragColor = vec4(col * k, k); }`;
 
 /* `onLit` is called once per waking, when his light reaches the logo (at once under reduced motion). */
@@ -55,8 +61,8 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
   gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS));
   gl.linkProgram(prog);
   gl.useProgram(prog);
-  const P = new Float32Array(N * 3), INFO = new Float32Array(N * 2);
-  const bufP = gl.createBuffer(), bufI = gl.createBuffer();
+  const P = new Float32Array(N * 3), INFO = new Float32Array(N * 2), PAL = new Float32Array(N);
+  const bufP = gl.createBuffer(), bufI = gl.createBuffer(), bufPal = gl.createBuffer();
   const attr = (name: string, buf: WebGLBuffer | null, size: number, data: Float32Array) => {
     const loc = gl.getAttribLocation(prog, name);
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
@@ -66,8 +72,9 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
   };
   attr("aPos", bufP, 3, P);
   attr("aInfo", bufI, 2, INFO);
+  attr("aPal", bufPal, 1, PAL);
   const U = (n: string) => gl.getUniformLocation(prog, n);
-  const uProj = U("uProj"), uCamZ = U("uCamZ"), uSize = U("uSize"), uTint = U("uTint"), uShape = U("uShape"), uGain = U("uGain"), uOff = U("uOff");
+  const uProj = U("uProj"), uCamZ = U("uCamZ"), uSize = U("uSize"), uTint = U("uTint"), uShape = U("uShape"), uGain = U("uGain"), uOff = U("uOff"), uPal = U("uPal");
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.ONE, gl.ONE);
   gl.clearColor(0, 0, 0, 0);
@@ -101,11 +108,9 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
   layout(read().stage);
   for (let i = 0; i < N; i++) P.set([cx + S * B.dust[i * 3], cy + S * B.dust[i * 3 + 1], S * B.dust[i * 3 + 2]], i * 3);
 
-  /* A door's own rounded outline, walked by length: most of his body rings it, the rest glows around it. */
-  const doorTgt = new Float32Array(B.nb * 3), doorHalo = new Uint8Array(B.nb);
-  let doorShown = -1, doorAt = "";
-  function aimDoor(el: HTMLElement, d: number, r: DOMRect) {
-    const K = B.nb;
+  /* A tile's own rounded outline, walked by length: the point a fraction `u` of
+     the way round, a corner pulled in by `inset`, and the way out from it there. */
+  function outline(el: HTMLElement, r: DOMRect) {
     const [x0, y1] = toWorld(r.left + 2, r.top + 2), [x1, y0] = toWorld(r.right - 2, r.bottom - 2);
     const w = x1 - x0, h = y1 - y0, px1 = (2 * HALF) / H;
     const ra = Math.min(parseFloat(getComputedStyle(el).borderTopLeftRadius) * px1 || 0, w / 2, h / 2);
@@ -113,22 +118,54 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
       [x1 - ra, y0, x0 + ra, y0], [x0 + ra, y0 + ra, -Math.PI / 2, -Math.PI], [x0, y0 + ra, x0, y1 - ra], [x0 + ra, y1 - ra, Math.PI, Math.PI / 2]];
     const len = segs.map((s, k) => (k % 2 ? (ra * Math.PI) / 2 : Math.hypot(s[2] - s[0], s[3] - s[1])));
     const per = len.reduce((a, b) => a + b, 0) || 1;
-    for (let j = 0; j < K; j++) {
-      let t = ((j + 0.5) / K) * per, k = 0;
+    return (u: number, inset: number): [number, number, number] => {
+      let t = u * per, k = 0;
       while (k < 7 && t > len[k]) t -= len[k++];
-      const s = segs[k], f = len[k] ? t / len[k] : 0, inset = (j % 7) * 0.0015;
-      let x: number, y: number;
-      if (k % 2) { const a = s[2] + (s[3] - s[2]) * f; x = s[0] + Math.cos(a) * (ra - inset); y = s[1] + Math.sin(a) * (ra - inset); }
-      else { x = s[0] + (s[2] - s[0]) * f; y = s[1] + (s[3] - s[1]) * f; }
+      const s = segs[k], f = len[k] ? t / len[k] : 0;
+      if (k % 2) { const a = s[2] + (s[3] - s[2]) * f; return [s[0] + Math.cos(a) * (ra - inset), s[1] + Math.sin(a) * (ra - inset), a]; }
+      return [s[0] + (s[2] - s[0]) * f, s[1] + (s[3] - s[1]) * f, [Math.PI / 2, 0, 0, 0, -Math.PI / 2, 0, Math.PI, 0][k]];
+    };
+  }
+  /* Some dots glow just outside the outline, the farther the fewer; `reach` in pixels. */
+  const halo = (x: number, y: number, a: number, j: number, reach: number): [number, number] => {
+    const o = ((j * 7919) % 100) / 100, d = o * o * reach * ((2 * HALF) / H);
+    return [x + Math.cos(a) * d, y + Math.sin(a) * d];
+  };
+
+  /* A door: most of his body rings it, the rest glows around it. */
+  const doorTgt = new Float32Array(B.nb * 3), doorHalo = new Uint8Array(B.nb);
+  let doorShown = -1, doorAt = "";
+  function aimDoor(el: HTMLElement, d: number, r: DOMRect) {
+    const K = B.nb, at = outline(el, r);
+    for (let j = 0; j < K; j++) {
+      const [px, py, a] = at((j + 0.5) / K, (j % 7) * 0.0015);
       doorHalo[j] = j % 5 < 2 ? 1 : 0;
-      if (doorHalo[j]) {
-        const a = k % 2 ? s[2] + (s[3] - s[2]) * f : [Math.PI / 2, 0, 0, 0, -Math.PI / 2, 0, Math.PI, 0][k], o = ((j * 7919) % 100) / 100;
-        x += Math.cos(a) * o * o * 26 * px1; y += Math.sin(a) * o * o * 26 * px1;
-      }
+      const [x, y] = doorHalo[j] ? halo(px, py, a, j, 26) : [px, py];
       doorTgt.set([x, y, ((j % 11) - 5) * 0.002], j * 3);
     }
     doorShown = d;
     doorAt = `${r.left},${r.top},${r.width},${r.height}`;
+  }
+
+  /* Every question at once: his body shared out among the chips, each share
+     ringing its chip in that chip's colour (`--glow`, palette entry k + 1). */
+  const chipTgt = new Float32Array(B.nb * 3), chipPal = new Uint8Array(B.nb);
+  let chipsAt = "";
+  function aimChips(els: HTMLElement[], rs: DOMRect[]) {
+    const M = els.length, K = B.nb, per = Math.ceil(K / M), cols = new Float32Array(18);
+    const rings = els.map((el, k) => {
+      cols.set(hex(getComputedStyle(el).getPropertyValue("--glow").trim() || "#f5d978"), k * 3);
+      return outline(el, rs[k]);
+    });
+    gl!.uniform3fv(uPal, cols);
+    for (let j = 0; j < K; j++) {
+      const k = j % M;
+      const [px, py, a] = rings[k]((Math.floor(j / M) + 0.5) / per, (j % 7) * 0.001);
+      const [x, y] = j % 5 < 2 ? halo(px, py, a, j, 14) : [px, py];
+      chipTgt.set([x, y, ((j % 11) - 5) * 0.002], j * 3);
+      chipPal[j] = k + 1;
+    }
+    chipsAt = rs.map((r) => `${r.left},${r.top},${r.width},${r.height}`).join(";");
   }
 
   /* Where he was pressed: a dent that heals within a breath. Pokes within
@@ -165,7 +202,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
   addEventListener("resize", resize);
 
   let phaseWas = read().mode, wakeT = phaseWas === "sleep" ? -1 : -99, last = performance.now(), raf = 0, nextBlink = 3, blinkUntil = 0;
-  let yaw = 0, pitch = 0, roll = 0, lookX = 0, lookY = 0, logoUntil = 0, litFired = false;
+  let yaw = 0, pitch = 0, roll = 0, lookX = 0, lookY = 0, logoUntil = 0, litFired = false, palDirty = false;
   const eyeCol: [number, number, number] = [...EYE_REST], shapeCol: [number, number, number] = [1, 0.85, 0.5];
   const LX = -0.42, LY = 0.5, LZ = 0.76;
 
@@ -184,11 +221,12 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     /* What plays, and where in it: the cues of that recording, now. */
     const a = inp.audio, src = a && !a.paused && a.src ? a.src.replace(/^.*\//, "").replace(/\.mp3.*$/, "") : "", lt = a ? a.currentTime : 0;
     const rec = src ? cues[src] : undefined;
-    let shape: Shape | null = null, door = -1, cueEyes: Eyes | null = null, beat = 0;
+    let shape: Shape | null = null, door = -1, chips = false, cueEyes: Eyes | null = null, beat = 0;
     if (rec) {
       for (const c of rec.cues) if (lt >= c.t0 && lt < c.t1) {
         if (c.shape && SH[c.shape]) shape = SH[c.shape];
         if (c.door !== undefined && inp.doors[c.door]) door = c.door;
+        if (c.chips && inp.chips.length) chips = true;
         if (c.eyes) cueEyes = c.eyes as Eyes;
       }
       for (const b of rec.beats) if (lt >= b && lt < b + 0.28) beat = 1;
@@ -201,6 +239,12 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     }
     if (door < 0) doorShown = -1;
     inp.doors.forEach((d, k) => d.classList.toggle("lit", k === door));
+    const six = inp.chips.slice(0, 6);
+    if (chips) {
+      const rs = six.map((c) => c.getBoundingClientRect());
+      if (chipsAt !== rs.map((r) => `${r.left},${r.top},${r.width},${r.height}`).join(";")) aimChips(six, rs);
+    } else chipsAt = "";
+    six.forEach((c) => c.classList.toggle("lit", chips));
 
     /* The logo moment: right after he wakes, part of his body lights the logo and comes back. */
     const logoOn = !reduce && inp.logo && t < logoUntil && sinceWake > 1.4;
@@ -233,6 +277,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     let lx = (tYaw / 0.28) * 0.05, ly = -(tPitch / 0.1) * 0.03;
     if (door >= 0) { const r = inp.doors[door].getBoundingClientRect(); lx = Math.max(-0.07, Math.min(0.07, (toWorld(r.left + r.width / 2, 0)[0] - cx) * 0.06)); ly = -0.05; }
     else if (shape) { lx = 0; ly = -0.045; }
+    else if (chips) { lx = 0; ly = -0.07; }
     if (expr === "scan") lx = 0.07 * Math.sin(t * 6);
     if (expr === "think") { lx = 0.05; ly = 0.05; }
     lookX += (lx - lookX) * 0.12; lookY += (ly - lookY) * 0.12;
@@ -267,7 +312,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
 
     for (let i = 0; i < N; i++) {
       const i3 = i * 3, p = B.part[i], body = p >= 4, j = B.rb[i];
-      let tx: number, ty: number, tz: number, b: number, tint = 0, sp2 = 1;
+      let tx: number, ty: number, tz: number, b: number, tint = 0, sp2 = 1, pal = 0;
       const formed = !asleep && (reduce || sinceWake > B.delay[i]);
       if (formed && body && logoOn && logoR && j % 3 === 0) {
         /* Around the logo: a ring of light along its box. */
@@ -282,6 +327,10 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
         const q = j * 3;
         tx = doorTgt[q]; ty = doorTgt[q + 1]; tz = doorTgt[q + 2]; b = (doorHalo[j] ? 0.3 : 0.9) + 0.12 * Math.sin(t * 5 + B.seed[i] * 30); sp2 = 1.5;
         tint = -Math.max(0, 1 - Math.hypot(tx - P[i3], ty - P[i3 + 1]) * 2.2);
+      } else if (formed && body && chips && chipsAt) {
+        const q = j * 3;
+        tx = chipTgt[q]; ty = chipTgt[q + 1]; tz = chipTgt[q + 2]; b = (j % 5 < 2 ? 0.3 : 0.9) + 0.12 * Math.sin(t * 5 + B.seed[i] * 30); sp2 = 1.5;
+        tint = -Math.max(0, 1 - Math.hypot(tx - P[i3], ty - P[i3 + 1]) * 2.2); pal = chipPal[j];
       } else if (formed) {
         let ox: number, oy: number, oz: number, nx = B.nrm[i3], ny = B.nrm[i3 + 1], nz = B.nrm[i3 + 2];
         const head = p <= 3;
@@ -332,10 +381,12 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
       if (!reduce && dist > 0.06) { const sw = Math.min(1, dist * 1.4) * dt * 1.1; px += -dy * sw; py += dx * sw; b = b * (1 - Math.min(0.5, dist)) + 0.55 * Math.min(0.5, dist); }
       P[i3] = px; P[i3 + 1] = py; P[i3 + 2] = pz;
       INFO[i * 2] = b; INFO[i * 2 + 1] = tint;
+      if (PAL[i] !== pal) { PAL[i] = pal; palDirty = true; }
     }
     gl!.clear(gl!.COLOR_BUFFER_BIT);
     gl!.bindBuffer(gl!.ARRAY_BUFFER, bufP); gl!.bufferSubData(gl!.ARRAY_BUFFER, 0, P);
     gl!.bindBuffer(gl!.ARRAY_BUFFER, bufI); gl!.bufferSubData(gl!.ARRAY_BUFFER, 0, INFO);
+    if (palDirty) { gl!.bindBuffer(gl!.ARRAY_BUFFER, bufPal); gl!.bufferSubData(gl!.ARRAY_BUFFER, 0, PAL); palDirty = false; }
     gl!.drawArrays(gl!.POINTS, 0, N);
     raf = requestAnimationFrame(frame);
   }

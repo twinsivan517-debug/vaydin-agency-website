@@ -173,10 +173,16 @@ body {
   font-size: 0.85rem;
   line-height: 1.2;
   text-align: left;
-  transition: border-color 0.25s ease, background 0.25s ease, transform 0.15s ease;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.4s ease, transform 0.15s ease;
 }
 
 .chip:active { transform: scale(0.98); }
+
+/* His light on the questions as he offers them, each in its own colour (`--glow`). */
+.chip.lit {
+  border-color: var(--glow);
+  box-shadow: 0 0 22px -6px var(--glow);
+}
 
 .chip i {
   flex: none;
@@ -189,6 +195,12 @@ body {
   color: var(--gold-bright);
   font-style: normal;
   font-size: 0.8rem;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+.chip.lit i {
+  background: color-mix(in srgb, var(--glow) 28%, transparent);
+  color: var(--glow);
 }
 
 .chip[aria-pressed="true"] {

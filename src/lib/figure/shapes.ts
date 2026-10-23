@@ -7,7 +7,7 @@ import { rng } from "./body";
 type Draw = (g: CanvasRenderingContext2D) => void;
 export type Shape = { pts: Float32Array; color: [number, number, number] };
 
-const hex = (h: string): [number, number, number] => [1, 3, 5].map((k) => parseInt(h.slice(k, k + 2), 16) / 255) as [number, number, number];
+export const hex = (h: string): [number, number, number] => [1, 3, 5].map((k) => parseInt(h.slice(k, k + 2), 16) / 255) as [number, number, number];
 export const ACCENT = ["#f87171", "#f5d978", "#4ade80", "#a78bfa", "#34e3f0"].map(hex);
 
 const rr = (g: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) => {

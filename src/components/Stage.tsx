@@ -24,6 +24,10 @@ type Point = { x: number; y: number };
 
 /* A small sign on each question's chip. */
 const ICONS: Record<string, string> = { what: "?", how: "\u2699", gain: "\u25B2", start: "\u25B6", price: "$" };
+/* The colour his light gives each chip when he says "Pick a question": the
+   colour of the page nearest its meaning (how: the Engine, gain: Grow, start:
+   the diagnostic, price: your plan), gold for Vaydin itself, rose for More. */
+const GLOWS: Record<string, string> = { what: "#f5d978", how: "#a78bfa", gain: "#4ade80", start: "#f87171", price: "#34e3f0", more: "#f472b6" };
 
 /* How long a line is, for the phone's cloud: it keeps one height, so a long
    line takes a smaller size rather than more room. */
@@ -419,14 +423,29 @@ export function Stage() {
       <ul className="hero-chips" aria-label="Questions">
         {QUESTIONS.map((c, i) => (
           <li key={c.id} style={{ "--i": i } as React.CSSProperties}>
-            <button type="button" onClick={() => tap(c.id)} aria-pressed={c.id === state.chapter && state.shown.kind === "chapter"} className="chip">
+            <button
+              type="button"
+              onClick={() => tap(c.id)}
+              aria-pressed={c.id === state.chapter && state.shown.kind === "chapter"}
+              data-figure-chip=""
+              className="chip"
+              style={{ "--glow": GLOWS[c.id] } as React.CSSProperties}
+            >
               <i aria-hidden="true">{ICONS[c.id] ?? "?"}</i>
               {c.label}
             </button>
           </li>
         ))}
         <li style={{ "--i": QUESTIONS.length } as React.CSSProperties}>
-          <button type="button" onPointerDown={() => ready(MORE)} onClick={more} aria-pressed={state.shown.kind === "more"} className="chip">
+          <button
+            type="button"
+            onPointerDown={() => ready(MORE)}
+            onClick={more}
+            aria-pressed={state.shown.kind === "more"}
+            data-figure-chip=""
+            className="chip"
+            style={{ "--glow": GLOWS.more } as React.CSSProperties}
+          >
             <i aria-hidden="true">{"…"}</i>
             More questions
           </button>

@@ -45,6 +45,7 @@ export const Figure = forwardRef<GuideHandle, Props>(function Figure(props, ref)
         audio: latest.current.audio(),
         stage: stage.current,
         doors: Array.from(document.querySelectorAll<HTMLElement>("[data-figure-door]")),
+        chips: Array.from(document.querySelectorAll<HTMLElement>("[data-figure-chip]")),
         logo: document.querySelector<HTMLElement>(".mark"),
       }),
       reduce,

@@ -64,6 +64,9 @@ def plan(text, timed, dur):
             hit = {"door": 1}
         if w == "hello" and nxt == "at":
             hit = {"shape": "mail"}
+        # "Pick a question": his light rings every question chip at once.
+        if w == "pick" and nxt == "a" and i + 2 < len(words) and words[i + 2] == "question":
+            hit = {"chips": 1}
         if not hit:
             for pat, shape in SHAPES:
                 if re.match(pat, w):
@@ -77,7 +80,7 @@ def plan(text, timed, dur):
     # Each body cue lasts until the next starts, at least 1 s, at most 2.4 s (a door 2.2 s).
     for k, c in enumerate(cues):
         nxt = cues[k + 1]["t0"] if k + 1 < len(cues) else dur + 0.3
-        cap = 2.2 if "door" in c else 2.4
+        cap = 2.2 if "door" in c or "chips" in c else 2.4
         c["t1"] = round(min(nxt, c["t0"] + cap, dur + 0.6) if nxt - c["t0"] >= 0.55 else nxt, 2)
     for idx, tag in tags:
         e = EYES.get(tag)
@@ -110,7 +113,7 @@ def main():
     out["opener"] = {"dur": round(OPENER[-1][1] + out[OPENER[-1][0]]["dur"], 2), "cues": oc, "beats": ob}
     json.dump(out, open(sys.argv[3], "w", encoding="utf-8"), separators=(",", ":"))
     shapes = sum(1 for v in out.values() for c in v["cues"] if "shape" in c)
-    doors = sum(1 for v in out.values() for c in v["cues"] if "door" in c)
+    doors = sum(1 for v in out.values() for c in v["cues"] if "door" in c or "chips" in c)
     eyes = sum(1 for v in out.values() for c in v["cues"] if "eyes" in c)
     print("files", len(out), "shape cues", shapes, "door cues", doors, "eye cues", eyes)
 
