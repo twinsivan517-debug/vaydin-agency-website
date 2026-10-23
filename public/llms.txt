@@ -1,23 +1,24 @@
 # Vaydin
 
-> Vaydin finds the patients a clinic never saw, and books them. Dubai aesthetic clinics. Measured, not promised.
+> Vaydin Agency is a Dubai free-zone company, licensed under IFZA, and an operations partner for aesthetic and wellness clinics in the UAE and the GCC. We find the patients your clinic never saw, and book them. Measured, not promised.
 
-Vaydin (VAYDIN PARTNERS INVESTMENTS - FZCO, Dubai Silicon Oasis, UAE) works with aesthetic clinics in Dubai and the MENA region in three steps:
+Vaydin (VAYDIN PARTNERS INVESTMENTS - FZCO, DSO-IFZA, Dubai Silicon Oasis, UAE) works in three steps:
 
-1. Diagnose: an unannounced mystery shop of the clinic, the way a patient meets it (WhatsApp, Google, Instagram, the website, the booking link), scored across six dimensions, plus a recurring sweep of everything a patient can find.
-2. Fix and run: the Vaydin engine takes over the clinic's digital front door, under the clinic's own name and number: WhatsApp messages answered in minutes, reviews answered, bookings made and reminded, old inquiries revived.
-3. Grow: once the engine runs the clinic, paid patient demand lands in a machine built to convert it.
+1. Intelligence (the diagnostic): unannounced, every thirty to sixty days, a real person messages the clinic on WhatsApp like a new patient. Between shops Vaydin reads the clinic's Google profile and its rivals every week, its Instagram and website every month. Six rooms, one score, and what to fix first.
+2. The Revenue Engine: Vaydin answers, books, reminds and revives every inquiry on the clinic's own WhatsApp number, and runs its Google profile, reviews, Instagram messages and website. The clinic's reception approves with a tap, and the Intelligence keeps scoring the work.
+3. Grow: once the Engine runs the clinic, paid patient demand lands in the system that already books, every dirham counted on the same dashboard.
 
 ## Pages
 
-- https://vaydin.agency/ : the Vaydin pitch in six short chapters, told by the guide; the full transcript is on the page
-- https://vaydin.agency/diagnose.html : the diagnostic, what is measured and how
-- https://vaydin.agency/fix.html : the engine and the estate, what Vaydin runs for a clinic
-- https://vaydin.agency/engine.html : inside the engine
-- https://vaydin.agency/grow.html : growth once the engine runs
+- https://vaydin.agency/ : who Vaydin is, told by the guide, who answers the five questions clinic owners ask first; the full transcript is on the page
+- https://vaydin.agency/diagnose.html : Intelligence, the diagnostic: what is measured and how
+- https://vaydin.agency/fix.html : the Revenue Engine and the front door Vaydin runs for a clinic
+- https://vaydin.agency/engine.html : inside the Engine
+- https://vaydin.agency/grow.html : growth once the Engine runs
 - https://vaydin.agency/pricing.html : ask for your plan; every plan is built for the clinic
 
 ## Contact
 
 - WhatsApp: +971 50 555 3148
 - Email: hello@vaydin.agency
+- Instagram: https://www.instagram.com/vaydin.agency/

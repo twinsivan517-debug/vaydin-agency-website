@@ -6,19 +6,22 @@ import "./globals.css";
 const sans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const display = Marcellus({ variable: "--font-marcellus", subsets: ["latin"], weight: "400" });
 
+/* The home page's name, in a search result and on a shared link alike. */
+const TITLE = `${SITE.name} Agency, Dubai: we find the patients your clinic never saw`;
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  title: { default: `${SITE.name} Agency, Dubai: we find the patients your clinic never saw`, template: `%s · ${SITE.name}` },
+  title: { default: TITLE, template: `%s · ${SITE.name}` },
   description: SITE.description,
   openGraph: {
-    title: SITE.name,
+    title: TITLE,
     description: SITE.description,
     url: SITE.url,
     siteName: SITE.name,
     type: "website",
     images: [{ url: "/vaydin-og.png", width: 1200, height: 630 }],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", title: TITLE },
   ...(LISTED ? {} : { robots: { index: false, follow: false } }),
 };
 
@@ -34,6 +37,7 @@ const ORGANISATION = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: SITE.name,
+  legalName: "VAYDIN PARTNERS INVESTMENTS - FZCO",
   alternateName: ["Vaydin Agency", "VAYDIN PARTNERS INVESTMENTS - FZCO"],
   telephone: "+971505553148",
   address: {
@@ -48,11 +52,14 @@ const ORGANISATION = {
   image: `${SITE.url}/vaydin-og.png`,
   description:
     "Vaydin Agency is a Dubai company for aesthetic and wellness clinics in the UAE and the GCC. We measure how a clinic looks to a new patient, then run its front door: WhatsApp, Google, reviews, Instagram and the website.",
-  areaServed: { "@type": "Place", name: "MENA" },
+  areaServed: [
+    { "@type": "Country", name: "United Arab Emirates" },
+    { "@type": "Place", name: "GCC" },
+  ],
   email: SITE.email,
   /* Profiles that are ours and answer: they tell a search engine which
      "Vaydin" this is. */
-  sameAs: ["https://www.instagram.com/vaydin.agency/"],
+  sameAs: ["https://www.instagram.com/vaydin.agency/", "https://www.facebook.com/profile.php?id=61580761917997"],
 };
 
 /* The site as an entity of its own, so a search engine ties the name to

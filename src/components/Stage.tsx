@@ -315,7 +315,7 @@ export function Stage() {
     >
       {/* The page's first words and its headline: who this is, before her cloud. */}
       <h1 className="hero-name wakes font-display text-base leading-snug text-muted md:text-lg">
-        <span className="label mr-3 text-gold-bright">Vaydin Agency · Dubai</span>
+        <span className="label mr-3 text-gold-bright">Vaydin Agency · Dubai</span>{" "}
         We find the patients your clinic never saw.
       </h1>
 

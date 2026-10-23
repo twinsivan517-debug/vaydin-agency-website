@@ -24,9 +24,11 @@ export default function Home() {
           <p className="label text-gold-bright">Vaydin Agency · Dubai</p>
           <h2 className="mt-2 max-w-3xl font-display text-2xl leading-tight sm:text-3xl">We find the patients your clinic never saw.</h2>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
-            Vaydin Agency is a Dubai company for aesthetic and wellness clinics in the UAE and the GCC. We measure how your
-            clinic looks to a new patient, then run its front door for you: WhatsApp, Google, reviews, Instagram and
-            the website, answered and kept current, with your reception approving by a tap.
+            Vaydin Agency is a Dubai free-zone company, licensed under IFZA, and an operations partner for aesthetic and
+            wellness clinics in the UAE and the GCC. Unannounced, a real person contacts your clinic like a new patient
+            while we read its Google profile, Instagram and website: six rooms, one score. Then the Revenue Engine
+            answers, books, reminds and revives patients on your own WhatsApp number and runs your Google profile,
+            reviews, Instagram and website, with your reception approving by a tap.
           </p>
           <details className="mt-6 text-muted">
             <summary className="label cursor-pointer text-gold-bright">Read what he says</summary>
