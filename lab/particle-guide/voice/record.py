@@ -16,13 +16,13 @@ import urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from eleven import key  # noqa: E402
 
-# His own lines, new for him (approved 2026-10-22), and the two lines that named her.
+# His own lines, new for him (approved 2026-10-22; 01 and poke-6 rewritten on his word 2026-10-23), and the two lines that named her.
 NEW = {
     "00b": "[softly] Mmm… [curious] oh, hello there.",
-    "01": "[warm] Thank you for waking me. I'm Vaydin's guide.",
+    "01": "[warm] I'm Vaydin's guide.",
     "tag-a": "[confident] Dubai never sleeps. Neither do your patients. [warm] With Vaydin, neither does your clinic.",
     "tag-b": "[confident] Dubai never sleeps. Neither do your patients. [warm] With Vaydin, your clinic never misses them.",
-    "poke-6": "[sighs] Fine. I'll just go back to sleep, then.",
+    "poke-6": "[skeptical] Sleep? In Dubai? Never. [laughs] Hibernation mode, though. Until you get serious.",
     "x-personal": "[laughs] I'm Vaydin's guide, so I only talk about Vaydin. Ask me anything about your clinic.",
 }
 # Emotion where it helps; the plain explanations stay calm and untagged.

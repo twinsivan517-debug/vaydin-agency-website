@@ -42,8 +42,8 @@ export const CHAPTERS: Chapter[] = [
     clip: "opener",
     lines: [
       { id: "00b", text: "Mmm… oh, hello there.", at: 0 },
-      { id: "01", text: "Thank you for waking me. I'm Vaydin's guide.", at: 2.58 },
-      { id: "tag", text: "Dubai never sleeps. Neither do your patients. With Vaydin, your clinic never misses them.", at: 5.64 },
+      { id: "01", text: "I'm Vaydin's guide.", at: 2.58 },
+      { id: "tag", text: "Dubai never sleeps. Neither do your patients. With Vaydin, your clinic never misses them.", at: 4.39 },
       {
         id: "02",
         text: "Pick a question or ask me anything, and I'll show you how patients find a clinic, and how a clinic loses them without ever knowing.",
@@ -183,7 +183,7 @@ export const POKES: Line[] = [
   { id: "p3", text: "Careful, I'm working.", audio: "/voice/poke-3.mp3", mood: "hop" },
   { id: "p4", text: "Okay, okay. What would you like to know?", audio: "/voice/poke-4.mp3", mood: "hop" },
   { id: "p5", text: "I'm a guide, not a button.", audio: "/voice/poke-5.mp3", mood: "shake" },
-  { id: "p6", text: "Fine. I'll just go back to sleep, then.", audio: "/voice/poke-6.mp3", mood: "shake" },
+  { id: "p6", text: "Sleep? In Dubai? Never. Hibernation mode, though. Until you get serious.", audio: "/voice/poke-6.mp3", mood: "shake" },
 ];
 
 export const chapter = (id: ChapterId) => CHAPTERS.find((c) => c.id === id)!;

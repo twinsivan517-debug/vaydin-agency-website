@@ -690,3 +690,12 @@ His pick 2026-10-22: Jon ("Natural Authority, Agent / Assistant", ElevenLabs lib
 - Eleven v3, emotion tags on 36 of 74 lines (`media/voice/jon/script.json`, raw takes beside it, not in git). Web files: the light AI layer (phase-zeroed copy at 0.24) then the site's chain (trim, 150 ms tail, -16 LUFS, mono 32 kHz 40 kbps), into `public/voice/` on this branch only. Tools: `lab/particle-guide/voice/record.py`, `verify.py`, `extract.mjs`.
 - Every line transcribed back and compared with its words: 7 of 74 flagged, each opened. False: 00b ("Hmm" for "Mmm"), poke-3, x-choose (short lines), a-legit (a second, larger transcriber hears it right, laugh included). Real: x-hello garbled ("Pit ticket chapter" by both), re-recorded clean; x-kind and x-thanks rushed, re-recorded. The larger transcriber hears the name as "Vayden".
 - Characters: 10,183 before, 14,228 after (4,045 for the name tests, the 74 lines and three retakes).
+
+# His greeting and sixth poke, retaken (Jon)
+
+His word 2026-10-23: he wakes by himself now, so the greeting loses "Thank you for waking me"; and he never sleeps ("Dubai never sleeps"), so the sixth poke gets a joke instead of going back to sleep. Words and price shown to him first (119 characters quoted); his yes, the key read at run time as before.
+
+- 01: "[warm] I'm Vaydin's guide." poke-6: "[skeptical] Sleep? In Dubai? Never. [laughs] Hibernation mode, though. Until you get serious." Eleven v3, voice `sB7vwSCyX0tQmU24cW2C`, one take each, `record.py ... 01 poke-6`. Yesterday's raw takes kept beside them as `*.before-2026-10-23.mp3`.
+- Transcribed back (`verify.py`): 0 of 2 flagged; every word heard, no direction read aloud. 01 is 1.36 s, poke-6 6.47 s.
+- The greeting rebuilt from its three files: 00b at 0, 01 at 2.58, tag-b at 4.39 (01's length plus the same 0.45 s pause): 10.59 s, -17.1 LUFS (the old one -17.3). Placement checked on the second word of each part as heard.
+- Characters: 14,314 before (86 more than the line above says, spent after it was written), 14,366 after: 52 for both lines.

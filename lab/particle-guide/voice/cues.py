@@ -23,7 +23,7 @@ DOORS = [(r"^(diagnostic|unannounced|shopper|shop|shops|intelligence|measure)$",
 # An acting direction -> how his eyes look for the words it covers.
 EYES = {"warm": "happy", "curious": "wide", "skeptical": "think", "laughs": "wink", "serious": "line", "sighs": "sad",
         "confident": "sparkle", "softly": "blink"}
-OPENER = [("00b", 0.0), ("01", 2.58), ("tag-b", 5.64)]
+OPENER = [("00b", 0.0), ("01", 2.58), ("tag-b", 4.39)]
 
 
 def norm(w):
