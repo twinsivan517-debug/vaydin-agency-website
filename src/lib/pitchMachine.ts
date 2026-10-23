@@ -150,6 +150,8 @@ export function reduce(s: State, e: Event): State {
       return speak(s, e.lines, s.shown, null);
     case "stop": {
       if (s.phase === "opener") return { ...s, phase: "done", met: true };
+      /* Cut short, the last quip still leaves him in hibernation: he has already said so. */
+      if (s.phase === "quip" && s.cloud.id === POKES[POKES.length - 1].id) return { ...s, phase: s.met ? "done" : "idle", cloud: RESTING, rest: true };
       if (s.phase === "talking" || s.phase === "quip") return { ...s, phase: s.met ? "done" : "idle" };
       return s;
     }

@@ -262,11 +262,12 @@ export function Stage() {
     dispatch({ type: "ask", reply });
   }
 
-  /* The list opens on the card, and the same chip closes it; asleep, she wakes as for any other chip. */
+  /* The list opens on the card, and the same chip closes it; asleep, he wakes as for any other chip.
+     In hibernation it is a question like any other: it brings him back, even with the list already open. */
   function more() {
     if (state.phase === "asleep") wake();
     else unlock();
-    dispatch({ type: state.shown.kind === "more" && state.phase !== "asleep" ? "less" : "more" });
+    dispatch({ type: state.shown.kind === "more" && state.phase !== "asleep" && !state.rest ? "less" : "more" });
   }
 
   function pick(a: Answer) {

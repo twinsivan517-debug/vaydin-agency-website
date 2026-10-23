@@ -301,6 +301,12 @@ check("the last quip never sends him to sleep: he hibernates, deaf to pokes, unt
   assert.equal(lonely.rest, true);
   assert.equal(mode(lonely), "rest");
   assert.equal(run([{ type: "line_ended" }], run([{ type: "poke", index: 0 }], awake)).phase, "done");
+  /* Stop (or a tab switch) during the last quip still leaves him hibernating; during an earlier one it does not. */
+  const cut = run([{ type: "stop" }], last);
+  assert.equal(cut.rest, true);
+  assert.equal(cut.cloud, RESTING);
+  assert.equal(pokeable(cut), false);
+  assert.equal(run([{ type: "stop" }], run([{ type: "poke", index: 0 }], awake)).rest, false);
 });
 
 check("stop returns to rest; stopping the greeting still counts as met", () => {

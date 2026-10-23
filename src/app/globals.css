@@ -178,12 +178,6 @@ body {
 
 .chip:active { transform: scale(0.98); }
 
-/* His light on the questions as he offers them, each in its own colour (`--glow`). */
-.chip.lit {
-  border-color: var(--glow);
-  box-shadow: 0 0 22px -6px var(--glow);
-}
-
 .chip i {
   flex: none;
   width: 1.6rem;
@@ -206,6 +200,13 @@ body {
 .chip[aria-pressed="true"] {
   border-color: var(--gold-bright);
   background: linear-gradient(135deg, rgb(201 164 74 / 0.35), rgb(74 46 130 / 0.35));
+}
+
+/* His light on the questions as he offers them, each in its own colour
+   (`--glow`); after the pressed edge, so a pressed chip takes his colour too. */
+.chip.lit {
+  border-color: var(--glow);
+  box-shadow: 0 0 22px -6px var(--glow);
 }
 
 .chip i { border-radius: 999px; }
@@ -391,6 +392,12 @@ body.site-asleep header {
   body.site-asleep .hero-ask {
     filter: brightness(0.5) saturate(0.5);
     transition-delay: 0s;
+  }
+
+  /* His light reaching the questions lights them all at once, without waiting their turn. */
+  .hero-chips li:has(.chip.lit) {
+    filter: brightness(1.12);
+    transition: filter 0.3s ease;
   }
 }
 

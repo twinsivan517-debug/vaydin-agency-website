@@ -42,7 +42,8 @@ const FS = `precision mediump float; varying float vB, vT; varying vec3 vS; unif
     float k = clamp(a * vB * uGain, 0.0, 1.0); gl_FragColor = vec4(col * k, k); }`;
 
 /* `onLit` is called once per waking, when his light reaches the logo (at once under reduced motion).
-   `onSpun` is called instead of his dizziness when he is spun while he speaks. */
+   `onSpun`, where given, is called instead of his dizziness when he is spun while he speaks;
+   without it (the corner) he gets dizzy as ever. */
 export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce: boolean, small: boolean, onLit?: () => void, onSpun?: () => void) {
   const gl = cv.getContext("webgl", { antialias: false, alpha: true, premultipliedAlpha: true });
   if (!gl) return null;
@@ -180,7 +181,8 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     const hit = Math.abs(x - cx) < S * 0.6 && y < cy + S * 1.0 && y > cy - S * 1.0;
     if (hit) {
       const t = performance.now() / 1000;
-      annoy = t - lastPoke < 8 ? Math.min(annoy + 1, 5) : 0;
+      /* In hibernation a poke only dents him: it no longer winds him up. */
+      annoy = read().mode !== "rest" && t - lastPoke < 8 ? Math.min(annoy + 1, 5) : 0;
       lastPoke = t;
       /* Kept relative to him, so the dent rides with him if the page scrolls. */
       holes.push({ x: x - cx, y: y - cy, t, r: S * (0.16 + 0.05 * annoy), life: 0.6 + 0.15 * annoy });
@@ -263,7 +265,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
        While he speaks he keeps his head and asks to finish first. */
     spin *= Math.exp(-dt / 4);
     if (Math.abs(spin) > 3 * Math.PI && !reduce) {
-      if (inp.mode === "talk" || inp.mode === "opener") onSpun?.();
+      if ((inp.mode === "talk" || inp.mode === "opener") && onSpun) onSpun();
       else dizzyUntil = t + 3.6;
       spin = 0;
     }
