@@ -44,20 +44,25 @@ def number(w, prev, nxt, nxt2, prev2):
     return None
 
 
+SPELLED = {"1": "one", "2": "two", "3": "three", "6": "six", "7": "seven", "13": "thirteen", "14": "fourteen", "30": "thirty", "60": "sixty"}
+
+
 def norm(w):
     return re.sub(r"[^a-z0-9']", "", w.lower())
 
 
 def plan(text, timed, dur):
     # The script's words and tags, aligned to the words heard, so a tag or a word in the script gets a time.
-    tokens = re.findall(r"\[[^\]]+\]|[^\s\[\]]+", text)
+    # A hyphen splits a word ("three-month" is heard as two), so each half finds its time.
+    tokens = re.findall(r"\[[^\]]+\]|[^\s\[\]-]+", text)
     words, tags = [], []
     for tok in tokens:
         if tok.startswith("["):
             tags.append((len(words), tok[1:-1]))
         elif norm(tok):
             words.append(norm(tok))
-    heard = [w for w, _ in timed]
+    # The transcriber writes numbers as digits; the script spells them.
+    heard = [SPELLED.get(w, w) for w, _ in timed]
     when = [None] * len(words)
     for blk in difflib.SequenceMatcher(None, words, heard, autojunk=False).get_matching_blocks():
         for k in range(blk.size):
@@ -110,6 +115,14 @@ def plan(text, timed, dur):
             continue
         t0 = when[idx] if idx < len(when) else dur
         cues.append({"t0": round(max(0, t0 - 0.05), 2), "t1": round(min(dur, t0 + 1.6), 2), "eyes": e})
+    # A greeting or a goodbye: he waves. Not the email's "hello at", not "you're welcome".
+    last_wave = -9.0
+    for i, w in enumerate(words):
+        prev, nxt = words[i - 1] if i else "", words[i + 1] if i + 1 < len(words) else ""
+        greets = (w == "hello" and nxt != "at") or w in ("hi", "bye", "goodbye") or (w == "welcome" and prev != "you're")
+        if greets and when[i] - last_wave > 3:
+            cues.append({"t0": round(max(0, when[i] - 0.1), 2), "t1": round(when[i] + 1.5, 2), "wave": 1})
+            last_wave = when[i]
     # A question ends with wide, waiting eyes.
     if text.rstrip().endswith("?"):
         cues.append({"t0": round(max(0, dur - 0.9), 2), "t1": round(dur + 0.8, 2), "eyes": "wide"})

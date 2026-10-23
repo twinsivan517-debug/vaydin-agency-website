@@ -10,7 +10,7 @@
 import { ACCENT, hex, makeShapes, markShape, type Shape } from "./shapes";
 import { HEAD, VIS, eyeAt, headZ, makeBody, type Eyes } from "./body";
 
-export type Cue = { t0: number; t1: number; shape?: string; door?: number; chips?: number; eyes?: Eyes | "blink" };
+export type Cue = { t0: number; t1: number; shape?: string; door?: number; chips?: number; wave?: number; eyes?: Eyes | "blink" };
 /* `end: "mark"`: the line closes a chapter, and he signs off with the Vaydin mark once it has played to its end. */
 export type Cues = Record<string, { dur: number; cues: Cue[]; beats: number[]; end?: string }>;
 export type FigureInput = {
@@ -57,8 +57,8 @@ export function runFigure(
   if (!gl) return null;
   /* Dots: a phone stays at 8,000, already at the edge of 60 fps on a mid-range CPU (4x slowed,
      2026-10-23: 56 fps at 8,000, 54 at 10,000, 43 at 14,000); a computer holds 60 fps at 20,000
-     even 2x slowed. The corner is small. */
-  const N = small ? 3000 : Math.min(screen.width, screen.height) < 700 ? 8000 : 20000;
+     even 2x slowed. A tablet (a big screen, a finger, a phone's CPU) keeps 14,000. The corner is small. */
+  const N = small ? 3000 : Math.min(screen.width, screen.height) < 700 ? 8000 : matchMedia("(pointer: fine)").matches ? 20000 : 14000;
   const B = makeBody(N);
   const SH = makeShapes(B.nb);
   markShape(B.nb, "/img/mark.png").then((m) => {
@@ -217,15 +217,19 @@ export function runFigure(
   };
   /* A phone has no pointer to circle him with: scrolling hard up and down
      shakes him instead. Three turns of direction within 1.8 s, each after a
-     real swing, count as one shake. */
-  let lastY = scrollY, dir = 0, swing = 0, turns: number[] = [], shook = false;
+     real swing, count as one shake; a small swing (a finger's stutter in a
+     steady scroll) starts the count over. The position is clamped to the
+     page, so an iPhone's bounce at either end is no swing. */
+  const scrolled = () => Math.max(0, Math.min(scrollY, document.documentElement.scrollHeight - innerHeight));
+  let lastY = scrolled(), dir = 0, swing = 0, turns: number[] = [], shook = false;
   const onScroll = () => {
-    const y = scrollY, d = y - lastY;
+    const y = scrolled(), d = y - lastY;
     lastY = y;
     if (!d) return;
     const s = Math.sign(d), t = performance.now() / 1000;
     if (s === dir) { swing += Math.abs(d); return; }
     if (dir && swing > 30) turns.push(t);
+    else if (dir) turns = [];
     dir = s; swing = Math.abs(d);
     turns = turns.filter((x) => t - x < 1.8);
     if (turns.length >= 3) { shook = true; turns = []; }
@@ -254,12 +258,13 @@ export function runFigure(
     /* What plays, and where in it: the cues of that recording, now. */
     const a = inp.audio, src = a && !a.paused && a.src ? a.src.replace(/^.*\//, "").replace(/\.mp3.*$/, "") : "", lt = a ? a.currentTime : 0;
     const rec = src ? cues[src] : undefined;
-    let shape: Shape | null = null, door = -1, chips = false, cueEyes: Eyes | null = null, beat = 0;
+    let shape: Shape | null = null, door = -1, chips = false, hail = false, cueEyes: Eyes | null = null, beat = 0;
     if (rec) {
       for (const c of rec.cues) if (lt >= c.t0 && lt < c.t1) {
         if (c.shape && SH[c.shape]) shape = SH[c.shape];
         if (c.door !== undefined && inp.doors[c.door]) door = c.door;
         if (c.chips && inp.chips.length) chips = true;
+        if (c.wave) hail = true;
         if (c.eyes) cueEyes = c.eyes as Eyes;
       }
       for (const b of rec.beats) if (lt >= b && lt < b + 0.28) beat = 1;
@@ -267,7 +272,7 @@ export function runFigure(
     if (src.startsWith("poke-")) cueEyes = POKED[src] ?? cueEyes;
     /* A closing line that plays to its end (not one stopped) leaves the Vaydin mark for a moment, until anything else plays. */
     if (src) signing = rec?.end === "mark" ? src : "";
-    else if (signing) { if (a?.ended) markUntil = t + 2.4; signing = ""; }
+    else if (signing) { if (a?.ended && SH.mark) markUntil = t + 2.4; signing = ""; }
     if (!src && t < markUntil && SH.mark && !asleep) shape = SH.mark;
     /* Aimed again whenever the tile moves on screen, as it does when the page scrolls under him. */
     if (door >= 0) {
@@ -348,7 +353,8 @@ export function runFigure(
       (dizzy ? 0.3 * Math.sin(t * 6) : 0) + 0.03 * Math.sin(t * 0.5)) * still - roll) * 0.06;
     const cyw = Math.cos(yaw), syw = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch), cr = Math.cos(roll), sr = Math.sin(roll);
     const bob = 0.035 * Math.sin(t * 1.25) * still, headBob = bob + 0.012 * Math.sin(t * 1.25 + 0.9) * still, armSw = 0.06 * Math.sin(t * 1.1) * still;
-    const waving = !reduce && sinceWake > 2.2 && sinceWake < 3.6;
+    /* He waves once as he wakes, and again whenever he says hello, hi, welcome or bye. */
+    const waving = !reduce && ((sinceWake > 2.2 && sinceWake < 3.6) || hail);
     const wave = waving ? 1 : 0, wa = wave * (2.2 + 0.35 * Math.sin(t * 11)), cwv = Math.cos(wa), swv = Math.sin(wa);
     const eyeH = 1 + beat * 0.18, eyeB = 1.15 + beat * 0.45;
     const isz = S * (shape === SH.skyline ? 0.56 : 0.5), icy = cy + S * (shape === SH.skyline ? -0.45 : -0.4);

@@ -27,9 +27,10 @@ const line = (g: CanvasRenderingContext2D, ...pts: number[]) => {
   g.stroke();
 };
 
-/* A number he says, in the serif of the site's headings: a bright outline over a faint fill. */
+/* A number he says, in a serif like the headings', its digits all full height
+   (Georgia's sink and shrink): a bright outline over a faint fill. */
 const num = (text: string, size: number): Draw => (g) => {
-  g.font = `700 ${size}px Georgia, serif`;
+  g.font = `700 ${size}px "Times New Roman", "Noto Serif", serif`;
   g.textAlign = "center";
   g.textBaseline = "middle";
   g.lineWidth = 6;
@@ -38,9 +39,6 @@ const num = (text: string, size: number): Draw => (g) => {
 };
 
 const DRAW: Record<string, [string, Draw]> = {
-  n1: ["#f5d978", num("1", 170)], n2: ["#f5d978", num("2", 170)], n3: ["#f5d978", num("3", 170)], n6: ["#f5d978", num("6", 170)],
-  n7: ["#f5d978", num("7", 170)], n13: ["#f5d978", num("13", 140)], n30: ["#f5d978", num("30", 140)], n60: ["#f5d978", num("60", 140)],
-  "n30-60": ["#f5d978", num("30-60", 66)],
   skyline: ["#f5d978", (g) => {
     /* A city at night: towers of different heights, the tallest stepping up to a needle. */
     const towers = [[8, 150, 20, 60], [32, 122, 18, 88], [54, 140, 22, 70], [80, 112, 16, 98], [134, 118, 18, 92], [156, 138, 16, 72], [176, 100, 18, 110], [198, 148, 16, 62],
@@ -104,6 +102,10 @@ const DRAW: Record<string, [string, Draw]> = {
     g.beginPath(); g.arc(110, 86, 22, 0, 7); g.stroke();
   }],
   clock: ["#a78bfa", (g) => { g.beginPath(); g.arc(110, 110, 84, 0, 7); g.stroke(); line(g, 110, 110, 110, 60); line(g, 110, 110, 146, 128); }],
+  /* Last, so the shapes above keep the dots they always had (one random stream feeds them all). */
+  n1: ["#f5d978", num("1", 170)], n2: ["#f5d978", num("2", 170)], n3: ["#f5d978", num("3", 170)], n6: ["#f5d978", num("6", 170)],
+  n7: ["#f5d978", num("7", 170)], n13: ["#f5d978", num("13", 140)], n30: ["#f5d978", num("30", 140)], n60: ["#f5d978", num("60", 140)],
+  "n30-60": ["#f5d978", num("30-60", 66)],
 };
 
 /* Dots spread over a drawing's ink, denser where it is more opaque. */
