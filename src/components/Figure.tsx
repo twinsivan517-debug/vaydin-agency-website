@@ -40,35 +40,41 @@ export const Figure = forwardRef<GuideHandle, Props>(function Figure(props, ref)
     canvas.setAttribute("aria-hidden", "true");
     document.body.append(canvas);
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const run = runFigure(
-      canvas,
-      () => ({
-        mode: latest.current.mode,
-        audio: latest.current.audio(),
-        stage: stage.current,
-        doors: Array.from(document.querySelectorAll<HTMLElement>("[data-figure-door]")),
-        chips: Array.from(document.querySelectorAll<HTMLElement>("[data-figure-chip]")),
-        logo: document.querySelector<HTMLElement>(".mark"),
-      }),
-      reduce,
-      !!latest.current.small,
-      () => latest.current.onLit?.(),
-      (how) => latest.current.onSpun?.(how),
-    );
-    engine.current = run;
-    /* No WebGL here: no figure, but the page must not stay dark waiting for his
-       light. A turn later, so the page has dimmed itself first. */
-    const unlit = run ? 0 : window.setTimeout(() => latest.current.onLit?.(), 0);
-    if (!run) canvas.remove();
+    /* The page's elements he reaches for, found once: they stay the same once the page is drawn. */
+    const doors = Array.from(document.querySelectorAll<HTMLElement>("[data-figure-door]"));
+    const chips = Array.from(document.querySelectorAll<HTMLElement>("[data-figure-chip]"));
+    const logo = document.querySelector<HTMLElement>(".mark");
     let live = true;
-    fetch("/guide/cues.json")
+    let run: ReturnType<typeof runFigure> = null;
+    let unlit = 0;
+    const cues = fetch("/guide/cues.json")
       .then((r) => (r.ok ? r.json() : {}))
-      .then((c: Cues) => {
+      .catch(() => ({}));
+    /* Started a turn after the page's own start, so his setup is never part of that one long task. */
+    const start = window.setTimeout(() => {
+      run = runFigure(
+        canvas,
+        () => ({ mode: latest.current.mode, audio: latest.current.audio(), stage: stage.current, doors, chips, logo }),
+        reduce,
+        !!latest.current.small,
+        () => latest.current.onLit?.(),
+        (how) => latest.current.onSpun?.(how),
+      );
+      engine.current = run;
+      /* No WebGL here: no figure, but the page must not stay dark waiting for his
+         light. A turn later, so the page has dimmed itself first. */
+      if (!run) {
+        canvas.remove();
+        unlit = window.setTimeout(() => latest.current.onLit?.(), 0);
+        return;
+      }
+      cues.then((c: Cues) => {
         if (live) run?.setCues(c);
-      })
-      .catch(() => {});
+      });
+    }, 0);
     return () => {
       live = false;
+      window.clearTimeout(start);
       window.clearTimeout(unlit);
       run?.stop();
       canvas.remove();

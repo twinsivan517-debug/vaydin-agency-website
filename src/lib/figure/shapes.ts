@@ -102,7 +102,6 @@ const DRAW: Record<string, [string, Draw]> = {
     g.beginPath(); g.arc(110, 86, 22, 0, 7); g.stroke();
   }],
   clock: ["#a78bfa", (g) => { g.beginPath(); g.arc(110, 110, 84, 0, 7); g.stroke(); line(g, 110, 110, 110, 60); line(g, 110, 110, 146, 128); }],
-  /* Last, so the shapes above keep the dots they always had (one random stream feeds them all). */
   n1: ["#f5d978", num("1", 170)], n2: ["#f5d978", num("2", 170)], n3: ["#f5d978", num("3", 170)], n6: ["#f5d978", num("6", 170)],
   n7: ["#f5d978", num("7", 170)], n13: ["#f5d978", num("13", 140)], n30: ["#f5d978", num("30", 140)], n60: ["#f5d978", num("60", 140)],
   "n30-60": ["#f5d978", num("30-60", 66)],
@@ -142,19 +141,34 @@ export function markShape(n: number, src: string): Promise<Shape | null> {
   });
 }
 
-export function makeShapes(n: number): Record<string, Shape> {
+export type Shapes = { get(name: string): Shape | undefined; add(name: string, shape: Shape): void };
+
+/* Each shape is drawn and sampled the first time he needs it, a few
+   milliseconds then, never all at once while the page starts. Each has its
+   own seed, so a shape's dots do not depend on which came first. */
+export function makeShapes(n: number): Shapes {
   const out: Record<string, Shape> = {};
-  const rnd = rng(31);
+  const names = Object.keys(DRAW);
   const S = 220;
-  const cv = document.createElement("canvas");
-  cv.width = cv.height = S;
-  const g = cv.getContext("2d", { willReadFrequently: true });
-  if (!g) return out;
-  for (const [name, [color, draw]] of Object.entries(DRAW)) {
-    g.clearRect(0, 0, S, S);
-    g.globalAlpha = 1; g.strokeStyle = g.fillStyle = "#fff"; g.lineWidth = 11; g.lineCap = g.lineJoin = "round";
-    draw(g);
-    out[name] = { pts: sample(g.getImageData(0, 0, S, S).data, S, n, rnd), color: hex(color) };
-  }
-  return out;
+  let g: CanvasRenderingContext2D | null | undefined;
+  return {
+    get(name) {
+      if (out[name] || !Object.hasOwn(DRAW, name)) return out[name];
+      if (g === undefined) {
+        const cv = document.createElement("canvas");
+        cv.width = cv.height = S;
+        g = cv.getContext("2d", { willReadFrequently: true });
+      }
+      if (!g) return undefined;
+      const [color, draw] = DRAW[name];
+      g.clearRect(0, 0, S, S);
+      g.globalAlpha = 1; g.strokeStyle = g.fillStyle = "#fff"; g.lineWidth = 11; g.lineCap = g.lineJoin = "round";
+      draw(g);
+      out[name] = { pts: sample(g.getImageData(0, 0, S, S).data, S, n, rng(31 + names.indexOf(name))), color: hex(color) };
+      return out[name];
+    },
+    add(name, shape) {
+      out[name] = shape;
+    },
+  };
 }

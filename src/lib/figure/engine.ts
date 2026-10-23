@@ -62,7 +62,7 @@ export function runFigure(
   const B = makeBody(N);
   const SH = makeShapes(B.nb);
   markShape(B.nb, "/img/mark.png").then((m) => {
-    if (m) SH.mark = m;
+    if (m) SH.add("mark", m);
   });
   let cues: Cues = {};
 
@@ -240,6 +240,12 @@ export function runFigure(
 
   let phaseWas = read().mode, wakeT = phaseWas === "sleep" ? -1 : -99, last = performance.now(), raf = 0, nextBlink = 3, blinkUntil = 0;
   let yaw = 0, pitch = 0, roll = 0, lookX = 0, lookY = 0, logoUntil = 0, litFired = false, palDirty = false, signing = "", markUntil = 0;
+  let litDoor = -1, litChips = false, litLogo = false;
+  /* At least half of it inside the window. */
+  const inView = (el: HTMLElement) => {
+    const r = el.getBoundingClientRect();
+    return r.width > 0 && r.top + r.height / 2 < H && r.bottom - r.height / 2 > 0;
+  };
   const eyeCol: [number, number, number] = [...EYE_REST], shapeCol: [number, number, number] = [1, 0.85, 0.5];
   const LX = -0.42, LY = 0.5, LZ = 0.76;
 
@@ -258,11 +264,13 @@ export function runFigure(
     /* What plays, and where in it: the cues of that recording, now. */
     const a = inp.audio, src = a && !a.paused && a.src ? a.src.replace(/^.*\//, "").replace(/\.mp3.*$/, "") : "", lt = a ? a.currentTime : 0;
     const rec = src ? cues[src] : undefined;
-    let shape: Shape | null = null, door = -1, chips = false, hail = false, cueEyes: Eyes | null = null, beat = 0;
+    let shape: Shape | null = null, sky = false, door = -1, chips = false, hail = false, cueEyes: Eyes | null = null, beat = 0;
     if (rec) {
       for (const c of rec.cues) if (lt >= c.t0 && lt < c.t1) {
-        if (c.shape && SH[c.shape]) shape = SH[c.shape];
-        if (c.door !== undefined && inp.doors[c.door]) door = c.door;
+        const drawn = c.shape ? SH.get(c.shape) : undefined;
+        if (drawn) { shape = drawn; sky = c.shape === "skyline"; }
+        /* A door is rung only where it can be seen: on a phone the doors may sit below the fold. */
+        if (c.door !== undefined && inp.doors[c.door] && inView(inp.doors[c.door])) door = c.door;
         if (c.chips && inp.chips.length) chips = true;
         if (c.wave) hail = true;
         if (c.eyes) cueEyes = c.eyes as Eyes;
@@ -272,25 +280,28 @@ export function runFigure(
     if (src.startsWith("poke-")) cueEyes = POKED[src] ?? cueEyes;
     /* A closing line that plays to its end (not one stopped) leaves the Vaydin mark for a moment, until anything else plays. */
     if (src) signing = rec?.end === "mark" ? src : "";
-    else if (signing) { if (a?.ended && SH.mark) markUntil = t + 2.4; signing = ""; }
-    if (!src && t < markUntil && SH.mark && !asleep) shape = SH.mark;
+    else if (signing) { if (a?.ended && SH.get("mark")) markUntil = t + 2.4; signing = ""; }
+    if (!src && t < markUntil && !asleep) shape = SH.get("mark") ?? shape;
     /* Aimed again whenever the tile moves on screen, as it does when the page scrolls under him. */
     if (door >= 0) {
       const r = inp.doors[door].getBoundingClientRect();
       if (door !== doorShown || doorAt !== `${r.left},${r.top},${r.width},${r.height}`) aimDoor(inp.doors[door], door, r);
     }
     if (door < 0) doorShown = -1;
-    inp.doors.forEach((d, k) => d.classList.toggle("lit", k === door));
-    const six = inp.chips.slice(0, 6);
+    /* The chips in sight share his light; none in sight, he keeps it. */
+    const six = chips ? inp.chips.slice(0, 6).filter(inView) : [];
+    if (chips && !six.length) chips = false;
     if (chips) {
       const rs = six.map((c) => c.getBoundingClientRect());
       if (chipsAt !== rs.map((r) => `${r.left},${r.top},${r.width},${r.height}`).join(";")) aimChips(six, rs);
     } else chipsAt = "";
-    six.forEach((c) => c.classList.toggle("lit", chips));
 
     /* The logo moment: right after he wakes, part of his body lights the logo and comes back. */
-    const logoOn = !reduce && inp.logo && t < logoUntil && sinceWake > 1.4;
-    if (inp.logo) inp.logo.classList.toggle("figure-lit", !!logoOn);
+    const logoOn = !!(!reduce && inp.logo && t < logoUntil && sinceWake > 1.4);
+    /* Classes change only when their state does: touching them every frame would restyle the page every frame. */
+    if (door !== litDoor) { inp.doors.forEach((d, k) => d.classList.toggle("lit", k === door)); litDoor = door; }
+    if (chips !== litChips) { inp.chips.forEach((c) => c.classList.toggle("lit", chips)); litChips = chips; }
+    if (logoOn !== litLogo) { inp.logo?.classList.toggle("figure-lit", logoOn); litLogo = logoOn; }
 
     /* Scrolled away, he is not drawn: a phone does no work for dots nobody sees. */
     if (!seen && !logoOn) {
@@ -357,7 +368,7 @@ export function runFigure(
     const waving = !reduce && ((sinceWake > 2.2 && sinceWake < 3.6) || hail);
     const wave = waving ? 1 : 0, wa = wave * (2.2 + 0.35 * Math.sin(t * 11)), cwv = Math.cos(wa), swv = Math.sin(wa);
     const eyeH = 1 + beat * 0.18, eyeB = 1.15 + beat * 0.45;
-    const isz = S * (shape === SH.skyline ? 0.56 : 0.5), icy = cy + S * (shape === SH.skyline ? -0.45 : -0.4);
+    const isz = S * (sky ? 0.56 : 0.5), icy = cy + S * (sky ? -0.45 : -0.4);
     const logoR = inp.logo ? inp.logo.getBoundingClientRect() : null;
     for (let k = holes.length - 1; k >= 0; k--) if (t - holes[k].t > holes[k].life) holes.splice(k, 1);
 
