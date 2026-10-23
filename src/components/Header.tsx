@@ -24,11 +24,11 @@ export function Header() {
         ))}
       </nav>
       <div className="flex items-center gap-2">
-        <a href={WHATSAPP} className="rounded-full border border-gold bg-background/70 px-3.5 py-1.5 text-[0.95rem] text-gold-bright sm:px-4 sm:py-2 sm:text-base">
+        <a href={WHATSAPP} className="rounded-full border border-gold bg-background/70 px-4 py-2 text-base text-gold-bright">
           WhatsApp
         </a>
         <details className="menu relative md:hidden">
-          <summary className="rounded-full border border-gold/50 bg-background/70 px-3.5 py-1.5 text-[0.95rem] text-foreground sm:px-4 sm:py-2 sm:text-base">Menu</summary>
+          <summary className="rounded-full border border-gold/50 bg-background/70 px-4 py-2 text-base text-foreground">Menu</summary>
           <nav
             className="absolute right-0 top-12 grid min-w-40 gap-3 rounded-2xl border border-gold/40 bg-background px-5 py-4 text-base"
             aria-label="Pages"

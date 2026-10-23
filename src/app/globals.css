@@ -44,11 +44,11 @@ body {
 
 /* The hero: the headline across the top. On a wide screen his cloud and the
    answer card on the left, him in the middle, the five doors stacked beside
-   him; under him the ask box, under that the questions. On a phone one
-   column: cloud, him, the questions right under him (where his light can
-   reach them in view), ask, the doors in a row, card; on a phone the doors
-   come before the ask box (below). His cloud in one column keeps one height
-   (below), so a long line grows sideways. */
+   him; under him the ask box, under that the questions. In one column: cloud,
+   him, the questions right under him (where his light can reach them in
+   view), ask, the doors in a row, card; on a phone the doors come before the
+   ask box (below). His cloud in one column keeps one height (below), so a
+   long line grows sideways. */
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -366,9 +366,10 @@ body::before {
 }
 
 /* A phone: everything lifted, so the questions and the five doors are in view
-   with him at once, above the bar, on a 360 x 640 screen: a smaller him and
-   cloud, the questions in a grid of three, the doors right under them, the ask
-   box after. Until the first touch the headline is his first message, popping
+   with him at once, above the bar, in whatever height the browser leaves
+   visible: he takes the height left over (svh: the toolbars counted), the
+   cloud a fixed row, the questions in a grid of three, the doors right under
+   them, the ask box after. Until the first touch the headline is his first message, popping
    from him in a cloud of its own (his own cloud waits unseen); after it, the
    headline stays for search engines and screen readers, unseen. */
 @media (max-width: 639px) {
@@ -377,7 +378,7 @@ body::before {
     row-gap: 0.5rem;
   }
   .hero-intro { grid-area: cloud; }
-  /* Measured 2026-10-23: the longest answer, 312 characters, fits 9.2rem at 360 px wide. */
+  /* Measured 2026-10-23: the longest answer, 312 characters, fits 9.2rem from 360 px wide (smaller type under 340, below). */
   .hero-cloud { height: 9.2rem; }
   .cloud { margin: 0.9rem 0 0.35rem 0.4rem; padding: 0.7rem 1rem; border-radius: 1.1rem; }
   .cloud::before,
@@ -388,7 +389,7 @@ body::before {
   .cloud p[data-long="1"] { font-size: 0.86rem; }
   .cloud p[data-long="2"] { font-size: 0.8rem; }
   .cloud p[data-long="3"] { font-size: 0.74rem; line-height: 1.28; }
-  .guide-floor { height: clamp(205px, 33vh, 300px); }
+  .guide-floor { height: clamp(205px, 33vh, 300px); height: clamp(110px, calc(100svh - 433px), 300px); }
   .hero-guide { margin-top: -0.3rem; }
   .hero-chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.3rem; }
   .hero-chips li { display: flex; }
@@ -396,7 +397,8 @@ body::before {
   .chip i { width: 1.25rem; height: 1.25rem; font-size: 0.66rem; }
   .hero-door { padding: 0.38rem 0.2rem; }
 
-  .hero.first .hero-cloud { visibility: hidden; }
+  /* Unseen but present, so the first line he speaks there is announced as a change. */
+  .hero.first .hero-cloud { opacity: 0; pointer-events: none; }
   .hero.first .hero-intro {
     align-self: end;
     position: relative;
@@ -430,6 +432,15 @@ body::before {
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
   }
+}
+
+@media (max-width: 389px) {
+  /* "Your plan" on one line, so the doors' row stays as short as on a wider phone. */
+  .hero-door b { font-size: 0.7rem; }
+}
+
+@media (max-width: 339px) {
+  .cloud p[data-long="3"] { font-size: 0.7rem; }
 }
 
 @media (max-width: 639px) and (prefers-reduced-motion: no-preference) {
