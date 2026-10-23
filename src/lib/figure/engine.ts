@@ -54,7 +54,10 @@ export function runFigure(
 ) {
   const gl = cv.getContext("webgl", { antialias: false, alpha: true, premultipliedAlpha: true });
   if (!gl) return null;
-  const N = small ? 3000 : Math.min(screen.width, screen.height) < 700 ? 8000 : 14000;
+  /* Dots: a phone stays at 8,000, already at the edge of 60 fps on a mid-range CPU (4x slowed,
+     2026-10-23: 56 fps at 8,000, 54 at 10,000, 43 at 14,000); a computer holds 60 fps at 20,000
+     even 2x slowed. The corner is small. */
+  const N = small ? 3000 : Math.min(screen.width, screen.height) < 700 ? 8000 : 20000;
   const B = makeBody(N);
   const SH = makeShapes(B.nb);
   let cues: Cues = {};
