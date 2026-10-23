@@ -12,7 +12,7 @@ product pages and the three legal pages are the standalone `.html` files in `pub
 - `src/components/Stage.tsx` — the hero: his cloud and the card, him, the five door
   tiles beside him, the ask box and the questions, Stop, the bar; his waking by himself.
 - `src/components/Figure.tsx` and `src/lib/figure/` — him: `engine.ts` (the dots frame by
-  frame, the cues, pokes, dizziness, the logo light), `body.ts` (his shape), `shapes.ts`
+  frame, the cues, the doors and question chips he rings, pokes, hibernation, dizziness, the logo light), `body.ts` (his shape), `shapes.ts`
   (what his body becomes). `public/guide/cues.json` says what he shows on each recording.
 - `src/components/Corner.tsx` and `public/guide/corner.js` — his small self in the corner
   of the five other pages, in a frame the page adds after it has loaded.

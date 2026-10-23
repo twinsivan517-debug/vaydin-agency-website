@@ -79,6 +79,8 @@ export function Stage() {
   const waking = stirring && state.phase === "opener";
   const [ripple, setRipple] = useState<(Point & { key: number }) | null>(null);
   const ripples = useRef(0);
+  /* Spun around while he speaks: a note over his head instead of dizziness, keyed so a second spin replays it. */
+  const [spun, setSpun] = useState(0);
 
   useEffect(() => {
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -212,6 +214,13 @@ export function Stage() {
     const timer = window.setTimeout(() => setRipple(null), 1200);
     return () => window.clearTimeout(timer);
   }, [ripple]);
+
+  /* The note is gone once it has been read. */
+  useEffect(() => {
+    if (!spun) return;
+    const timer = window.setTimeout(() => setSpun(0), 2600);
+    return () => window.clearTimeout(timer);
+  }, [spun]);
 
   /* While she sleeps, a tap anywhere on the page wakes her; a control keeps
      its own job, and her own button already wakes her. */
@@ -379,7 +388,13 @@ export function Stage() {
               lightUp();
               shimmer();
             }}
+            onSpun={() => setSpun((n) => n + 1)}
           />
+          {spun > 0 && (
+            <span key={spun} aria-hidden="true" className="spin-pop">
+              Let me finish, then spin me.
+            </span>
+          )}
         </div>
       </div>
 

@@ -41,8 +41,9 @@ const FS = `precision mediump float; varying float vB, vT; varying vec3 vS; unif
     vec3 col = mix(mix(gold, uTint, clamp(vT, 0.0, 1.0)), vS, clamp(-vT, 0.0, 1.0));
     float k = clamp(a * vB * uGain, 0.0, 1.0); gl_FragColor = vec4(col * k, k); }`;
 
-/* `onLit` is called once per waking, when his light reaches the logo (at once under reduced motion). */
-export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce: boolean, small: boolean, onLit?: () => void) {
+/* `onLit` is called once per waking, when his light reaches the logo (at once under reduced motion).
+   `onSpun` is called instead of his dizziness when he is spun while he speaks. */
+export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce: boolean, small: boolean, onLit?: () => void, onSpun?: () => void) {
   const gl = cv.getContext("webgl", { antialias: false, alpha: true, premultipliedAlpha: true });
   if (!gl) return null;
   const N = small ? 3000 : Math.min(screen.width, screen.height) < 700 ? 8000 : 14000;
@@ -258,9 +259,14 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     }
     drawn = true;
 
-    /* About two laps around him at an easy pace (a lap a second or slower) make him dizzy; back and forth cancels out. */
+    /* About two laps around him at an easy pace (a lap a second or slower) make him dizzy; back and forth cancels out.
+       While he speaks he keeps his head and asks to finish first. */
     spin *= Math.exp(-dt / 4);
-    if (Math.abs(spin) > 3 * Math.PI && !reduce) { dizzyUntil = t + 3.6; spin = 0; }
+    if (Math.abs(spin) > 3 * Math.PI && !reduce) {
+      if (inp.mode === "talk" || inp.mode === "opener") onSpun?.();
+      else dizzyUntil = t + 3.6;
+      spin = 0;
+    }
     const dizzy = t < dizzyUntil;
 
     let expr: Eyes = "open";
