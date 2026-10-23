@@ -18,8 +18,8 @@ type Props = {
   onPoke: (at: number, point?: { x: number; y: number }) => void;
   /* His light has reached the logo: the page may light. */
   onLit?: () => void;
-  /* He was spun around while he spoke, and stayed steady. */
-  onSpun?: () => void;
+  /* He was spun around (or shaken by scrolling, on a phone) while he spoke, and stayed steady. */
+  onSpun?: (how: "spin" | "shake") => void;
   small?: boolean;
 };
 
@@ -53,7 +53,7 @@ export const Figure = forwardRef<GuideHandle, Props>(function Figure(props, ref)
       reduce,
       !!latest.current.small,
       () => latest.current.onLit?.(),
-      () => latest.current.onSpun?.(),
+      (how) => latest.current.onSpun?.(how),
     );
     engine.current = run;
     /* No WebGL here: no figure, but the page must not stay dark waiting for his

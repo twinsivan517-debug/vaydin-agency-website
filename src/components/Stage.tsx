@@ -79,8 +79,8 @@ export function Stage() {
   const waking = stirring && state.phase === "opener";
   const [ripple, setRipple] = useState<(Point & { key: number }) | null>(null);
   const ripples = useRef(0);
-  /* Spun around while he speaks: a note over his head instead of dizziness, keyed so a second spin replays it. */
-  const [spun, setSpun] = useState(0);
+  /* Spun around (or shaken by scrolling) while he speaks: a note over his head instead of dizziness, keyed so a second one replays it. */
+  const [spun, setSpun] = useState<{ n: number; how: "spin" | "shake" } | null>(null);
 
   useEffect(() => {
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -218,7 +218,7 @@ export function Stage() {
   /* The note is gone once it has been read. */
   useEffect(() => {
     if (!spun) return;
-    const timer = window.setTimeout(() => setSpun(0), 2600);
+    const timer = window.setTimeout(() => setSpun(null), 2600);
     return () => window.clearTimeout(timer);
   }, [spun]);
 
@@ -389,11 +389,11 @@ export function Stage() {
               lightUp();
               shimmer();
             }}
-            onSpun={() => setSpun((n) => n + 1)}
+            onSpun={(how) => setSpun((was) => ({ n: (was?.n ?? 0) + 1, how }))}
           />
-          {spun > 0 && (
-            <span key={spun} aria-hidden="true" className="spin-pop">
-              Let me finish, then spin me.
+          {spun && (
+            <span key={spun.n} aria-hidden="true" className="spin-pop">
+              Let me finish, then {spun.how === "shake" ? "shake" : "spin"} me.
             </span>
           )}
         </div>

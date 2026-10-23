@@ -42,9 +42,16 @@ const FS = `precision mediump float; varying float vB, vT; varying vec3 vS; unif
     float k = clamp(a * vB * uGain, 0.0, 1.0); gl_FragColor = vec4(col * k, k); }`;
 
 /* `onLit` is called once per waking, when his light reaches the logo (at once under reduced motion).
-   `onSpun`, where given, is called instead of his dizziness when he is spun while he speaks;
-   without it (the corner) he gets dizzy as ever. */
-export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce: boolean, small: boolean, onLit?: () => void, onSpun?: () => void) {
+   `onSpun`, where given, is called instead of his dizziness when he is spun (or, on a phone,
+   shaken by scrolling) while he speaks; without it (the corner) he gets dizzy as ever. */
+export function runFigure(
+  cv: HTMLCanvasElement,
+  read: () => FigureInput,
+  reduce: boolean,
+  small: boolean,
+  onLit?: () => void,
+  onSpun?: (how: "spin" | "shake") => void,
+) {
   const gl = cv.getContext("webgl", { antialias: false, alpha: true, premultipliedAlpha: true });
   if (!gl) return null;
   const N = small ? 3000 : Math.min(screen.width, screen.height) < 700 ? 8000 : 14000;
@@ -201,7 +208,23 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     lastAng = a;
     tYaw = ((e.clientX / W) * 2 - 1) * 0.28; tPitch = ((e.clientY / H) * 2 - 1) * 0.1;
   };
+  /* A phone has no pointer to circle him with: scrolling hard up and down
+     shakes him instead. Three turns of direction within 1.8 s, each after a
+     real swing, count as one shake. */
+  let lastY = scrollY, dir = 0, swing = 0, turns: number[] = [], shook = false;
+  const onScroll = () => {
+    const y = scrollY, d = y - lastY;
+    lastY = y;
+    if (!d) return;
+    const s = Math.sign(d), t = performance.now() / 1000;
+    if (s === dir) { swing += Math.abs(d); return; }
+    if (dir && swing > 30) turns.push(t);
+    dir = s; swing = Math.abs(d);
+    turns = turns.filter((x) => t - x < 1.8);
+    if (turns.length >= 3) { shook = true; turns = []; }
+  };
   addEventListener("pointermove", onMove);
+  addEventListener("scroll", onScroll, { passive: true });
   addEventListener("resize", resize);
 
   let phaseWas = read().mode, wakeT = phaseWas === "sleep" ? -1 : -99, last = performance.now(), raf = 0, nextBlink = 3, blinkUntil = 0;
@@ -255,6 +278,7 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
 
     /* Scrolled away, he is not drawn: a phone does no work for dots nobody sees. */
     if (!seen && !logoOn) {
+      shook = false;
       if (drawn) { gl!.clear(gl!.COLOR_BUFFER_BIT); drawn = false; }
       raf = requestAnimationFrame(frame);
       return;
@@ -264,11 +288,13 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
     /* About two laps around him at an easy pace (a lap a second or slower) make him dizzy; back and forth cancels out.
        While he speaks he keeps his head and asks to finish first. */
     spin *= Math.exp(-dt / 4);
-    if (Math.abs(spin) > 3 * Math.PI && !reduce) {
-      if ((inp.mode === "talk" || inp.mode === "opener") && onSpun) onSpun();
+    const spun = Math.abs(spin) > 3 * Math.PI;
+    if ((spun || shook) && !reduce) {
+      if ((inp.mode === "talk" || inp.mode === "opener") && onSpun) onSpun(spun ? "spin" : "shake");
       else dizzyUntil = t + 3.6;
       spin = 0;
     }
+    shook = false;
     const dizzy = t < dizzyUntil;
 
     let expr: Eyes = "open";
@@ -402,6 +428,6 @@ export function runFigure(cv: HTMLCanvasElement, read: () => FigureInput, reduce
   return {
     setCues(c: Cues) { cues = c; },
     poke,
-    stop() { cancelAnimationFrame(raf); removeEventListener("pointermove", onMove); removeEventListener("resize", resize); },
+    stop() { cancelAnimationFrame(raf); removeEventListener("pointermove", onMove); removeEventListener("scroll", onScroll); removeEventListener("resize", resize); },
   };
 }
