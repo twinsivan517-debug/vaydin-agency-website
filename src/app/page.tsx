@@ -16,7 +16,7 @@ export default function Home() {
     <>
       <Header />
       <main className="flex-1">
-        <div className="mx-auto w-full max-w-6xl px-5 pt-20 sm:px-12 md:pt-24">
+        <div className="mx-auto w-full max-w-6xl px-5 pt-14 sm:px-12 sm:pt-20 md:pt-24">
           <Stage />
         </div>
         <Doors />

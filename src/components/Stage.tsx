@@ -309,15 +309,26 @@ export function Stage() {
     <section
       ref={hero}
       aria-label="The guide"
-      className={`hero relative ${offered ? "offered" : ""}`}
+      className={`hero relative ${offered ? "offered" : ""} ${first ? "first" : ""}`}
       /* A pointer that can hover is a tap coming: his greeting may load while it is over him. */
       onPointerEnter={(event) => event.pointerType === "mouse" && state.phase === "asleep" && guide.current?.warm()}
     >
-      {/* The page's first words and its headline: who this is, before his cloud. */}
-      <h1 className="hero-name wakes font-display text-base leading-snug text-muted md:text-lg">
-        <span className="label mr-3 text-gold-bright">Vaydin Agency · Dubai</span>{" "}
-        We find the patients your clinic never saw.
-      </h1>
+      {/* The page's first words and its headline: who this is, before his cloud. On a
+          phone, until the first touch, it is his first message, in a cloud of its own
+          with the line that says how to hear him; after it, it stays the page's h1 for
+          search engines and screen readers, unseen. Outside the cloud's live region,
+          so it is never read out again with each of his lines. */}
+      <div className="hero-intro wakes">
+        <h1 className="hero-name font-display text-base leading-snug text-muted md:text-lg">
+          <span className="label mr-3 text-gold-bright">Vaydin Agency · Dubai</span>{" "}
+          We find the patients your clinic never saw.
+        </h1>
+        <p className="hero-hint">Tap anywhere and I&apos;ll talk you through it.</p>
+        <span aria-hidden="true" className="cloud-tail">
+          <i />
+          <i />
+        </span>
+      </div>
 
       <div aria-live="polite" className="hero-cloud">
         <div key={state.cloud.id} className="cloud">
@@ -460,14 +471,14 @@ export function Stage() {
 
       {/* On a phone the bar is one slim row, WhatsApp as an icon, so it covers
           little of him; at its right, the way down to the five pages. */}
-      <div className={`hero-bar wakes sticky bottom-0 -mx-5 mt-6 flex items-center gap-3 border-t border-gold/15 bg-background/95 px-5 py-2 backdrop-blur sm:-mx-12 sm:px-12 md:py-3 ${state.lit ? "cta-lit" : ""}`}>
-        <a href={WHATSAPP} aria-label={`WhatsApp ${WHATSAPP_SHOWN}`} className="flex items-center gap-2 rounded-full bg-gold-bright p-2.5 text-base font-medium text-background md:px-6 md:py-3">
+      <div className={`hero-bar wakes sticky bottom-0 -mx-5 mt-6 flex items-center gap-3 border-t border-gold/15 bg-background/95 px-5 py-1 backdrop-blur sm:-mx-12 sm:px-12 sm:py-2 md:py-3 ${state.lit ? "cta-lit" : ""}`}>
+        <a href={WHATSAPP} aria-label={`WhatsApp ${WHATSAPP_SHOWN}`} className="flex items-center gap-2 rounded-full bg-gold-bright p-2 text-base sm:p-2.5 font-medium text-background md:px-6 md:py-3">
           <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
             <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c1.7.7 2.1.6 2.8.5a2.4 2.4 0 0 0 1.6-1.1c.2-.6.2-1 .1-1.1l-.5-.3Z" />
           </svg>
           <span className="hidden md:inline">WhatsApp · {WHATSAPP_SHOWN}</span>
         </a>
-        <a href="/pricing.html" className="rounded-full border border-gold px-4 py-2 text-sm text-gold-bright md:px-6 md:py-3 md:text-base">
+        <a href="/pricing.html" className="rounded-full border border-gold px-4 py-1.5 text-sm text-gold-bright sm:py-2 md:px-6 md:py-3 md:text-base">
           Ask for your plan
         </a>
         <a href="#pages" className="label ml-auto flex items-center gap-1.5 whitespace-nowrap text-gold-bright">
