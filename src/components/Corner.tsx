@@ -54,12 +54,15 @@ export function Corner() {
   }, [busy]);
 
   /* The frame is only as tall as the panel's content, so the page under its
-     empty part stays tappable. */
+     empty part stays tappable. The content's height is rounded up, with a pixel
+     to spare: rounded down, a fraction of a pixel overflowed, a computer's
+     scrollbar appeared and narrowed the text, it wrapped a line more, the frame
+     grew, the scrollbar went, and the frame shrank again, many times a second. */
   useEffect(() => {
     const box = panel.current;
     const content = inner.current;
     if (!open || !box || !content) return;
-    const send = () => tell(content.offsetHeight + (box.offsetHeight - box.clientHeight) + 32 + BELOW);
+    const send = () => tell(Math.ceil(content.getBoundingClientRect().height) + 1 + (box.offsetHeight - box.clientHeight) + 32 + BELOW);
     send();
     const watch = new ResizeObserver(send);
     watch.observe(content);
@@ -212,7 +215,8 @@ export function Corner() {
           aria-label="Ask Vaydin"
           onClickCapture={lead}
           onKeyDown={(event) => event.key === "Escape" && hide()}
-          className="relative max-h-full min-h-0 w-full overflow-y-auto rounded-3xl border border-gold/30 bg-[#120c08] p-4 shadow-[0_10px_40px_rgba(0,0,0,0.6)]"
+          /* The scrollbar's room is kept even with none showing, so one appearing never rewraps the text. */
+          className="relative max-h-full min-h-0 w-full overflow-y-auto [scrollbar-gutter:stable] rounded-3xl border border-gold/30 bg-[#120c08] p-4 shadow-[0_10px_40px_rgba(0,0,0,0.6)]"
         >
           <div ref={inner} className="flex flex-col gap-3">
             <div className="absolute right-3 top-3 flex items-center gap-3">
