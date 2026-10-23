@@ -389,7 +389,6 @@ body::before {
   .cloud p[data-long="1"] { font-size: 0.86rem; }
   .cloud p[data-long="2"] { font-size: 0.8rem; }
   .cloud p[data-long="3"] { font-size: 0.74rem; line-height: 1.28; }
-  .guide-floor { height: clamp(205px, 33vh, 300px); height: clamp(110px, calc(100svh - 433px), 300px); }
   .hero-guide { margin-top: -0.3rem; }
   .hero-chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.3rem; }
   .hero-chips li { display: flex; }
@@ -437,6 +436,13 @@ body::before {
 @media (max-width: 389px) {
   /* "Your plan" on one line, so the doors' row stays as short as on a wider phone. */
   .hero-door b { font-size: 0.7rem; }
+}
+
+/* Upright, he takes the height the rest leaves (measured 425 px, 8 to spare;
+   the first value for a browser without svh). A phone on its side has no room
+   for the doors whatever he does: he keeps his size there. */
+@media (max-width: 639px) and (min-height: 480px) {
+  .guide-floor { height: clamp(205px, 33vh, 300px); height: clamp(110px, calc(100svh - 433px), 300px); }
 }
 
 @media (max-width: 339px) {
