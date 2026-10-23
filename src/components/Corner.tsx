@@ -29,7 +29,10 @@ const tell = (height: number | null) =>
 const BELOW = 180 + 8 + 8;
 
 /* Which page he sits on, from the frame's address. */
-const pageSummary = () => SUMMARIES[new URLSearchParams(location.search).get("p") ?? ""];
+const pageSummary = () => {
+  const page = new URLSearchParams(location.search).get("p") ?? "";
+  return Object.hasOwn(SUMMARIES, page) ? SUMMARIES[page] : undefined;
+};
 
 const BUTTON = "rounded-2xl border border-gold/40 px-3 py-1.5 text-sm text-gold-bright";
 

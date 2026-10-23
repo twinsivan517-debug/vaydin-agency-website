@@ -8,7 +8,7 @@
 // Usage: node scripts/phone-preview.mjs <dest> [title]
 
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
-import { join, relative, sep } from "node:path";
+import { join, relative, resolve, sep } from "node:path";
 
 const OUT = "out";
 const NEXT = "build/";
@@ -22,6 +22,9 @@ const TEXT = /\.(html|js|css|txt|json|xml)$/;
 const top = readdirSync(OUT).filter((n) => !n.endsWith(".gz")).map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
 const ROOTED = new RegExp(`(["'\`(=]|\\\\")/(?=(?:${top.join("|")})(?:[/"'\`?#)\\\\]|$))`, "g");
 
+/* The destination is emptied first: never this repository, a folder holding it, or out/ itself. */
+const here = resolve("."), there = resolve(dest);
+if (there === here || here.startsWith(there + sep) || there === resolve(OUT)) throw new Error(`refusing to empty ${there}`);
 rmSync(dest, { recursive: true, force: true });
 const files = [];
 (function walk(dir) {

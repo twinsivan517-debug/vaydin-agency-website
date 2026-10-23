@@ -674,7 +674,7 @@ His word 2026-10-22: she goes; in her place a man made of gold dots, powerful (h
 
 # His voice (the particle guide)
 
-His word 2026-10-22: a male voice, deep, a teacher explaining, a little robotic for an AI, able to be serious, funny and sceptical; ElevenLabs direct. The key is read at run time from the clinic-growth-bot house's `.env` on his word ("yes yes"), never printed or copied. Tools in `lab/particle-guide/voice/`.
+His word 2026-10-22: a male voice, deep, a teacher explaining, a little robotic for an AI, able to be serious, funny and sceptical; ElevenLabs direct. The key is read at run time from a local `.env` outside this repository, on his word, never printed or copied. Tools in `lab/particle-guide/voice/`.
 
 - Account: Creator, active, commercial licence; 8,614 of 363,000 characters used before, 10,183 after: 1,569 for everything below.
 - Library: 210 male English middle-aged and older voices (educational, narrative, conversational), plus searches for "robot", "AI assistant", "android". Pitch measured on every sample after a check on known ones (her recording 213 Hz, two male samples 112 and 124 Hz).
