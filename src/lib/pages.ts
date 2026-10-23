@@ -1,4 +1,4 @@
-/* What she says in the corner of the other pages: one welcome for all, and
+/* What he says in the corner of the other pages: one welcome for all, and
    each page's summary when the visitor says yes. The owner's words of
    2026-10-20; every fact is the page's own. Keyed by the page's file name. */
 
@@ -33,5 +33,5 @@ export const SUMMARIES: Record<string, Line> = {
 };
 
 /* In the corner there are no chapter chips to point at: a greeting is met
-   with the welcome, and a question she cannot answer with the list. */
+   with the welcome, and a question he cannot answer with the list. */
 export const inCorner = (r: Reply): Reply | "welcome" | "more" => (r.kind === "greeting" ? "welcome" : r.kind === "unknown" ? "more" : r);

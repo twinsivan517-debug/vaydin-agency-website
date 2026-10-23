@@ -1,11 +1,11 @@
 "use client";
 
-/* The floor under her: the five pages as doors, each in its page's own
+/* The floor under him: the five pages as doors, each in its page's own
    colour with a sign, one line and three facts, the whole tile the link, so
    a visitor who scrolls instead of tapping finds the site and a curious one
-   taps through. The room is dark while she sleeps; a visitor who scrolls down
-   to these lifts the dimming, softly, without waking her and without the
-   mark's glow: her bulb, and that glow, are for the one who taps. */
+   taps through. The room is dark until he has gathered; a visitor who scrolls
+   down to these lifts the dimming, softly, without the mark's glow: his
+   light, and that glow, are for the one who taps. */
 
 import { useEffect, useRef, type CSSProperties } from "react";
 import { DOORS, type Icon } from "@/lib/doors";

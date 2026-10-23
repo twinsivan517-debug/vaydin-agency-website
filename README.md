@@ -1,48 +1,49 @@
 # vaydin-night
 
 The site at https://vaydin.agency. Next.js, TypeScript, Tailwind, exported to plain files
-and published by GitHub Pages from `main`. The home page is the guide. On `main` that is an
-illustrated woman; on branch `particle-guide` it is him, a figure of gold dots drawn by
-code, who shows shapes and lights the doors as he speaks. The five
-product pages and the three legal pages are the standalone `.html` files in `public/`.
+and published by GitHub Pages from `main`. The home page is the guide: him, a figure of gold
+dots drawn by code, who speaks his lines, shows shapes and numbers, and lights the doors
+and questions as he speaks. The five product pages and the three legal pages are the
+standalone `.html` files in `public/`.
 
 ## Where things are
 
-- `src/app/page.tsx` — the home page: headline, the stage, the closing frame.
+- `src/app/page.tsx` — the home page: headline, the stage, the doors, the who-we-are
+  paragraph and the transcript ("Read what he says"). `layout.tsx` — titles and the
+  organisation record for search engines. `corner/` — the page inside the corner's frame.
 - `src/components/Stage.tsx` — the hero: his cloud and the card, him, the five door
-  tiles beside him, the ask box and the questions, Stop, the bar; his waking by himself.
+  tiles, the ask box and the questions, Stop, the bar; his waking by himself.
 - `src/components/Figure.tsx` and `src/lib/figure/` — him: `engine.ts` (the dots frame by
-  frame, the cues, the doors and question chips he rings, pokes, hibernation, dizziness, the logo light), `body.ts` (his shape), `shapes.ts`
-  (what his body becomes). `public/guide/cues.json` says what he shows on each recording.
+  frame, the cues, the doors and question chips he rings, the numbers and the Vaydin mark,
+  pokes, hibernation, dizziness and the scroll shake, the wave, the logo light), `body.ts`
+  (his shape), `shapes.ts` (what his body becomes, each drawn the first time it is needed).
 - `src/components/Corner.tsx` and `public/guide/corner.js` — his small self in the corner
   of the five other pages, in a frame the page adds after it has loaded.
-- `src/lib/doors.ts` — the five pages as doors, beside him and under the hero (`Doors.tsx`).
-- `src/components/Guide.tsx` — hers: her clips keyed onto a canvas. Unused on his branch
-  but for the handle type; it goes once he is approved.
-- `src/lib/chroma.ts` — the green-screen keyer, two layers so clips fade into each other.
-- `src/lib/pitch.ts` — her words, chapter by chapter, and the path of each line's sound.
-- `src/lib/pitchMachine.ts` — what a tap, a poke, a line's end or Stop does; tested by
-  `npm test`.
+- `src/components/Card.tsx` — the card beside him; `Doors.tsx` and `src/lib/doors.ts` — the
+  five pages as doors; `Header.tsx` — the bar across the top.
+- `src/lib/pitch.ts` — his words, chapter by chapter, and each line's sound;
+  `answers.ts` — the typed questions he answers; `match.ts` and `asked.json` — how a typed
+  line finds its answer; `talk.ts` — small talk; `pages.ts` — the corner's words per page.
+- `src/lib/pitchMachine.ts` — what a tap, a poke, a line's end or Stop does; tested, with
+  the matcher and the recordings, by `npm test`.
 - `src/lib/speaker.ts` — one audio element, unlocked by the first tap.
-- `public/guide/` — `walk`, `idle`, `talk` loops (silent, 258x480) and `opener.mp4`
-  (with sound). `public/voice/` — one mp3 per line. `public/guide/lines/` — one clip
-  per line: the idle loop with her lips on that line, made by `scripts/lipsync.py`.
+- `public/voice/` — one mp3 per line, in Jon's voice. `public/guide/cues.json` — what he
+  shows on each recording, made by `lab/particle-guide/voice/cues.py`.
+- `lab/particle-guide/` — how he was made, never shipped: the voice tools (record, time,
+  verify, cues), the test pages and mocks, the armour pick. Its own README.
 - `scripts/phone-preview.mjs` — a copy of `out/` that works from any folder, for a private
-  preview link on a phone (a claude.ai artifact) without going live.
-- `scripts/` (hers) — `lipsync.py` (the lines, over the shared loop or a line's own body),
-  `opener_lipsync.py` (the greeting's standing part), `body.py` (a generated gesture clip
-  made ready as a line's body), `loop.py` (her idle, talk and sleep loops from generated clips), `seal.py` (her mouth closed in a
-  silent loop the generator made talk), `green_gate.py` (can every frame be keyed), `rekey.py`
-  (rescues a clip whose backdrop drifted), `LIPSYNC.md` (the lab they need, outside the repo).
-- `media/guide/bodies/` — one gesture clip per line that has one, not in git (made again
-  from `body.py` and the job id in the log); a `<id>.front` file, in git, holds how many
-  frames show her face. The page's clips in `public/guide/lines/` are made from them.
-- `media/prompt-log.md` — every generation that made her, with job ids; the sources
-  under `media/` are not in git.
+  preview link on a phone (a claude.ai artifact) without going live. `ship-gate.mjs`,
+  `arm-hooks.mjs`, `gzip-out.mjs` — the gate and the build.
+- `scripts/` (hers, kept as know-how for clip guides) — `lipsync.py`, `opener_lipsync.py`,
+  `opener_lying.py`, `body.py`, `loop.py`, `seal.py`, `green_gate.py`, `rekey.py`,
+  `voice.py`, `gpu/`, `LIPSYNC.md`. `media/guide/` — her two base loops and a `.front` file;
+  her generated sources are not in git.
+- `media/prompt-log.md` — every generation and recording, with job ids and costs.
 
-Sound never starts on load: the first touch plays the opener (or the question touched),
-and that touch unlocks the page for every later line. The scroll story that was the home page until the guide is at
-tag `story-home-2026-10-17`.
+Sound never starts on load: the first touch plays the greeting (or the question touched),
+and that touch unlocks the page for every later line. Earlier home pages are tags: the
+scroll story at `story-home-2026-10-17`, the woman guide made of video clips (her code and
+all her clips) at `guide-lady-2026-10-21`.
 
 ## The ship gate
 

@@ -7,7 +7,7 @@ import { SITE, WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
-/* The home page is the guide, her headline over her. Under her, the five
+/* The home page is the guide, his headline over him. Under him, the five
    pages in their own words, then the title and a transcript, so the page
    reads, and is found, before any script or clip arrives, and a visitor who
    scrolls finds the site. */

@@ -1,15 +1,25 @@
 "use client";
 
-/* The guide as gold dots, in her place: the same handle as her video figure,
-   so the page's flow is unchanged. He speaks only through the page's audio,
+/* The guide as gold dots, behind the page's guide handle (made for a guide of
+   video clips; he uses only part of it). He speaks only through the page's audio,
    so the greeting is always the recording, never a clip. His canvas is made
    on the body and spans the window above the page, letting his light reach
    the doors beside him and the logo; it never takes a tap. A press on him
    dents him and counts as a poke. */
 
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
-import type { GuideHandle } from "@/components/Guide";
 import { runFigure, type Cues, type FigureInput } from "@/lib/figure/engine";
+
+/* What the page may ask of its guide. He has no clips, so only `unlock` and
+   `opener` matter, and the greeting is always his recording. */
+export type GuideHandle = {
+  opener(): Promise<boolean>;
+  exit(): { x: number; y: number; width: number } | null;
+  prime(src: string, full?: boolean): void;
+  unlock(): void;
+  /* For a pointer hovering over him: load the greeting ahead. He has nothing to load. */
+  warm(): void;
+};
 
 type Props = {
   mode: FigureInput["mode"];
@@ -84,7 +94,7 @@ export const Figure = forwardRef<GuideHandle, Props>(function Figure(props, ref)
     };
   }, []);
 
-  /* Her handle, kept so the page needs no change: there is no clip to open, prime or warm. */
+  /* There is no clip to open, prime or warm. */
   useImperativeHandle(ref, () => ({
     opener: () => Promise.resolve(false),
     exit: () => null,

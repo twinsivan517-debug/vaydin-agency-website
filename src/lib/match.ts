@@ -4,7 +4,7 @@
    question: its keywords count most, then its question and answer text, and
    a word found in few answers counts for more than one found in many; a
    misspelt word still counts, a real word is never corrected into another.
-   She answers only a clear winner; close answers are offered to choose
+   He answers only a clear winner; close answers are offered to choose
    from; small talk is met when no answer is sure; and a question that
    reaches nothing is tried once more for misspelt keywords alone.
 
@@ -33,14 +33,14 @@ const KEYWORD = 1.5;
 const PHRASE = 3;
 /* Each word of any keyword found exactly, as the matcher first counted. */
 const EXACT = 1;
-/* She answers when the best scores at least this, and this many times the next. */
+/* He answers when the best scores at least this, and this many times the next. */
 const SURE = 1.5;
 const MARGIN = 1.8;
 /* Below this nothing is offered; offered are those within this share of the best. */
 const OFFER = 3.5;
 const KEEP = 0.5;
 
-/* Words that say nothing about which answer is meant; her email's words too. */
+/* Words that say nothing about which answer is meant; the email's words too. */
 const FILLER = new Set(
   "hello dot vaydin thank thanks thx a an and any are as at be been being but by can could did do does doing done for from get got had has have having he her here hey hi him his how i i'm if in into is it it's its just let me my no not now of off on once only or our ours out over own please pls so some such than that that's the their them then there these they this those to too u ur us very was we we're were what what's whats when where which while who whom why will with would yes you you're your yours also about again all am because before both each few more most other same should until up down".split(
     " ",
@@ -76,7 +76,7 @@ function slips(a: string, b: string) {
   return d[a.length][b.length];
 }
 
-/* A typed word close enough to a word she knows: the same first letter and
+/* A typed word close enough to a word he knows: the same first letter and
    one slip (two in a word of eight letters or more), or the same stem with
    another ending. Short and common words must match exactly. */
 function near(typed: string, word: string) {
@@ -180,14 +180,14 @@ const NO = new Set("n no nope nah neither none wrong".split(" "));
 const PLACE: Record<string, number> = { first: 0, "1st": 0, "1": 0, second: 1, "2nd": 1, "2": 1, third: 2, "3rd": 2, "3": 2, last: -1 };
 const AND = new Set("please pls that this these those them one it is the i mean meant did do number thanks thank you of thing tell me more about go".split(" "));
 
-/* A reply that is only a yes or only a no, to any question she asked. */
+/* A reply that is only a yes or only a no, to any question he asked. */
 export function yesNo(input: string): "yes" | "no" | null {
   const words = normalise(input).replace(/\bwhy not\b/, "yes").split(" ");
   if (words.length > 6) return null;
   const said = words.filter((w) => !AND.has(w));
   if (said.length > 0 && said.every((w) => YES.has(w))) return "yes";
   if (said.length > 0 && said.every((w) => NO.has(w))) return "no";
-  /* "tell me more", "go on": only asking her to go ahead. */
+  /* "tell me more", "go on": only asking him to go ahead. */
   if (said.every((w) => w === "on") && words.some((w) => w === "tell" || w === "go" || w === "more")) return "yes";
   return null;
 }
@@ -209,7 +209,7 @@ export function followUp(input: string, offered: Answer[]): Reply | "more" | nul
   return null;
 }
 
-/* Lines of hers that end on a question to the visitor ("Is there anything
+/* Lines of his that end on a question to the visitor ("Is there anything
    else I can help with?"): a yes opens the list, a no is goodbye. */
 const ASKING = new Set(["x-hello", "x-thanks", "x-howareyou", "x-kind", "x-personal", "x-rude"]);
 

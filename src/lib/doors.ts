@@ -1,5 +1,5 @@
 /* The five pages behind the home page, as the home page shows them under
-   her: each in that page's own words (its headline, one line and three
+   him: each in that page's own words (its headline, one line and three
    facts, as of 2026-10-21), in that page's own colour, so the two never
    disagree. Order and addresses as in PAGES. */
 

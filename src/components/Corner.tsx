@@ -12,7 +12,7 @@
 import { useEffect, useReducer, useRef, useState, type FormEvent, type MouseEvent } from "react";
 import { Card } from "@/components/Card";
 import { Figure } from "@/components/Figure";
-import type { GuideHandle } from "@/components/Guide";
+import type { GuideHandle } from "@/components/Figure";
 import { answer, answerLine, type Answer } from "@/lib/answers";
 import { afterTalk, followUp, match, yesNo, type Reply } from "@/lib/match";
 import { SUMMARIES, WELCOME, inCorner } from "@/lib/pages";
@@ -22,7 +22,7 @@ import { speaker, type Speaker } from "@/lib/speaker";
 
 const AWAKE: State = { ...START, phase: "done", met: true, cloud: WELCOME };
 
-/* The page around the frame sizes it: to the panel and her, or back to her alone. */
+/* The page around the frame sizes it: to the panel and him, or back to him alone. */
 const tell = (height: number | null) =>
   window.parent.postMessage(height === null ? { vaydinCorner: "closed" } : { vaydinCorner: "open", height }, location.origin);
 /* His figure, the gap above it and the frame's padding, under the panel. */
@@ -39,7 +39,7 @@ const BUTTON = "rounded-2xl border border-gold/40 px-3 py-1.5 text-sm text-gold-
 export function Corner() {
   const [state, dispatch] = useReducer(reduce, AWAKE);
   const [open, setOpen] = useState(false);
-  /* True while she waits for a yes or no to the page's summary. */
+  /* True while he waits for a yes or no to the page's summary. */
   const [offering, setOffering] = useState(false);
   const [draft, setDraft] = useState("");
   const guide = useRef<GuideHandle>(null);
@@ -48,7 +48,7 @@ export function Corner() {
   const inner = useRef<HTMLDivElement>(null);
   const busy = speaking(state);
 
-  /* The page keeps her in sight while she speaks, even where it would move her aside. */
+  /* The page keeps him in sight while he speaks, even where it would move him aside. */
   useEffect(() => {
     window.parent.postMessage({ vaydinTalking: busy }, location.origin);
   }, [busy]);
@@ -182,7 +182,7 @@ export function Corner() {
     unlock();
     setOffering(false);
     /* From the list, the list stays open for the next question, and the
-       panel goes back to its top, where her words appear. */
+       panel goes back to its top, where his words appear. */
     const keep = state.shown.kind === "more";
     if (keep) panel.current?.scrollTo({ top: 0 });
     dispatch({ type: "ask", reply: { kind: "answer", answer: a }, keep });

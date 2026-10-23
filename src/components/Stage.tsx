@@ -12,7 +12,7 @@ import { useEffect, useEffectEvent, useReducer, useRef, useState, type FormEvent
 import { Card } from "@/components/Card";
 import { Figure } from "@/components/Figure";
 import { DOORS } from "@/lib/doors";
-import type { GuideHandle } from "@/components/Guide";
+import type { GuideHandle } from "@/components/Figure";
 import { MORE, UNKNOWN, answer, answerLine, type Answer } from "@/lib/answers";
 import { afterTalk, followUp, match, type Reply } from "@/lib/match";
 import { OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, WAITING, chapter, talkTime, type ChapterId, type Line } from "@/lib/pitch";
@@ -108,7 +108,7 @@ export function Stage() {
     }
   }, [state.shown.kind]);
 
-  /* While she asks "Did you mean", a yes is the likeliest reply: her first offer loads. */
+  /* While he asks "Did you mean", a yes is the likeliest reply: his first offer loads. */
   const firstOffer = state.shown.kind === "choose" ? state.shown.ids[0] : null;
   const readyOffer = useEffectEvent((id: string) => ready(answerLine(answer(id))));
   useEffect(() => {
@@ -169,7 +169,7 @@ export function Stage() {
     unlock();
     thrown.current = false;
     dispatch({ type: "tap", chapter: "meet" });
-    /* Under reduced motion her first line shows at once, as before. */
+    /* Under reduced motion his first line shows at once. */
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setWaking(true);
       signal(point);
@@ -207,8 +207,8 @@ export function Stage() {
     return () => window.clearTimeout(timer);
   }, [spun]);
 
-  /* While she sleeps, a tap anywhere on the page wakes her; a control keeps
-     its own job, and her own button already wakes her. */
+  /* Before his greeting, a tap anywhere on the page wakes him; a control keeps
+     its own job, and he is a button of his own. */
   const wakeFrom = useEffectEvent((event: MouseEvent) => {
     if (event.target instanceof Element && event.target.closest("a, button, input, textarea, select, summary, label, .figure-stage")) return;
     wake(event.detail ? { x: event.clientX, y: event.clientY } : undefined);
@@ -232,7 +232,7 @@ export function Stage() {
     dispatch({ type: "tap", chapter: id });
   }
 
-  /* What a typed line means here: a reply to her last question, to "Did you mean", or a question. */
+  /* What a typed line means here: a reply to his last question, to "Did you mean", or a question. */
   function heard(text: string): Reply | "more" {
     return (
       afterTalk(text, state.cloud.id) ?? followUp(text, state.shown.kind === "choose" ? state.shown.ids.map(answer) : []) ?? match(text)
@@ -258,7 +258,7 @@ export function Stage() {
   function pick(a: Answer) {
     unlock();
     lightUp();
-    /* Picked from a list scrolled up past her: back to her, to see her answer. */
+    /* Picked from a list scrolled up past him: back to him, to see his answer. */
     if ((hero.current?.getBoundingClientRect().top ?? 0) < 0) window.scrollTo({ top: 0, behavior: glide() });
     /* From the list, the list stays open for the next question. */
     dispatch({ type: "ask", reply: { kind: "answer", answer: a }, keep: state.shown.kind === "more" });
@@ -310,10 +310,10 @@ export function Stage() {
       ref={hero}
       aria-label="The guide"
       className={`hero relative ${offered ? "offered" : ""}`}
-      /* A pointer that can hover is a tap coming: her greeting loads while it is over her. */
+      /* A pointer that can hover is a tap coming: his greeting may load while it is over him. */
       onPointerEnter={(event) => event.pointerType === "mouse" && state.phase === "asleep" && guide.current?.warm()}
     >
-      {/* The page's first words and its headline: who this is, before her cloud. */}
+      {/* The page's first words and its headline: who this is, before his cloud. */}
       <h1 className="hero-name wakes font-display text-base leading-snug text-muted md:text-lg">
         <span className="label mr-3 text-gold-bright">Vaydin Agency · Dubai</span>{" "}
         We find the patients your clinic never saw.
@@ -459,7 +459,7 @@ export function Stage() {
       {ripple && <span key={ripple.key} aria-hidden="true" className="ripple" style={{ left: ripple.x, top: ripple.y }} />}
 
       {/* On a phone the bar is one slim row, WhatsApp as an icon, so it covers
-          little of her; at its right, the way down to the five pages. */}
+          little of him; at its right, the way down to the five pages. */}
       <div className={`hero-bar wakes sticky bottom-0 -mx-5 mt-6 flex items-center gap-3 border-t border-gold/15 bg-background/95 px-5 py-2 backdrop-blur sm:-mx-12 sm:px-12 md:py-3 ${state.lit ? "cta-lit" : ""}`}>
         <a href={WHATSAPP} aria-label={`WhatsApp ${WHATSAPP_SHOWN}`} className="flex items-center gap-2 rounded-full bg-gold-bright p-2.5 text-base font-medium text-background md:px-6 md:py-3">
           <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">

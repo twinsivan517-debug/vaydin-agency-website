@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { ANSWERS, CHOOSE, GROUPS, HELLO, MORE, UNKNOWN, UNLISTED, answer, answerLine } from "./answers.ts";
 import { afterTalk, followUp, match, yesNo, type Reply } from "./match.ts";
-import { CHAPTERS, POKES, RESTING, SLEEPING, lineClip } from "./pitch.ts";
+import { CHAPTERS, POKES, RESTING, SLEEPING } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
 import { SUMMARIES, WELCOME, inCorner } from "./pages.ts";
 import { TALK } from "./talk.ts";
@@ -20,7 +20,7 @@ const check = (name: string, test: () => void) => {
   console.log(`ok  ${name}`);
 };
 
-check("she sleeps as the page opens, and a tap on her wakes her into the greeting", () => {
+check("he sleeps as the page opens, and a tap on him wakes him into the greeting", () => {
   assert.equal(START.phase, "asleep");
   assert.equal(START.cloud, SLEEPING);
   assert.equal(mode(START), "sleep");
@@ -34,7 +34,7 @@ check("she sleeps as the page opens, and a tap on her wakes her into the greetin
   assert.equal(run([{ type: "wake" }], awake), awake);
 });
 
-check("a chapter chip or a question also wakes her, straight into the answer", () => {
+check("a chapter chip or a question also wakes him, straight into the answer", () => {
   const see = run([{ type: "tap", chapter: "how" }]);
   assert.equal(see.phase, "talking");
   assert.equal(see.cloud.id, "07");
@@ -43,7 +43,7 @@ check("a chapter chip or a question also wakes her, straight into the answer", (
   assert.equal(price.cloud.id, "a-price");
 });
 
-check("the clip's end hands over to the greeting's spoken line; its end means she is met", () => {
+check("the clip's end hands over to the greeting's spoken line; its end means he is met", () => {
   const clipDone = run([{ type: "wake" }, { type: "line_ended" }]);
   assert.equal(clipDone.phase, "talking");
   assert.equal(clipDone.cloud.id, "02");
@@ -155,7 +155,7 @@ check("a misspelt question is offered its nearest answers; nonsense still hands 
   assert.ok(offered("whats the prise").length <= 3);
 });
 
-check("More lists every answer once, except the hand-offs, and she says so, unless she is greeting", () => {
+check("More lists every answer once, except the hand-offs, and he says so, unless he is greeting", () => {
   const listed = GROUPS.flatMap((g) => g.ids);
   assert.deepEqual([...listed, ...UNLISTED].sort(), ANSWERS.map((a) => a.id).sort());
   assert.equal(new Set(listed).size, listed.length);
@@ -196,9 +196,9 @@ check("small talk is met, rudeness first, and a real question still wins over co
 });
 
 /* 444 things visitors might type, written on 2026-10-20 by a reader who never
-   saw the keywords. A keyword edit that makes her answer wrongly more often,
+   saw the keywords. A keyword edit that makes him answer wrongly more often,
    or find the right answer less often, fails here. */
-check("visitors' own phrasings: she finds the right answer often and is rarely wrong", () => {
+check("visitors' own phrasings: he finds the right answer often and is rarely wrong", () => {
   const asked: { answers: { id: string; asks: string[] }[]; talk: { kind: string; asks: string[] }[]; offtopic: string[] } = JSON.parse(
     readFileSync(new URL("./asked.json", import.meta.url), "utf8"),
   );
@@ -246,9 +246,9 @@ check("a yes to Did you mean answers the first offer, an ordinal its own, a no a
   assert.equal(followUp("yes", []), null);
 });
 
-/* The owner's word of 2026-10-21: the list stays open while she answers a
+/* The owner's word of 2026-10-21: the list stays open while he answers a
    question picked from it, until the visitor closes it. */
-check("a question picked from the list keeps the list open; closing it shows the answer she gave", () => {
+check("a question picked from the list keeps the list open; closing it shows the answer he gave", () => {
   const list = run([{ type: "more" }], awake);
   const picked = run([{ type: "ask", reply: { kind: "answer", answer: answer("legit") }, keep: true }], list);
   assert.deepEqual(picked.shown, { kind: "more" });
@@ -262,7 +262,7 @@ check("a question picked from the list keeps the list open; closing it shows the
   assert.notEqual(answer("legit").answer, answer("where").answer);
 });
 
-check("pokes only while she rests awake, and they escalate to the last quip", () => {
+check("pokes only while he rests awake, and they escalate to the last quip", () => {
   assert.equal(pokeable(awake), true);
   const quip = run([{ type: "poke", index: 0 }], awake);
   assert.equal(quip.phase, "quip");
@@ -348,28 +348,28 @@ check("nothing a visitor reads carries a long dash or a price", () => {
 });
 
 /* 2026-10-20: two clips were deleted while lines still named them, and "How
-   much?" hung. Every line she can speak must have its recording and its clip
-   in public/ before the site ships. */
-check("every line she can speak has its recording and its clip", () => {
+   much?" hung. Every line he can speak must have its recording in public/
+   before the site ships. */
+check("every line he can speak has its recording", () => {
   const root = new URL("../../", import.meta.url);
   const lines = [...CHAPTERS.flatMap((c) => c.lines), ...POKES, ...ANSWERS.map(answerLine), CHOOSE, UNKNOWN, HELLO, MORE, ...Object.values(TALK), WELCOME, ...Object.values(SUMMARIES)];
   const missing: string[] = [];
   for (const l of lines) {
     if (!l.audio) continue;
-    for (const path of [l.audio, lineClip(l)]) if (path && !existsSync(new URL(`public${path}`, root))) missing.push(path);
+    if (!existsSync(new URL(`public${l.audio}`, root))) missing.push(l.audio);
   }
   assert.deepEqual([...new Set(missing)], []);
 });
 
-/* The owner's word of 2026-10-20: a small her in the corner of every other
+/* The owner's word of 2026-10-20: a small guide in the corner of every other
    page, who offers that page's summary. */
-check("every page that carries her has its summary, and the frame's page and its small loop exist", () => {
+check("every page that carries him has its summary, and the frame's page exists", () => {
   const root = new URL("../../", import.meta.url);
   const carrying = readdirSync(new URL("public/", root)).filter(
     (f) => f.endsWith(".html") && readFileSync(new URL(`public/${f}`, root), "utf8").includes('src="/guide/corner.js"'),
   );
   assert.deepEqual(carrying.map((f) => f.replace(/\.html$/, "")).sort(), Object.keys(SUMMARIES).sort());
-  for (const path of ["public/guide/corner.js", "public/guide/idle-small.mp4", "src/app/corner/page.tsx"]) assert.ok(existsSync(new URL(path, root)), path);
+  for (const path of ["public/guide/corner.js", "src/app/corner/page.tsx"]) assert.ok(existsSync(new URL(path, root)), path);
 });
 
 /* The review of 2026-10-20: a business question was met as rudeness or
@@ -426,7 +426,7 @@ check("a business question is never met as rudeness or small talk, and courtesy 
   assert.equal(yesNo("tell me about price"), null);
 });
 
-check("in the corner she never points at chapter chips", () => {
+check("in the corner he never points at chapter chips", () => {
   for (const text of ["hi", "hello", "good morning", "zzz qqq", "football", "what is the meaning of life"]) {
     const r = inCorner(match(text));
     assert.ok(r === "welcome" || r === "more", `${text} -> ${typeof r === "string" ? r : r.kind}`);

@@ -1,4 +1,4 @@
-/* The questions she answers when asked: draft 3 of 2026-10-17, the figures
+/* The questions he answers when asked: draft 3 of 2026-10-17, the figures
    verified by the clinic-growth-bot house that day and the owner's word to
    speak them aloud. A question that matches none of these is handed to
    WhatsApp. No em dashes: the house's style lock for anything a client reads. */
@@ -10,7 +10,7 @@ export type Answer = {
   short: string;
   question: string;
   answer: string;
-  /* A recording she already has for the same words, instead of a-<id>.mp3. */
+  /* A recording he already has for the same words, instead of a-<id>.mp3. */
   voice?: string;
   keywords: string[];
   link: { href: string; label: string };

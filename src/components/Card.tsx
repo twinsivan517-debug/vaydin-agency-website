@@ -1,18 +1,18 @@
-/* The card beside the guide: the chapter she is telling, the answer to a
+/* The card beside the guide: the chapter he is telling, the answer to a
    question, a choice when a question could mean two things or was misspelt,
-   a hand-off when she has no answer, or every question she can answer. */
+   a hand-off when he has no answer, or every question he can answer. */
 
 import { GROUPS, answer, type Answer } from "@/lib/answers";
 import { chapter } from "@/lib/pitch";
 import type { Shown } from "@/lib/pitchMachine";
 import { WHATSAPP } from "@/lib/site";
 
-/* Each card is a folder she pulls out: it swings in from her side, and its
-   lines drop out one after another while she speaks. */
+/* Each card is a folder he pulls out: it swings in from his side, and its
+   lines drop out one after another while he speaks. */
 const CARD = "folder relative rounded-3xl border border-gold/20 bg-[#161009] p-5";
 const LINK = "label inline-block border-b border-transparent text-gold-bright transition-colors hover:border-gold-bright";
 
-/* A finger landing on a question starts her answer loading before it lifts. */
+/* A finger landing on a question starts his answer loading before it lifts. */
 type Pick = { onPick: (a: Answer) => void; onSoon: (a: Answer) => void };
 
 function Chips({ answers, onPick, onSoon, full, current }: Pick & { answers: Answer[]; full?: boolean; current?: string }) {
@@ -34,7 +34,7 @@ function Chips({ answers, onPick, onSoon, full, current }: Pick & { answers: Ans
   );
 }
 
-/* `current` is the answer she is giving, marked in the list. */
+/* `current` is the answer he is giving, marked in the list. */
 type Props = Pick & { shown: Shown; onMore: () => void; onLess?: () => void; current?: string };
 
 export function Card({ shown, onPick, onSoon, onMore, onLess, current }: Props) {

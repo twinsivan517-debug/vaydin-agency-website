@@ -1,15 +1,15 @@
 /* The guide's state, as a pure reducer so it can be tested without a browser.
-   Phases: asleep (as the page opens), idle, opener (the lip-synced waking
+   Phases: asleep (as the page opens), idle, opener (the three-line
    greeting), talking (lines, one after another), quip (a poke reply), done
    (a run finished; the card stays). `run` changes whenever a new sound must
    start, so tapping the active chip again replays it. The last poke's quip
    ends with him in hibernation: awake and lit, but deaf to pokes until he is
    asked something (`rest`). More opens the list of questions on the card,
-   and she says so, unless she is still giving the greeting. Small talk is
+   and he says so, unless he is still giving the greeting. Small talk is
    answered with its line, and the list is offered unless it was thanks or
    goodbye. Say speaks lines of the page's own, leaving the card as it is. A
    question picked from the list is answered with the list kept open; less
-   closes it onto the answer she gave, or her first chapter. */
+   closes it onto the answer he gave, or his first chapter. */
 
 import { ANSWERS, CHOOSE, HELLO, MORE, UNKNOWN, answerLine } from "./answers.ts";
 import type { Reply } from "./match.ts";
@@ -73,7 +73,7 @@ const speak = (s: State, lines: Line[], shown: Shown, chapter: ChapterId | null,
   rest: false,
 });
 
-/* What she says to a typed question; the page also readies it while it is typed. */
+/* What he says to a typed question; the page also readies it while it is typed. */
 export const replyLines = (r: Reply): Line[] =>
   r.kind === "answer"
     ? [answerLine(r.answer)]

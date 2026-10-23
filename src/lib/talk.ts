@@ -1,4 +1,4 @@
-/* Small talk: a visitor talking to her rather than asking about Vaydin. Each
+/* Small talk: a visitor talking to him rather than asking about Vaydin. Each
    kind has one line, the owner's words of 2026-10-20, and every line steers
    back to Vaydin. Rude is looked for first and wins over any question in the
    same message. The rest return what is left of the message once the small

@@ -2,9 +2,9 @@
    the clinic-growth-bot house's product truth and approved by the owner for
    recording, arranged as the five questions a clinic owner asks first (the
    owner's layout of the same day). Every spoken line is one mp3 under
-   /voice. The opener is one lip-synced clip carrying its own sound, so its
-   lines have no mp3: `at` is the second at which each line starts in that
-   clip, measured on the recording. No statistic anywhere. */
+   /voice. The greeting is one recording of three lines (OPENER_AUDIO), so
+   those lines have no mp3 of their own: `at` is the second at which each
+   starts in it, measured on the recording. No statistic anywhere. */
 
 export type Mood = "hop" | "shake";
 export type Line = { id: string; text: string; audio?: string; at?: number; mood?: Mood };
@@ -12,25 +12,12 @@ export type ChapterId = "meet" | "what" | "how" | "gain" | "start" | "price";
 export type Card = { title: string; body: string; facts: string[]; links: { href: string; label: string }[] };
 export type Chapter = { id: ChapterId; label: string; clip: "opener" | "talk"; lines: Line[]; card: Card };
 
-export const OPENER_VIDEO = "/guide/opener.mp4";
-/* The same greeting as sound alone, for when the clip cannot play. */
+/* The greeting, his three opening lines in one recording. */
 export const OPENER_AUDIO = "/voice/opener.mp3";
-/* The second of the waking clip at which the page's own bulb takes over from
-   the one she tossed (in her hand from 9.4, released at 10.4, out of the frame
-   by 11.2, measured on the frames and the keyed canvas); it lands on the mark
-   `BULB_FLIGHT` later, when the page lights up. */
+/* The second of the greeting by which the page is lit, if his light has not lit it already. */
 export const THROW_AT = 2.58;
-export const BULB_FLIGHT = 1;
 
-/* One body, many mouths: every line with a recording also has a clip of the
-   idle loop with her lips on that line, made by scripts/lipsync.py and
-   carrying the voice. The loop is `BASE_LOOP` seconds; a line's clip cycles
-   it from its first frame, so frame t of a clip is frame t mod BASE_LOOP of
-   the loop, and the page can switch between them on one clock. */
-export const BASE_LOOP = 4.5;
-export const lineClip = (line: Line) => (line.audio ? line.audio.replace("/voice/", "/guide/lines/").replace(/\.mp3$/, ".mp4") : null);
-
-/* In the cloud while she sleeps. Not spoken: no sound may start before a tap. */
+/* In the cloud while he is still dust, before he gathers. Not spoken: no sound may start before a tap. */
 export const SLEEPING: Line = { id: "00", text: "Zzz… Tap anywhere to wake me up." };
 /* In the cloud once he has woken by himself on a first visit: a phone lets him speak only after a touch. */
 export const WAITING: Line = { id: "00w", text: "Hello. Tap anywhere and I'll talk you through it." };
@@ -172,12 +159,12 @@ export const CHAPTERS: Chapter[] = [
   },
 ];
 
-/* The five the chips show; the greeting replays by tapping her name. */
+/* The five the chips show; the greeting is not among them. */
 export const QUESTIONS = CHAPTERS.filter((c) => c.id !== "meet");
 
 /* What he says when touched, in order. The last never sends him to sleep
    (Dubai never sleeps): it puts him in hibernation until he is asked
-   something. The mood moved her picture; he has none. */
+   something. `mood` moved the earlier guide's picture; he does not use it. */
 export const POKES: Line[] = [
   { id: "p1", text: "Hi there. Tap a question and I'll explain.", audio: "/voice/poke-1.mp3", mood: "hop" },
   { id: "p2", text: "Yes? I'm listening.", audio: "/voice/poke-2.mp3", mood: "hop" },
