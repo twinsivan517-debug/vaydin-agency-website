@@ -87,6 +87,17 @@ export function Stage() {
     };
   }, []);
 
+  /* A tap on the mark in the header loads the home page afresh: caught before
+     React sees it, so Next's Link makes no client navigation (which shows
+     nothing on the page already open) and the browser follows the link itself. */
+  useEffect(() => {
+    const afresh = (event: MouseEvent) => {
+      if (event.target instanceof Element && event.target.closest("header a.mark")) event.stopPropagation();
+    };
+    window.addEventListener("click", afresh, true);
+    return () => window.removeEventListener("click", afresh, true);
+  }, []);
+
   /* Once he has been met and is up, the page is lit, even after a greeting
      stopped early (Stop, a tab switch). He never sleeps again: the last poke
      only puts him in hibernation, and the page stays lit. */
