@@ -1,6 +1,7 @@
 /* The shapes his body becomes, drawn once on a small canvas and sampled into
    dots: outlines dense, fills sparse. Each carries a colour from the site's
-   own palette, so a shape reads as its subject. */
+   own palette, so a shape reads as its subject. The numbers he says are
+   shapes too, and the Vaydin mark is sampled from the logo picture. */
 
 import { rng } from "./body";
 
@@ -26,7 +27,20 @@ const line = (g: CanvasRenderingContext2D, ...pts: number[]) => {
   g.stroke();
 };
 
+/* A number he says, in the serif of the site's headings: a bright outline over a faint fill. */
+const num = (text: string, size: number): Draw => (g) => {
+  g.font = `700 ${size}px Georgia, serif`;
+  g.textAlign = "center";
+  g.textBaseline = "middle";
+  g.lineWidth = 6;
+  g.globalAlpha = 0.3; g.fillText(text, 110, 116);
+  g.globalAlpha = 1; g.strokeText(text, 110, 116);
+};
+
 const DRAW: Record<string, [string, Draw]> = {
+  n1: ["#f5d978", num("1", 170)], n2: ["#f5d978", num("2", 170)], n3: ["#f5d978", num("3", 170)], n6: ["#f5d978", num("6", 170)],
+  n7: ["#f5d978", num("7", 170)], n13: ["#f5d978", num("13", 140)], n30: ["#f5d978", num("30", 140)], n60: ["#f5d978", num("60", 140)],
+  "n30-60": ["#f5d978", num("30-60", 66)],
   skyline: ["#f5d978", (g) => {
     /* A city at night: towers of different heights, the tallest stepping up to a needle. */
     const towers = [[8, 150, 20, 60], [32, 122, 18, 88], [54, 140, 22, 70], [80, 112, 16, 98], [134, 118, 18, 92], [156, 138, 16, 72], [176, 100, 18, 110], [198, 148, 16, 62],
@@ -92,6 +106,40 @@ const DRAW: Record<string, [string, Draw]> = {
   clock: ["#a78bfa", (g) => { g.beginPath(); g.arc(110, 110, 84, 0, 7); g.stroke(); line(g, 110, 110, 110, 60); line(g, 110, 110, 146, 128); }],
 };
 
+/* Dots spread over a drawing's ink, denser where it is more opaque. */
+function sample(d: Uint8ClampedArray, S: number, n: number, rnd: () => number): Float32Array {
+  const px: number[] = [];
+  for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) if (d[(y * S + x) * 4 + 3] > 30) px.push(x, y);
+  const pts = new Float32Array(n * 3), m = px.length / 2;
+  for (let j = 0; j < n && m; j++) {
+    let p = Math.floor(rnd() * m);
+    while (rnd() * 255 > d[(px[p * 2 + 1] * S + px[p * 2]) * 4 + 3]) p = Math.floor(rnd() * m);
+    pts[j * 3] = ((px[p * 2] + rnd() - 0.5) / S) * 2 - 1;
+    pts[j * 3 + 1] = 1 - ((px[p * 2 + 1] + rnd() - 0.5) / S) * 2;
+    pts[j * 3 + 2] = (rnd() - 0.5) * 0.08;
+  }
+  return pts;
+}
+
+/* The Vaydin mark, from the site's own logo picture, in gold: the shape he
+   signs off with. Null where the picture cannot load. */
+export function markShape(n: number, src: string): Promise<Shape | null> {
+  return new Promise((done) => {
+    const img = new Image();
+    img.onload = () => {
+      const S = 220, cv = document.createElement("canvas");
+      cv.width = cv.height = S;
+      const g = cv.getContext("2d", { willReadFrequently: true });
+      if (!g || !img.width) return done(null);
+      const k = Math.min((S - 20) / img.width, (S - 20) / img.height), w = img.width * k, h = img.height * k;
+      g.drawImage(img, (S - w) / 2, (S - h) / 2, w, h);
+      done({ pts: sample(g.getImageData(0, 0, S, S).data, S, n, rng(47)), color: hex("#f5d978") });
+    };
+    img.onerror = () => done(null);
+    img.src = src;
+  });
+}
+
 export function makeShapes(n: number): Record<string, Shape> {
   const out: Record<string, Shape> = {};
   const rnd = rng(31);
@@ -104,18 +152,7 @@ export function makeShapes(n: number): Record<string, Shape> {
     g.clearRect(0, 0, S, S);
     g.globalAlpha = 1; g.strokeStyle = g.fillStyle = "#fff"; g.lineWidth = 11; g.lineCap = g.lineJoin = "round";
     draw(g);
-    const d = g.getImageData(0, 0, S, S).data;
-    const px: number[] = [];
-    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) if (d[(y * S + x) * 4 + 3] > 30) px.push(x, y);
-    const pts = new Float32Array(n * 3), m = px.length / 2;
-    for (let j = 0; j < n; j++) {
-      let p = Math.floor(rnd() * m);
-      while (rnd() * 255 > d[(px[p * 2 + 1] * S + px[p * 2]) * 4 + 3]) p = Math.floor(rnd() * m);
-      pts[j * 3] = ((px[p * 2] + rnd() - 0.5) / S) * 2 - 1;
-      pts[j * 3 + 1] = 1 - ((px[p * 2 + 1] + rnd() - 0.5) / S) * 2;
-      pts[j * 3 + 2] = (rnd() - 0.5) * 0.08;
-    }
-    out[name] = { pts, color: hex(color) };
+    out[name] = { pts: sample(g.getImageData(0, 0, S, S).data, S, n, rnd), color: hex(color) };
   }
   return out;
 }

@@ -7,11 +7,12 @@
    his body dims. Pressed, he dents; spun around, he gets dizzy. Under
    reduced motion every dot takes its place at once. */
 
-import { ACCENT, hex, makeShapes, type Shape } from "./shapes";
+import { ACCENT, hex, makeShapes, markShape, type Shape } from "./shapes";
 import { HEAD, VIS, eyeAt, headZ, makeBody, type Eyes } from "./body";
 
 export type Cue = { t0: number; t1: number; shape?: string; door?: number; chips?: number; eyes?: Eyes | "blink" };
-export type Cues = Record<string, { dur: number; cues: Cue[]; beats: number[] }>;
+/* `end: "mark"`: the line closes a chapter, and he signs off with the Vaydin mark once it has played to its end. */
+export type Cues = Record<string, { dur: number; cues: Cue[]; beats: number[]; end?: string }>;
 export type FigureInput = {
   mode: "sleep" | "opener" | "talk" | "idle" | "rest";
   audio: HTMLAudioElement | null;
@@ -60,6 +61,9 @@ export function runFigure(
   const N = small ? 3000 : Math.min(screen.width, screen.height) < 700 ? 8000 : 20000;
   const B = makeBody(N);
   const SH = makeShapes(B.nb);
+  markShape(B.nb, "/img/mark.png").then((m) => {
+    if (m) SH.mark = m;
+  });
   let cues: Cues = {};
 
   const sh = (type: number, src: string) => {
@@ -231,7 +235,7 @@ export function runFigure(
   addEventListener("resize", resize);
 
   let phaseWas = read().mode, wakeT = phaseWas === "sleep" ? -1 : -99, last = performance.now(), raf = 0, nextBlink = 3, blinkUntil = 0;
-  let yaw = 0, pitch = 0, roll = 0, lookX = 0, lookY = 0, logoUntil = 0, litFired = false, palDirty = false;
+  let yaw = 0, pitch = 0, roll = 0, lookX = 0, lookY = 0, logoUntil = 0, litFired = false, palDirty = false, signing = "", markUntil = 0;
   const eyeCol: [number, number, number] = [...EYE_REST], shapeCol: [number, number, number] = [1, 0.85, 0.5];
   const LX = -0.42, LY = 0.5, LZ = 0.76;
 
@@ -261,6 +265,10 @@ export function runFigure(
       for (const b of rec.beats) if (lt >= b && lt < b + 0.28) beat = 1;
     }
     if (src.startsWith("poke-")) cueEyes = POKED[src] ?? cueEyes;
+    /* A closing line that plays to its end (not one stopped) leaves the Vaydin mark for a moment, until anything else plays. */
+    if (src) signing = rec?.end === "mark" ? src : "";
+    else if (signing) { if (a?.ended) markUntil = t + 2.4; signing = ""; }
+    if (!src && t < markUntil && SH.mark && !asleep) shape = SH.mark;
     /* Aimed again whenever the tile moves on screen, as it does when the page scrolls under him. */
     if (door >= 0) {
       const r = inp.doors[door].getBoundingClientRect();

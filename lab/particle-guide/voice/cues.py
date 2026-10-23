@@ -24,6 +24,24 @@ DOORS = [(r"^(diagnostic|unannounced|shopper|shop|shops|intelligence|measure)$",
 EYES = {"warm": "happy", "curious": "wide", "skeptical": "think", "laughs": "wink", "serious": "line", "sighs": "sad",
         "confident": "sparkle", "softly": "blink"}
 OPENER = [("00b", 0.0), ("01", 2.58), ("tag-b", 4.39)]
+# The lines that close the greeting, a chapter or a page's summary: he signs off with the Vaydin mark once they end.
+SIGN_OFF = {"02", "w1", "08", "10", "a-time", "a-cancel", "p-diagnose", "p-fix", "p-grow", "p-engine", "p-pricing"}
+
+
+def number(w, prev, nxt, nxt2, prev2):
+    # A number he says -> its digits. "One" and "two" only where they count something (layer one, two days).
+    if w == "thirty" and nxt == "to" and nxt2 == "sixty":
+        return "n30-60"
+    if w == "sixty" and prev == "to" and prev2 == "thirty":
+        return None
+    for pat, shape in ((r"^thirty$", "n30"), (r"^sixty$", "n60"), (r"^thirteen$", "n13"), (r"^six$", "n6"), (r"^three", "n3"), (r"^seven$", "n7")):
+        if re.match(pat, w):
+            return shape
+    if w == "one" and prev == "layer":
+        return "n1"
+    if w == "two" and (prev == "layer" or nxt == "days"):
+        return "n2"
+    return None
 
 
 def norm(w):
@@ -68,6 +86,10 @@ def plan(text, timed, dur):
         if w == "pick" and nxt == "a" and i + 2 < len(words) and words[i + 2] == "question":
             hit = {"chips": 1}
         if not hit:
+            n = number(w, words[i - 1] if i else "", nxt, words[i + 2] if i + 2 < len(words) else "", words[i - 2] if i > 1 else "")
+            if n:
+                hit = {"shape": n}
+        if not hit:
             for pat, shape in SHAPES:
                 if re.match(pat, w):
                     hit = {"shape": shape}; break
@@ -104,6 +126,8 @@ def main():
             continue
         cues, beats = plan(text, words[i]["words"], words[i]["dur"])
         out[i] = {"dur": words[i]["dur"], "cues": cues, "beats": beats}
+        if i in SIGN_OFF:
+            out[i]["end"] = "mark"
     # The greeting is one file of three lines: their cues, shifted to where each starts in it.
     oc, ob = [], []
     for i, at in OPENER:
