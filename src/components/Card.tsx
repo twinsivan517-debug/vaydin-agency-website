@@ -36,9 +36,9 @@ function Chips({ answers, onPick, onSoon, full, current }: Pick & { answers: Ans
 
 /* `current` is the answer he is giving, marked in the list. */
 /* `onTour` opens a chapter from the More list; the corner, which has no chapters, leaves it out. */
-type Props = Pick & { shown: Shown; onMore: () => void; onLess?: () => void; onTour?: (id: ChapterId) => void; current?: string };
+type Props = Pick & { shown: Shown; onMore: () => void; onLess?: () => void; onTour?: (id: ChapterId) => void; onTourSoon?: (id: ChapterId) => void; current?: string };
 
-export function Card({ shown, onPick, onSoon, onMore, onLess, onTour, current }: Props) {
+export function Card({ shown, onPick, onSoon, onMore, onLess, onTour, onTourSoon, current }: Props) {
   if (shown.kind === "unknown") {
     return (
       <div className={CARD}>
@@ -84,7 +84,7 @@ export function Card({ shown, onPick, onSoon, onMore, onLess, onTour, current }:
             <p className="label text-gold-bright">He tells it ({TOUR.length})</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {TOUR.map((c) => (
-                <button key={c.id} type="button" onClick={() => onTour(c.id)} className="rounded-2xl border border-gold/40 px-3 py-1.5 text-left text-sm text-gold-bright">
+                <button key={c.id} type="button" onPointerDown={() => onTourSoon?.(c.id)} onClick={() => onTour(c.id)} className="rounded-2xl border border-gold/40 px-3 py-1.5 text-left text-sm text-gold-bright">
                   {c.label}
                 </button>
               ))}

@@ -23,8 +23,9 @@ import { WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
 type Point = { x: number; y: number };
 
 /* The colour his light gives each chip when he says "Pick a question": the
-   colour of the page nearest its meaning (how: the Engine, gain: Grow, start:
-   the diagnostic, price: your plan), gold for Vaydin itself, rose for More. */
+   colour of the page nearest its meaning (how: the Engine, price: your plan),
+   gold for Vaydin itself, rose for More; gain and start keep theirs for the
+   day they are chips again. */
 const GLOWS: Record<string, string> = { what: "#f5d978", how: "#a78bfa", gain: "#4ade80", start: "#f87171", price: "#34e3f0", more: "#f472b6" };
 
 /* How long a line is, for the phone's cloud: it keeps one height, so a long
@@ -56,6 +57,8 @@ export function Stage() {
   const [up, setUp] = useState(false);
   /* The visitor has touched the page: sound is unlocked, and the visit is no longer a first look. */
   const [touched, setTouched] = useState(false);
+  /* The same, for the scroll handler, which outlives any render. */
+  const touchedAt = useRef(false);
   /* Before any touch: he is up, silent, and his cloud (on a phone, the headline's) says how to hear him. */
   const first = state.phase === "asleep" && !touched;
   const guide = useRef<GuideHandle>(null);
@@ -80,13 +83,17 @@ export function Stage() {
     if (!still) document.body.classList.add("site-asleep");
     const timer = window.setTimeout(() => setUp(true), still ? 0 : 450);
     /* A visitor who scrolls down instead of tapping lifts the dimming, softly,
-       without the mark's glow: his light, and that glow, are for the one who taps. */
+       without the mark's glow: his light, and that glow, are for the one who
+       taps, so a scroll the page makes after a tap (the list brought into
+       view) is not one. Checked once at mount too: a reload or a return to
+       the page restores its scroll before any scroll event. */
     const scrolled = () => {
       if (window.scrollY <= 40) return;
-      document.body.classList.remove("site-asleep");
       window.removeEventListener("scroll", scrolled);
+      if (!touchedAt.current) document.body.classList.remove("site-asleep");
     };
     window.addEventListener("scroll", scrolled, { passive: true });
+    scrolled();
     return () => {
       window.clearTimeout(timer);
       window.removeEventListener("scroll", scrolled);
@@ -174,6 +181,7 @@ export function Stage() {
 
   function unlock() {
     setTouched(true);
+    touchedAt.current = true;
     (voice.current ??= speaker()).arm();
     guide.current?.unlock();
   }
@@ -198,7 +206,7 @@ export function Stage() {
       setWaking(false);
     });
     /* After the greeting, in the order he may need them: the line that
-       follows it with no tap, the five questions' first lines, his first poke
+       follows it with no tap, the three questions' first lines, his first poke
        reply, and his answer to a question he does not know. */
     ready(chapter("meet").lines.find((l) => l.audio));
     for (const q of QUESTIONS) ready(q.lines[0]);
@@ -383,6 +391,7 @@ export function Stage() {
           onMore={more}
           onLess={() => dispatch({ type: "less" })}
           onTour={tap}
+          onTourSoon={(id) => ready(chapter(id).lines[0])}
           current={busy ? state.cloud.id.replace(/^a-/, "") : undefined}
         />
       </div>

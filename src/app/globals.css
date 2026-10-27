@@ -347,7 +347,7 @@ body::before {
 /* A phone: everything lifted, so the questions and the five doors are in view
    with him at once, above the bar, in whatever height the browser leaves
    visible: he takes the height left over (svh: the toolbars counted), the
-   cloud a fixed row, the questions in a grid of three, the doors right under
+   cloud a fixed row, the questions two by two, the doors right under
    them, the ask box after. Until the first touch the headline is his first message, popping
    from him in a cloud of its own (his own cloud waits unseen); after it, the
    headline stays for search engines and screen readers, unseen. */
