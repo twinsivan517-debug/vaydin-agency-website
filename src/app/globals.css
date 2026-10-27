@@ -161,7 +161,7 @@ body {
   .hero-door span { display: none; }
 }
 
-/* The questions: plain glass, a gold edge on the one playing. */
+/* The questions: plain glass, a green edge on the one playing. */
 .hero-chips {
   display: flex;
   flex-wrap: wrap;
