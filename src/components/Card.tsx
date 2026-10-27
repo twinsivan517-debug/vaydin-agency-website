@@ -3,7 +3,7 @@
    a hand-off when he has no answer, or every question he can answer. */
 
 import { GROUPS, answer, type Answer } from "@/lib/answers";
-import { chapter } from "@/lib/pitch";
+import { TOUR, chapter, type ChapterId } from "@/lib/pitch";
 import type { Shown } from "@/lib/pitchMachine";
 import { WHATSAPP } from "@/lib/site";
 
@@ -35,9 +35,10 @@ function Chips({ answers, onPick, onSoon, full, current }: Pick & { answers: Ans
 }
 
 /* `current` is the answer he is giving, marked in the list. */
-type Props = Pick & { shown: Shown; onMore: () => void; onLess?: () => void; current?: string };
+/* `onTour` opens a chapter from the More list; the corner, which has no chapters, leaves it out. */
+type Props = Pick & { shown: Shown; onMore: () => void; onLess?: () => void; onTour?: (id: ChapterId) => void; current?: string };
 
-export function Card({ shown, onPick, onSoon, onMore, onLess, current }: Props) {
+export function Card({ shown, onPick, onSoon, onMore, onLess, onTour, current }: Props) {
   if (shown.kind === "unknown") {
     return (
       <div className={CARD}>
@@ -77,6 +78,19 @@ export function Card({ shown, onPick, onSoon, onMore, onLess, current }: Props) 
           )}
         </div>
         <p className="mt-2 leading-7 text-muted">Pick a subject, then a question, or type your own.</p>
+        {/* The two chapters the chips no longer show come first, open. */}
+        {onTour && (
+          <div className="mt-3 border-t border-gold/15 pt-3">
+            <p className="label text-gold-bright">He tells it ({TOUR.length})</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {TOUR.map((c) => (
+                <button key={c.id} type="button" onClick={() => onTour(c.id)} className="rounded-2xl border border-gold/40 px-3 py-1.5 text-left text-sm text-gold-bright">
+                  {c.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         {/* All shut at first, so the visitor picks the subject; one open at a time. */}
         {GROUPS.map((group) => (
           <details key={group.title} name="more" className="mt-3 border-t border-gold/15 pt-3">

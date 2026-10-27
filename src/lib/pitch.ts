@@ -159,8 +159,12 @@ export const CHAPTERS: Chapter[] = [
   },
 ];
 
-/* The five the chips show; the greeting is not among them. */
-export const QUESTIONS = CHAPTERS.filter((c) => c.id !== "meet");
+/* The three the chips show, the first three a clinic owner asks (2026-10-27,
+   the owner's word: three, the page neater); the greeting is never a chip. */
+const SHOWN: ChapterId[] = ["what", "how", "price"];
+export const QUESTIONS = CHAPTERS.filter((c) => SHOWN.includes(c.id));
+/* The chapters the chips no longer show, at the top of the More list. */
+export const TOUR = CHAPTERS.filter((c) => c.id !== "meet" && !SHOWN.includes(c.id));
 
 /* What he says when touched, in order. The last never sends him to sleep
    (Dubai never sleeps): it puts him in hibernation until he is asked

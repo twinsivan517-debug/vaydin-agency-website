@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Doors } from "@/components/Doors";
 import { Header } from "@/components/Header";
 import { Stage } from "@/components/Stage";
 import { answer } from "@/lib/answers";
@@ -22,10 +21,11 @@ const FAQ_RECORD = {
   mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.question, acceptedAnswer: { "@type": "Answer", text: f.answer } })),
 };
 
-/* The home page is the guide, his headline over him. Under him, the five
-   pages in their own words, then the title and a transcript, then the FAQ,
-   so the page reads, and is found, before any script or clip arrives, and a
-   visitor who scrolls finds the site. */
+/* The home page is the guide, his headline over him, the five pages beside
+   him. Under him the title and a transcript, then the FAQ, so the page reads,
+   and is found, before any script or clip arrives. (The five pages as tiles
+   under him went on 2026-10-27, the owner's word: the tiles beside him and
+   the menu already name them.) */
 export default function Home() {
   return (
     <>
@@ -34,8 +34,7 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl px-5 pt-15 sm:px-12 sm:pt-20 md:pt-24">
           <Stage />
         </div>
-        <Doors />
-        <section className="wakes mx-auto w-full max-w-6xl px-5 py-12 sm:px-12">
+        <section className="wakes mx-auto w-full max-w-6xl px-5 pt-20 pb-12 sm:px-12 md:pt-24">
           <p className="label text-gold-bright">Vaydin Agency · Dubai</p>
           <h2 className="mt-2 max-w-3xl font-display text-2xl leading-tight sm:text-3xl">We find the patients your clinic never saw.</h2>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted">

@@ -22,8 +22,6 @@ import { WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
 
 type Point = { x: number; y: number };
 
-/* A small sign on each question's chip. */
-const ICONS: Record<string, string> = { what: "?", how: "\u2699", gain: "\u25B2", start: "\u25B6", price: "$" };
 /* The colour his light gives each chip when he says "Pick a question": the
    colour of the page nearest its meaning (how: the Engine, gain: Grow, start:
    the diagnostic, price: your plan), gold for Vaydin itself, rose for More. */
@@ -81,8 +79,17 @@ export function Stage() {
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!still) document.body.classList.add("site-asleep");
     const timer = window.setTimeout(() => setUp(true), still ? 0 : 450);
+    /* A visitor who scrolls down instead of tapping lifts the dimming, softly,
+       without the mark's glow: his light, and that glow, are for the one who taps. */
+    const scrolled = () => {
+      if (window.scrollY <= 40) return;
+      document.body.classList.remove("site-asleep");
+      window.removeEventListener("scroll", scrolled);
+    };
+    window.addEventListener("scroll", scrolled, { passive: true });
     return () => {
       window.clearTimeout(timer);
+      window.removeEventListener("scroll", scrolled);
       document.body.classList.remove("site-asleep", "site-awake", "site-shimmer");
     };
   }, []);
@@ -375,6 +382,7 @@ export function Stage() {
           onSoon={(a) => ready(answerLine(a))}
           onMore={more}
           onLess={() => dispatch({ type: "less" })}
+          onTour={tap}
           current={busy ? state.cloud.id.replace(/^a-/, "") : undefined}
         />
       </div>
@@ -457,7 +465,6 @@ export function Stage() {
               className="chip"
               style={{ "--glow": GLOWS[c.id] } as React.CSSProperties}
             >
-              <i aria-hidden="true">{ICONS[c.id] ?? "?"}</i>
               {c.label}
             </button>
           </li>
@@ -472,7 +479,6 @@ export function Stage() {
             className="chip"
             style={{ "--glow": GLOWS.more } as React.CSSProperties}
           >
-            <i aria-hidden="true">{"…"}</i>
             More questions
           </button>
         </li>
@@ -482,8 +488,7 @@ export function Stage() {
 
       {ripple && <span key={ripple.key} aria-hidden="true" className="ripple" style={{ left: ripple.x, top: ripple.y }} />}
 
-      {/* On a phone the bar is one slim row, WhatsApp as an icon, so it covers
-          little of him; at its right, the way down to the five pages. */}
+      {/* On a phone the bar is one slim row, WhatsApp as an icon, so it covers little of him. */}
       <div className={`hero-bar wakes sticky bottom-0 -mx-5 mt-6 flex items-center gap-3 border-t border-gold/15 bg-background/95 px-5 py-2 backdrop-blur sm:-mx-12 sm:px-12 md:py-3 ${state.lit ? "cta-lit" : ""}`}>
         <a href={WHATSAPP} aria-label={`WhatsApp ${WHATSAPP_SHOWN}`} className="flex items-center gap-2 rounded-full bg-gold-bright p-2.5 text-base font-medium text-background md:px-6 md:py-3">
           <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
@@ -493,13 +498,6 @@ export function Stage() {
         </a>
         <a href="/pricing.html" className="rounded-full border border-gold px-4 py-2 text-sm text-gold-bright md:px-6 md:py-3 md:text-base">
           Ask for your plan
-        </a>
-        <a href="#pages" className="label ml-auto flex items-center gap-1.5 whitespace-nowrap text-gold-bright">
-          <span className="hidden sm:inline">The five pages</span>
-          <span className="sm:hidden">Pages</span>
-          <svg aria-hidden="true" viewBox="0 0 12 12" width="12" height="12">
-            <path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
-          </svg>
         </a>
       </div>
     </section>

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0d0807;
+  --background: #0a0605;
   --foreground: #f3ead9;
   --muted: #b9b0a2;
   --gold: #c9a44a;
@@ -151,7 +151,7 @@ body {
   .hero-door span { display: none; }
 }
 
-/* The questions: a sign, a soft colour field, a gold edge on the one playing. */
+/* The questions: plain glass, a gold edge on the one playing. */
 .hero-chips {
   display: flex;
   flex-wrap: wrap;
@@ -172,9 +172,9 @@ body {
   gap: 0.45rem;
   border-radius: 999px;
   border: 1px solid rgb(201 164 74 / 0.35);
-  background: linear-gradient(135deg, rgb(74 46 130 / 0.35), rgb(15 80 78 / 0.25));
+  background: rgb(255 255 255 / 0.04);
   color: var(--foreground);
-  padding: 0.35rem 0.75rem 0.35rem 0.4rem;
+  padding: 0.5rem 0.9rem;
   font-size: 0.85rem;
   line-height: 1.2;
   text-align: left;
@@ -183,28 +183,9 @@ body {
 
 .chip:active { transform: scale(0.98); }
 
-.chip i {
-  flex: none;
-  width: 1.6rem;
-  height: 1.6rem;
-  display: grid;
-  place-items: center;
-  border-radius: 0.5rem;
-  background: rgb(201 164 74 / 0.18);
-  color: var(--gold-bright);
-  font-style: normal;
-  font-size: 0.8rem;
-  transition: background 0.4s ease, color 0.4s ease;
-}
-
-.chip.lit i {
-  background: color-mix(in srgb, var(--glow) 28%, transparent);
-  color: var(--glow);
-}
-
 .chip[aria-pressed="true"] {
   border-color: var(--gold-bright);
-  background: linear-gradient(135deg, rgb(201 164 74 / 0.35), rgb(74 46 130 / 0.35));
+  background: rgb(201 164 74 / 0.22);
 }
 
 /* His light on the questions as he offers them, each in its own colour
@@ -214,10 +195,8 @@ body {
   box-shadow: 0 0 22px -6px var(--glow);
 }
 
-.chip i { border-radius: 999px; }
-
 @media (min-width: 768px) {
-  .chip { font-size: 0.95rem; padding: 0.4rem 0.9rem 0.4rem 0.45rem; }
+  .chip { font-size: 0.95rem; padding: 0.55rem 1.1rem; }
 }
 
 /* Stop, a small round sign at his shoulder while he speaks. */
@@ -237,8 +216,9 @@ body {
   backdrop-filter: blur(4px);
 }
 
-/* The sky behind everything: three soft colour fields, violet, teal and
-   gold, drifting over half a minute. Plain gradients, no blur: a phone
+/* The sky behind everything: two faint colour fields, gold and teal, over a
+   near-black floor (the violet went on 2026-10-27, the owner's word: darker,
+   not purple), drifting over half a minute. Plain gradients, no blur: a phone
    paints it once per frame for next to nothing. Still under reduced motion. */
 body::before {
   content: "";
@@ -246,9 +226,8 @@ body::before {
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(60% 45% at 20% 25%, rgb(74 46 130 / 0.5), transparent 70%),
-    radial-gradient(55% 40% at 85% 70%, rgb(15 80 78 / 0.5), transparent 70%),
-    radial-gradient(40% 30% at 70% 15%, rgb(201 164 74 / 0.18), transparent 70%),
+    radial-gradient(60% 45% at 20% 25%, rgb(201 164 74 / 0.09), transparent 70%),
+    radial-gradient(55% 40% at 85% 70%, rgb(15 80 78 / 0.3), transparent 70%),
     var(--background);
   background-size: 200% 200%;
   pointer-events: none;
@@ -390,10 +369,9 @@ body::before {
   .cloud p[data-long="2"] { font-size: 0.8rem; }
   .cloud p[data-long="3"] { font-size: 0.74rem; line-height: 1.28; }
   .hero-guide { margin-top: -0.3rem; }
-  .hero-chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.3rem; }
+  .hero-chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.3rem; }
   .hero-chips li { display: flex; }
-  .chip { flex: 1; gap: 0.3rem; padding: 0.3rem 0.4rem 0.3rem 0.28rem; font-size: 0.74rem; line-height: 1.15; border-radius: 0.8rem; }
-  .chip i { width: 1.25rem; height: 1.25rem; font-size: 0.66rem; }
+  .chip { flex: 1; justify-content: center; padding: 0.45rem 0.5rem; font-size: 0.78rem; line-height: 1.15; border-radius: 0.8rem; }
   .hero-door { padding: 0.38rem 0.2rem; }
 
   /* Unseen but present, so the first line he speaks there is announced as a change. */
@@ -667,85 +645,3 @@ body.site-awake .mark::before {
   50% { opacity: 1; transform: translateY(-0.15em); }
 }
 
-/* The five doors under him: three steps in a row, the two other pages wider
-   under them; one column on a phone. The whole tile is the link. The link
-   down to them lands the hero's bar just off the top of the screen, and the
-   section's own top padding clears the fixed header. */
-.doors { scroll-margin-top: 0; }
-
-.doors-grid {
-  display: grid;
-  gap: 0.9rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-@media (min-width: 768px) {
-  .doors-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-  .door-step { grid-column: span 2; }
-  .door-side { grid-column: span 3; }
-}
-
-/* Each door wears its page's colour (--accent, set on the tile): a thread of
-   it along the top edge, its sign in a tinted square, the dots of its facts,
-   and the whole frame and a glow in it when the pointer is over it. */
-.door {
-  position: relative;
-  display: block;
-  height: 100%;
-  overflow: hidden;
-  border-radius: 1.5rem;
-  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
-  background:
-    radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%),
-    #161009;
-  padding: 1.25rem 1.4rem 1.4rem;
-  color: var(--foreground);
-  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.door::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto auto 1.4rem;
-  width: 3.5rem;
-  height: 3px;
-  border-radius: 0 0 3px 3px;
-  background: var(--accent);
-}
-
-.door:hover,
-.door:focus-visible {
-  border-color: var(--accent);
-  transform: translateY(-3px);
-  box-shadow: 0 1rem 2.5rem color-mix(in srgb, var(--accent) 18%, transparent);
-  outline: none;
-}
-
-.door-sign {
-  display: grid;
-  place-items: center;
-  width: 2.6rem;
-  height: 2.6rem;
-  border-radius: 0.8rem;
-  background: color-mix(in srgb, var(--accent) 16%, transparent);
-  color: var(--accent);
-}
-
-.door-dot {
-  flex: none;
-  width: 0.4rem;
-  height: 0.4rem;
-  margin-top: 0.7rem;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
-.door-open {
-  color: var(--accent);
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.25s ease;
-}
-
-.door:hover .door-open { border-bottom-color: var(--accent); }
