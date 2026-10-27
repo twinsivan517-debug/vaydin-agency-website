@@ -28,8 +28,8 @@ const FAQ_RECORD = {
 const PROBLEMS = [
   {
     title: "The message that waited",
-    problem: "A new patient writes on WhatsApp or Instagram at nine in the evening. The reply comes in the morning, or never. The clinic that answered in a minute has her booking.",
-    vaydin: "Every inquiry answered and booked on your own number, day and night, your reception approving with a tap.",
+    problem: "A new patient writes on WhatsApp or Instagram at nine in the evening. The reply comes in the morning, or never. The clinic that answered in minutes has the booking.",
+    vaydin: "Every inquiry answered around the clock and booked on your own number, your reception approving the booking with a tap.",
   },
   {
     title: "The booking that never showed",
@@ -62,9 +62,9 @@ export default function Home() {
             A clinic loses patients in the places nobody inside is watching.
           </h2>
           <p className="mt-4 max-w-2xl text-base leading-7 text-muted">
-            A patient looking for a treatment in Dubai tonight opens three doors before she ever walks in: your Google
-            profile, your Instagram, your WhatsApp. She forms a verdict in minutes and books with whoever answers first
-            and best. The clinic never finds out she existed.
+            A patient looking for a treatment in Dubai tonight opens three doors before they ever walk in: your Google
+            profile, your Instagram, your WhatsApp. They form a verdict in minutes and book with whoever answers first
+            and best. The clinic never finds out they existed.
           </p>
           <ul className="mt-8 grid gap-4 md:grid-cols-3">
             {PROBLEMS.map((item, index) => (
