@@ -455,9 +455,9 @@ export function Stage() {
             autoComplete="off"
             enterKeyHint="send"
             maxLength={200}
-            className="min-w-0 flex-1 rounded-full border border-gold/40 bg-white/[0.04] px-4 py-3 text-base text-foreground placeholder:text-muted"
+            className="min-w-0 flex-1 rounded-full border border-accent/40 bg-white/[0.04] px-4 py-3 text-base text-foreground placeholder:text-muted"
           />
-          <button type="submit" className="rounded-full bg-gold-bright px-5 py-3 text-base font-medium text-background">
+          <button type="submit" className="rounded-full bg-accent px-5 py-3 text-base font-medium text-background">
             Ask
           </button>
         </form>
@@ -498,14 +498,14 @@ export function Stage() {
       {ripple && <span key={ripple.key} aria-hidden="true" className="ripple" style={{ left: ripple.x, top: ripple.y }} />}
 
       {/* On a phone the bar is one slim row, WhatsApp as an icon, so it covers little of him. */}
-      <div className={`hero-bar wakes sticky bottom-0 -mx-5 mt-6 flex items-center gap-3 border-t border-gold/15 bg-background/95 px-5 py-2 backdrop-blur sm:-mx-12 sm:px-12 md:py-3 ${state.lit ? "cta-lit" : ""}`}>
-        <a href={WHATSAPP} aria-label={`WhatsApp ${WHATSAPP_SHOWN}`} className="flex items-center gap-2 rounded-full bg-gold-bright p-2.5 text-base font-medium text-background md:px-6 md:py-3">
+      <div className={`hero-bar wakes sticky bottom-0 -mx-5 mt-6 flex items-center gap-3 border-t border-accent/15 bg-background/95 px-5 py-2 backdrop-blur sm:-mx-12 sm:px-12 md:py-3 ${state.lit ? "cta-lit" : ""}`}>
+        <a href={WHATSAPP} aria-label={`WhatsApp ${WHATSAPP_SHOWN}`} className="flex items-center gap-2 rounded-full bg-accent p-2.5 text-base font-medium text-background md:px-6 md:py-3">
           <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
             <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c1.7.7 2.1.6 2.8.5a2.4 2.4 0 0 0 1.6-1.1c.2-.6.2-1 .1-1.1l-.5-.3Z" />
           </svg>
           <span className="hidden md:inline">WhatsApp · {WHATSAPP_SHOWN}</span>
         </a>
-        <a href="/pricing.html" className="rounded-full border border-gold px-4 py-2 text-sm text-gold-bright md:px-6 md:py-3 md:text-base">
+        <a href="/pricing.html" className="rounded-full border border-accent px-4 py-2 text-sm text-accent-bright md:px-6 md:py-3 md:text-base">
           Ask for your plan
         </a>
       </div>

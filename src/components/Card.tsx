@@ -9,8 +9,8 @@ import { WHATSAPP } from "@/lib/site";
 
 /* Each card is a folder he pulls out: it swings in from his side, and its
    lines drop out one after another while he speaks. */
-const CARD = "folder relative rounded-3xl border border-gold/20 bg-[#161009] p-5";
-const LINK = "label inline-block border-b border-transparent text-gold-bright transition-colors hover:border-gold-bright";
+const CARD = "folder relative rounded-3xl border border-accent/20 bg-surface p-5";
+const LINK = "label inline-block border-b border-transparent text-accent-bright transition-colors hover:border-accent-bright";
 
 /* A finger landing on a question starts his answer loading before it lifts. */
 type Pick = { onPick: (a: Answer) => void; onSoon: (a: Answer) => void };
@@ -25,7 +25,7 @@ function Chips({ answers, onPick, onSoon, full, current }: Pick & { answers: Ans
           onPointerDown={() => onSoon(a)}
           onClick={() => onPick(a)}
           aria-pressed={a.id === current}
-          className="rounded-2xl border border-gold/40 px-3 py-1.5 text-left text-sm text-gold-bright aria-pressed:bg-gold/20"
+          className="rounded-2xl border border-accent/40 px-3 py-1.5 text-left text-sm text-accent-bright aria-pressed:bg-accent/20"
         >
           {full ? a.question : a.short}
         </button>
@@ -80,11 +80,11 @@ export function Card({ shown, onPick, onSoon, onMore, onLess, onTour, onTourSoon
         <p className="mt-2 leading-7 text-muted">Pick a subject, then a question, or type your own.</p>
         {/* The two chapters the chips no longer show come first, open. */}
         {onTour && (
-          <div className="mt-3 border-t border-gold/15 pt-3">
-            <p className="label text-gold-bright">He tells it ({TOUR.length})</p>
+          <div className="mt-3 border-t border-accent/15 pt-3">
+            <p className="label text-accent-bright">He tells it ({TOUR.length})</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {TOUR.map((c) => (
-                <button key={c.id} type="button" onPointerDown={() => onTourSoon?.(c.id)} onClick={() => onTour(c.id)} className="rounded-2xl border border-gold/40 px-3 py-1.5 text-left text-sm text-gold-bright">
+                <button key={c.id} type="button" onPointerDown={() => onTourSoon?.(c.id)} onClick={() => onTour(c.id)} className="rounded-2xl border border-accent/40 px-3 py-1.5 text-left text-sm text-accent-bright">
                   {c.label}
                 </button>
               ))}
@@ -93,8 +93,8 @@ export function Card({ shown, onPick, onSoon, onMore, onLess, onTour, onTourSoon
         )}
         {/* All shut at first, so the visitor picks the subject; one open at a time. */}
         {GROUPS.map((group) => (
-          <details key={group.title} name="more" className="mt-3 border-t border-gold/15 pt-3">
-            <summary className="label cursor-pointer text-gold-bright">
+          <details key={group.title} name="more" className="mt-3 border-t border-accent/15 pt-3">
+            <summary className="label cursor-pointer text-accent-bright">
               {group.title} ({group.ids.length})
             </summary>
             <Chips answers={group.ids.map(answer)} onPick={onPick} onSoon={onSoon} full current={current} />
@@ -110,7 +110,7 @@ export function Card({ shown, onPick, onSoon, onMore, onLess, onTour, onTourSoon
     const a = answer(shown.id);
     return (
       <div className={CARD}>
-        <p className="label text-gold-bright">{a.question}</p>
+        <p className="label text-accent-bright">{a.question}</p>
         <p className="mt-3 leading-7">{a.answer}</p>
         <a href={a.link.href} className={`${LINK} mt-4`}>
           {a.link.label}
@@ -126,7 +126,7 @@ export function Card({ shown, onPick, onSoon, onMore, onLess, onTour, onTourSoon
       <ul className="mt-4 space-y-2 text-muted">
         {card.facts.map((fact, index) => (
           <li key={fact} className="folder-line flex gap-3" style={{ animationDelay: `${0.9 + index * 0.7}s` }}>
-            <span aria-hidden="true" className="mt-[0.7rem] size-1.5 shrink-0 rounded-full bg-gold" />
+            <span aria-hidden="true" className="mt-[0.7rem] size-1.5 shrink-0 rounded-full bg-accent" />
             {fact}
           </li>
         ))}

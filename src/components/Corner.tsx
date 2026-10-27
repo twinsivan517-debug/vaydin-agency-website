@@ -34,7 +34,7 @@ const pageSummary = () => {
   return Object.hasOwn(SUMMARIES, page) ? SUMMARIES[page] : undefined;
 };
 
-const BUTTON = "rounded-2xl border border-gold/40 px-3 py-1.5 text-sm text-gold-bright";
+const BUTTON = "rounded-2xl border border-accent/40 px-3 py-1.5 text-sm text-accent-bright";
 
 export function Corner() {
   const [state, dispatch] = useReducer(reduce, AWAKE);
@@ -216,12 +216,12 @@ export function Corner() {
           onClickCapture={lead}
           onKeyDown={(event) => event.key === "Escape" && hide()}
           /* The scrollbar's room is kept even with none showing, so one appearing never rewraps the text. */
-          className="relative max-h-full min-h-0 w-full overflow-y-auto [scrollbar-gutter:stable] rounded-3xl border border-gold/30 bg-[#120c08] p-4 shadow-[0_10px_40px_rgba(0,0,0,0.6)]"
+          className="relative max-h-full min-h-0 w-full overflow-y-auto [scrollbar-gutter:stable] rounded-3xl border border-accent/30 bg-surface p-4 shadow-[0_10px_40px_rgba(0,0,0,0.6)]"
         >
           <div ref={inner} className="flex flex-col gap-3">
             <div className="absolute right-3 top-3 flex items-center gap-3">
               {busy && (
-                <button type="button" onClick={stop} className="rounded-full border border-gold/40 px-2.5 py-0.5 text-xs text-gold-bright">
+                <button type="button" onClick={stop} className="rounded-full border border-accent/40 px-2.5 py-0.5 text-xs text-accent-bright">
                   {"■"} Stop
                 </button>
               )}
@@ -234,7 +234,7 @@ export function Corner() {
             </p>
             {offering ? (
               <div className="flex flex-wrap gap-2">
-                <button type="button" onClick={summarise} className={`${BUTTON} bg-gold/15`}>
+                <button type="button" onClick={summarise} className={`${BUTTON} bg-accent/15`}>
                   Yes, tell me
                 </button>
                 <button type="button" onClick={more} className={BUTTON}>
@@ -278,9 +278,9 @@ export function Corner() {
                   }}
                   placeholder="Ask him…"
                   maxLength={200}
-                  className="min-w-0 flex-1 rounded-full border border-gold/30 bg-transparent px-4 py-2 text-base"
+                  className="min-w-0 flex-1 rounded-full border border-accent/30 bg-transparent px-4 py-2 text-base"
                 />
-                <button type="submit" className="rounded-full bg-gold px-4 py-2 text-sm font-medium text-[#120c08]">
+                <button type="submit" className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-background">
                   Ask
                 </button>
               </form>
@@ -294,12 +294,12 @@ export function Corner() {
             <button
               type="button"
               onClick={stop}
-              className="absolute -top-7 left-0 z-40 whitespace-nowrap rounded-full bg-gold px-2.5 py-0.5 text-xs font-medium text-[#120c08]"
+              className="absolute -top-7 left-0 z-40 whitespace-nowrap rounded-full bg-accent px-2.5 py-0.5 text-xs font-medium text-background"
             >
               {"■"} Stop
             </button>
           ) : (
-            <span aria-hidden="true" className="absolute -top-6 left-0 whitespace-nowrap rounded-full bg-gold px-2.5 py-0.5 text-xs font-medium text-[#120c08]">
+            <span aria-hidden="true" className="absolute -top-6 left-0 whitespace-nowrap rounded-full bg-accent px-2.5 py-0.5 text-xs font-medium text-background">
               Ask me
             </span>
           ))}

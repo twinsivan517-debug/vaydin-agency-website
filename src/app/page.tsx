@@ -45,7 +45,7 @@ export default function Home() {
             reviews, Instagram and website, with your reception approving by a tap.
           </p>
           <details className="mt-6 text-muted">
-            <summary className="label cursor-pointer text-gold-bright">Read what he says</summary>
+            <summary className="label cursor-pointer text-accent-bright">Read what he says</summary>
             <ol className="mt-3 space-y-2 text-base leading-7">
               {CHAPTERS.flatMap((c) => c.lines).map((line) => (
                 <li key={line.id}>{line.text}</li>
@@ -67,13 +67,13 @@ export default function Home() {
           </div>
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_RECORD) }} />
         </section>
-        <footer className="wakes mx-auto w-full max-w-6xl border-t border-gold/15 px-5 py-6 text-sm leading-6 text-muted sm:px-12">
+        <footer className="wakes mx-auto w-full max-w-6xl border-t border-accent/15 px-5 py-6 text-sm leading-6 text-muted sm:px-12">
           <p>
-            <a href={WHATSAPP} className="text-gold-bright">
+            <a href={WHATSAPP} className="text-accent-bright">
               WhatsApp · {WHATSAPP_SHOWN}
             </a>
             {" · "}
-            <a href={`mailto:${SITE.email}`} className="text-gold-bright">
+            <a href={`mailto:${SITE.email}`} className="text-accent-bright">
               {SITE.email}
             </a>
             {" · "}

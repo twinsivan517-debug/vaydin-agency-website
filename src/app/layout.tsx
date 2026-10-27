@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   ...(LISTED ? {} : { robots: { index: false, follow: false } }),
 };
 
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#0d0807" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#050a08" };
 
 /* GitHub Pages sets no security headers on a custom domain; the referrer
    policy is the one that works as a meta tag. */
