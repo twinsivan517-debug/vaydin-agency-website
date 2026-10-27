@@ -1,24 +1,9 @@
 import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Stage } from "@/components/Stage";
-import { answer } from "@/lib/answers";
 import { SITE, WHATSAPP, WHATSAPP_SHOWN } from "@/lib/site";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
-
-/* The short FAQ: eight of his own answers, who Vaydin is, as plain text for
-   visitors who read rather than tap and for search engines and AI assistants,
-   and the same words in the page's FAQ record. His spoken address is written. */
-const FAQ = ["what", "who", "where", "legit", "diagnostic", "engine", "bot", "price"].map((id) => {
-  const a = answer(id);
-  return { question: a.question, answer: a.answer.replaceAll("hello at vaydin dot agency", SITE.email) };
-});
-
-const FAQ_RECORD = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.question, acceptedAnswer: { "@type": "Answer", text: f.answer } })),
-};
 
 /* The problems a clinic lives with and what Vaydin does about each, under
    him, in the site's own claims (the diagnostic's and the engine's pages,
@@ -44,8 +29,10 @@ const PROBLEMS = [
 ];
 
 /* The home page is the guide, his headline over him, the five pages beside
-   him. Under him the problems and the answers, then the FAQ, so the page
-   reads, and is found, before any script or clip arrives. (The five pages as
+   him. Under him the problems and the answers, so the page reads, and is
+   found, before any script or clip arrives (the FAQ under it went on
+   2026-10-27, the owner's word, and its FAQ record with it: a record needs
+   its questions on the page). (The five pages as
    tiles under him went on 2026-10-27, the owner's word: the tiles beside him
    and the menu already name them.) */
 export default function Home() {
@@ -94,20 +81,6 @@ export default function Home() {
               Ask on WhatsApp
             </a>
           </div>
-        </section>
-        <section aria-labelledby="faq-title" className="wakes mx-auto w-full max-w-6xl px-5 pb-12 sm:px-12">
-          <h2 id="faq-title" className="label text-gold-bright">
-            Questions clinics ask
-          </h2>
-          <div className="mt-4 grid max-w-4xl gap-x-10 gap-y-6 md:grid-cols-2">
-            {FAQ.map((f) => (
-              <div key={f.question}>
-                <h3 className="font-display text-lg leading-snug">{f.question}</h3>
-                <p className="mt-1 text-base leading-7 text-muted">{f.answer}</p>
-              </div>
-            ))}
-          </div>
-          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_RECORD) }} />
         </section>
         <footer className="wakes mx-auto w-full max-w-6xl border-t border-accent/15 px-5 py-6 text-sm leading-6 text-muted sm:px-12">
           <p>
