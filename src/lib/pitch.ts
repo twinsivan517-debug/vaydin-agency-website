@@ -9,7 +9,8 @@
 export type Mood = "hop" | "shake";
 export type Line = { id: string; text: string; audio?: string; at?: number; mood?: Mood };
 export type ChapterId = "meet" | "what" | "how" | "gain" | "start" | "price";
-export type Card = { title: string; body: string; facts: string[]; links: { href: string; label: string }[] };
+/* The card beside him while he tells a chapter: its title, three facts, the pages to open. What he says is in his cloud. */
+export type Card = { title: string; facts: string[]; links: { href: string; label: string }[] };
 export type Chapter = { id: ChapterId; label: string; clip: "opener" | "talk"; lines: Line[]; card: Card };
 
 /* The greeting, his three opening lines in one recording. */
@@ -39,7 +40,6 @@ export const CHAPTERS: Chapter[] = [
     ],
     card: {
       title: "Vaydin · Dubai",
-      body: "An operations partner for aesthetic and wellness clinics in Dubai and the GCC. We find the patients your clinic never saw, then run the front door that keeps them.",
       facts: ["Three steps: Intelligence, the Engine, Grow", "A Dubai free-zone company, licensed under IFZA", "Measured, not promised"],
       links: [{ href: "/diagnose.html", label: "Start with the diagnostic" }],
     },
@@ -57,7 +57,6 @@ export const CHAPTERS: Chapter[] = [
     ],
     card: {
       title: "What is Vaydin?",
-      body: "An operations partner for aesthetic and wellness clinics in Dubai and the GCC.",
       facts: ["We measure how your clinic looks to a new patient", "Then we run its front door: WhatsApp, Google, reviews, Instagram, the website", "A Dubai free-zone company, licensed under IFZA"],
       links: [{ href: "/diagnose.html", label: "Start with the diagnostic" }],
     },
@@ -80,7 +79,6 @@ export const CHAPTERS: Chapter[] = [
     ],
     card: {
       title: "How we work",
-      body: "Intelligence sees it. The Revenue Engine fixes it, and runs it.",
       facts: [
         "A real person shops your clinic every thirty to sixty days",
         "Google and rivals read weekly; Instagram and website monthly",
@@ -110,7 +108,6 @@ export const CHAPTERS: Chapter[] = [
     ],
     card: {
       title: "What you gain",
-      body: "The patients you are losing in public, and the proof.",
       facts: ["Every inquiry answered and booked", "Every review answered within a day; the quiet ones revived", "Evidence a patient could find themselves, scored on one dashboard"],
       links: [{ href: "/engine.html", label: "Inside the engine" }],
     },
@@ -133,7 +130,6 @@ export const CHAPTERS: Chapter[] = [
     ],
     card: {
       title: "How it starts",
-      body: "The diagnostic first, unannounced. The Engine when you want it fixed and run.",
       facts: ["For the diagnostic: nothing from you", "For the Engine: access to Google, Instagram, the website and your WhatsApp number, which stays yours", "One kickoff call on day one; three months minimum"],
       links: [{ href: "/fix.html", label: "The first thirty days" }],
     },
@@ -152,7 +148,6 @@ export const CHAPTERS: Chapter[] = [
     ],
     card: {
       title: "Your plan",
-      body: "Every plan is built for your clinic. Add the Engine when you want it fixed and run for you.",
       facts: ["Every plan starts with the measurement", "A person sends yours on WhatsApp, no forms", "Intelligence month to month; the Engine three months minimum"],
       links: [{ href: "/pricing.html", label: "Ask for your plan" }],
     },

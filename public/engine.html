@@ -26,9 +26,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
   :root{
-    --bg:#050a08; --bg-card:#0b1410; --bg-elevated:#101c16; --border:#1a2e25;
+    --bg:#040706; --bg-card:#090f0c; --bg-elevated:#0d1611; --border:#152219;
     --tx:#edf3ef; --tx-muted:#9db0a6; --tx-faint:#6f8378;
-    --gold:#c9a44a; --gold-light:#e8d48b; --gold-deep:#8a6d1b; --gold-bright:#f5d978; --accent:#3ecf9b; --accent-light:#7fe8c0;
+    --gold:#c9a44a; --gold-light:#e8d48b; --gold-deep:#8a6d1b; --gold-bright:#f5d978; --accent:#2f9f77; --accent-light:#6fd6a8;
     --ok:#4ade80; --warn:#fbbf24; --critical:#f87171;
     --volt:#34e3f0; --volt-deep:#19a7b8;
     --display:'Marcellus', Georgia, serif;
@@ -43,7 +43,7 @@
     background:
       radial-gradient(1100px 750px at 82% 14%, rgba(20,64,72,0.20), transparent 62%),
       radial-gradient(950px 700px at 8% 88%, rgba(14,48,54,0.18), transparent 60%),
-      radial-gradient(700px 520px at 50% 50%, rgba(26,46,37,0.10), transparent 65%),
+      radial-gradient(700px 520px at 50% 50%, rgba(21,34,25,0.10), transparent 65%),
       var(--bg);
     background-attachment:fixed}
   a{color:var(--accent);text-decoration:none}
@@ -53,8 +53,8 @@
 
   /* ---------- nav (canonical bar) ---------- */
   nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:34px;
-      padding:13px 40px;background:rgba(11,20,16,0.93);backdrop-filter:blur(12px);
-      border-bottom:1px solid rgba(62,207,155,0.30)}
+      padding:13px 40px;background:rgba(9,15,12,0.93);backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(47,159,119,0.30)}
   .brand{display:flex;align-items:center;gap:13px}
   .brand img{width:32px;height:32px}
   .wordmark{font-family:var(--display);font-size:20px;letter-spacing:0.32em;color:var(--gold-light)}
@@ -71,18 +71,18 @@
   .nav-contact{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.08em;line-height:1}
   .nav-contact a{color:#6f8378;transition:color .3s}
   .nav-contact a:hover{color:#f5f1e8}
-  .nav-cta{background:var(--accent);color:#050a08 !important;font-weight:700;padding:11px 24px;font-size:13px;letter-spacing:0.02em;transition:background .3s var(--ease)}
+  .nav-cta{background:var(--accent);color:#040706 !important;font-weight:700;padding:11px 24px;font-size:13px;letter-spacing:0.02em;transition:background .3s var(--ease)}
   .nav-cta:hover{background:var(--accent-light)}
   .nav-here{color:#f5f1e8}
   .nav-burger{display:none;width:40px;height:40px;align-items:center;justify-content:center;cursor:pointer;background:none;border:0;
-    color:var(--accent-light);box-shadow:inset 0 0 0 1px rgba(62,207,155,0.45);margin-left:6px;padding:0}
+    color:var(--accent-light);box-shadow:inset 0 0 0 1px rgba(47,159,119,0.45);margin-left:6px;padding:0}
   .nav-burger svg{width:18px;height:14px;display:block}
 
   /* ---------- the stage ---------- */
   .stage{position:relative;height:100vh;min-height:680px;overflow:hidden}
   #field{position:absolute;top:50%;left:58%;transform:translate(-50%,-50%)}
   .stage-shade{position:absolute;inset:0;pointer-events:none;
-    background:linear-gradient(90deg, rgba(11,20,16,0.92) 0%, rgba(11,20,16,0.55) 34%, transparent 55%)}
+    background:linear-gradient(90deg, rgba(9,15,12,0.92) 0%, rgba(9,15,12,0.55) 34%, transparent 55%)}
 
   /* ---------- console ---------- */
   .console{position:absolute;left:48px;top:96px;bottom:70px;z-index:5;max-width:430px;padding-right:16px;
@@ -112,7 +112,7 @@
 
   /* ---------- HUD panel (appears after the engine absorbs a field) ---------- */
   .hud{position:absolute;right:56px;top:50%;transform:translateY(-50%) translateX(26px);z-index:8;width:350px;
-    background:rgba(11,20,16,0.90);backdrop-filter:blur(10px);padding:28px 30px 24px;
+    background:rgba(9,15,12,0.90);backdrop-filter:blur(10px);padding:28px 30px 24px;
     opacity:0;pointer-events:none;transition:opacity .55s var(--ease), transform .55s var(--ease)}
   .hud.on{opacity:1;pointer-events:auto;transform:translateY(-50%) translateX(0)}
   .hud .bk{position:absolute;width:18px;height:18px;border:1.5px solid var(--volt-deep)}
@@ -147,7 +147,7 @@
   .reveal{opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease), transform 1s var(--ease)}
   .reveal.in{opacity:1;transform:none}
 
-  .cmp-frame{position:relative;background:rgba(11,20,16,0.75);box-shadow:0 30px 70px rgba(0,0,0,0.45), 0 0 0 1px var(--border);
+  .cmp-frame{position:relative;background:rgba(9,15,12,0.75);box-shadow:0 30px 70px rgba(0,0,0,0.45), 0 0 0 1px var(--border);
     display:grid;grid-template-columns:300px 1fr}
   .cmp-frame .bk{position:absolute;width:20px;height:20px;border:1.5px solid var(--volt-deep);z-index:3}
   .cmp-frame .bk.tl{top:-1px;left:-1px;border-right:0;border-bottom:0}
@@ -184,7 +184,7 @@
   .cmp-foot a:hover{color:var(--tx)}
 
   /* ---------- cta band ---------- */
-  .band{margin-top:130px;background:linear-gradient(180deg, transparent 0%, rgba(11,20,16,0.8) 50%, transparent 100%);
+  .band{margin-top:130px;background:linear-gradient(180deg, transparent 0%, rgba(9,15,12,0.8) 50%, transparent 100%);
     border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:96px 48px;text-align:center}
   .band h2{font-family:var(--display);font-weight:400;font-size:clamp(28px,3.3vw,44px);line-height:1.15;margin:0 auto 14px;text-wrap:balance}
   .band p{color:var(--tx-muted);max-width:540px;margin:0 auto 36px}
@@ -216,7 +216,7 @@
     .brand{gap:9px}
     .brand img{width:28px;height:28px}
     .nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;
-      background:rgba(5,10,8,0.995);border-bottom:1px solid rgba(62,207,155,0.30);padding:6px 22px 12px;box-shadow:0 24px 40px rgba(0,0,0,0.5)}
+      background:rgba(4,7,6,0.995);border-bottom:1px solid rgba(47,159,119,0.30);padding:6px 22px 12px;box-shadow:0 24px 40px rgba(0,0,0,0.5)}
     .nav-links.open{display:flex}
     .nav-links a{padding:13px 2px;font-size:17px;border-bottom:1px solid rgba(255,255,255,0.05)}
     .nav-links a:last-child{border-bottom:0}

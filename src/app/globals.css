@@ -1,20 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  /* A forest floor, near black and green, never brown (2026-10-27, the
-     owner's word); mint for what is pressed or tapped; gold only for the
-     mark, him, and a headline's label. */
-  --background: #050a08;
-  --surface: #0b1410;
+  /* A floor near black with a breath of forest green, never brown
+     (2026-10-27, the owner's word: dark the main colour, the green a nuance);
+     forest green for what is pressed or tapped; gold only for the mark, him,
+     and a headline's label. */
+  --background: #040706;
+  --surface: #090f0c;
   --foreground: #edf3ef;
   --muted: #9db0a6;
   --gold: #c9a44a;
   --gold-bright: #f5d978;
-  --accent: #3ecf9b;
-  --accent-bright: #7fe8c0;
+  --accent: #2f9f77;
+  --accent-bright: #6fd6a8;
   --leak: #f87171;
   --proof: #4ade80;
-  --cloud: #123a33;
+  --cloud: #0f2b26;
 }
 
 @theme inline {
@@ -122,7 +123,7 @@ body {
   text-align: center;
   color: var(--foreground);
   border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
-  background: color-mix(in srgb, var(--accent) 6%, rgb(5 10 8 / 0.7));
+  background: color-mix(in srgb, var(--accent) 6%, rgb(4 7 6 / 0.7));
   transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 }
 
@@ -143,7 +144,7 @@ body {
 .hero-door:focus-visible {
   border-color: var(--accent);
   box-shadow: 0 0 26px -6px var(--accent);
-  background: color-mix(in srgb, var(--accent) 12%, rgb(5 10 8 / 0.7));
+  background: color-mix(in srgb, var(--accent) 12%, rgb(4 7 6 / 0.7));
   outline: none;
 }
 
@@ -218,7 +219,7 @@ body {
   height: 2.5rem;
   border-radius: 50%;
   border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent);
-  background: rgb(5 10 8 / 0.7);
+  background: rgb(4 7 6 / 0.7);
   color: var(--accent-bright);
   display: grid;
   place-items: center;
@@ -235,8 +236,8 @@ body::before {
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(60% 45% at 20% 25%, rgb(62 207 155 / 0.07), transparent 70%),
-    radial-gradient(55% 40% at 85% 70%, rgb(15 80 78 / 0.3), transparent 70%),
+    radial-gradient(60% 45% at 20% 25%, rgb(47 159 119 / 0.05), transparent 70%),
+    radial-gradient(55% 40% at 85% 70%, rgb(15 80 78 / 0.2), transparent 70%),
     var(--background);
   background-size: 200% 200%;
   pointer-events: none;
@@ -281,7 +282,7 @@ body::before {
   white-space: nowrap;
   border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent);
   border-radius: 999px;
-  background: rgb(5 10 8 / 0.88);
+  background: rgb(4 7 6 / 0.88);
   color: var(--accent-bright);
   padding: 0.35rem 0.9rem;
   font-size: 0.9rem;
@@ -526,7 +527,7 @@ body.site-awake .mark::before {
   100% { transform: scale(1); }
 }
 
-/* The folder he pulls out: a gold tab on its top edge, a swing in from his
+/* The folder he pulls out: a green tab on its top edge, a swing in from his
    side, and its lines dropping into place one after another. */
 .folder::before {
   content: "";
@@ -536,7 +537,7 @@ body.site-awake .mark::before {
   width: 4.5rem;
   height: 0.55rem;
   border-radius: 0.4rem 0.4rem 0 0;
-  background: var(--gold);
+  background: var(--accent);
 }
 
 @keyframes folder-in {
@@ -551,8 +552,8 @@ body.site-awake .mark::before {
 }
 
 @keyframes cta-lit {
-  0%, 100% { box-shadow: 0 0 0 0 rgb(62 207 155 / 0); }
-  50% { box-shadow: 0 0 0 0.5rem rgb(62 207 155 / 0.35); }
+  0%, 100% { box-shadow: 0 0 0 0 rgb(47 159 119 / 0); }
+  50% { box-shadow: 0 0 0 0.5rem rgb(47 159 119 / 0.35); }
 }
 
 /* Movement only for those who have not asked for less. */

@@ -8,8 +8,10 @@ import type { Shown } from "@/lib/pitchMachine";
 import { WHATSAPP } from "@/lib/site";
 
 /* Each card is a folder he pulls out: it swings in from his side, and its
-   lines drop out one after another while he speaks. */
-const CARD = "folder relative rounded-3xl border border-accent/20 bg-surface p-5";
+   lines drop out one after another while he speaks. Small and plain: what he
+   says is in his cloud, so a card carries only what the cloud does not. */
+const CARD = "folder relative rounded-2xl border border-accent/25 bg-white/[0.03] p-4 backdrop-blur-sm";
+const PAGE = "rounded-full border border-accent/50 bg-accent/10 px-3.5 py-1.5 text-sm text-accent-bright transition-colors hover:bg-accent/20";
 const LINK = "label inline-block border-b border-transparent text-accent-bright transition-colors hover:border-accent-bright";
 
 /* A finger landing on a question starts his answer loading before it lifts. */
@@ -111,8 +113,8 @@ export function Card({ shown, onPick, onSoon, onMore, onLess, onTour, onTourSoon
     return (
       <div className={CARD}>
         <p className="label text-accent-bright">{a.question}</p>
-        <p className="mt-3 leading-7">{a.answer}</p>
-        <a href={a.link.href} className={`${LINK} mt-4`}>
+        <p className="mt-2 text-sm leading-6">{a.answer}</p>
+        <a href={a.link.href} className={`${PAGE} mt-3 inline-block`}>
           {a.link.label}
         </a>
       </div>
@@ -121,19 +123,18 @@ export function Card({ shown, onPick, onSoon, onMore, onLess, onTour, onTourSoon
   const card = chapter(shown.id).card;
   return (
     <div className={CARD}>
-      <p className="font-display text-xl text-gold-bright">{card.title}</p>
-      <p className="mt-2 leading-7">{card.body}</p>
-      <ul className="mt-4 space-y-2 text-muted">
+      <p className="label text-gold-bright">{card.title}</p>
+      <ul className="mt-3 space-y-1.5 text-sm leading-6 text-muted">
         {card.facts.map((fact, index) => (
-          <li key={fact} className="folder-line flex gap-3" style={{ animationDelay: `${0.9 + index * 0.7}s` }}>
-            <span aria-hidden="true" className="mt-[0.7rem] size-1.5 shrink-0 rounded-full bg-accent" />
+          <li key={fact} className="folder-line flex gap-2.5" style={{ animationDelay: `${0.9 + index * 0.7}s` }}>
+            <span aria-hidden="true" className="mt-[0.6rem] size-1.5 shrink-0 rounded-full bg-accent" />
             {fact}
           </li>
         ))}
       </ul>
-      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
+      <div className="mt-3 flex flex-wrap gap-2">
         {card.links.map((link) => (
-          <a key={link.href} href={link.href} className={LINK}>
+          <a key={link.href} href={link.href} className={PAGE}>
             {link.label}
           </a>
         ))}
