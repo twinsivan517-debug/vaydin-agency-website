@@ -79,6 +79,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${sans.variable} ${display.variable} h-full antialiased`}>
       <head>
         <meta name="referrer" content={REFERRER} />
+        {/* Meta's domain verification for the business portfolio (2026-11-08): it must sit in the static head, never added by script. */}
+        <meta name="facebook-domain-verification" content="0zvlv8s6ziuexc3xq3pqdg7ocabo2l" />
       </head>
       <body className="flex min-h-full flex-col">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANISATION) }} />
