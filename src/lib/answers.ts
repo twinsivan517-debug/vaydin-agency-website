@@ -30,7 +30,7 @@ export const ANSWERS: Answer[] = [
     short: "The diagnostic",
     question: "What is the diagnostic?",
     answer:
-      "Every thirty to sixty days a real person messages your clinic on WhatsApp like a new patient. Between shops we read your Google profile and rivals weekly, your Instagram and website monthly. Six rooms, one score, a report every month, and what to fix first.",
+      "Every thirty to sixty days a real person messages your clinic on WhatsApp like a new patient. Between shops we read your Google profile and rivals weekly, your Instagram and website monthly. Six areas, one score, a report every month, and what to fix first.",
     keywords: ["diagnostic", "diagnose", "intelligence", "mystery", "shop", "shopper", "shopping", "audit", "measure", "measured", "measurement", "score", "scored", "scores", "test", "assessment", "report", "first step", "step one", "layer one", "layer 1", "leak", "leaks"],
     link: { href: "/diagnose.html", label: "How the diagnostic works" },
   },
@@ -180,7 +180,7 @@ export const ANSWERS: Answer[] = [
     short: "What we measure",
     question: "What do you measure?",
     answer: "Six scored areas: how your team answers a new patient, how easily a patient can book, your Google reputation, your marketing, how you compare with the clinics around you, and how well set up you are online. One score across all six. We also show whether AI search tools can read your website and see it as a clinic: shown, not scored.",
-    keywords: ["six rooms", "rooms", "room", "dimensions", "dimension", "six dimensions", "what do you measure", "what do you check", "what do you score", "score us on", "criteria", "categories", "what do you look at", "what do you test", "do you score", "do you measure", "do you check", "google", "reviews", "review", "instagram profile"],
+    keywords: ["six rooms", "rooms", "room", "six areas", "areas", "dimensions", "dimension", "six dimensions", "what do you measure", "what do you check", "what do you score", "score us on", "criteria", "categories", "what do you look at", "what do you test", "do you score", "do you measure", "do you check", "google", "reviews", "review", "instagram profile"],
     link: { href: "/diagnose.html", label: "The six areas" },
   },
   {

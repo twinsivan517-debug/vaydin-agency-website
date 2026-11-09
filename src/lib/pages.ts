@@ -12,7 +12,7 @@ export const WELCOME = line("x-welcome", "Hi, welcome to this page. Would you li
 export const SUMMARIES: Record<string, Line> = {
   diagnose: line(
     "p-diagnose",
-    "This is the diagnostic. Unannounced, a real person messages your clinic on WhatsApp like a patient, and we read your Google and Instagram. Every month you get one score across six rooms, with the evidence behind it.",
+    "This is the diagnostic. Unannounced, a real person messages your clinic on WhatsApp like a patient, and we read your Google and Instagram. Every month you get one score across six areas, with the evidence behind it.",
   ),
   fix: line(
     "p-fix",

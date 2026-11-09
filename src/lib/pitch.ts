@@ -68,7 +68,7 @@ export const CHAPTERS: Chapter[] = [
     lines: [
       {
         id: "07",
-        text: "Layer one, Intelligence: every thirty to sixty days a real person messages your clinic on WhatsApp like a new patient. Between shops we read your Google profile and your rivals every week, your Instagram and website every month. Six rooms, one score, and what to fix first.",
+        text: "Layer one, Intelligence: every thirty to sixty days a real person messages your clinic on WhatsApp like a new patient. Between shops we read your Google profile and your rivals every week, your Instagram and website every month. Six areas, one score, and what to fix first.",
         audio: "/voice/07.mp3",
       },
       {
