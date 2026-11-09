@@ -2,7 +2,7 @@
   "_why": "Ship gate on the GitHub runner (scripts/runner-gate.mjs). The candidate is measured side by side with the ANCHOR on one runner. The anchor moves only on the owner's word. The tolerance comes from an A/A test (the anchor against itself on 3 separate runners), written here before any candidate is judged; null means main never deploys.",
   "anchor": "4396036",
   "tolerance": null,
-  "aa_rule": "Written 2026-11-09 before any A/A job ran. Branch gate/aa = the anchor's site + these gate files, so both sides build identical bytes. 3 jobs, one after another, each on its own runner; each job gives d = candidate median - anchor median. A job whose log says the gate could not measure does not count and is run again. tolerance = the largest |d| of the 3, plus 1. If that largest |d| is over 5, nothing is written: the side-by-side method is too noisy here, and the owner decides what next.",
+  "aa_rule": "Written 2026-11-09 before any A/A job ran. Branch gate/aa = the anchor's site + these gate files, so both sides build identical bytes. 5 jobs (the owner's pick, 2026-11-09, on web-studio's review; first written as 3, changed before any job counted), one after another, each on its own runner; each job gives d = candidate median - anchor median. A job whose log says the gate could not measure does not count and is run again (run 42628188860, d = +1, did not count: it crashed after measuring, the keep-alive bug fixed since). tolerance = the largest |d| of the 5, plus 1. If that largest |d| is over 5, nothing is written: the side-by-side method is too noisy here, and the owner decides what next.",
   "floors": {
     "accessibility": 95,
     "best-practices": 90,
