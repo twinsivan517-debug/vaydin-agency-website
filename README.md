@@ -39,7 +39,7 @@ standalone `.html` files in `public/`.
 - `lab/particle-guide/` — how he was made, never shipped: the voice tools (record, time,
   verify, cues), the test pages and mocks, the armour pick. Its own README.
 - `scripts/phone-preview.mjs` — a copy of `out/` that works from any folder, for a private
-  preview link on a phone (a claude.ai artifact) without going live. `ship-gate.mjs`,
+  preview link on a phone (a claude.ai artifact) without going live. `runner-gate.mjs`,
   `arm-hooks.mjs`, `gzip-out.mjs` — the gate and the build.
 - `scripts/` (hers, kept as know-how for clip guides) — `lipsync.py`, `opener_lipsync.py`,
   `opener_lying.py`, `body.py`, `loop.py`, `seal.py`, `green_gate.py`, `rekey.py`,
@@ -54,10 +54,13 @@ all her clips) at `guide-lady-2026-10-21`.
 
 ## The ship gate
 
-`npm install` points git at `.githooks/`. From then on a push to `main` is refused unless
-`.ship/stamp.json` names a commit that passed the ship gate, and nothing but `.ship/` changed
-after it. `git push --no-verify` skips the check, and a stamp written by hand with a real
-commit id passes it; nothing here can stop either. It catches drift, not intent.
+Since 2026-11-09 the gate runs on a GitHub runner, not the laptop (whose scores swung 79 to 90
+on unchanged bytes). Every push to `main` builds the commit, serves `out/` as `npm start` does,
+runs Lighthouse 3 times on the home and judges the middle run against `.github/ship-floors.json`;
+the deploy job needs it, so nothing below a floor goes live (`scripts/runner-gate.mjs`,
+`.github/workflows/pages.yml`). A `gate/**` branch is measured and never deployed: that is how
+the floors were set, from 5 runs of the live commit before any candidate was judged. The
+laptop's pre-push stamp check is retired.
 
 Each page sets its own canonical address in its own `metadata` (see `page.tsx`). Set in the
 layout it would be inherited, and every page would claim to be the home page.

@@ -3,9 +3,12 @@
 // It measures the build of the pushed commit, served the way `npm start` serves it (http-server -s -g),
 // before anything deploys: the deploy job in pages.yml needs this step to pass.
 //
-// Floors live in .github/ship-floors.json. The performance floor was set from 5 runs of the live commit
-// (4396036) on this runner BEFORE any candidate was measured, by a rule written down first: the lowest of
-// those 5 runs. With no floors file (the baseline branch) it only reports, and main never passes without one.
+// Floors live in .github/ship-floors.json, set from 5 runs of the live commit 4396036 on this runner
+// (run 42624917106: performance [69, 90, 90, 94, 94]) BEFORE any candidate was measured. The performance
+// floor is that baseline's median, 90: the same statistic this gate judges, so the live site passes and
+// anything slower fails. The rule first written here, the lowest of the 5 runs, would have set 69 from a
+// cold first run; it was replaced, openly, before any candidate was measured (2026-11-09).
+// With no floors file (the baseline branch) it only reports, and main never passes without one.
 //
 // HONEST LIMIT: this runner removes the laptop's drift. It is not a visitor's phone on mobile data, and it
 // does not make the page faster: about 0.4 s of Next.js start-up on the home is a real cost on every phone.

@@ -1,3 +1,4 @@
 #!/bin/sh
-# Armed by `npm install` (the prepare script points git at this folder).
-exec node scripts/ship-gate.mjs
+# Retired 2026-11-09: the ship gate runs on a GitHub runner for every push to main (pages.yml needs it
+# before deploy; scripts/runner-gate.mjs). The laptop stamp it checked swung 79 to 90 on unchanged bytes.
+exit 0

@@ -1,0 +1,24 @@
+{
+  "_why": "Ship gate floors on the GitHub runner (scripts/runner-gate.mjs). Performance = the median of 5 runs of the live commit 4396036 measured BEFORE any candidate; the other three keep the laptop gate's floors.",
+  "baseline": {
+    "commit": "4396036",
+    "run": 42624917106,
+    "performance_runs": [
+      69,
+      90,
+      90,
+      94,
+      94
+    ],
+    "performance_median": 90,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "floors": {
+    "performance": 90,
+    "accessibility": 95,
+    "best-practices": 90,
+    "seo": 95
+  }
+}
