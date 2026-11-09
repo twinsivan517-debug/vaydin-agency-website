@@ -36,6 +36,8 @@ jobs:
           git worktree add ../anchor "$anchor"
           cd ../anchor && npm ci --ignore-scripts && npm run build
       - run: npm ci --ignore-scripts
+      - name: The suite (the pitch cases and both gates' tests); a red suite never deploys
+        run: npm test
       - run: npm run build
       - name: Ship gate on this runner (fails closed)
         env:

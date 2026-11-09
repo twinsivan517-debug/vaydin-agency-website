@@ -122,12 +122,14 @@ test("a key committed, then deleted only on disk, is still refused", () => {
   writeFileSync(join(dir, "config.ts"), 'export const k = "";\n');
   assert.equal(pushed(dir, withKey, start).length, 1);
 });
-test("a new branch scans every commit it brings; a secret file is refused by name", () => {
-  const { dir, commit } = repo();
+test("a new branch scans every commit it brings, not only its tip; a secret file is refused by name", () => {
+  const { dir, g, commit } = repo();
   commit("a.ts", "export const a = 1;\n", "start");
   const env = commit(".env", "TOKEN=1\n", "env");
-  const found = pushed(dir, env, ZERO);
-  assert.ok(found.some((f) => /\.env {2}is a secret file/.test(f)), found.join("; "));
+  g("rm", "-q", ".env");
+  g("commit", "-q", "-m", "drop env");
+  const found = pushed(dir, g("rev-parse", "HEAD"), ZERO);
+  assert.ok(found.some((f) => f.startsWith(env.slice(0, 7)) && /\.env {2}is a secret file/.test(f)), found.join("; "));
 });
 test("deleting a branch pushes no bytes and passes", () => {
   const { dir, commit } = repo();
