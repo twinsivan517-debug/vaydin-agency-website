@@ -19,6 +19,7 @@
 import { execFileSync, spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { scan as secretScan } from "./secret-scan.mjs";
+import { exitCode, judge } from "./gate-judge.mjs";
 
 const RUNS = Number(process.env.RUNS || 5);
 const FLOORS = JSON.parse(readFileSync(".github/ship-floors.json", "utf8"));
@@ -62,8 +63,6 @@ function lighthouse(t, label) {
   return { scores, bytes, bench: Math.round(d.environment?.benchmarkIndex || 0) };
 }
 
-const median = (xs) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];
-
 async function deadLinks(t) {
   const html = await (await fetch(url(t))).text();
   const own = new URL(site.url).host.replace(/^www\./, "");
@@ -106,22 +105,10 @@ try {
   for (let n = 0; n < RUNS; n++) for (const t of (n % 2 ? [...targets].reverse() : targets)) runs[t.name].push(lighthouse(t, n));
   for (const t of targets) console.log(`[runner-gate] ${t.name.padEnd(9)} performance in run order ${JSON.stringify(runs[t.name].map((r) => r.scores.performance))} · benchmark ${JSON.stringify(runs[t.name].map((r) => r.bench))}`);
 
-  const cand = runs.candidate, perf = median(cand.map((r) => r.scores.performance));
-  const judged = cand.find((r) => r.scores.performance === perf);
-  console.log(`[runner-gate] candidate median: performance ${perf} · a11y ${judged.scores.accessibility} · BP ${judged.scores["best-practices"]} · SEO ${judged.scores.seo} · ${judged.bytes == null ? "weight not measured" : judged.bytes.toLocaleString("en") + " b"}`);
-  if (runs.anchor) {
-    const anchor = median(runs.anchor.map((r) => r.scores.performance));
-    console.log(`[runner-gate] anchor ${FLOORS.anchor} median: performance ${anchor} · difference ${perf - anchor} · tolerance ${TOLERANCE ?? "not yet measured"}`);
-    if (TOLERANCE == null) { if (!reportOnly) fails.push("no tolerance yet: the A/A test sets it, and main never deploys before it"); }
-    else if (perf < anchor - TOLERANCE) fails.push(`performance ${perf} is more than ${TOLERANCE} under the anchor's ${anchor}, measured side by side`);
-  } else if (!reportOnly) {
-    fails.push("the anchor could not be built to measure side by side: main never deploys unjudged");
-  }
-  for (const [k, f] of Object.entries(ABSOLUTE)) if ((judged.scores[k] ?? 0) < f) fails.push(`${k}: ${judged.scores[k]} is under the floor of ${f}`);
-  const limit = BYTES[site.tier];
-  if (!limit) fails.push(`site.json must name a tier, one of ${Object.keys(BYTES).join(", ")}`);
-  else if (!judged.bytes) fails.push("page weight: not measured");
-  else if (judged.bytes > limit) fails.push(`page weight: ${judged.bytes.toLocaleString("en")} b is over the ${site.tier} budget of ${limit.toLocaleString("en")} b`);
+  const verdict = judge({ cand: runs.candidate, anchor: runs.anchor ?? null, tolerance: TOLERANCE, floors: ABSOLUTE,
+    budget: BYTES[site.tier], tier: site.tier, tiers: Object.keys(BYTES), reportOnly, anchorName: FLOORS.anchor });
+  for (const line of verdict.log) console.log(line);
+  fails.push(...verdict.fails);
   // Lighthouse ran through execFileSync, which blocks this process's event loop for minutes; meanwhile the
   // server closed the idle keep-alive socket from up(). Without one yield, the next fetch writes into that dead
   // socket: "fetch failed" (ECONNRESET). Proven 2026-11-09: run 42628188860 failed here, and a local repro
@@ -136,7 +123,7 @@ try {
 
 if (fails.length) {
   console.log("[runner-gate] " + (reportOnly ? "REPORT (gate branch, never deploys):" : "REFUSED:") + "\n  " + fails.join("\n  "));
-  if (!reportOnly) process.exit(1);
+  if (exitCode(fails, reportOnly)) process.exit(1);
 } else {
   console.log("[runner-gate] PASSED");
 }
