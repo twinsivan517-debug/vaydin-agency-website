@@ -24,7 +24,7 @@ const PROBLEMS = [
   {
     title: "The front door nobody checks",
     problem: "Your Google profile, reviews, Instagram and website are judged by patients every day and seen by nobody inside the clinic.",
-    vaydin: "A real person shops your clinic unannounced every thirty to sixty days. Six rooms, one score, what to fix first. Then we run it: every review answered within a day.",
+    vaydin: "A real person shops your clinic unannounced every thirty to sixty days. Six areas, one score, what to fix first. Then we run it: every review answered within a day.",
   },
 ];
 
