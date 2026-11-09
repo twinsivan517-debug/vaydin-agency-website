@@ -12,6 +12,8 @@
 // are judged as web-studio's laptop ship_check judged them (spine/rituals/ship_check.py verdict()).
 //
 // HONEST LIMIT: the anchor must be moved by hand, on the owner's word, when a slower page is accepted.
+// Reduce motion is a text search without ship_check's starter exclusion (the runner has no starter to compare):
+// a new site cloned from the starter would pass on an untouched starter file. vaydin-night passed WITH it.
 // This is not a visitor's phone on mobile data, and it does not make the page faster: about 0.4 s of
 // Next.js start-up on the home is a real cost on every phone.
 import { execFileSync, spawn } from "node:child_process";
@@ -106,7 +108,7 @@ try {
 
   const cand = runs.candidate, perf = median(cand.map((r) => r.scores.performance));
   const judged = cand.find((r) => r.scores.performance === perf);
-  console.log(`[runner-gate] candidate median: performance ${perf} · a11y ${judged.scores.accessibility} · BP ${judged.scores["best-practices"]} · SEO ${judged.scores.seo} · ${judged.bytes.toLocaleString("en")} b`);
+  console.log(`[runner-gate] candidate median: performance ${perf} · a11y ${judged.scores.accessibility} · BP ${judged.scores["best-practices"]} · SEO ${judged.scores.seo} · ${judged.bytes == null ? "weight not measured" : judged.bytes.toLocaleString("en") + " b"}`);
   if (runs.anchor) {
     const anchor = median(runs.anchor.map((r) => r.scores.performance));
     console.log(`[runner-gate] anchor ${FLOORS.anchor} median: performance ${anchor} · difference ${perf - anchor} · tolerance ${TOLERANCE ?? "not yet measured"}`);
@@ -120,9 +122,14 @@ try {
   if (!limit) fails.push(`site.json must name a tier, one of ${Object.keys(BYTES).join(", ")}`);
   else if (!judged.bytes) fails.push("page weight: not measured");
   else if (judged.bytes > limit) fails.push(`page weight: ${judged.bytes.toLocaleString("en")} b is over the ${site.tier} budget of ${limit.toLocaleString("en")} b`);
+  // Lighthouse ran through execFileSync, which blocks this process's event loop for minutes; meanwhile the
+  // server closed the idle keep-alive socket from up(). Without one yield, the next fetch writes into that dead
+  // socket: "fetch failed" (ECONNRESET). Proven 2026-11-09: run 42628188860 failed here, and a local repro
+  // failed after an 8 s block and passed after the same block plus one yield.
+  await new Promise((r) => setTimeout(r, 50));
   for (const d of await deadLinks(CAND)) fails.push(`dead link: ${d}`);
 } catch (e) {
-  fails.push(`the gate could not measure: ${e.message}`);
+  fails.push(`the gate could not measure: ${e.message}${e.cause ? ` (${e.cause.code || e.cause.message})` : ""}`);
 } finally {
   for (const s of servers) s.kill();
 }
