@@ -1,9 +1,9 @@
 # Builds the export, judges it with the ship gate on this runner, and publishes it to GitHub Pages
 # on every push to main. Each action is pinned to a commit, not a tag: a moved tag cannot run other
 # code here. Dependabot proposes the bumps.
-# The ship gate runs HERE since 2026-11-09 (the owner's yes, via web-studio): the laptop's scores
-# swung 79 to 90 on unchanged bytes. The deploy job needs the gate step to pass; a gate/** branch
-# is measured and never deployed (that is how the floors were set). See scripts/runner-gate.mjs.
+# The ship gate runs HERE since 2026-11-09 (the owner's yes, via web-studio). It builds a fixed ANCHOR
+# commit too and measures both on this one runner, side by side (scripts/runner-gate.mjs says why). The deploy
+# job needs it; a gate/** branch is measured and reported, never deployed.
 name: pages
 on:
   push:
@@ -20,16 +20,26 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     env:
-      RUNS: ${{ startsWith(github.ref, 'refs/heads/gate/') && 5 || 3 }}
+      RUNS: 5
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: npm
+      - name: Build the anchor commit beside the candidate (.github/ship-floors.json; moves only on the owner's word)
+        run: |
+          anchor=$(node -p "require('./.github/ship-floors.json').anchor")
+          echo "anchor commit: $anchor"
+          git worktree add ../anchor "$anchor"
+          cd ../anchor && npm ci --ignore-scripts && npm run build
       - run: npm ci --ignore-scripts
       - run: npm run build
-      - name: Ship gate on this runner (fails closed below the floors)
+      - name: Ship gate on this runner (fails closed)
+        env:
+          ANCHOR_OUT: ../anchor/out
         run: node scripts/runner-gate.mjs
       - if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3

@@ -1,4 +1,6 @@
 #!/bin/sh
-# Retired 2026-11-09: the ship gate runs on a GitHub runner for every push to main (pages.yml needs it
-# before deploy; scripts/runner-gate.mjs). The laptop stamp it checked swung 79 to 90 on unchanged bytes.
-exit 0
+# Armed by `npm install` (the prepare script points git at this folder).
+# Since 2026-11-09 the ship gate runs on a GitHub runner (pages.yml, scripts/runner-gate.mjs). What stays on
+# the laptop is the one check that must happen BEFORE the bytes reach the public repo: no key, no secret file.
+# It scans the files tracked in the checked-out tree, not the commits being pushed.
+exec node scripts/secret-scan.mjs
