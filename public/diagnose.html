@@ -375,18 +375,20 @@
   <div class="console">
     <div class="eyebrow"><span class="pulse"></span>STEP 01 · THE DIAGNOSTIC · EVERY PLAN STARTS HERE</div>
     <h1 class="grad-text">We measure your clinic<br>the way a patient <span class="red">meets it</span>.</h1>
-    <p>Unannounced, every 30 to 60 days, a trained shopper approaches your clinic like any new patient. Everything that happens is scored across <b>six dimensions</b>. <b>Press one</b> and watch the scan lock on, then read exactly what we test.</p>
+    <p>Unannounced, every 30 to 60 days, a trained shopper approaches your clinic like any new patient. What the shop finds, and what we read about your clinic online, builds one score from <b>six dimensions</b>. <b>Press one</b> and watch the scan lock on, then read exactly what we test.</p>
 
     <div class="fgroup">
-      <div class="gh">THE SIX DIMENSIONS · SAMPLE SCORES</div>
-      <button class="frow" data-dim="response"><span class="dot" style="background:#f87171"></span><span class="fn">First response</span><span class="val" style="color:#f87171">38</span><span class="arr">→</span></button>
-      <button class="frow" data-dim="booking"><span class="dot" style="background:#fbbf24"></span><span class="fn">The booking push</span><span class="val" style="color:#fbbf24">52</span><span class="arr">→</span></button>
-      <button class="frow" data-dim="follow"><span class="dot" style="background:#f87171"></span><span class="fn">Follow-through</span><span class="val" style="color:#f87171">44</span><span class="arr">→</span></button>
-      <button class="frow" data-dim="google"><span class="dot" style="background:#4ade80"></span><span class="fn">The front door: Google &amp; Instagram</span><span class="val" style="color:#4ade80">74</span><span class="arr">→</span></button>
-      <button class="frow" data-dim="reviews"><span class="dot" style="background:#4ade80"></span><span class="fn">Reviews &amp; reputation</span><span class="val" style="color:#4ade80">70</span><span class="arr">→</span></button>
-      <button class="frow" data-dim="website"><span class="dot" style="background:#4ade80"></span><span class="fn">The website reality</span><span class="val" style="color:#4ade80">88</span><span class="arr">→</span></button>
+      <div class="gh">HOW YOUR ONE SCORE IS BUILT · SAMPLE</div>
+      <button class="frow" data-dim="team"><span class="dot" style="background:#f87171"></span><span class="fn">How your team answers</span><span class="val" style="color:#f87171">38</span><span class="arr">→</span></button>
+      <button class="frow" data-dim="book"><span class="dot" style="background:#fbbf24"></span><span class="fn">How easily patients can book</span><span class="val" style="color:#fbbf24">52</span><span class="arr">→</span></button>
+      <button class="frow" data-dim="reputation"><span class="dot" style="background:#4ade80"></span><span class="fn">Your Google reputation</span><span class="val" style="color:#4ade80">74</span><span class="arr">→</span></button>
+      <button class="frow" data-dim="marketing"><span class="dot" style="background:#94a3b8"></span><span class="fn">Your marketing reach</span><span class="val" style="color:#94a3b8">61</span><span class="arr">→</span></button>
+      <button class="frow" data-dim="rivals"><span class="dot" style="background:#fbbf24"></span><span class="fn">You versus nearby clinics</span><span class="val" style="color:#fbbf24">58</span><span class="arr">→</span></button>
+      <button class="frow" data-dim="setup"><span class="dot" style="background:#4ade80"></span><span class="fn">How well set up you are</span><span class="val" style="color:#4ade80">88</span><span class="arr">→</span></button>
+      <div class="gh">SHOWN, NOT SCORED</div>
+      <button class="frow" data-dim="ai"><span class="dot" style="background:#94a3b8"></span><span class="fn">Can AI search read your site</span><span class="val" style="color:#94a3b8">6 of 6</span><span class="arr">→</span></button>
     </div>
-    <div class="snote">SAMPLE · A FICTIONAL CLINIC. YOUR SCORES ARE DRAWN FROM YOUR OWN SHOP.</div>
+    <div class="snote">SAMPLE · A FICTIONAL CLINIC. YOUR REPORT SHOWS ONE SCORE AND ITS LETTER, BUILT FROM THESE SIX, AND A LETTER FOR EACH CHANNEL.</div>
   </div>
 
   <div class="hud" id="hud">
@@ -582,39 +584,44 @@
 
   /* ================= DIMENSION DATA ================= */
   var DIMS = {
-    'response': {
-      name:'First response', val:38, color:'#f87171',
-      exp:'We message your clinic as a patient (evening, weekend, mid-day) and time the reply to the minute. Then we read it: did it answer the question, or deflect it? Speed and substance, both recorded.',
-      rec:['MINUTES TO FIRST REPLY','AFTER-HOURS TEST','ANSWERED OR DEFLECTED']
+    'team': {
+      name:'How your team answers', val:38, color:'#f87171',
+      exp:'How fast your team replies to a new patient on WhatsApp, how well they answer, and whether they follow up.',
+      rec:['REPLY SPEED','THE ANSWERS','FOLLOW-UP']
     },
-    'booking': {
-      name:'The booking push', val:52, color:'#fbbf24',
-      exp:'Interest means nothing until someone offers a time. We record whether your clinic proposed a slot, asked for the booking, or sent the patient away to call during working hours.',
-      rec:['SLOT OFFERED?','CALL-US DEFLECTION','CHAT-TO-BOOKING PATH']
+    'book': {
+      name:'How easily patients can book', val:52, color:'#fbbf24',
+      exp:'Whether a patient can book online, which booking tool you use, whether the chat offers real times, and whether your site works on a phone.',
+      rec:['ONLINE BOOKING','TIMES OFFERED IN THE CHAT','WORKS ON A PHONE']
     },
-    'follow': {
-      name:'Follow-through', val:44, color:'#f87171',
-      exp:'We go quiet on purpose, the way real patients do, and record what happens next. A day of silence is where most clinics lose the patient forever.',
-      rec:['FOLLOW-UP SENT?','HOW SOON','HOW IT READS']
+    'reputation': {
+      name:'Your Google reputation', val:74, color:'#4ade80',
+      exp:'Your Google rating, how many reviews you have, whether recent reviews are rising or falling, and any recent low rating.',
+      rec:['RATING','REVIEW COUNT','RECENT TREND']
     },
-    'google': {
-      name:'The front door: Google & Instagram', val:74, color:'#4ade80',
-      exp:'Before any message, we review what a searching patient sees: your Google profile (hours, prices, photos, unanswered questions), your Instagram, and how quiet it has gone; and how you sit against the three clinics beside you on the map.',
-      rec:['PROFILE ACCURACY','INSTAGRAM ACTIVITY','THE THREE CLINICS BESIDE YOU']
+    'marketing': {
+      name:'Your marketing reach', val:61, color:'#94a3b8', noVerdict:true,
+      exp:'Whether you run adverts, and whether your website is live, shows prices and links to your Instagram.',
+      rec:['ADVERTS RUNNING','PRICES ON YOUR SITE','LINK TO INSTAGRAM']
     },
-    'reviews': {
-      name:'Reviews & reputation', val:70, color:'#4ade80',
-      exp:'Your rating, its trend, the reviews nobody answered, and what your replies reveal, including the privacy slips most front desks never notice.',
-      rec:['RATING TREND','UNANSWERED REVIEWS','REPLY QUALITY']
+    'rivals': {
+      name:'You versus nearby clinics', val:58, color:'#fbbf24',
+      exp:'Your Google rating and review count against the clinics around you.',
+      rec:['YOUR RATING VS THEIRS','REVIEW COUNTS','THE CLINICS AROUND YOU']
     },
-    'website': {
-      name:'The website reality', val:88, color:'#4ade80',
-      exp:'Not the design. The honesty. Current prices, real treatments, working numbers, working links. A patient checks before they trust. So do we.',
-      rec:['PRICE CURRENCY','CONTACT PATHS','TREATMENT LIST']
+    'setup': {
+      name:'How well set up you are', val:88, color:'#4ade80',
+      exp:'Whether you are on WhatsApp, Instagram, a website and Google; whether your listing is claimed and your Instagram is a business account; and whether you have your own website.',
+      rec:['ON EVERY CHANNEL','LISTING CLAIMED','BUSINESS ACCOUNT']
+    },
+    'ai': {
+      name:'Can AI search read your site', shown:'6 of 6 allowed · clinic markup: none', color:'#94a3b8',
+      exp:'Whether AI search tools (ChatGPT, Claude, Perplexity, Google, Bing) are allowed to read your website and can tell it is a clinic.',
+      rec:['AI SEARCH TOOLS CHECKED','ALLOWED TO READ','CLINIC MARKUP']
     }
   };
-  var ORDER = ['response','booking','follow','google','reviews','website'];
-  var LABELS = ['RESPONSE','BOOKING','FOLLOW-UP','GOOGLE','REVIEWS','WEBSITE'];
+  var ORDER = ['team','book','reputation','marketing','rivals','setup'];
+  var LABELS = ['TEAM','BOOKING','GOOGLE','MARKETING','RIVALS','SET-UP'];
 
   /* ================= ticker ================= */
   var flows = [
@@ -752,8 +759,10 @@
     var D = DIMS[id];
     hudTitle.textContent = D.name;
     hudExp.textContent = D.exp;
-    hudCount.textContent = 'DIMENSION ' + ('0' + (ORDER.indexOf(id) + 1)).slice(-2) + '/06 · THE SHOP';
-    hudScore.innerHTML = 'SAMPLE SCORE: <span style="color:' + D.color + '">' + D.val + ' / 100 · ' + band(D.val) + '</span>';
+    var at = ORDER.indexOf(id);
+    hudCount.textContent = at < 0 ? 'SHOWN, NOT SCORED' : 'DIMENSION ' + ('0' + (at + 1)).slice(-2) + '/06';
+    hudScore.innerHTML = D.shown ? 'SAMPLE READ: <span style="color:' + D.color + '">' + D.shown + '</span>'
+      : 'SAMPLE SCORE: <span style="color:' + D.color + '">' + D.val + ' / 100 · ' + (D.noVerdict ? 'NOT ENOUGH MEASURED FOR A VERDICT' : band(D.val)) + '</span>';
     hudChs.innerHTML = D.rec.map(function(c){ return '<span>' + c + '</span>'; }).join('');
     hud.classList.add('on');
   }
