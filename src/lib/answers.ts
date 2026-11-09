@@ -179,7 +179,7 @@ export const ANSWERS: Answer[] = [
     id: "rooms",
     short: "What we measure",
     question: "What do you measure?",
-    answer: "Six scored areas: how your team answers a new patient (reply speed, the answers, follow-up), how easily a patient can book (online booking, the chat offering times, a phone-friendly site), your Google reputation, your marketing (the adverts you run and your online presence), how you compare with the clinics around you, and how well set up you are online. One score across all six. We also show whether AI search tools can read your website and see it as a clinic: shown, not scored.",
+    answer: "Six scored areas: how your team answers a new patient, how easily a patient can book, your Google reputation, your marketing, how you compare with the clinics around you, and how well set up you are online. One score across all six. We also show whether AI search tools can read your website and see it as a clinic: shown, not scored.",
     keywords: ["six rooms", "rooms", "room", "dimensions", "dimension", "six dimensions", "what do you measure", "what do you check", "what do you score", "score us on", "criteria", "categories", "what do you look at", "what do you test", "do you score", "do you measure", "do you check", "google", "reviews", "review", "instagram profile"],
     link: { href: "/diagnose.html", label: "The six areas" },
   },
