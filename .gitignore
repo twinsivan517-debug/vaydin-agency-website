@@ -51,3 +51,6 @@ next-env.d.ts
 /media/guide/bodies/*.mp4
 /media/guide/bodies/*.jpg
 __pycache__/
+
+# the houses' verbatim truth reads: private (they quote the owner and hold business facts); the public ledger keeps pointers
+/lab/ledger/*.private.json

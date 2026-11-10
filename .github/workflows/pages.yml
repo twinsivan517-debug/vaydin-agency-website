@@ -39,6 +39,8 @@ jobs:
       - name: The suite (the pitch cases and both gates' tests); a red suite never deploys
         run: npm test
       - run: npm run build
+      - name: The sentence ledger (lab/ledger/ledger.json) reads the built pages; an untagged sentence or a claim with no truth read never deploys
+        run: npm run ledger
       - name: Ship gate on this runner (fails closed)
         env:
           ANCHOR_OUT: ../anchor/out

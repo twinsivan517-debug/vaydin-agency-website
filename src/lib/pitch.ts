@@ -8,7 +8,7 @@
 
 export type Mood = "hop" | "shake";
 export type Line = { id: string; text: string; audio?: string; at?: number; mood?: Mood };
-export type ChapterId = "meet" | "what" | "how" | "gain" | "start" | "price";
+export type ChapterId = "meet" | "what" | "how" | "gain" | "see" | "start" | "price";
 /* The card beside him while he tells a chapter: its title, three facts, the pages to open. What he says is in his cloud. */
 export type Card = { title: string; facts: string[]; links: { href: string; label: string }[] };
 export type Chapter = { id: ChapterId; label: string; clip: "opener" | "talk"; lines: Line[]; card: Card };
@@ -51,7 +51,7 @@ export const CHAPTERS: Chapter[] = [
     lines: [
       {
         id: "w1",
-        text: "Vaydin is a Dubai company for aesthetic and wellness clinics. We measure how your clinic looks to a new patient, then run its front door for you: WhatsApp answered and booked, your Google profile checked daily and a reply ready for every review, with Instagram, email and your website built around your clinic.",
+        text: "Vaydin is a Dubai company for aesthetic and wellness clinics. We measure how your clinic looks to a new patient, then run its front door for you: WhatsApp answered and booked, your Google profile checked daily and a reply ready for every new review, with Instagram, email and your website built around your clinic.",
         audio: "/voice/w1.mp3",
       },
     ],
@@ -73,7 +73,7 @@ export const CHAPTERS: Chapter[] = [
       },
       {
         id: "08",
-        text: "Layer two, the Revenue Engine: on your own WhatsApp number a patient gets your menu at once and books inside the chat. Visits are reminded, your quiet list is invited back, and every review gets a reply ready for your reception to post with one tap. Four more are built around your clinic, and the Intelligence keeps scoring us.",
+        text: "Layer two, the Revenue Engine: on your own WhatsApp number a patient gets your menu at once and books inside the chat. Visits booked in the chat are reminded, your quiet list is invited back, and every new review gets a reply ready for your reception to post with one tap. Four more are built around your clinic, and the Intelligence keeps reading your clinic from outside.",
         audio: "/voice/08.mp3",
       },
     ],
@@ -97,19 +97,30 @@ export const CHAPTERS: Chapter[] = [
     lines: [
       {
         id: "g1",
-        text: "You gain the patients you are losing in public: a WhatsApp inquiry answered at once and booked inside the chat, a reply ready for every review, the quiet ones invited back, and each step counted on one page.",
+        text: "You gain the patients you are losing in public: a WhatsApp inquiry answered at once and booked inside the chat, a reply ready for every new review, the quiet ones you marked invited back, and each step counted on one page.",
         audio: "/voice/g1.mp3",
       },
       {
         id: "10",
-        text: "Everything we measure is evidence a patient could find themselves, scored and explained, counted on one dashboard. And the next unannounced shop scores us too. Measured, not promised.",
+        text: "Everything we measure is evidence a patient could find themselves, explained on one page. And what the engine does is counted there too. Measured, not promised.",
         audio: "/voice/10.mp3",
       },
     ],
     card: {
       title: "What you gain",
-      facts: ["A WhatsApp inquiry answered at once and booked", "A reply ready for every review; the quiet ones invited back", "Evidence a patient could find themselves, scored on one dashboard"],
+      facts: ["A WhatsApp inquiry answered at once and booked", "A reply ready for every new review; the quiet patients on your list invited back", "Evidence a patient could find themselves, scored on one dashboard"],
       links: [{ href: "/engine.html", label: "Inside the engine" }],
+    },
+  },
+  {
+    id: "see",
+    label: "What will I see?",
+    clip: "talk",
+    lines: [{ id: "o1", text: "Everything in one place, on one link. How patients see your clinic, read every week and every month: one score, and what to fix first. And once the Engine runs, what it did for you, counted: how many wrote in, how many booked, how many came.", audio: "/voice/o1.mp3" }],
+    card: {
+      title: "Everything in one place",
+      facts: ["One link, on your phone", "Your clinic as patients meet it, kept up to date", "Once the Engine runs, what it did, counted"],
+      links: [{ href: "/app.html", label: "See it in one place" }],
     },
   },
   {
@@ -119,18 +130,18 @@ export const CHAPTERS: Chapter[] = [
     lines: [
       {
         id: "a-need",
-        text: "For the diagnostic, nothing: it is unannounced. For the Engine, access to your Google profile, Instagram, website and WhatsApp number, which stays yours, and one kickoff call on day one.",
+        text: "For the diagnostic, nothing: it is unannounced. For the Engine, your WhatsApp number, which stays yours, manager access to your Google profile, and a set-up call a week before day one.",
         audio: "/voice/a-need.mp3",
       },
       {
         id: "a-time",
-        text: "Your first report comes after the first shop, then monthly. The Engine runs on a three-month minimum, hands-on for the first thirty days.",
+        text: "Your page opens after the first shop, then keeps updating: Google every week, the rest every month, a fresh shop every thirty to sixty days. The Engine runs on a three-month minimum, hands-on for the first thirty days.",
         audio: "/voice/a-time.mp3",
       },
     ],
     card: {
       title: "How it starts",
-      facts: ["For the diagnostic: nothing from you", "For the Engine: access to Google, Instagram, the website and your WhatsApp number, which stays yours", "One kickoff call on day one; three months minimum"],
+      facts: ["For the diagnostic: nothing from you", "For the Engine: manager access to your Google profile, and your WhatsApp number, which stays yours", "A set-up call a week before day one; three months minimum"],
       links: [{ href: "/fix.html", label: "The first thirty days" }],
     },
   },

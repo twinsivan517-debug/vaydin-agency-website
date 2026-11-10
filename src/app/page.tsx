@@ -19,12 +19,19 @@ const PROBLEMS = [
   {
     title: "The booking that never showed",
     problem: "Consults slip without a reminder. Patients who had one treatment never hear from the clinic again. Nobody counts what that costs in a month.",
-    vaydin: "Every visit reminded before, every quiet patient on your list invited back, and all of it counted on one page.",
+    vaydin: "Every visit booked in the chat reminded before, every quiet patient you marked invited back, and inquiries, bookings and visits counted on one page.",
   },
   {
     title: "The front door nobody checks",
     problem: "Your Google profile, reviews, Instagram and website are judged by patients every day and seen by nobody inside the clinic.",
-    vaydin: "A real person shops your clinic unannounced every thirty to sixty days. Six areas, one score, what to fix first. Then the engine keeps watch: your Google hours checked daily, a reply ready for every review.",
+    vaydin: "A real person shops your clinic unannounced every thirty to sixty days. Six areas, one score, what to fix first. Then the engine keeps watch: your Google hours checked daily, a reply ready for every new review.",
+  },
+  /* Every field in front (WEB-G, 2026-11-10): the email sentence is Layer 2's, word for word; Instagram's words follow
+     the engine page's until Layer 2's read says otherwise. */
+  {
+    title: "The doors nobody owns",
+    problem: "A patient asks in an Instagram DM or by email, or finds last season's prices on your website. Nobody inside owns those doors.",
+    vaydin: "Instagram DMs on the same menu and booking as WhatsApp, once Meta approves our access. A patient who emails your clinic's address, on your clinic's own domain, gets your approved acknowledgement within minutes, and your reception is told at once on WhatsApp so a person answers. Your website kept current by a person, on request, with a Book on WhatsApp button.",
   },
 ];
 
@@ -53,7 +60,7 @@ export default function Home() {
             profile, your Instagram, your WhatsApp. They form a verdict in minutes and book with whoever answers first
             and best. The clinic never finds out they existed.
           </p>
-          <ul className="mt-8 grid gap-4 md:grid-cols-3">
+          <ul className="mt-8 grid gap-4 md:grid-cols-2">
             {PROBLEMS.map((item, index) => (
               <li key={item.title} className="rounded-2xl border border-accent/20 bg-white/[0.03] p-5">
                 <p className="label text-accent-bright">0{index + 1}</p>
@@ -70,7 +77,7 @@ export default function Home() {
             ))}
           </ul>
           <p className="mt-6 max-w-2xl text-sm leading-6 text-muted">
-            Measured, not promised: the next unannounced shop scores us too. Vaydin Agency is a Dubai free-zone company,
+            Measured, not promised: what the engine does is counted on your page. Vaydin Agency is a Dubai free-zone company,
             licensed under IFZA, for aesthetic and wellness clinics in the UAE and the GCC.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">

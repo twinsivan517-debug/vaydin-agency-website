@@ -259,6 +259,7 @@
     <a href="fix.html" style="--chip:rgba(232,212,139,0.30);--chip-hi:#e8d48b;--chip-bg:rgba(232,212,139,0.07)">Fix</a>
     <a href="grow.html" style="--chip:rgba(167,139,250,0.32);--chip-hi:#a78bfa;--chip-bg:rgba(167,139,250,0.08)">Grow</a>
     <a href="engine.html" class="nav-here" style="--chip:rgba(52,227,240,0.30);--chip-hi:#34e3f0;--chip-bg:rgba(52,227,240,0.07)">Engine</a>
+    <a href="app.html" style="--chip:rgba(74,222,128,0.30);--chip-hi:#4ade80;--chip-bg:rgba(74,222,128,0.07)">One place</a>
   </div>
   <div class="nav-right">
     <div class="nav-contact">
@@ -291,7 +292,7 @@
     <div class="fgroup">
       <div class="gh">THE ESTATE · 3 FIELDS</div>
       <button class="frow" data-field="google"><span class="dot" style="background:#4285F4"></span><span class="fn">Your Google profile, checked daily</span><span class="arr">→</span></button>
-      <button class="frow" data-field="reviews"><span class="dot" style="background:#fbbf24"></span><span class="fn">Every review, a reply ready</span><span class="arr">→</span></button>
+      <button class="frow" data-field="reviews"><span class="dot" style="background:#fbbf24"></span><span class="fn">Every new review, a reply ready</span><span class="arr">→</span></button>
       <button class="frow" data-field="review-growth"><span class="dot" style="background:#fbbf24"></span><span class="fn">Every attended patient asked for a review</span><span class="arr">→</span></button>
     </div>
     <div class="fgroup">
@@ -405,7 +406,7 @@
     },
     'dormant': {
       name:'The quiet list, invited back', group:'engine', ch:['RECOVERY','WHATSAPP'],
-      exp:'Your patient list goes cold silently. You give us the list of past patients and mark the ones who agreed to hear from you. Only those are invited: once each, when the last visit is more than three months old or has no date, and no visit is already booked. Your wording, with a button to book. A patient who ever said stop is never invited.',
+      exp:'Your patient list goes cold silently. You give us the list of past patients and mark the ones who agreed to hear from you. Only those are invited: once each, when the last visit is more than three months old or has no date, and no visit is already booked. Your wording, with a button to book. A patient who said stop is never invited, unless they later write start.',
       off:['Patients quietly drift away after their treatment ends',
            'The list of past patients sits in a spreadsheet, untouched',
            'Reactivation is an occasional blast that reads like advertising'],
@@ -425,13 +426,13 @@
     },
     'kpi': {
       name:'Each step counted', group:'engine', ch:['ALL'],
-      exp:'What the engine does is counted on your page, read fresh each time you open it: patients who wrote in, visits booked, who came and who did not, how fast the first reply went out, and, where the engine answers your Google reviews, how many arrived, how many were answered and how fast. Counts and times, no money figure. And the unannounced shop keeps coming after we start: it grades what it finds, with the engine answering. Only the speed of the first reply is not graded: that reply is ours, so it is shown as the engine\'s own time.',
+      exp:'What the engine does is counted on your page, read fresh each time you open it: patients who wrote in, visits booked, who came and who did not, how fast the first reply went out, and, where the engine answers your Google reviews, how many arrived, how many were answered and how fast. Counts and times, no money figure. And the unannounced shop keeps coming after we start. What it meets in the chat is our engine, so it is shown as ours, never graded as your team\'s.',
       off:['"How is the front desk doing?" is answered by feel',
            'No number connects inquiries to bookings to visits',
            'Vendors grade their own homework'],
       on:['<b>Counts</b>, from the engine\'s own records',
           'Wrote in, booked, came: each step counted',
-          'The unannounced shop keeps grading what a patient meets']
+          'The outside reads keep grading what a patient meets: Google, your website, Instagram, your rivals']
     },
     'google': {
       name:'Your Google profile, checked daily', group:'estate', ch:['GOOGLE'],
@@ -444,7 +445,7 @@
           'It only reads: nothing on your profile is changed by us']
     },
     'reviews': {
-      name:'Every review, a reply ready', group:'estate', ch:['REVIEWS','WHATSAPP'],
+      name:'Every new review, a reply ready', group:'estate', ch:['REVIEWS','WHATSAPP'],
       exp:'When a review lands, the engine picks the reply your clinic approved for that star rating and sends it to your reception on WhatsApp with two buttons: Post reply, or Don\'t reply. One tap and it is on Google within minutes. The engine adds only your clinic\'s name and phone: never the reviewer\'s name, never a treatment.',
       off:['A bad review sits unanswered for weeks, in public',
            'Each reply is written from scratch, whenever someone finds the time',
@@ -465,9 +466,9 @@
     },
     'consult': {
       name:'Consultations, prepared', group:'custom', ch:['BUILT FOR YOUR CLINIC'],
-      exp:'The consultation is where treatment plans are accepted or lost. We build the patient\'s preparation with your clinic: what to expect, how long it takes, what to bring, in wording your team approves, sent before they arrive.',
-      off:['The patient arrives cold: the first fifteen minutes are spent explaining',
-           'The same three questions, answered at the desk every day',
+      exp:'A consultation that starts on time starts well. Before it, your patients get exactly what they need to walk in ready: when to come and what to bring, written with your clinic, approved by your team, sent on the same WhatsApp.',
+      off:['The patient arrives late or unprepared, and the slot starts behind',
+           'Reception answers "when do I come, what do I bring?" all day long',
            'Nobody told them what to bring'],
       on:['Built with your clinic: <b>your own lines</b>, approved by your team',
           'Sent before the visit, on the same WhatsApp',
@@ -475,33 +476,33 @@
     },
     'instagram': {
       name:'Instagram DMs, connected', group:'custom', ch:['BUILT FOR YOUR CLINIC'],
-      exp:'For aesthetic clinics, Instagram is the front door. We connect your DMs and story replies to the same engine as your WhatsApp: the same menu, the same booking, the same hand-over to your team, through Meta\'s official access.',
+      exp:'For aesthetic clinics, Instagram is the front door. Instagram DMs get the same menu and the same booking as your WhatsApp, with the same hand-over to your team: built and connected for your clinic once Meta approves our access.',
       off:['DMs sit behind whoever holds the account password',
            'Story replies scroll away and vanish',
            'A "check DM please" comment is a patient nobody claims'],
-      on:['Connected for your clinic, through <b>Meta\'s official access</b>',
+      on:['Built for your clinic, <b>once Meta approves our access</b>',
           'The same menu and the same booking as WhatsApp',
           'Handed to your team the moment a person is needed']
     },
     'email': {
       name:'Email, connected', group:'custom', ch:['BUILT FOR YOUR CLINIC'],
-      exp:'The inbox stops being a graveyard. We connect your inquiries inbox to the same engine: the same approved answers, the same booking, the same hand-over to your team, built around how your clinic uses email.',
+      exp:'The inbox stops being a graveyard. A patient who emails your clinic\'s address, on your clinic\'s own domain, gets your approved acknowledgement within minutes, and your reception is told at once on WhatsApp so a person answers.',
       off:['Email inquiries answered days later, or never',
-           'The inbox gives different answers than the front desk',
-           'Nothing connects the inbox to the booking calendar'],
-      on:['<b>Connected</b> for your clinic',
-          'One set of approved answers on every channel',
-          'Handed to your team the moment a person is needed']
+           'A patient\'s email waits until someone has time',
+           'Nobody at the front desk knows an email came in'],
+      on:['<b>Built</b> for your clinic, on your clinic\'s own domain',
+          'Your approved acknowledgement within minutes',
+          'Your reception told at once on WhatsApp']
     },
     'website': {
       name:'Website concierge', group:'custom', ch:['BUILT FOR YOUR CLINIC'],
-      exp:'Hours, prices, a new treatment, a new doctor: one WhatsApp message to us and a person makes the change, within 48 hours. Your site stops drifting out of date.',
+      exp:'Hours, prices, a new treatment, a new doctor: one WhatsApp message to us and a person makes the change. A Book on WhatsApp button on your site opens a chat with your number, and the visitor\'s first message gets your menu. Your site stops drifting out of date.',
       off:['Last year\'s prices are live right now',
            'The old agency charges per change and takes weeks',
            'So nobody asks, and the site quietly rots'],
-      on:['One message → <b>done within 48 hours</b>',
+      on:['One message → <b>a person makes the change</b>',
           'Hours, prices, treatments: kept current',
-          'Done by a person, not a ticket queue']
+          'A Book on WhatsApp button on your site, opening a chat where the first message gets your menu']
     }
   };
   var ORDER = ['intake','booking','showup','dormant','crosssell','kpi','google','reviews','review-growth','consult','instagram','email','website'];

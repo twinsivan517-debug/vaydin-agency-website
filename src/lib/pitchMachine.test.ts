@@ -329,7 +329,7 @@ check("stop returns to rest; stopping the greeting still counts as met", () => {
 
 check("every line has a sound or a time, the five questions cover eleven lines, every card links somewhere", () => {
   const ids = CHAPTERS.flatMap((c) => c.lines.map((l) => l.id));
-  assert.deepEqual(ids, ["00b", "01", "tag", "02", "w1", "07", "08", "g1", "10", "a-need", "a-time", "a-price", "a-cancel"]);
+  assert.deepEqual(ids, ["00b", "01", "tag", "02", "w1", "07", "08", "g1", "10", "o1", "a-need", "a-time", "a-price", "a-cancel"]);
   for (const c of CHAPTERS) {
     for (const l of c.lines) assert.ok(l.at !== undefined || l.audio, l.id);
     assert.ok(c.card.links.length > 0 && c.card.facts.length > 0, c.id);

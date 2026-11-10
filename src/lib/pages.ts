@@ -10,17 +10,21 @@ const line = (id: string, text: string): Line => ({ id, text, audio: `/voice/${i
 export const WELCOME = line("x-welcome", "Hi, welcome to this page. Would you like a short summary of it?");
 
 export const SUMMARIES: Record<string, Line> = {
+  app: line(
+    "p-app",
+    "This page shows what you see once Vaydin works for your clinic: one link on your phone, how patients find you read for you every week and every month, one score with what to fix first, and, once the Engine runs, what it did, counted.",
+  ),
   diagnose: line(
     "p-diagnose",
-    "This is the diagnostic. Unannounced, a real person messages your clinic on WhatsApp like a patient, and we read your Google and Instagram. Every month you get one score across six areas, with the evidence behind it.",
+    "This is the diagnostic. Unannounced, a real person messages your clinic on WhatsApp like a patient, and we read your Google and Instagram. One score across six areas, with the evidence behind it, on a page that keeps updating.",
   ),
   fix: line(
     "p-fix",
-    "This is the Engine. We stop reporting the leaks and run the machine: WhatsApp inquiries answered and booked, visits reminded, quiet patients invited back, your Google profile checked and a reply ready for every review, with four more built around your clinic. You grant access; you keep the keys.",
+    "This is the Engine. We stop reporting the leaks and run the machine: WhatsApp inquiries answered and booked, visits reminded, quiet patients invited back, your Google profile checked and a reply ready for every new review, with four more built around your clinic. You grant access; you keep the keys.",
   ),
   grow: line(
     "p-grow",
-    "This is Grow, the third step. Once the Engine runs your clinic, we add fuel: paid patient demand, and Instagram run like a channel, all counted on the same dashboard.",
+    "This is Grow, the third step. It opens only once the Engine runs your clinic and its bookings are proven. Then we add fuel: paid patient demand and Instagram content, landing in the engine that already books.",
   ),
   engine: line(
     "p-engine",

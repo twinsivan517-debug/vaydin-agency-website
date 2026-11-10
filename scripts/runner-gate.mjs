@@ -33,13 +33,19 @@ const LIGHTHOUSE = "lighthouse@13.5.0";
 const CAND = { name: "candidate", dir: "out", port: 4173 };
 const LIVE = { name: "anchor", dir: process.env.ANCHOR_OUT || "", port: 4174 };
 const reportOnly = (process.env.GITHUB_REF || "").startsWith("refs/heads/gate/");
+/* The pages judged, each paired with the anchor page it must not fall behind on the same runner. A new page has no
+   anchor of its own, so /app.html (WEB-G, the owner's approved plan of 2026-11-10) is held to the anchor's grow.html:
+   the same static shell and canvas pattern, where the Next home would be a lax bar. HONEST LIMIT: the tolerance was
+   measured home against home (the A/A test), not grow against /app. */
+const PAIRS = [{ page: "home", cand: "/", anchor: "/" },
+  ...(existsSync(`${CAND.dir}/app.html`) ? [{ page: "app", cand: "/app.html", anchor: "/grow.html" }] : [])];
 const fails = [];
 
 const site = JSON.parse(readFileSync("site.json", "utf8"));
 console.log(`[runner-gate] chrome ${tryRun("google-chrome", ["--version"])} · image ${process.env.ImageVersion || "?"} · runs ${RUNS} each`);
 
 function tryRun(cmd, args) { try { return execFileSync(cmd, args, { encoding: "utf8" }).trim(); } catch { return "?"; } }
-const url = (t) => `http://127.0.0.1:${t.port}/`;
+const url = (t, path = "/") => `http://127.0.0.1:${t.port}${path}`;
 
 async function up(t) {
   for (let i = 0; i < 60; i++) {
@@ -49,9 +55,9 @@ async function up(t) {
   throw new Error(`${t.name}: the built site never answered`);
 }
 
-function lighthouse(t, label) {
+function lighthouse(t, label, path = "/") {
   const out = `lh-${t.name}-${label}.json`;
-  execFileSync("npx", ["--yes", LIGHTHOUSE, url(t), "--form-factor=mobile", "--output=json", `--output-path=${out}`,
+  execFileSync("npx", ["--yes", LIGHTHOUSE, url(t, path), "--form-factor=mobile", "--output=json", `--output-path=${out}`,
     "--quiet", "--chrome-flags=--headless=new --no-sandbox",
     "--only-categories=performance,accessibility,seo,best-practices"], { stdio: "ignore" });
   const d = JSON.parse(readFileSync(out, "utf8"));
@@ -63,14 +69,14 @@ function lighthouse(t, label) {
   return { scores, bytes, bench: Math.round(d.environment?.benchmarkIndex || 0) };
 }
 
-async function deadLinks(t) {
-  const html = await (await fetch(url(t))).text();
+async function deadLinks(t, path = "/") {
+  const html = await (await fetch(url(t, path))).text();
   const own = new URL(site.url).host.replace(/^www\./, "");
   const seen = new Set(), dead = [];
   for (const m of html.matchAll(/<a\b[^>]*?\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
     const href = m[1] || m[2] || m[3] || "";
     if (!href || /^(mailto:|tel:|javascript:|#)/i.test(href)) continue;
-    let u = new URL(href, url(t));
+    let u = new URL(href, url(t, path));
     if (u.host.replace(/^www\./, "") === own) u = new URL(u.pathname + u.search, url(t));
     if (u.host !== new URL(url(t)).host) continue;
     u.hash = "";
@@ -98,23 +104,27 @@ try {
   for (const t of targets) servers.push(spawn("npx", ["http-server", t.dir, "-s", "-g", "-c-1", "-p", String(t.port), "-a", "127.0.0.1"], { stdio: "ignore" }));
   for (const t of targets) await up(t);
 
-  for (const t of targets) lighthouse(t, "warmup");                       // discarded
-  const runs = Object.fromEntries(targets.map((t) => [t.name, []]));
+  const at = (t, p) => (t === CAND ? p.cand : p.anchor);
+  for (const p of PAIRS) for (const t of targets) lighthouse(t, `warmup-${p.page}`, at(t, p));   // discarded
+  const runs = Object.fromEntries(PAIRS.map((p) => [p.page, Object.fromEntries(targets.map((t) => [t.name, []]))]));
   // Interleaved, and the order flips each round (candidate first, then anchor first), so neither side
   // always runs on the warmer machine.
-  for (let n = 0; n < RUNS; n++) for (const t of (n % 2 ? [...targets].reverse() : targets)) runs[t.name].push(lighthouse(t, n));
-  for (const t of targets) console.log(`[runner-gate] ${t.name.padEnd(9)} performance in run order ${JSON.stringify(runs[t.name].map((r) => r.scores.performance))} · benchmark ${JSON.stringify(runs[t.name].map((r) => r.bench))}`);
+  for (let n = 0; n < RUNS; n++) for (const p of PAIRS) for (const t of (n % 2 ? [...targets].reverse() : targets))
+    runs[p.page][t.name].push(lighthouse(t, `${p.page}-${n}`, at(t, p)));
+  for (const p of PAIRS) for (const t of targets) console.log(`[runner-gate] ${p.page} ${t.name.padEnd(9)} ${at(t, p)} performance in run order ${JSON.stringify(runs[p.page][t.name].map((r) => r.scores.performance))} · benchmark ${JSON.stringify(runs[p.page][t.name].map((r) => r.bench))}`);
 
-  const verdict = judge({ cand: runs.candidate, anchor: runs.anchor ?? null, tolerance: TOLERANCE, floors: ABSOLUTE,
-    budget: BYTES[site.tier], tier: site.tier, tiers: Object.keys(BYTES), reportOnly, anchorName: FLOORS.anchor });
-  for (const line of verdict.log) console.log(line);
-  fails.push(...verdict.fails);
+  for (const p of PAIRS) {
+    const verdict = judge({ cand: runs[p.page].candidate, anchor: runs[p.page].anchor?.length ? runs[p.page].anchor : null, tolerance: TOLERANCE,
+      floors: ABSOLUTE, budget: BYTES[site.tier], tier: site.tier, tiers: Object.keys(BYTES), reportOnly, anchorName: `${FLOORS.anchor} ${p.anchor}` });
+    for (const line of verdict.log) console.log(line.replace("[runner-gate]", `[runner-gate] ${p.page}:`));
+    fails.push(...verdict.fails.map((f) => `${p.page} (${p.cand}): ${f}`));
+  }
   // Lighthouse ran through execFileSync, which blocks this process's event loop for minutes; meanwhile the
   // server closed the idle keep-alive socket from up(). Without one yield, the next fetch writes into that dead
   // socket: "fetch failed" (ECONNRESET). Proven 2026-11-09: run 42628188860 failed here, and a local repro
   // failed after an 8 s block and passed after the same block plus one yield.
   await new Promise((r) => setTimeout(r, 50));
-  for (const d of await deadLinks(CAND)) fails.push(`dead link: ${d}`);
+  for (const p of PAIRS) for (const d of await deadLinks(CAND, p.cand)) fails.push(`dead link on ${p.cand}: ${d}`);
 } catch (e) {
   fails.push(`the gate could not measure: ${e.message}${e.cause ? ` (${e.cause.code || e.cause.message})` : ""}`);
 } finally {

@@ -27,7 +27,7 @@ OPENER = [("00b", 0.0), ("01", 2.58), ("tag-b", 4.39)]
 # The lines that close the greeting, a chapter or a page's summary: he signs off with the Vaydin mark once they end.
 # Lines that show no digits: after "How much?", a big 30 or 3 would read as a price.
 NO_DIGITS = {"a-price", "a-cancel"}
-SIGN_OFF = {"02", "w1", "08", "10", "a-time", "a-cancel", "p-diagnose", "p-fix", "p-grow", "p-engine", "p-pricing"}
+SIGN_OFF = {"02", "w1", "08", "10", "a-time", "a-cancel", "p-diagnose", "p-fix", "p-grow", "p-engine", "p-pricing", "o1", "p-app"}
 
 
 def number(w, prev, nxt, nxt2, prev2):
@@ -89,6 +89,9 @@ def plan(text, timed, dur, digits=True):
             hit = {"door": 1}
         if w == "hello" and nxt == "at":
             hit = {"shape": "mail"}
+        # "One place", "one link" (WEB-G): his body becomes the empty phone.
+        if w == "one" and nxt in ("place", "link"):
+            hit = {"shape": "app"}
         # "Pick a question": his light rings every question chip at once.
         if w == "pick" and nxt == "a" and i + 2 < len(words) and words[i + 2] == "question":
             hit = {"chips": 1}

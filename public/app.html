@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your clinic in one place · Vaydin</title>
+<meta name="description" content="What a clinic owner sees with Vaydin, on one link: the clinic as patients meet it, one score and what to fix first, and what the engine did, counted.">
+<link rel="icon" href="vaydin-icon-48.png">
+<link rel="apple-touch-icon" href="vaydin-icon-192.png">
+<link rel="canonical" href="https://vaydin.agency/app.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vaydin">
+<meta property="og:title" content="Your clinic in one place · Vaydin">
+<meta property="og:description" content="What a clinic owner sees with Vaydin, on one link: the clinic as patients meet it, one score and what to fix first, and what the engine did, counted.">
+<meta property="og:url" content="https://vaydin.agency/app.html">
+<meta property="og:image" content="https://vaydin.agency/vaydin-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Your clinic in one place · Vaydin">
+<meta name="twitter:description" content="What a clinic owner sees with Vaydin, on one link: the clinic as patients meet it, one score and what to fix first, and what the engine did, counted.">
+<meta name="twitter:image" content="https://vaydin.agency/vaydin-og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#040706; --bg-card:#090f0c; --border:#152219;
+    --tx:#edf3ef; --tx-muted:#9db0a6; --tx-faint:#6f8378;
+    --gold:#c9a44a; --gold-light:#e8d48b; --accent:#2f9f77; --accent-light:#6fd6a8;
+    --ok:#4ade80; --critical:#f87171; --violet:#a78bfa; --volt:#34e3f0; --wa:#25D366;
+    --display:'Marcellus', Georgia, serif;
+    --serif:'Cormorant Garamond', Georgia, serif;
+    --sans:'DM Sans', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', Consolas, monospace;
+    --ease:cubic-bezier(0.16,1,0.3,1);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;color:var(--tx);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(1100px 750px at 84% 8%, rgba(74,222,128,0.12), transparent 62%),
+      radial-gradient(950px 700px at 6% 88%, rgba(201,164,74,0.10), transparent 60%),
+      var(--bg);
+    background-attachment:fixed}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{color:var(--accent-light)}
+  img{max-width:100%;display:block}
+
+  /* ---------- nav (canonical bar, as on the other pages) ---------- */
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:34px;
+      padding:13px 40px;background:rgba(9,15,12,0.93);backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(47,159,119,0.30)}
+  .brand{display:flex;align-items:center;gap:13px}
+  .brand img{width:32px;height:32px}
+  .wordmark{font-family:var(--display);font-size:20px;letter-spacing:0.32em;color:var(--gold-light)}
+  .nav-links{display:flex;gap:36px;align-items:center;font-size:15px}
+  .nav-links a{position:relative;padding:8px 1px;color:var(--chip-hi);letter-spacing:0.05em;font-weight:500;opacity:0.84;
+    transition:opacity .3s, color .3s}
+  .nav-links a::after{content:'';position:absolute;left:0;right:0;bottom:1px;height:1.5px;background:var(--chip-hi);
+    transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease)}
+  .nav-links a:hover{opacity:1}
+  .nav-links a:hover::after{transform:scaleX(1)}
+  .nav-links a.nav-here{opacity:1;color:#f5f1e8}
+  .nav-links a.nav-here::after{transform:scaleX(1)}
+  .nav-right{margin-left:auto;display:flex;align-items:center;gap:26px}
+  .nav-contact{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.08em;line-height:1}
+  .nav-contact a{color:#6f8378;transition:color .3s}
+  .nav-contact a:hover{color:#f5f1e8}
+  .nav-cta{background:var(--accent);color:#040706 !important;font-weight:700;padding:11px 24px;font-size:13px;letter-spacing:0.02em;transition:background .3s var(--ease)}
+  .nav-cta:hover{background:var(--accent-light)}
+  .nav-burger{display:none;width:40px;height:40px;align-items:center;justify-content:center;cursor:pointer;background:none;border:0;
+    color:var(--accent-light);box-shadow:inset 0 0 0 1px rgba(47,159,119,0.45);margin-left:6px;padding:0}
+  .nav-burger svg{width:18px;height:14px;display:block}
+
+  /* ---------- hero ---------- */
+  .hero-inner{max-width:1240px;margin:0 auto;padding:150px 48px 10px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:0.26em;color:var(--ok);margin-bottom:16px}
+  h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,4vw,56px);line-height:1.12;margin:0 0 22px;max-width:820px;text-wrap:balance}
+  .glow-text{background:linear-gradient(96deg,#e8d48b 0%,#cfe3c8 45%,#4ade80 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero-sub{font-size:16.5px;color:var(--tx-muted);max-width:640px;margin:0}
+  .hero-sub b{color:var(--tx);font-weight:600}
+
+  /* ---------- the stage: one canvas behind the phone and the outcomes ---------- */
+  .stage{position:relative;max-width:1240px;margin:0 auto;padding:56px 48px 0;display:grid;grid-template-columns:0.9fr 1.1fr;gap:40px;align-items:center}
+  .stage canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+  .phone-slot{position:relative;z-index:1;height:440px}
+  .outcomes{position:relative;z-index:1;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:22px}
+  .oc{display:grid;grid-template-columns:56px 1fr;gap:16px;align-items:start;opacity:0.38;transition:opacity .8s var(--ease)}
+  .oc.on{opacity:1}
+  .oc .slot{width:56px;height:56px}
+  .oc h2{font-family:var(--display);font-weight:400;font-size:21px;line-height:1.3;margin:6px 0 4px;color:var(--tx)}
+  .oc p{margin:0;font-size:15px;color:var(--tx-muted);max-width:520px}
+  .oc .when{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;color:var(--ok);margin-left:6px}
+  .note{max-width:1240px;margin:34px auto 0;padding:0 48px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.14em;color:var(--tx-faint)}
+
+  /* finale */
+  .finale{margin:110px auto 0;border-top:1px solid var(--border);padding:90px 48px 40px;text-align:center;
+    background:linear-gradient(180deg, transparent 0%, rgba(13,22,17,0.75) 100%)}
+  .fin-line{font-family:var(--serif);font-size:clamp(23px,2.5vw,34px);line-height:1.5;color:var(--tx);max-width:800px;margin:0 auto 40px}
+  .fin-line em{color:var(--ok)}
+  .fin-contacts{display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
+  .fchip{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:0.08em;
+    padding:14px 24px;color:var(--tx-muted);box-shadow:inset 0 0 0 1px var(--fc);transition:color .3s, background .3s, transform .3s var(--ease)}
+  .fchip:hover{color:var(--tx);background:rgba(255,255,255,0.04);transform:translateY(-2px)}
+  footer{max-width:1240px;margin:0 auto;padding:56px 48px 48px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--tx-faint);letter-spacing:0.05em}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important}
+    .oc{opacity:1 !important}
+  }
+  @media (max-width: 900px){
+    nav{padding:14px 22px}
+    .nav-contact{display:none}
+    .nav-burger{display:flex}
+    .nav-cta{white-space:nowrap;padding:10px 15px;font-size:12.5px}
+    nav{gap:14px}
+    .wordmark{font-size:16px;letter-spacing:0.2em}
+    .brand{gap:9px}
+    .brand img{width:28px;height:28px}
+    .nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;
+      background:rgba(4,7,6,0.995);border-bottom:1px solid rgba(47,159,119,0.30);padding:6px 22px 12px;box-shadow:0 24px 40px rgba(0,0,0,0.5)}
+    .nav-links.open{display:flex}
+    .nav-links a{padding:13px 2px;font-size:17px;border-bottom:1px solid rgba(255,255,255,0.05)}
+    .nav-links a:last-child{border-bottom:0}
+    .nav-links a::after{bottom:8px;right:auto;width:28px}
+    .hero-inner{padding:130px 22px 0}
+    .stage{grid-template-columns:1fr;gap:18px;padding:36px 22px 0}
+    .phone-slot{height:300px}
+    .oc{grid-template-columns:44px 1fr;gap:12px}
+    .oc .slot{width:44px;height:44px}
+    .oc h2{font-size:19px}
+    .note{padding:0 22px}
+    .finale{padding:80px 22px 40px}
+  }
+  @media (max-width: 380px){
+    .wordmark{display:none}
+    .nav-right{gap:12px}
+  }
+</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Vaydin Agency", "item": "https://vaydin.agency/"}, {"@type": "ListItem", "position": 2, "name": "One place", "item": "https://vaydin.agency/app.html"}]}</script>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="brand">
+    <img src="vaydin-icon-mark.png" alt="Vaydin mark">
+    <div class="wordmark">VAYDIN</div>
+  </a>
+  <div class="nav-links">
+    <a href="/" style="--chip:rgba(201,164,74,0.32);--chip-hi:#e8d48b;--chip-bg:rgba(201,164,74,0.07)">Home</a>
+    <a href="diagnose.html" style="--chip:rgba(248,113,113,0.35);--chip-hi:#f87171;--chip-bg:rgba(248,113,113,0.08)">Diagnose</a>
+    <a href="fix.html" style="--chip:rgba(232,212,139,0.30);--chip-hi:#e8d48b;--chip-bg:rgba(232,212,139,0.07)">Fix</a>
+    <a href="grow.html" style="--chip:rgba(167,139,250,0.32);--chip-hi:#a78bfa;--chip-bg:rgba(167,139,250,0.08)">Grow</a>
+    <a href="engine.html" style="--chip:rgba(52,227,240,0.30);--chip-hi:#34e3f0;--chip-bg:rgba(52,227,240,0.07)">Engine</a>
+    <a href="app.html" class="nav-here" style="--chip:rgba(74,222,128,0.30);--chip-hi:#4ade80;--chip-bg:rgba(74,222,128,0.07)">One place</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-contact">
+      <a href="tel:+971505553148">+971 50 555 3148</a>
+      <a href="mailto:hello@vaydin.agency">hello@vaydin.agency</a>
+    </div>
+    <a href="pricing.html" class="nav-cta">Ask for your plan</a>
+    <button class="nav-burger" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 1h18M0 7h18M0 13h18"/></svg></button>
+  </div>
+</nav>
+<script>(function(){var b=document.querySelector(".nav-burger"),l=document.querySelector(".nav-links");if(b&&l){b.addEventListener("click",function(){var o=l.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false");});l.addEventListener("click",function(e){if(e.target.tagName==="A"){l.classList.remove("open");b.setAttribute("aria-expanded","false");}});}})();</script>
+
+<header>
+  <div class="hero-inner">
+    <div class="eyebrow">ONE PLACE · WHAT YOU SEE</div>
+    <h1>Your clinic, <span class="glow-text">in one place.</span></h1>
+    <p class="hero-sub">Everything Vaydin does for your clinic, on <b>one link</b>: how patients meet you, what to fix first, and once the Engine runs, what it did for you.</p>
+  </div>
+</header>
+
+<main>
+  <section class="stage" id="stage" aria-label="What you see, one outcome at a time">
+    <canvas id="onecanvas" aria-hidden="true"></canvas>
+    <div class="phone-slot" id="phoneSlot"></div>
+    <ol class="outcomes" id="outcomes">
+      <li class="oc"><div class="slot"></div><div><h2>One link, on your phone.</h2><p>Your clinic's own page: the same link from your first report on.</p></div></li>
+      <li class="oc"><div class="slot"></div><div><h2>Your clinic, as a patient meets it.</h2><p>A real shop every 30 to 60 days. Your Google profile and your rivals read every week, your Instagram and website every month.</p></div></li>
+      <li class="oc"><div class="slot"></div><div><h2>One score, and what to fix first.</h2><p>Six areas, each with its evidence, ranked by what costs you patients most.</p></div></li>
+      <li class="oc"><div class="slot"></div><div><h2>What the engine did, counted.<span class="when">ONCE THE ENGINE RUNS</span></h2><p>How many wrote in, how many booked, how many came, on the same link.</p></div></li>
+      <li class="oc"><div class="slot"></div><div><h2>Your engine, set to your clinic.</h2><p>The first reply, booking and the counting run for every clinic; every other job you choose is switched on for yours alone.</p></div></li>
+      <li class="oc"><div class="slot"></div><div><h2>Your reception just taps, in WhatsApp.</h2><p>Nobody installs anything. Your WhatsApp number and your Google profile stay yours.</p></div></li>
+    </ol>
+  </section>
+  <p class="note">DRAWN, NOT SCREENSHOTTED · YOUR OWN PAGE IS SHOWN TO YOU ONE-TO-ONE</p>
+</main>
+
+<div class="finale">
+  <p class="fin-line">It starts with one measurement of your clinic.<br><em>Everything after it lands on the same link.</em></p>
+  <div class="fin-contacts">
+    <a class="fchip" style="--fc:#f87171" href="diagnose.html">Start with the diagnostic</a>
+    <a class="fchip" style="--fc:#25D366" href="https://wa.me/971505553148">WhatsApp · +971 50 555 3148</a>
+  </div>
+</div>
+
+<footer>
+  <div>Vaydin Agency · VAYDIN PARTNERS INVESTMENTS - FZCO · DSO-IFZA, IFZA Properties, Dubai Silicon Oasis, Dubai, UAE · Licensed under IFZA</div>
+  <div>The diagnostic sells the engine. The engine earns the fuel.</div>
+  <div><a href="/">Home</a> · <a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/data-deletion/">Data deletion</a></div>
+</footer>
+
+<script>
+/* The one picture: dust gathers into a phone whose screen stays empty (the owner's lock of 13 May: never the
+   product's screens on a public page), then one symbol per outcome rises out of it to the slot beside its words.
+   Runs only while on screen, stops once settled; with reduced motion the settled picture is drawn once. */
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var stage = document.getElementById('stage'), cv = document.getElementById('onecanvas'), ctx = cv.getContext('2d');
+  var slot = document.getElementById('phoneSlot'), items = [].slice.call(document.querySelectorAll('.oc'));
+  var COLORS = ['#34e3f0', '#f87171', '#e8d48b', '#a78bfa', '#4ade80', '#25D366'];
+  var W, H, dpr, phone, dots = [], glyphs = [], t0 = 0, raf = 0, visible = false, done = false;
+
+  function rnd(seed){ return function(){ seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }; }
+  /* points along a rounded rectangle's outline */
+  function outline(x, y, w, h, r, n){
+    var pts = [], per = 2 * (w + h - 4 * r) + 2 * Math.PI * r, k;
+    for (k = 0; k < n; k++){
+      var d = (k / n) * per, px, py;
+      var seg = [w - 2*r, Math.PI*r/2, h - 2*r, Math.PI*r/2, w - 2*r, Math.PI*r/2, h - 2*r, Math.PI*r/2], s = 0;
+      while (d > seg[s]) { d -= seg[s]; s++; }
+      var a;
+      switch (s){
+        case 0: px = x + r + d; py = y; break;
+        case 1: a = -Math.PI/2 + d/r; px = x + w - r + r*Math.cos(a); py = y + r + r*Math.sin(a); break;
+        case 2: px = x + w; py = y + r + d; break;
+        case 3: a = d/r; px = x + w - r + r*Math.cos(a); py = y + h - r + r*Math.sin(a); break;
+        case 4: px = x + w - r - d; py = y + h; break;
+        case 5: a = Math.PI/2 + d/r; px = x + r + r*Math.cos(a); py = y + h - r + r*Math.sin(a); break;
+        case 6: px = x; py = y + h - r - d; break;
+        default: a = Math.PI + d/r; px = x + r + r*Math.cos(a); py = y + r + r*Math.sin(a);
+      }
+      pts.push([px, py]);
+    }
+    return pts;
+  }
+  /* each symbol as points in a unit box (-1..1): link, eye, score ring, counts, switch, tick */
+  function symbol(i, n){
+    var p = [], k, a;
+    for (k = 0; k < n; k++){
+      var u = k / n;
+      if (i === 0){ a = u * 4 * Math.PI; var c = u < 0.5 ? -0.32 : 0.32; p.push([c + 0.5*Math.cos(a), 0.34*Math.sin(a)]); }
+      else if (i === 1){ if (u < 0.75){ a = (u/0.75) * 2 * Math.PI; p.push([0.9*Math.cos(a), (Math.sin(a) > 0 ? 0.48 : 0.48) * Math.sin(a) * (1 - 0.25*Math.cos(2*a))]); }
+                         else { a = ((u-0.75)/0.25) * 2 * Math.PI; p.push([0.22*Math.cos(a), 0.22*Math.sin(a)]); } }
+      else if (i === 2){ a = -Math.PI/2 + u * 1.55 * Math.PI; p.push([0.85*Math.cos(a), 0.85*Math.sin(a)]); }
+      else if (i === 3){ var b = Math.floor(u*3), f = (u*3) % 1, hs = [0.6, 1.1, 1.6][b]; p.push([-0.6 + b*0.6, 0.8 - f*hs]); }
+      else if (i === 4){ if (u < 0.7){ var pp = outline(-0.9, -0.38, 1.8, 0.76, 0.38, 1)[0]; pp = outline(-0.9, -0.38, 1.8, 0.76, 0.38, 100)[Math.floor(u/0.7*100) % 100]; p.push(pp); }
+                         else { a = ((u-0.7)/0.3) * 2 * Math.PI; p.push([0.48 + 0.24*Math.cos(a), 0.24*Math.sin(a)]); } }
+      else { if (u < 0.35){ var g = u/0.35; p.push([-0.75 + g*0.5, 0.05 + g*0.45]); } else { var h2 = (u-0.35)/0.65; p.push([-0.25 + h2*1.05, 0.5 - h2*1.15]); } }
+    }
+    return p;
+  }
+
+  function layout(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var r = stage.getBoundingClientRect();
+    W = r.width; H = r.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var s = slot.getBoundingClientRect(), ph = Math.min(s.height * 0.92, 420), pw = ph * 0.5;
+    phone = { x: s.left - r.left + (s.width - pw) / 2, y: s.top - r.top + (s.height - ph) / 2, w: pw, h: ph };
+    var n = W < 700 ? 300 : 420, rr = rnd(7), out = outline(phone.x, phone.y, phone.w, phone.h, pw * 0.16, n);
+    dots = out.map(function(p){ return { sx: rr() * W, sy: rr() * H, tx: p[0], ty: p[1], d: rr() * 0.5 }; });
+    glyphs = items.map(function(li, i){
+      var sl = li.querySelector('.slot').getBoundingClientRect(), cx = sl.left - r.left + sl.width/2, cy = sl.top - r.top + sl.height/2;
+      var half = sl.width * 0.36, pts = symbol(i, W < 700 ? 40 : 56);
+      return { cx: cx, cy: cy, at: 1.7 + i * 0.75, color: COLORS[i],
+        pts: pts.map(function(q){ return { sx: phone.x + phone.w/2 + (rr()-0.5) * phone.w * 0.5, sy: phone.y + phone.h * (0.3 + rr()*0.4), tx: cx + q[0]*half, ty: cy + q[1]*half }; }) };
+    });
+  }
+  var ease = function(x){ x = Math.max(0, Math.min(1, x)); return 1 - Math.pow(1 - x, 3); };
+
+  function draw(t){
+    ctx.clearRect(0, 0, W, H);
+    var g = ease(t / 1.6);
+    /* the screen: a glow, and nothing drawn on it */
+    var gl = ctx.createRadialGradient(phone.x + phone.w/2, phone.y + phone.h/2, 4, phone.x + phone.w/2, phone.y + phone.h/2, phone.h * 0.55);
+    gl.addColorStop(0, 'rgba(232,212,139,' + (0.16 * g) + ')'); gl.addColorStop(1, 'rgba(232,212,139,0)');
+    ctx.fillStyle = gl; ctx.fillRect(phone.x, phone.y, phone.w, phone.h);
+    ctx.fillStyle = '#e8d48b';
+    for (var i = 0; i < dots.length; i++){
+      var d = dots[i], e = ease((t - d.d) / 1.3);
+      ctx.globalAlpha = 0.35 + 0.65 * e;
+      ctx.fillRect(d.sx + (d.tx - d.sx) * e - 1, d.sy + (d.ty - d.sy) * e - 1, 2, 2);
+    }
+    var lit = 0;
+    for (var j = 0; j < glyphs.length; j++){
+      var G = glyphs[j], ge = ease((t - G.at) / 1.1);
+      if (t < G.at) continue;
+      lit = j + 1;
+      ctx.fillStyle = G.color;
+      for (var k = 0; k < G.pts.length; k++){
+        var q = G.pts[k];
+        ctx.globalAlpha = 0.25 + 0.75 * ge;
+        ctx.fillRect(q.sx + (q.tx - q.sx) * ge - 1.1, q.sy + (q.ty - q.sy) * ge - 1.1, 2.2, 2.2);
+      }
+    }
+    ctx.globalAlpha = 1;
+    for (var m = 0; m < items.length; m++) items[m].classList.toggle('on', m < lit);
+    return t > glyphs[glyphs.length - 1].at + 1.2;
+  }
+  function frame(now){
+    if (!t0) t0 = now;
+    var settled = draw((now - t0) / 1000);
+    if (settled){ done = true; raf = 0; return; }
+    raf = visible ? requestAnimationFrame(frame) : 0;
+  }
+  function settle(){ draw(99); done = true; }
+
+  layout();
+  if (reduced){ settle(); }
+  else {
+    new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        visible = e.isIntersecting && e.intersectionRatio >= 0.2;
+        if (visible && !done && !raf){ if (t0) t0 = 0; raf = requestAnimationFrame(frame); }
+      });
+    }, { threshold: [0, 0.2] }).observe(stage);
+  }
+  var rt = 0;
+  window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ layout(); if (done) settle(); }, 150); });
+})();
+</script>
+<script src="/guide/corner.js" defer></script>
+</body>
+</html>

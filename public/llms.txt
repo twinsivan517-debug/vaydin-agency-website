@@ -5,12 +5,13 @@
 Vaydin (VAYDIN PARTNERS INVESTMENTS - FZCO, DSO-IFZA, Dubai Silicon Oasis, UAE) works in three steps:
 
 1. Intelligence (the diagnostic): unannounced, every thirty to sixty days, a real person messages the clinic on WhatsApp like a new patient. Between shops Vaydin reads the clinic's Google profile and its rivals every week, its Instagram and website every month. Six areas, one score, and what to fix first.
-2. The Revenue Engine: on the clinic's own WhatsApp number a patient's first message gets the clinic's menu at once and a visit is booked inside the chat; visits are reminded, a quiet list of past patients is invited back once, and each new Google review gets a reply the clinic approved, posted by one tap from reception. The clinic's Google profile is checked daily. Consultation preparation, Instagram messages, email and website changes are built around each clinic. The Intelligence keeps scoring the work.
-3. Grow: once the Engine runs the clinic, paid patient demand lands in the system that already books, every dirham counted on the same dashboard.
+2. The Revenue Engine: on the clinic's own WhatsApp number a patient's first message gets the clinic's menu at once and a visit is booked inside the chat; visits are reminded, a quiet list of past patients is invited back once, and each new Google review gets a reply the clinic approved, posted by one tap from reception. The clinic's Google profile is checked daily. Consultation preparation, email on the clinic's own domain, and website changes made by a person on request are built around each clinic; Instagram DMs on the same menu and booking as WhatsApp, once Meta approves our access. The Intelligence keeps reading the clinic from outside.
+3. Grow: only once the Engine runs the clinic and its bookings are proven, paid patient demand and Instagram content land in the system that already books.
 
 ## Pages
 
-- https://vaydin.agency/ : who Vaydin is, told by the guide, who answers the five questions clinic owners ask first; the full transcript is on the page
+- https://vaydin.agency/ : who Vaydin is, told by the guide, who answers the six questions clinic owners ask first; the full transcript is on the page
+- https://vaydin.agency/app.html : what a clinic owner sees in one place: one link, how patients meet the clinic read every week and every month, one score, and once the Engine runs, what it did, counted
 - https://vaydin.agency/diagnose.html : Intelligence, the diagnostic: what is measured and how
 - https://vaydin.agency/fix.html : the Revenue Engine: what it does on a clinic's WhatsApp number and Google profile, and where it stands today
 - https://vaydin.agency/engine.html : inside the Engine

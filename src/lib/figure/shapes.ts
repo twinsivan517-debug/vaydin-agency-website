@@ -72,6 +72,8 @@ const DRAW: Record<string, [string, Draw]> = {
     rr(g, 30, 44, 160, 150, 16); g.stroke(); line(g, 30, 86, 190, 86); line(g, 70, 26, 70, 60); line(g, 150, 26, 150, 60);
     g.lineWidth = 12; line(g, 78, 140, 102, 164, 148, 112);
   }],
+  /* "One place" (WEB-G): a phone's outline and nothing inside it, the owner's lock of 13 May (never the product's screens). */
+  app: ["#e8d48b", (g) => { g.lineWidth = 9; rr(g, 62, 12, 96, 196, 24); g.stroke(); }],
   bell: ["#f5d978", (g) => {
     g.beginPath(); g.moveTo(54, 160); g.quadraticCurveTo(66, 140, 66, 100); g.bezierCurveTo(66, 48, 154, 48, 154, 100); g.quadraticCurveTo(154, 140, 166, 160); g.closePath(); g.stroke();
     dot(g, 110, 182, 12); line(g, 110, 34, 110, 50);
