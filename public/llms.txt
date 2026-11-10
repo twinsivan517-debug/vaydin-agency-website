@@ -5,7 +5,7 @@
 Vaydin (VAYDIN PARTNERS INVESTMENTS - FZCO, DSO-IFZA, Dubai Silicon Oasis, UAE) works in three steps:
 
 1. Intelligence (the diagnostic): unannounced, every thirty to sixty days, a real person messages the clinic on WhatsApp like a new patient. Between shops Vaydin reads the clinic's Google profile and its rivals every week, its Instagram and website every month. Six areas, one score, and what to fix first.
-2. The Revenue Engine: on the clinic's own WhatsApp number a patient's first message gets the clinic's menu at once and a visit is booked inside the chat; visits are reminded, a quiet list of past patients is invited back once, and each new Google review gets a reply the clinic approved, posted by one tap from reception. The clinic's Google profile is checked daily. It is built and tested, and no clinic runs on it yet; Instagram messages and email are not built. The Intelligence keeps scoring the work.
+2. The Revenue Engine: on the clinic's own WhatsApp number a patient's first message gets the clinic's menu at once and a visit is booked inside the chat; visits are reminded, a quiet list of past patients is invited back once, and each new Google review gets a reply the clinic approved, posted by one tap from reception. The clinic's Google profile is checked daily. It is built and tested, and no clinic runs on it yet; Instagram replies, email and website care are not part of it: they are scoped and built on request. The Intelligence keeps scoring the work.
 3. Grow: once the Engine runs the clinic, paid patient demand lands in the system that already books, every dirham counted on the same dashboard.
 
 ## Pages
