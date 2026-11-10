@@ -5,12 +5,16 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
-/* A line's words, as a voice would say them: stage directions, case and punctuation aside. verify.py's words() is the
-   same rule; the lock holds both a text's hash and its words' hash, so the test turns red if the two rules ever differ. */
+/* A line's words, as a voice would say them: stage directions, case and punctuation aside; every letter and digit of any
+   script kept, and a typographic apostrophe read as a plain one. verify.py's words() is the same rule and writes these
+   words into the lock, so the test turns red the moment the two rules disagree. A number written as digits instead of
+   words counts as changed words. */
 export const words = (t) =>
-  t.replace(/\[[^\]]*\]/g, " ").toLowerCase().replace(/[^a-z0-9']+/g, " ").trim().split(/\s+/).filter(Boolean).join(" ");
+  t.replace(/\[[^\]]*\]/g, " ").replace(/’/g, "'").toLowerCase().replace(/[^\p{L}\p{N}']+/gu, " ").trim()
+    .split(" ").filter(Boolean).join(" ");
 
-/* Every /voice/<id>.mp3 named anywhere under src/, so a spoken line kept outside the walk is still seen. */
+/* Every /voice/<id>.mp3 named literally anywhere under src/, so a recording played outside the walk is still seen.
+   Limits: a path built from a template is not resolved, and a second text for an id the walk already knows is not seen. */
 export function referenced(site) {
   const ids = new Set();
   const visit = (dir) => {

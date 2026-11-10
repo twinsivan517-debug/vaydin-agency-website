@@ -1,8 +1,9 @@
 // Run with `npm test`. No spoken line may say words its recording does not (2026-11-10, web-studio's WEB-A). Every line,
 // read the way extract.mjs reads it (lab/particle-guide/voice/lines.mjs), is held to lab/particle-guide/voice/recorded.json:
-// for each line the SHA-256 of its page text, of its words and of its mp3, written only by verify.py --lock after Whisper
-// heard the take say that text. Changed words need a new recording (verify.py will not lock new words on an old one); a
-// changed mp3 needs verifying; punctuation alone needs only verify.py --lock. Limit: cues.json is checked for presence only.
+// for each line the SHA-256 of its page text, its words as text, and the SHA-256 of its mp3, written only by verify.py
+// --lock after Whisper heard the take say that text. Changed words need a new take that Whisper hears closer to them than
+// to the old words; a changed mp3 needs verifying; punctuation alone needs only verify.py --lock.
+// Limits: cues.json is checked for presence only; src/ is scanned for literal /voice/<id>.mp3 paths only.
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -26,10 +27,13 @@ for (const [id, l] of Object.entries(lines)) {
   const e = locked[id];
   if (id in extras) fails.push(`${id}: named in _extras, but a line speaks it`);
   if (!disk.includes(id)) { fails.push(`${at}: a spoken line with no recording`); continue; }
-  if (!e || typeof e !== "object") { fails.push(`${at}: never verified against its recording (verify.py --lock)`); continue; }
+  if (!e || typeof e !== "object" || !e.text || typeof e.said !== "string" || !e.audio) {
+    fails.push(`${at}: never verified against its recording (verify.py --lock)`);
+    continue;
+  }
   if (e.audio !== audio(id)) fails.push(`${at}: its recording changed since it was verified (verify.py --lock checks the new take)`);
-  if (e.words !== sha(words(l.text)))
-    fails.push(`${at}: its words changed since its recording was verified. Re-record it: verify.py will not lock new words on the old recording`);
+  if (e.said !== words(l.text))
+    fails.push(`${at}: its words changed since its recording was verified. Re-record it: verify.py will not lock new words on the old take`);
   else if (e.text !== sha(l.text)) fails.push(`${at}: punctuation or case changed, the words did not (verify.py --lock)`);
 }
 for (const id of Object.keys(locked)) if (!lines[id]) fails.push(`${id}: verified once, no longer a spoken line (verify.py --lock removes it)`);
