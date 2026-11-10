@@ -51,13 +51,13 @@ export const CHAPTERS: Chapter[] = [
     lines: [
       {
         id: "w1",
-        text: "Vaydin is a Dubai company for aesthetic and wellness clinics. We measure how your clinic looks to a new patient, then run its front door for you: WhatsApp, Google, reviews, Instagram and the website.",
+        text: "Vaydin is a Dubai company for aesthetic and wellness clinics. We measure how your clinic looks to a new patient, then run its front door for you: WhatsApp answered and booked, your Google profile checked daily and a reply ready for every review, with Instagram, email and your website built around your clinic.",
         audio: "/voice/w1.mp3",
       },
     ],
     card: {
       title: "What is Vaydin?",
-      facts: ["We measure how your clinic looks to a new patient", "Then we run its front door: WhatsApp, Google, reviews, Instagram, the website", "A Dubai free-zone company, licensed under IFZA"],
+      facts: ["We measure how your clinic looks to a new patient", "WhatsApp, Google and reviews in one engine; Instagram, email and website built around you", "A Dubai free-zone company, licensed under IFZA"],
       links: [{ href: "/diagnose.html", label: "Start with the diagnostic" }],
     },
   },

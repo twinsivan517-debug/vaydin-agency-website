@@ -146,7 +146,7 @@ export const ANSWERS: Answer[] = [
     id: "what",
     short: "What we do",
     question: "What do you do?",
-    answer: "Vaydin is a Dubai company for aesthetic and wellness clinics. We measure how your clinic looks to a new patient, then run its front door for you: WhatsApp, Google, reviews, Instagram and the website.",
+    answer: "Vaydin is a Dubai company for aesthetic and wellness clinics. We measure how your clinic looks to a new patient, then run its front door for you: WhatsApp answered and booked, your Google profile checked daily and a reply ready for every review, with Instagram, email and your website built around your clinic.",
     voice: "/voice/w1.mp3",
     keywords: ["what is vaydin", "what does vaydin do", "what do you do", "what do you offer", "what services", "services", "about vaydin", "what is this", "how does it work", "how do you work", "how it works", "explain", "tell me about vaydin", "tell me more about vaydin", "more about vaydin", "more information about vaydin", "tell me more about you"],
     link: { href: "/diagnose.html", label: "Start with the diagnostic" },

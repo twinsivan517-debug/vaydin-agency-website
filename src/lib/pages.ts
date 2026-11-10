@@ -24,7 +24,7 @@ export const SUMMARIES: Record<string, Line> = {
   ),
   engine: line(
     "p-engine",
-    "This page shows the engine on one screen. Your WhatsApp and your Google profile flow into one system that answers, books, reminds, invites back and counts, with four more jobs built around your clinic. Thirteen jobs, working while you sleep.",
+    "This page shows the engine on one screen. Your WhatsApp and your Google profile flow into one system that answers, books, reminds, invites back and counts. Nine jobs in the engine, and four more built around your clinic.",
   ),
   pricing: line(
     "p-pricing",
