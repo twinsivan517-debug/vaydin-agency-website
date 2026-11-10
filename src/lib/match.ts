@@ -49,7 +49,7 @@ const FILLER = new Set(
 
 /* Words too common to be a misspelling of a keyword. */
 const COMMON = new Set(
-  "about also anything been best could does doing done from give good have hello help here into just know like make many more much need please really should some something tell than thank thanks that their them then there they this very want were what when where which will with work works would your".split(
+  "about also anything been best change could does doing done from give good have hello help here into just know like make many more much need please really recover should some something tell than thank thanks that their them then there they this very want were what when where which will with work works would your".split(
     " ",
   ),
 );

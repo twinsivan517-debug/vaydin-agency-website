@@ -73,7 +73,7 @@ export const CHAPTERS: Chapter[] = [
       },
       {
         id: "08",
-        text: "Layer two, the Revenue Engine: we answer, book, remind and revive every inquiry on your own WhatsApp number, and run your Google profile, your reviews, your Instagram messages and your website. Your reception approves with a tap, and the Intelligence keeps scoring us.",
+        text: "Layer two, the Revenue Engine: on your own WhatsApp number a patient gets your menu at once and books inside the chat. Visits are reminded, your quiet list is invited back, and every review gets a reply ready for your reception to post with one tap. Four more are built around your clinic, and the Intelligence keeps scoring us.",
         audio: "/voice/08.mp3",
       },
     ],
@@ -82,7 +82,7 @@ export const CHAPTERS: Chapter[] = [
       facts: [
         "A real person shops your clinic every thirty to sixty days",
         "Google and rivals read weekly; Instagram and website monthly",
-        "Answer, book, remind, revive: on your own number, your reception approving by a tap",
+        "Your menu at once, booked in the chat, reminded, invited back: on your own number",
       ],
       links: [
         { href: "/diagnose.html", label: "Intelligence" },
@@ -97,7 +97,7 @@ export const CHAPTERS: Chapter[] = [
     lines: [
       {
         id: "g1",
-        text: "You gain the patients you are losing in public: every inquiry answered and booked, every review answered within a day, the quiet ones revived, and the proof of all of it on one dashboard.",
+        text: "You gain the patients you are losing in public: a WhatsApp inquiry answered at once and booked inside the chat, a reply ready for every review, the quiet ones invited back, and each step counted on one page.",
         audio: "/voice/g1.mp3",
       },
       {
@@ -108,7 +108,7 @@ export const CHAPTERS: Chapter[] = [
     ],
     card: {
       title: "What you gain",
-      facts: ["Every inquiry answered and booked", "Every review answered within a day; the quiet ones revived", "Evidence a patient could find themselves, scored on one dashboard"],
+      facts: ["A WhatsApp inquiry answered at once and booked", "A reply ready for every review; the quiet ones invited back", "Evidence a patient could find themselves, scored on one dashboard"],
       links: [{ href: "/engine.html", label: "Inside the engine" }],
     },
   },

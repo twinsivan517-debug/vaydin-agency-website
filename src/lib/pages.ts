@@ -16,7 +16,7 @@ export const SUMMARIES: Record<string, Line> = {
   ),
   fix: line(
     "p-fix",
-    "This is the Engine. We stop reporting the leaks and run the machine: every patient inquiry answered, booked, reminded and revived, and your Google, reviews, Instagram and website kept immaculate. You grant access; you keep the keys.",
+    "This is the Engine. We stop reporting the leaks and run the machine: WhatsApp inquiries answered and booked, visits reminded, quiet patients invited back, your Google profile checked and a reply ready for every review, with four more built around your clinic. You grant access; you keep the keys.",
   ),
   grow: line(
     "p-grow",
@@ -24,7 +24,7 @@ export const SUMMARIES: Record<string, Line> = {
   ),
   engine: line(
     "p-engine",
-    "This page shows the engine live on one screen. Every channel a patient can reach you on flows into one system that answers, books, reminds, revives and counts. Thirteen jobs, working while you sleep.",
+    "This page shows the engine on one screen. Your WhatsApp and your Google profile flow into one system that answers, books, reminds, invites back and counts, with four more jobs built around your clinic. Thirteen jobs, working while you sleep.",
   ),
   pricing: line(
     "p-pricing",

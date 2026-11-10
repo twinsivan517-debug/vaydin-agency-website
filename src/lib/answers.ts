@@ -39,7 +39,7 @@ export const ANSWERS: Answer[] = [
     short: "The engine",
     question: "What is the engine?",
     answer:
-      "Seven parts: intake, booking, consult conversion, show-up, dormant recovery, cross-sell and a dashboard, plus your estate: Google profile managed, every review answered within a day, Instagram and email on the same intake, website changes within two days. On your own number, your reception approving with a tap.",
+      "Thirteen jobs. Nine in the engine: your menu at once, booking inside the chat, reminders, your quiet list invited back, the next treatment offered, each step counted, your Google profile checked daily, a reply ready for every review, and every attended patient asked for one. Four built around your clinic: consultation preparation, Instagram, email and your website.",
     keywords: ["engine", "fix", "run", "operate", "operated", "answer", "answered", "answers", "reply", "replies", "respond", "whatsapp", "booking", "bookings", "book", "reminder", "reminders", "reception", "front door", "no show", "no shows", "revive", "follow up", "estate", "layer two", "layer 2", "dashboard", "google", "reviews", "review", "google maps", "listing"],
     link: { href: "/fix.html", label: "What the engine runs" },
   },
@@ -47,7 +47,7 @@ export const ANSWERS: Answer[] = [
     id: "bot",
     short: "Is it a bot?",
     question: "Is it a bot?",
-    answer: "The shopper is a person, never a bot. In the engine, AI drafts and a person approves; your reception confirms every booking with a tap.",
+    answer: "The shopper is a person, never a bot. The engine answers from a menu your clinic approved, never from a guess, and anything a patient types goes to your reception.",
     keywords: ["ai", "bot", "bots", "robot", "chatbot", "automated", "automatic", "automation", "human", "real person", "people", "machine"],
     link: { href: "/engine.html", label: "Inside the engine" },
   },
@@ -211,8 +211,8 @@ export const ANSWERS: Answer[] = [
     id: "privacy",
     short: "Patient data",
     question: "Is our patient data safe?",
-    answer: "Your patient records stay in your own system: we never import them.",
-    keywords: ["privacy", "private", "secure", "security", "patient data", "patient records", "records", "medical records", "our data", "my data", "data safe", "data stored", "pdpl", "hipaa", "gdpr", "hipaa compliant", "pdpl compliant", "stored", "storage", "encrypted", "encryption", "data protection", "data kept", "is the data", "patient information"],
+    answer: "Your medical records stay in your own system: the engine never connects to it. It keeps the WhatsApp conversations it handles, the bookings, a record of what it did, and a quiet list if you give us one.",
+    keywords: ["privacy", "private", "secure", "security", "patient data", "patient records", "records", "medical records", "our data", "my data", "data safe", "data stored", "pdpl", "hipaa", "gdpr", "hipaa compliant", "pdpl compliant", "stored", "storage", "encrypted", "encryption", "data protection", "data kept", "is the data", "patient information", "import", "our files", "patient files"],
     link: { href: "/privacy/", label: "Privacy policy" },
   },
   {
@@ -310,7 +310,7 @@ export const ANSWERS: Answer[] = [
     short: "Best clinic?",
     question: "Which clinic is best?",
     answer: "We don't rate clinics for the public. We measure them for their owners, and we name nobody.",
-    keywords: ["best clinic", "recommend a clinic", "recommend a doctor", "can you recommend", "which clinic", "good clinic", "top clinic", "best doctor"],
+    keywords: ["best clinic", "recommend a clinic", "recommend a doctor", "can you recommend", "which clinic", "good clinic", "top clinic", "best doctor", "highest rated", "top rated"],
     link: { href: "/diagnose.html", label: "What we measure" },
   },
   {
@@ -350,7 +350,7 @@ export const ANSWERS: Answer[] = [
     short: "Legal advice",
     question: "Can you give legal advice?",
     answer: "I can't give legal or regulatory advice for your clinic; your licensing authority or adviser can.",
-    keywords: ["do i need a permit", "my licence", "my license", "legal advice", "regulatory advice", "clinic licence", "clinic license"],
+    keywords: ["do i need a permit", "my licence", "my license", "legal advice", "regulatory advice", "clinic licence", "clinic license", "legal question"],
     link: { href: "/terms/", label: "Our terms" },
   },
   {
