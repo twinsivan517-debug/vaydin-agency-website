@@ -6,10 +6,14 @@ import { join } from "node:path";
 const [site, out] = process.argv.slice(2);
 const lib = (f) => import(pathToFileURL(join(site, "src", "lib", f)).href);
 const lines = {};
+const clashes = [];
 const add = (audio, text, from) => {
   if (!audio) return;
   const id = audio.replace(/^.*\//, "").replace(/\.mp3$/, "");
-  if (lines[id] && lines[id].text !== text) console.error(`two texts for ${id} (${from})`);
+  if (lines[id] && lines[id].text !== text) {
+    clashes.push(id);
+    console.error(`two texts for ${id} (${lines[id].from} and ${from})`);
+  }
   lines[id] = { text, from };
 };
 const walk = (v, from) => {
@@ -28,4 +32,9 @@ const disk = readdirSync(join(site, "public", "voice")).filter((f) => f.endsWith
 console.log("lines found", Object.keys(lines).length, "files on disk", disk.length);
 console.log("on disk, no text:", disk.filter((d) => !lines[d]).join(" ") || "none");
 console.log("text, no file:", Object.keys(lines).filter((l) => !disk.includes(l)).join(" ") || "none");
+/* One recording, two texts: whichever came last would be recorded, so nothing is written (2026-11-10). */
+if (clashes.length) {
+  console.error(`refused: ${clashes.join(" ")} ha${clashes.length > 1 ? "ve" : "s"} two texts; nothing written`);
+  process.exit(1);
+}
 writeFileSync(out, JSON.stringify(lines, null, 1));
