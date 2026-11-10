@@ -13,18 +13,18 @@ export const metadata: Metadata = { alternates: { canonical: "/" } };
 const PROBLEMS = [
   {
     title: "The message that waited",
-    problem: "A new patient writes on WhatsApp or Instagram at nine in the evening. The reply comes in the morning, or never. The clinic that answered in minutes has the booking.",
-    vaydin: "Every inquiry answered around the clock and booked on your own number, your reception approving the booking with a tap.",
+    problem: "A new patient writes on WhatsApp at nine in the evening. The reply comes in the morning, or never. The clinic that answered in minutes has the booking.",
+    vaydin: "Every WhatsApp inquiry answered at once, around the clock, and booked on your own number, your reception told the moment it happens.",
   },
   {
     title: "The booking that never showed",
     problem: "Consults slip without a reminder. Patients who had one treatment never hear from the clinic again. Nobody counts what that costs in a month.",
-    vaydin: "Every patient reminded before, revived after, and every conversation carried to the finish, counted on one dashboard.",
+    vaydin: "Every visit reminded before, every quiet patient on your list invited back, and all of it counted on one page.",
   },
   {
     title: "The front door nobody checks",
     problem: "Your Google profile, reviews, Instagram and website are judged by patients every day and seen by nobody inside the clinic.",
-    vaydin: "A real person shops your clinic unannounced every thirty to sixty days. Six areas, one score, what to fix first. Then we run it: every review answered within a day.",
+    vaydin: "A real person shops your clinic unannounced every thirty to sixty days. Six areas, one score, what to fix first. Then the engine keeps watch: your Google hours checked daily, a reply ready for every review.",
   },
 ];
 

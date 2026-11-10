@@ -51,7 +51,7 @@ const ORGANISATION = {
   logo: `${SITE.url}/vaydin-icon-512.png`,
   image: `${SITE.url}/vaydin-og.png`,
   description:
-    "Vaydin Agency is a Dubai company for aesthetic and wellness clinics in the UAE and the GCC. We measure how a clinic looks to a new patient, then run its front door: WhatsApp, Google, reviews, Instagram and the website.",
+    "Vaydin Agency is a Dubai company for aesthetic and wellness clinics in the UAE and the GCC. We measure how a clinic looks to a new patient, then answer and book its patients on WhatsApp and watch its Google profile and reviews.",
   areaServed: [
     { "@type": "Country", name: "United Arab Emirates" },
     { "@type": "Place", name: "GCC" },
