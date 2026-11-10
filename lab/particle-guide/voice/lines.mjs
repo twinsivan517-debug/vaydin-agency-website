@@ -1,9 +1,29 @@
 // Every spoken line of the site, read from its own sources: the one walk extract.mjs and scripts/voice-lines.test.mjs share.
 // A line is any object with `text` and `audio`, plus every answer, plus the opener: the lines of an "opener" chapter that
 // carry no audio of their own are spoken from OPENER_AUDIO, so their joined text is that file's line (record.py skips it).
-import { readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
+
+/* A line's words, as a voice would say them: stage directions, case and punctuation aside. verify.py's words() is the
+   same rule; the lock holds both a text's hash and its words' hash, so the test turns red if the two rules ever differ. */
+export const words = (t) =>
+  t.replace(/\[[^\]]*\]/g, " ").toLowerCase().replace(/[^a-z0-9']+/g, " ").trim().split(/\s+/).filter(Boolean).join(" ");
+
+/* Every /voice/<id>.mp3 named anywhere under src/, so a spoken line kept outside the walk is still seen. */
+export function referenced(site) {
+  const ids = new Set();
+  const visit = (dir) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = join(dir, e.name);
+      if (e.isDirectory()) visit(p);
+      else if (/\.(ts|tsx|js|mjs)$/.test(e.name))
+        for (const m of readFileSync(p, "utf8").matchAll(/\/voice\/([A-Za-z0-9_-]+)\.mp3/g)) ids.add(m[1]);
+    }
+  };
+  visit(join(site, "src"));
+  return [...ids];
+}
 
 export async function collect(site) {
   const lib = (f) => import(pathToFileURL(join(site, "src", "lib", f)).href);
