@@ -31,7 +31,7 @@ export const DOORS: Door[] = [
     tag: "System",
     href: "/engine.html",
     accent: "#a78bfa",
-    title: "One engine. Thirteen jobs. Working while you sleep.",
+    title: "Thirteen jobs. Nine in the engine, four built around you.",
   },
   {
     word: "Your plan",

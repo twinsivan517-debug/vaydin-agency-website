@@ -346,7 +346,7 @@ export function Stage() {
           so it is never read out again with each of his lines. */}
       <div className="hero-intro wakes">
         <h1 className="hero-name font-display text-base leading-snug text-muted md:text-lg">
-          <span className="label mr-3 text-gold-bright">Vaydin Agency · Dubai</span>{" "}
+          <span className="label mr-3 text-gold-bright">Vaydin · Aesthetic clinic marketing agency, Dubai</span>{" "}
           We find the patients your clinic never saw.
         </h1>
         <p aria-hidden="true" className="hero-hint">

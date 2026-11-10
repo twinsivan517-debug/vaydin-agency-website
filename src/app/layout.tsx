@@ -7,7 +7,7 @@ const sans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const display = Marcellus({ variable: "--font-marcellus", subsets: ["latin"], weight: "400" });
 
 /* The home page's name, in a search result and on a shared link alike. */
-const TITLE = `${SITE.name} Agency, Dubai: we find the patients your clinic never saw`;
+const TITLE = `Aesthetic clinic marketing agency in Dubai · ${SITE.name}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -31,19 +31,20 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
    policy is the one that works as a meta tag. */
 const REFERRER = "strict-origin-when-cross-origin";
 
-/* The organisation record, saying what the page itself says: the shopper is
-   a person, so no bots in it. */
+/* The business record, a ProfessionalService in Dubai, saying what the page
+   itself says: the shopper is a person, so no bots in it. */
 const ORGANISATION = {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": "ProfessionalService",
+  "@id": `${SITE.url}/#organization`,
   name: SITE.name,
   legalName: "VAYDIN PARTNERS INVESTMENTS - FZCO",
   alternateName: ["Vaydin Agency", "VAYDIN PARTNERS INVESTMENTS - FZCO"],
   telephone: "+971505553148",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "DSO-IFZA, IFZA Properties",
-    addressLocality: "Dubai Silicon Oasis",
+    streetAddress: "DSO-IFZA, IFZA Properties, Dubai Silicon Oasis",
+    addressLocality: "Dubai",
     addressRegion: "Dubai",
     addressCountry: "AE",
   },
@@ -70,7 +71,7 @@ const WEBSITE = {
   name: SITE.name,
   alternateName: ["Vaydin Agency", "vaydin.agency"],
   url: `${SITE.url}/`,
-  publisher: { "@type": "Organization", name: SITE.name, url: `${SITE.url}/` },
+  publisher: { "@type": "Organization", "@id": `${SITE.url}/#organization`, name: SITE.name, url: `${SITE.url}/` },
   inLanguage: "en",
 };
 
