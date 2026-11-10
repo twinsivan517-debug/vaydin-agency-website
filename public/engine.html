@@ -183,18 +183,6 @@
   .cmp-foot a{font-size:13px;color:var(--volt)}
   .cmp-foot a:hover{color:var(--tx)}
 
-  /* ---------- where it stands today ---------- */
-  #today{max-width:1240px;margin:0 auto;padding:110px 48px 0}
-  #today h2{font-family:var(--display);font-weight:400;font-size:clamp(28px,3.3vw,44px);line-height:1.15;margin:0 0 14px;max-width:720px;text-wrap:balance}
-  #today .section-sub{margin-bottom:34px}
-  .today{background:rgba(9,15,12,0.75);box-shadow:0 0 0 1px var(--border);padding:8px 34px}
-  .trow{display:grid;grid-template-columns:210px 1fr;gap:22px;padding:15px 0;border-top:1px solid rgba(27,43,48,0.7);font-size:14px;color:var(--tx-muted);align-items:baseline}
-  .trow:first-child{border-top:0}
-  .trow .tk{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:var(--tx-faint)}
-  .trow.ok .tk{color:var(--ok)}
-  .trow.wait .tk{color:var(--warn)}
-  .trow.no .tk{color:var(--critical)}
-
   /* ---------- cta band ---------- */
   .band{margin-top:130px;background:linear-gradient(180deg, transparent 0%, rgba(9,15,12,0.8) 50%, transparent 100%);
     border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:96px 48px;text-align:center}
@@ -239,9 +227,6 @@
     .hud{position:fixed;left:22px;right:22px;top:auto;bottom:22px;width:auto;transform:translateY(12px)}
     .hud.on{transform:none}
     #compare{padding:80px 22px 0}
-    #today{padding:72px 22px 0}
-    .today{padding:4px 20px}
-    .trow{grid-template-columns:1fr;gap:4px}
     .cmp-frame{grid-template-columns:1fr}
     .cmp-sel{border-right:0;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;padding:14px 10px}
     .cmp-sel .gh{display:none}
@@ -289,7 +274,7 @@
 
   <div class="console">
     <div class="eyebrow"><span class="pulse"></span>INSIDE THE VAYDIN ENGINE</div>
-    <h1 class="grad-text">One engine.<br>Nine jobs.<br>Working while you sleep.</h1>
+    <h1 class="grad-text">One engine.<br>Thirteen jobs.<br>Working while you sleep.</h1>
     <p>Your WhatsApp and your Google profile flow into <b>one system</b> that answers, books, reminds, invites back, and counts. <b>Press a field</b> and watch the engine pull it in, then read what it does for you.</p>
 
     <div class="fgroup">
@@ -307,12 +292,19 @@
       <button class="frow" data-field="reviews"><span class="dot" style="background:#fbbf24"></span><span class="fn">Every review, a reply ready</span><span class="arr">→</span></button>
       <button class="frow" data-field="review-growth"><span class="dot" style="background:#fbbf24"></span><span class="fn">Every attended patient asked for a review</span><span class="arr">→</span></button>
     </div>
+    <div class="fgroup">
+      <div class="gh">BUILT AROUND YOUR CLINIC · 4 FIELDS</div>
+      <button class="frow" data-field="consult"><span class="dot" style="background:#34e3f0"></span><span class="fn">Consultations, prepared</span><span class="arr">→</span></button>
+      <button class="frow" data-field="instagram"><span class="dot" style="background:#E1306C"></span><span class="fn">Instagram DMs, on the same engine</span><span class="arr">→</span></button>
+      <button class="frow" data-field="email"><span class="dot" style="background:#60a5fa"></span><span class="fn">Email, connected</span><span class="arr">→</span></button>
+      <button class="frow" data-field="website"><span class="dot" style="background:#34e3f0"></span><span class="fn">Website concierge</span><span class="arr">→</span></button>
+    </div>
   </div>
 
   <div class="hud" id="hud">
     <span class="bk tl"></span><span class="bk tr"></span><span class="bk bl"></span><span class="bk br"></span>
     <button class="hx" id="hudclose" aria-label="Close">×</button>
-    <div class="hh" id="hud-count">FIELD 01/09</div>
+    <div class="hh" id="hud-count">FIELD 01/13</div>
     <h3 id="hud-title"></h3>
     <p class="hp" id="hud-exp"></p>
     <div class="chs" id="hud-chs"></div>
@@ -336,7 +328,7 @@
 
   <div class="cmp-frame reveal">
     <span class="bk tl"></span><span class="bk tr"></span><span class="bk bl"></span><span class="bk br"></span>
-    <div class="cmp-counter" id="cmp-count">01/09</div>
+    <div class="cmp-counter" id="cmp-count">01/13</div>
     <div class="cmp-sel" id="cmp-sel">
       <div class="gh">THE ENGINE</div>
     </div>
@@ -358,22 +350,6 @@
         <a href="pricing.html" id="cmp-detail">Ask for your plan →</a>
       </div>
     </div>
-  </div>
-</section>
-
-<section id="today">
-  <div class="reveal">
-    <div class="sec-eyebrow">BUILT, NOT YET RUNNING</div>
-    <h2 class="grad-text">Where the engine stands today.</h2>
-    <p class="section-sub">Everything above is what the engine does, not a client's result. This is exactly how far it has come.</p>
-  </div>
-  <div class="today reveal">
-    <div class="trow ok"><span class="tk">BUILT AND TESTED</span><span>Built and tested with the engine's own tests and on our own test phones. The two Google parts have not yet run on a real Google profile.</span></div>
-    <div class="trow wait"><span class="tk">NOT RUNNING YET</span><span>No clinic runs on the engine yet.</span></div>
-    <div class="trow wait"><span class="tk">SWITCHED ON PER CLINIC</span><span>Each of the nine is off until it is switched on for your clinic, one at a time.</span></div>
-    <div class="trow wait"><span class="tk">APPROVED WHEN A CLINIC JOINS</span><span>Reminders and the other messages a clinic starts are approved by Meta under the clinic's own account when it joins. None is approved yet, because no clinic has joined.</span></div>
-    <div class="trow wait"><span class="tk">WAITING ON GOOGLE</span><span>The profile check and the review replies need Google to approve our access, which we can request only once a first clinic adds us to its profile. The check's findings do not show on your page yet.</span></div>
-    <div class="trow"><span class="tk">ON REQUEST</span><span>Not part of the nine: Instagram replies, email, care of your website. Today the engine answers WhatsApp only. If your clinic needs more, ask: we scope it, build it and price it in your plan.</span></div>
   </div>
 </section>
 
@@ -407,7 +383,7 @@
     },
     'booking': {
       name:'Booked inside the chat', group:'engine', ch:['BOOKING','WHATSAPP'],
-      exp:'Interest is not a booking. The patient taps a treatment, picks a time, and is booked and told in the same chat. Your reception is told at once, with one button if the time has to move. If you prefer, reception confirms every booking first. The engine sees only the bookings made through it, not your own diary: if a time clashes, that button moves it.',
+      exp:'Interest is not a booking. The patient taps a treatment, picks a time, and is booked and told in the same chat. Your reception is told at once, with one button if the time has to move. If you prefer, reception confirms every booking first.',
       off:['"I\'ll think about it" is where conversations go to die',
            'Patients are asked to call back during working hours',
            'A booking waits until someone has time to open the diary'],
@@ -437,7 +413,7 @@
     },
     'crosssell': {
       name:'The next treatment, offered after the visit', group:'engine', ch:['WHATSAPP','BOOKING'],
-      exp:'When your reception marks a visit as attended, and you mapped a next treatment to the one they just had, the patient gets one note from your clinic with a button that starts booking it. The note itself names no treatment and pushes nothing. It starts once the engine has a few bookings behind it.',
+      exp:'When your reception marks a visit as attended, and you mapped a next treatment to the one they just had, the patient gets one note from your clinic with a button that starts booking it. The note itself names no treatment and pushes nothing.',
       off:['The next treatment is mentioned only if the doctor remembers',
            'A patient\'s value ends at one visit',
            'When it is offered, it sounds like upselling'],
@@ -457,7 +433,7 @@
     },
     'google': {
       name:'Your Google profile, checked daily', group:'estate', ch:['GOOGLE'],
-      exp:'For most new patients, your Google profile is your front door. Once a day the engine reads it and checks four things: that the hours Google shows match the hours you gave us, that Google has not edited the profile on its own, that it does not show you as closed, and that the listing is in good standing. It changes nothing: you fix it in Google\'s own screen. Showing you what it finds on your page is not built yet.',
+      exp:'For most new patients, your Google profile is your front door. Once a day the engine reads it and checks four things: that the hours Google shows match the hours you gave us, that Google has not edited the profile on its own, that it does not show you as closed, and that the listing is in good standing. It changes nothing: you fix it in Google\'s own screen.',
       off:['Old hours on the profile, and a patient at a locked door',
            'A change nobody at the clinic made, noticed weeks later',
            'Nobody at the clinic looks at it for months'],
@@ -484,11 +460,52 @@
       on:['Asked <b>after a visit that happened</b>, never before',
           'One request, at most once a year',
           'Everyone is asked, as Google requires']
+    },
+    'consult': {
+      name:'Consultations, prepared', group:'custom', ch:['BUILT FOR YOUR CLINIC'],
+      exp:'The consultation is where treatment plans are accepted or lost. We build the patient\'s preparation with your clinic: what to expect, how long it takes, what to bring, in wording your team approves, sent before they arrive.',
+      off:['The patient arrives cold: the first fifteen minutes are spent explaining',
+           'The same three questions, answered at the desk every day',
+           'Nobody told them what to bring'],
+      on:['Built with your clinic: <b>your own lines</b>, approved by your team',
+          'Sent before the visit, on the same WhatsApp',
+          'Anything clinical stays with your doctors']
+    },
+    'instagram': {
+      name:'Instagram DMs, on the same engine', group:'custom', ch:['BUILT FOR YOUR CLINIC'],
+      exp:'For aesthetic clinics, Instagram is the front door. We connect your DMs and story replies to the same engine as your WhatsApp: the same menu, the same booking, the same hand-over to your team, through Meta\'s official access.',
+      off:['DMs sit behind whoever holds the account password',
+           'Story replies scroll away and vanish',
+           'A "check DM please" comment is a patient nobody claims'],
+      on:['Connected for your clinic, through <b>Meta\'s official access</b>',
+          'The same menu and the same booking as WhatsApp',
+          'Handed to your team the moment a person is needed']
+    },
+    'email': {
+      name:'Email, connected', group:'custom', ch:['BUILT FOR YOUR CLINIC'],
+      exp:'The inbox stops being a graveyard. We connect your inquiries inbox to the same engine: the same approved answers, the same booking, the same hand-over to your team, built around how your clinic uses email.',
+      off:['Email inquiries answered days later, or never',
+           'The inbox gives different answers than the front desk',
+           'Nothing connects the inbox to the booking calendar'],
+      on:['Connected for your clinic, <b>on the same engine</b>',
+          'One set of approved answers on every channel',
+          'Handed to your team the moment a person is needed']
+    },
+    'website': {
+      name:'Website concierge', group:'custom', ch:['BUILT FOR YOUR CLINIC'],
+      exp:'Hours, prices, a new treatment, a new doctor: one WhatsApp message to us and a person makes the change, within 48 hours. Your site stops drifting out of date.',
+      off:['Last year\'s prices are live right now',
+           'The old agency charges per change and takes weeks',
+           'So nobody asks, and the site quietly rots'],
+      on:['One message → <b>done within 48 hours</b>',
+          'Hours, prices, treatments: kept current',
+          'Done by a person, not a ticket queue']
     }
   };
-  var ORDER = ['intake','booking','showup','dormant','crosssell','kpi','google','reviews','review-growth'];
+  var ORDER = ['intake','booking','showup','dormant','crosssell','kpi','google','reviews','review-growth','consult','instagram','email','website'];
+  var GROUPS = {engine:'THE ENGINE', estate:'THE ESTATE', custom:'BUILT AROUND YOUR CLINIC'};
   var TOTAL = ('0' + ORDER.length).slice(-2);
-  var DOTS = {'intake':'#25D366','booking':'#e8d48b','showup':'#4ade80','dormant':'#fb923c','crosssell':'#a78bfa','kpi':'#f5d978','google':'#4285F4','reviews':'#fbbf24','review-growth':'#fbbf24'};
+  var DOTS = {'intake':'#25D366','booking':'#e8d48b','showup':'#4ade80','dormant':'#fb923c','crosssell':'#a78bfa','kpi':'#f5d978','google':'#4285F4','reviews':'#fbbf24','review-growth':'#fbbf24','consult':'#34e3f0','instagram':'#E1306C','email':'#60a5fa','website':'#34e3f0'};
 
   /* ================= ticker (labeled illustration) ================= */
   var flows = [
@@ -531,9 +548,9 @@
 
   /* build selector rows (after the ENGINE header; ESTATE header before index 7) */
   ORDER.forEach(function(id, i){
-    if(i > 0 && FIELDS[id].group === 'estate' && FIELDS[ORDER[i - 1]].group === 'engine'){
+    if(i > 0 && FIELDS[id].group !== FIELDS[ORDER[i - 1]].group){
       var gh = document.createElement('div');
-      gh.className = 'gh'; gh.textContent = 'THE ESTATE';
+      gh.className = 'gh'; gh.textContent = GROUPS[FIELDS[id].group];
       sel.appendChild(gh);
     }
     var b = document.createElement('button');
@@ -576,7 +593,7 @@
     var F = FIELDS[id];
     hudTitle.textContent = F.name;
     hudExp.textContent = F.exp;
-    hudCount.textContent = 'FIELD ' + ('0' + (ORDER.indexOf(id) + 1)).slice(-2) + '/' + TOTAL + ' · ' + (F.group === 'engine' ? 'THE ENGINE' : 'THE ESTATE');
+    hudCount.textContent = 'FIELD ' + ('0' + (ORDER.indexOf(id) + 1)).slice(-2) + '/' + TOTAL + ' · ' + GROUPS[F.group];
     hudChs.innerHTML = (F.ch[0] === 'ALL' ? ['EVERY FIELD'] : F.ch).map(function(c){ return '<span>' + c + '</span>'; }).join('');
     hud.classList.add('on');
   }

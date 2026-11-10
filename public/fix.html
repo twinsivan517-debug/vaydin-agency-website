@@ -158,15 +158,6 @@
   .inc .sumrow .m{color:var(--ok)} .gone .sumrow .m{color:var(--critical)}
   .sumrow b{color:var(--tx);font-weight:700}
 
-  /* where it stands today */
-  .today{background:var(--bg-card);box-shadow:0 0 0 1px var(--border);padding:8px 42px;max-width:1240px}
-  .trow{display:grid;grid-template-columns:220px 1fr;gap:22px;padding:15px 0;border-top:1px solid var(--border);font-size:14px;color:var(--tx-muted);align-items:baseline}
-  .trow:first-child{border-top:0}
-  .trow .tk{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:var(--tx-faint)}
-  .trow.ok .tk{color:var(--ok)}
-  .trow.wait .tk{color:var(--warn)}
-  .trow.no .tk{color:var(--critical)}
-
   /* trust table */
   .trustwrap{max-width:1240px;margin:0 auto;padding:110px 48px 0}
   .trust{background:var(--bg-card);box-shadow:0 0 0 1px var(--border);padding:48px 52px;display:grid;grid-template-columns:1fr 1fr;gap:52px}
@@ -215,8 +206,6 @@
     .inner{width:92%;padding:20px 20px 18px;bottom:20px}
     .inner h3{font-size:21px}
     .trustwrap{padding:80px 20px 0}
-    .today{padding:4px 22px}
-    .trow{grid-template-columns:1fr;gap:4px}
     .trust{grid-template-columns:1fr;padding:28px 24px;gap:28px}
     .band{padding:64px 22px}
   }
@@ -259,7 +248,7 @@
   <div class="hero-inner">
     <div class="eyebrow">STEP 02 · THE ENGINE &amp; THE ESTATE</div>
     <h1 class="grad-text">We stop reporting the leaks.<br>We start <span class="goldtx">running the machine</span>.</h1>
-    <p class="hero-sub">Nine things on your own WhatsApp number and your own Google profile, each switched on for your clinic one at a time. Nothing to install: your reception just taps ✓.</p>
+    <p class="hero-sub">Thirteen things: nine in the engine, four built around your clinic. On your own WhatsApp number and your own Google profile, with nothing to install: your reception just taps ✓.</p>
     <div class="swapline"><span style="color:var(--ok);font-weight:800">✓</span><span><b>Intelligence is included in the engine</b>, and the next unannounced shop scores us too.</span></div>
   </div>
 </header>
@@ -291,7 +280,7 @@
         <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
           <div class="fno">ENGINE 02 / 06</div>
           <h3>Booked inside the chat</h3>
-          <p>The patient taps a treatment, picks a time, and is booked and told in the same chat. Your reception is told at once, with one button if the time has to move. If you prefer, reception confirms every booking first. The engine sees only the bookings made through it, not your own diary: if a time clashes, that button moves it.</p>
+          <p>The patient taps a treatment, picks a time, and is booked and told in the same chat. Your reception is told at once, with one button if the time has to move. If you prefer, reception confirms every booking first.</p>
           <div class="ba">
             <div class="no"><span class="m">✗</span><span>Without: "let me check and get back to you", and nobody does</span></div>
             <div class="yes"><span class="m">✓</span><span>With: the time the patient picked <b>is the booking</b>, in the same chat</span></div>
@@ -330,7 +319,7 @@
         <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
           <div class="fno">ENGINE 05 / 06</div>
           <h3>The next treatment, offered after the visit</h3>
-          <p>When your reception marks a visit as attended, and you mapped a next treatment to the one they just had, the patient gets one note from your clinic with a button that starts booking it. Your protocols, your wording, never pushed. It starts once the engine has a few bookings behind it.</p>
+          <p>When your reception marks a visit as attended, and you mapped a next treatment to the one they just had, the patient gets one note from your clinic with a button that starts booking it. Your protocols, your wording, never pushed.</p>
           <div class="ba">
             <div class="no"><span class="m">✗</span><span>Without: the patient leaves; the next visit is left to chance</span></div>
             <div class="yes"><span class="m">✓</span><span>With: the next step is <b>one tap away</b>, after a visit that happened</span></div>
@@ -395,7 +384,7 @@
         <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
           <div class="fno">ESTATE 01 / 03</div>
           <h3>Your Google profile, checked daily</h3>
-          <p>Once a day the engine reads your Business Profile and checks four things: that the hours Google shows match the hours you gave us, that Google has not edited the profile on its own, that it does not show you as closed, and that the listing is in good standing. It changes nothing: you fix it in Google's own screen. Showing you what it finds on your page is not built yet.</p>
+          <p>Once a day the engine reads your Business Profile and checks four things: that the hours Google shows match the hours you gave us, that Google has not edited the profile on its own, that it does not show you as closed, and that the listing is in good standing. It changes nothing: you fix it in Google's own screen.</p>
           <div class="ba">
             <div class="no"><span class="m">✗</span><span>Without: wrong hours on the map result, found by a patient at a locked door</span></div>
             <div class="yes"><span class="m">✓</span><span>With: the engine <b>checks every day</b>, where today nobody does</span></div>
@@ -453,18 +442,70 @@
   </div>
 </section>
 
-<section id="today">
-  <div class="reveal"><div class="eyebrow">BUILT, NOT YET RUNNING</div>
-  <h2 class="grad-text">Where the engine stands today.</h2>
-  <p class="section-sub">Everything above is what the engine does, not a client's result. This is exactly how far it has come.</p></div>
+<section id="custom">
+  <div class="reveal"><div class="eyebrow">BUILT AROUND YOUR CLINIC · FOUR MORE</div>
+  <h2 class="grad-text">Four more, built around your clinic.</h2>
+  <p class="section-sub">The nine above are the engine. These four we build and connect for your clinic, around the way it already works.</p></div>
 
-  <div class="today reveal">
-    <div class="trow ok"><span class="tk">BUILT AND TESTED</span><span>Built and tested with the engine's own tests and on our own test phones. The two Google parts have not yet run on a real Google profile.</span></div>
-    <div class="trow wait"><span class="tk">NOT RUNNING YET</span><span>No clinic runs on the engine yet.</span></div>
-    <div class="trow wait"><span class="tk">SWITCHED ON PER CLINIC</span><span>Each of the nine is off until it is switched on for your clinic, one at a time.</span></div>
-    <div class="trow wait"><span class="tk">APPROVED WHEN A CLINIC JOINS</span><span>Reminders and the other messages a clinic starts are approved by Meta under the clinic's own account when it joins. None is approved yet, because no clinic has joined.</span></div>
-    <div class="trow wait"><span class="tk">WAITING ON GOOGLE</span><span>The profile check and the review replies need Google to approve our access, which we can request only once a first clinic adds us to its profile. The check's findings do not show on your page yet.</span></div>
-    <div class="trow"><span class="tk">ON REQUEST</span><span>Not part of the nine: Instagram replies, email, care of your website. Today the engine answers WhatsApp only. If your clinic needs more, ask: we scope it, build it and price it in your plan.</span></div>
+  <div class="deck reveal" id="customDeck">
+    <div class="deckhud"><div class="dn">◈ YOUR CLINIC · ILLUSTRATION</div><div class="dc" id="customCount"></div></div>
+    <div class="stage" id="customStage">
+
+      <div class="dcard" id="consult" data-img="assets/img/field-consult.webp">
+        <div class="bgimg"></div><div class="grad"></div>
+        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
+          <div class="fno">YOUR CLINIC 01 / 04</div>
+          <h3>Consultations, prepared</h3>
+          <p>Before the visit, the patient gets the right expectations: what happens, how long, what to bring. We build these lines with your clinic, in wording your team approves, and anything clinical stays with your doctors.</p>
+          <div class="ba">
+            <div class="no"><span class="m">✗</span><span>Without: the patient arrives unsure, half-decided</span></div>
+            <div class="yes"><span class="m">✓</span><span>With: they arrive <b>ready</b>, on lines your own team wrote</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dcard" id="instagram" data-img="assets/img/estate-igdms.webp">
+        <div class="bgimg"></div><div class="grad"></div>
+        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
+          <div class="fno">YOUR CLINIC 02 / 04</div>
+          <h3>Instagram DMs, on the same engine</h3>
+          <p>A DM at midnight is a patient at noon. We connect your DMs and story replies to the same engine as your WhatsApp: the same menu, the same booking, through Meta's official access.</p>
+          <div class="ba">
+            <div class="no"><span class="m">✗</span><span>Without: DMs pile up unread under the notifications</span></div>
+            <div class="yes"><span class="m">✓</span><span>With: the DM gets <b>the same menu and the same booking</b></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dcard" id="email" data-img="assets/img/estate-email.webp">
+        <div class="bgimg"></div><div class="grad"></div>
+        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
+          <div class="fno">YOUR CLINIC 03 / 04</div>
+          <h3>Email, connected</h3>
+          <p>We connect your inquiries inbox to the same engine: the same approved answers, the same booking, the same hand-over to your team. An email inquiry is a patient too.</p>
+          <div class="ba">
+            <div class="no"><span class="m">✗</span><span>Without: the inbox is a graveyard checked "when someone has time"</span></div>
+            <div class="yes"><span class="m">✓</span><span>With: answered like WhatsApp, <b>toward a booking</b></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dcard" id="website" data-img="assets/img/estate-website.webp">
+        <div class="bgimg"></div><div class="grad"></div>
+        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
+          <div class="fno">YOUR CLINIC 04 / 04</div>
+          <h3>Website concierge</h3>
+          <p>New treatment? Changed hours? A price update? One WhatsApp to us and a person makes the change within 48 hours. No chasing a web guy who built it two years ago and disappeared.</p>
+          <div class="ba">
+            <div class="no"><span class="m">✗</span><span>Without: the site says Ramadan hours in November</span></div>
+            <div class="yes"><span class="m">✓</span><span>With: kept current, <b>changed within 48 hours</b></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="darrow prev" data-deck="custom">‹</div>
+      <div class="darrow next" data-deck="custom">›</div>
+    </div>
   </div>
 </section>
 
@@ -558,6 +599,7 @@
   }
   initDeck('engine', 'engineStage', 'engineCount');
   initDeck('estate', 'estateStage', 'estateCount');
+  initDeck('custom', 'customStage', 'customCount');
   document.querySelectorAll('.darrow').forEach(function(a){
     a.addEventListener('click', function(){
       step(a.getAttribute('data-deck'), a.classList.contains('next') ? 1 : -1);
