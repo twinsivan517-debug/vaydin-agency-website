@@ -14,8 +14,15 @@ const run = (events: Event[], from: State = START) => events.reduce(reduce, from
 const awake = run([{ type: "wake" }, { type: "line_ended" }, { type: "line_ended" }]);
 
 let cases = 0;
+/* A red check names itself before the run stops, so a failure never reads as a crash (2026-11-10). */
 const check = (name: string, test: () => void) => {
-  test();
+  try {
+    test();
+  } catch (error) {
+    console.log(`FAIL  ${name}`);
+    console.log(`      ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
+  }
   cases++;
   console.log(`ok  ${name}`);
 };
