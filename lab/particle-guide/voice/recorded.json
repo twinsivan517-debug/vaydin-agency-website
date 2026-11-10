@@ -1,5 +1,5 @@
 {
- "_why": "Each spoken line: the SHA-256 of the page text its recording was verified against, those words as text, and the SHA-256 of its mp3. Lines are written only by verify.py --lock; scripts/voice-lines.test.mjs fails npm test when they differ. _extras: recordings no page plays, each with its reason, kept by hand; the test checks that src/ never names them.",
+ "_why": "Each spoken line: the SHA-256 of the page text its recording was verified against and of its mp3, those words as text, and what Whisper heard the take say (its words, the page words it did not hear, the words it heard beyond the page). Lines are written only by verify.py --lock; scripts/voice-lines.test.mjs fails npm test when the page holds a word the recording was not heard to say that is not named here, and on any changed text or mp3. _extras: recordings no page plays, each with its reason, kept by hand; the test checks that src/ never names them.",
  "_extras": {
   "00b": "record.py's NEW take of the greeting's first line; opener.mp3 holds it (cues.py OPENER). Never played alone: src/ never names it (the test checks) and no public page did on 2026-11-10 (grep)",
   "01": "record.py's NEW take of the greeting's second line; opener.mp3 holds it (cues.py OPENER). Never played alone: src/ never names it (the test checks) and no public page did on 2026-11-10 (grep)",
@@ -10,361 +10,723 @@
   "02": {
    "text": "b5e009e2b4dd2698ff5e3fa47a1e3f8f5cf08fc9cd61033ce5bfd4c72a1f36e6",
    "said": "pick a question or ask me anything and i'll show you how patients find a clinic and how a clinic loses them without ever knowing",
-   "audio": "c228b74b44cbdd6d3989360e2c44e5764036a362ffeebc080925f4a62a4fe6e1"
+   "audio": "c228b74b44cbdd6d3989360e2c44e5764036a362ffeebc080925f4a62a4fe6e1",
+   "heard": "pick a question or ask me anything and i'll show you how patients find a clinic and how a clinic loses them without ever knowing",
+   "unheard": [],
+   "extra": []
   },
   "07": {
    "text": "bc9a68d0d57b6bc3d1a4d9ba88c2bd89f51bd1e77bc9df9321d2ffd2b6dc5bbb",
    "said": "layer one intelligence every thirty to sixty days a real person messages your clinic on whatsapp like a new patient between shops we read your google profile and your rivals every week your instagram and website every month six areas one score and what to fix first",
-   "audio": "7f40e03cd934b3f93898752bdd400668c825a5609aea396cd6eb328d4fbe7849"
+   "audio": "7f40e03cd934b3f93898752bdd400668c825a5609aea396cd6eb328d4fbe7849",
+   "heard": "layer 1 intelligence every 30 to 60 days a real person messages your clinic on whatsapp like a new patient between shops we read your google profile and your rivals every week your instagram and website every month six areas one score and what to fix first",
+   "unheard": [
+    "one",
+    "sixty",
+    "thirty"
+   ],
+   "extra": [
+    "1",
+    "30",
+    "60"
+   ]
   },
   "08": {
    "text": "d4bb74c49f24e6b420a2ace64395d482d19cb4cbb7740d82382a0aa3d667d869",
    "said": "layer two the revenue engine on your own whatsapp number a patient gets your menu at once and books inside the chat visits are reminded your quiet list is invited back and every review gets a reply ready for your reception to post with one tap four more are built around your clinic and the intelligence keeps scoring us",
-   "audio": "42b38c83eb308c9b3fb3ae77a603481bead411d1aeb4eb1977e988d3dc07dc3c"
+   "audio": "42b38c83eb308c9b3fb3ae77a603481bead411d1aeb4eb1977e988d3dc07dc3c",
+   "heard": "layer 2 the revenue engine on your own whatsapp number a patient gets your menu at once and books inside the chat visits are reminded your quiet list is invited back and every review gets a reply ready for your reception to post with one tap four more are built around your clinic and the intelligence keeps scoring us",
+   "unheard": [
+    "two"
+   ],
+   "extra": [
+    "2"
+   ]
   },
   "10": {
    "text": "6abca44da161a3dad3ec1e694384716ad0a7db0fa331e30a5c35aa0de86cfc04",
    "said": "everything we measure is evidence a patient could find themselves scored and explained counted on one dashboard and the next unannounced shop scores us too measured not promised",
-   "audio": "0cc6f4cb0a3cad76344570d47bbe52447c53fc43407d0acbcb71a67bdde2819b"
+   "audio": "0cc6f4cb0a3cad76344570d47bbe52447c53fc43407d0acbcb71a67bdde2819b",
+   "heard": "everything we measure is evidence a patient could find themselves scored and explained counted on one dashboard and the next unannounced shop scores us too measured not promised",
+   "unheard": [],
+   "extra": []
   },
   "a-ads": {
    "text": "1e2cacde1e7cb3f9923cb023ae17f957af9cf164c5e458b61878e1fa7dc43fa5",
    "said": "growth runs only on a running engine never on its own paid demand and reels statics and stories to a brief no ai patients and no before and afters ever",
-   "audio": "4ab5f02e4fbf3ab0670a0c01be623856eecf4fa8d2b1ce67bd867ff0a4b5eb00"
+   "audio": "4ab5f02e4fbf3ab0670a0c01be623856eecf4fa8d2b1ce67bd867ff0a4b5eb00",
+   "heard": "growth runs only on a running engine never on its own paid demand and reels statics and stories to a brief no ai patients and no before and afters ever",
+   "unheard": [],
+   "extra": []
   },
   "a-alone": {
    "text": "ece39a767409ea42e4dee1e138f18a13edc584ee505310e90fa760bb0c3e0cc2",
    "said": "the diagnostic runs on its own month to month with no commitment beyond it its findings either earn the next step or they don't",
-   "audio": "1141b255d2a82399b5be6f13cc2bf64f4136a2c8c7a4bfff65a876d5b13df332"
+   "audio": "1141b255d2a82399b5be6f13cc2bf64f4136a2c8c7a4bfff65a876d5b13df332",
+   "heard": "the diagnostic runs on its own month to month with no commitment beyond it its findings either earn the next step or they don't",
+   "unheard": [],
+   "extra": []
   },
   "a-askus": {
    "text": "b6d42fc61b411582ccce52765b7ccc0be57d6e70b638fac9aa61c59646e36720",
    "said": "ask us on whatsapp a person answers that one",
-   "audio": "f9d4a0b004209f3f9b09d7d2afb5ebbf89ec0ddc774c24327fb02b5831f48346"
+   "audio": "f9d4a0b004209f3f9b09d7d2afb5ebbf89ec0ddc774c24327fb02b5831f48346",
+   "heard": "ask us on whatsapp a person answers that one",
+   "unheard": [],
+   "extra": []
   },
   "a-bot": {
    "text": "c49f77b9d02ba56d5cb52dd3ed84ce23faa6509b2e0688d0a683f9842f7a313e",
    "said": "the shopper is a person never a bot the engine answers from a menu your clinic approved never from a guess and anything a patient types goes to your reception",
-   "audio": "bfa580e5fb9a18738912dc4a899a79b5584be862f0ac6e0830d25020dc5b4a76"
+   "audio": "bfa580e5fb9a18738912dc4a899a79b5584be862f0ac6e0830d25020dc5b4a76",
+   "heard": "the shopper is a person never a bot the engine answers from a menu your clinic approved never from a guess and anything a patient types goes to your reception",
+   "unheard": [],
+   "extra": []
   },
   "a-branches": {
    "text": "027ed057d0048992d7fafbfd932f61f94ec423188845bdc798490fcb8cf91fb9",
    "said": "both intelligence runs per location and the engine runs every branch your plan is built for your group ask us on whatsapp and a person sends it",
-   "audio": "490fd9cad354fc5dd9505f6c2ff4b2f8cc7273f66c662313c10bd533d36dcc84"
+   "audio": "490fd9cad354fc5dd9505f6c2ff4b2f8cc7273f66c662313c10bd533d36dcc84",
+   "heard": "both intelligence runs per location and the engine runs every branch your plan is built for your group ask us on whatsapp and a person sends it",
+   "unheard": [],
+   "extra": []
   },
   "a-brief": {
    "text": "4074a2ffeb9bd49a6fc53b826bfd815569fae32aac68a12f377403e0e967aca3",
    "said": "we message you as a patient evening weekend or mid day and ask what real patients ask the treatment the price the availability",
-   "audio": "4abf12b7b1784d8c2569229788e6c699ef323456c6d7548265d5b67e4f06d82e"
+   "audio": "4abf12b7b1784d8c2569229788e6c699ef323456c6d7548265d5b67e4f06d82e",
+   "heard": "we message you as a patient evening weekend or midday and ask what real patients ask the treatment the price the availability",
+   "unheard": [
+    "day",
+    "mid"
+   ],
+   "extra": [
+    "midday"
+   ]
   },
   "a-business": {
    "text": "130e7e00fc7f6ddc40935cd5d003126d0e95390f134da419f1032df9824f9f28",
    "said": "vaydin works with clinics for another kind of business ask us on whatsapp and a person answers",
-   "audio": "84a47fc113145d393fb4a53b6a813d3604ab1513fd9214ece16ce74313bfcaab"
+   "audio": "84a47fc113145d393fb4a53b6a813d3604ab1513fd9214ece16ce74313bfcaab",
+   "heard": "vadon works with clinics for another kind of business ask us on whatsapp and a person answers",
+   "unheard": [
+    "vaydin"
+   ],
+   "extra": [
+    "vadon"
+   ]
   },
   "a-cancel": {
    "text": "3043375d0b1a57b9320a2d7133c978555770ae104e743d8abf0818bf9dad74e5",
    "said": "intelligence is month to month with thirty days' notice the engine has a three month minimum",
-   "audio": "f34cb3bfc6da8b0d72987a3c0f75f6b82658f5408574cbef24d1d4d18bfe60a1"
+   "audio": "f34cb3bfc6da8b0d72987a3c0f75f6b82658f5408574cbef24d1d4d18bfe60a1",
+   "heard": "intelligence is month to month with 30 days notice the engine has a three month minimum",
+   "unheard": [
+    "days'",
+    "thirty"
+   ],
+   "extra": [
+    "30",
+    "days"
+   ]
   },
   "a-chatgpt": {
    "text": "259ab8227d1dc3ac1d6e51cce0757721e9cd2f029b215758bfead545c318a6df",
    "said": "it only sees inside your clinic we measure how you look from outside every month and we are accountable for it",
-   "audio": "181ffa265128b654ddcebd8bd461797f3400fcce55b30277edb95f1168c6c53e"
+   "audio": "181ffa265128b654ddcebd8bd461797f3400fcce55b30277edb95f1168c6c53e",
+   "heard": "it only sees inside your clinic we measure how you look from outside every month and we are accountable for it",
+   "unheard": [],
+   "extra": []
   },
   "a-clients": {
    "text": "0ddc56178ca8301831ef61c8f29f593b164b761432ff94442c95cc58f4622a4b",
    "said": "the first cohort is forming now we name nobody and we invent nothing",
-   "audio": "f456f0c844d3e91c01281fde95093d92e971b3c60d3c3288e07bf214384dd471"
+   "audio": "f456f0c844d3e91c01281fde95093d92e971b3c60d3c3288e07bf214384dd471",
+   "heard": "the first cohort is forming now we name nobody and we invent nothing",
+   "unheard": [],
+   "extra": []
   },
   "a-compliance": {
    "text": "cea0a4d29cce2f58714afbda4326948db08caa54430433de8e4bda6c292260fb",
    "said": "we never show ai patients or before and afters ever for the permit and the rules on your ads a person answers on whatsapp",
-   "audio": "09f78dd00435783bea5f4de6b1c63ffbeb2b72e5c61b7e0f1f65fc511a7111db"
+   "audio": "09f78dd00435783bea5f4de6b1c63ffbeb2b72e5c61b7e0f1f65fc511a7111db",
+   "heard": "we never show ai patients or before and afters ever for the permit and the rules on your ads a person answers on whatsapp",
+   "unheard": [],
+   "extra": []
   },
   "a-confidential": {
    "text": "5b9047da3af942a4670e5a4a23424275fc40f985571e3c2276b579dd1d362d7f",
    "said": "your findings are never shown to anyone else and we name nobody",
-   "audio": "500e813b6972bb0135b20e50afa0bd8c888515eeee85f3bf4eeffb97520c5a53"
+   "audio": "500e813b6972bb0135b20e50afa0bd8c888515eeee85f3bf4eeffb97520c5a53",
+   "heard": "your findings are never shown to anyone else and we name nobody",
+   "unheard": [],
+   "extra": []
   },
   "a-contact": {
    "text": "4622725e1024ec7a2b0e98badfe78a911a5fe9aa2657da2c6baef68ec71dd176",
    "said": "whatsapp us or write to hello at vaydin dot agency your plan arrives on whatsapp no forms",
-   "audio": "da42db181bbbd3d7db4965a54dd094d86f1411701e378b495e2d7fca591b5e98"
+   "audio": "da42db181bbbd3d7db4965a54dd094d86f1411701e378b495e2d7fca591b5e98",
+   "heard": "whatsapp us or write to hello at vadin agency your plan arrives on whatsapp no forms",
+   "unheard": [
+    "dot",
+    "vaydin"
+   ],
+   "extra": [
+    "vadin"
+   ]
   },
   "a-delete": {
    "text": "a6f3ad7bb4c1ec82ac8f75659a74c5358a872ef07bded69433f7cd23e6ce75fa",
    "said": "email hello at vaydin dot agency with the subject data deletion request and include the phone or email we know you by",
-   "audio": "ce9dc27c40416d7388244bd9fa6ee1ca7b323b7c7099e125e3f6ae06cc73b50c"
+   "audio": "ce9dc27c40416d7388244bd9fa6ee1ca7b323b7c7099e125e3f6ae06cc73b50c",
+   "heard": "email hello at vaden agency with the subject data deletion request and include the phone or email we know you by",
+   "unheard": [
+    "dot",
+    "vaydin"
+   ],
+   "extra": [
+    "vaden"
+   ]
   },
   "a-diagnostic": {
    "text": "73563863d53d522ebfb594b339634ee769acdb84d0d8bf3dfc9e561ceca97ea0",
    "said": "every thirty to sixty days a real person messages your clinic on whatsapp like a new patient between shops we read your google profile and rivals weekly your instagram and website monthly six areas one score a report every month and what to fix first",
-   "audio": "13ea1bc9c6dd03b79ec3b04a0e5ce829b5b83577f9e96cc5b2a8f4486a4ef8f4"
+   "audio": "13ea1bc9c6dd03b79ec3b04a0e5ce829b5b83577f9e96cc5b2a8f4486a4ef8f4",
+   "heard": "every 30 to 60 days a real person messages your clinic on whatsapp like a new patient between shops we read your google profile and rivals weekly your instagram and website monthly six areas one score a report every month and what to fix first",
+   "unheard": [
+    "sixty",
+    "thirty"
+   ],
+   "extra": [
+    "30",
+    "60"
+   ]
   },
   "a-engine": {
    "text": "3d6ac299f637bbf3fce2d0de991907433213773c0ee9bb513c5198d71b584a16",
    "said": "thirteen jobs nine in the engine your menu at once booking inside the chat reminders your quiet list invited back the next treatment offered each step counted your google profile checked daily a reply ready for every review and every attended patient asked for one four built around your clinic consultation preparation instagram email and your website",
-   "audio": "c28df7aab7b76b20f82053b299688db8752674ec392d3155c842449ea5110474"
+   "audio": "c28df7aab7b76b20f82053b299688db8752674ec392d3155c842449ea5110474",
+   "heard": "13 jobs 9 in the engine your menu at once booking inside the chat reminders your quiet list invited back the next treatment offered each step counted your google profile checked daily a reply ready for every review and every attended patient asked for one four built around your clinic consultation preparation instagram email and your website",
+   "unheard": [
+    "nine",
+    "thirteen"
+   ],
+   "extra": [
+    "13",
+    "9"
+   ]
   },
   "a-jobs": {
    "text": "0e56b613478e6da45c5a09163aab4209efec104034ce1435d4b77fe529c35182",
    "said": "thank you for thinking of us send your details to hello at vaydin dot agency",
-   "audio": "676a36d47bcd79e8830f3d6937024b480ceb5d986806772144e286226c42db97"
+   "audio": "676a36d47bcd79e8830f3d6937024b480ceb5d986806772144e286226c42db97",
+   "heard": "thank you for thinking of us send your details to hello at vedin agency",
+   "unheard": [
+    "dot",
+    "vaydin"
+   ],
+   "extra": [
+    "vedin"
+   ]
   },
   "a-lawful": {
    "text": "eb5f12fad26e4fa2788219978087bf57205ab698ea8a4088146d63112833543f",
    "said": "the shop sees only what any patient can see we message you on whatsapp the way the public does",
-   "audio": "b880646a03704336d1c209a8fc749821fb726170b784fd58b6409616690949f0"
+   "audio": "b880646a03704336d1c209a8fc749821fb726170b784fd58b6409616690949f0",
+   "heard": "the shop sees only what any patient can see we message you on whatsapp the way the public does",
+   "unheard": [],
+   "extra": []
   },
   "a-legal": {
    "text": "bd0ad9df72a9096c68a58a967f21a6e73002c66c4225b1b55171ed4f65a38e92",
    "said": "i can't give legal or regulatory advice for your clinic your licensing authority or adviser can",
-   "audio": "dc03ca319cb7d5d1e50fc49dc10f193b1e66cd0a3cede281a51a8b613e95de41"
+   "audio": "dc03ca319cb7d5d1e50fc49dc10f193b1e66cd0a3cede281a51a8b613e95de41",
+   "heard": "i can't give legal or regulatory advice for your clinic your licensing authority or advisor can",
+   "unheard": [
+    "adviser"
+   ],
+   "extra": [
+    "advisor"
+   ]
   },
   "a-legit": {
    "text": "d352f22a37f5c9a3a6123d7cf8d5cc984d8aa12a0f1b1a0b27ce3e67c7ec5297",
    "said": "we're very real promise a licensed dubai free zone company in dubai silicon oasis say hi on whatsapp write to hello at vaydin dot agency or give us a call",
    "audio": "d3c3630de817e54bbe7e3222860258d74d032305de6ead7d513a41a2adbe9853",
+   "heard": "we're very real promise a license do buy free zone company and do buy silicon oasis say hi on whatsapp write to hello at vadon agency or give us a call",
+   "unheard": [
+    "dot",
+    "dubai",
+    "dubai",
+    "in",
+    "licensed",
+    "vaydin"
+   ],
+   "extra": [
+    "and",
+    "buy",
+    "buy",
+    "do",
+    "do",
+    "license",
+    "vadon"
+   ],
    "accepted": true
   },
   "a-markup": {
    "text": "5505da9f1cefc2799113ced26582b5eb655ef50b0524b8605cdb57be152c4e78",
    "said": "your ad accounts and their billing stay yours spend is paid direct never marked up our own fee comes in your plan which a person sends on whatsapp",
-   "audio": "e95cde998976730685d5a70c91915d72d1fea0036d41c41e456868c738ba06af"
+   "audio": "e95cde998976730685d5a70c91915d72d1fea0036d41c41e456868c738ba06af",
+   "heard": "your ad accounts and their billings stay yours spend is paid direct never marked up our own fee comes in your plan which a person sends on whatsapp",
+   "unheard": [
+    "billing"
+   ],
+   "extra": [
+    "billings"
+   ]
   },
   "a-medical": {
    "text": "3264e3071c59ee8bd9571e913b1955d0f3b57755a0a34d8e8c4310bc50302305",
    "said": "i can't give medical advice please ask a licensed doctor your clinic can help",
-   "audio": "59f5db8e85ff408793a7ea355555fda6718e177199f585d310d3c4d75c6d47a5"
+   "audio": "59f5db8e85ff408793a7ea355555fda6718e177199f585d310d3c4d75c6d47a5",
+   "heard": "i can't give medical advice please ask a licensed doctor your clinic can help",
+   "unheard": [],
+   "extra": []
   },
   "a-need": {
    "text": "98a16de422d25c8e3c27d13a295b31296692339bd13a9311d57061c74d7276db",
    "said": "for the diagnostic nothing it is unannounced for the engine access to your google profile instagram website and whatsapp number which stays yours and one kickoff call on day one",
-   "audio": "bd06b4d86d077aa2e86bb53b5175ecfc67be1c5bb2ea3361e62231118d260bdd"
+   "audio": "bd06b4d86d077aa2e86bb53b5175ecfc67be1c5bb2ea3361e62231118d260bdd",
+   "heard": "for the diagnostic nothing it is unannounced for the engine access to your google profile instagram website and whatsapp number which stays yours and one kickoff call on day one",
+   "unheard": [],
+   "extra": []
   },
   "a-often": {
    "text": "246c02d5ab06599672b326dd59a1f49210c3f6d1df725fef961b1c316f4f65a4",
    "said": "between shops we keep reading your google profile and your rivals every week your instagram and website every month and every new shop has the last one to beat",
-   "audio": "4a7b88df7acb8797886ad146b429376074d7289e457328392ecb76cb901ff607"
+   "audio": "4a7b88df7acb8797886ad146b429376074d7289e457328392ecb76cb901ff607",
+   "heard": "between shops we keep reading your google profile and your rivals every week your instagram and website every month and every new shop has the last one to beat",
+   "unheard": [],
+   "extra": []
   },
   "a-patient": {
    "text": "f57fd9f8a11f357c3aa477b1630e76be13d21a30ee9d6d62a821fdd20bd6a5a3",
    "said": "we're not a clinic we work with clinics to book a treatment or ask its price please contact your clinic directly",
-   "audio": "82924788aa2cde34fbf8bfa33723e783e4a98d9cb6b2ccd6b25db38c712d68dc"
+   "audio": "82924788aa2cde34fbf8bfa33723e783e4a98d9cb6b2ccd6b25db38c712d68dc",
+   "heard": "we're not a clinic we work with clinics to book a treatment or ask its price please contact your clinic directly",
+   "unheard": [],
+   "extra": []
   },
   "a-price": {
    "text": "7cf21e381065536e3d153569ed385f34f59bb4878c507441a0c0f7d90dba3159",
    "said": "every clinic gets its own plan and every plan starts with the measurement message us on whatsapp and a person sends yours",
-   "audio": "c866a2e0d0cb025242f11977928a60ff29f2706b6f1abafbab9aba07f4a691ee"
+   "audio": "c866a2e0d0cb025242f11977928a60ff29f2706b6f1abafbab9aba07f4a691ee",
+   "heard": "every clinic gets its own plan and every plan starts with the measurement message us on whatsapp and a person sends yours",
+   "unheard": [],
+   "extra": []
   },
   "a-privacy": {
    "text": "9e684232d34a1d1ff58e2dab83788849181f91d244fdf8800810c7247bc9deac",
    "said": "your medical records stay in your own system the engine never connects to it it keeps the whatsapp conversations it handles the bookings a record of what it did and a quiet list if you give us one",
-   "audio": "ef5ef95c649e881fd20067c5f73a1516bca6cc3ae58775a7d2324e9c1bfdb978"
+   "audio": "ef5ef95c649e881fd20067c5f73a1516bca6cc3ae58775a7d2324e9c1bfdb978",
+   "heard": "your medical records stay in your own system the engine never connects to it it keeps the whatsapp conversations it handles the bookings a record of what it did and a quiet list if you give us one",
+   "unheard": [],
+   "extra": []
   },
   "a-proof": {
    "text": "5734ad45789d11bf15d093bd61403d16e0fd5a066369c24a0741149ca2c29794",
    "said": "evidence a patient could find themselves google reviews instagram the website how you answered scored and explained every month the next shop scores us too",
-   "audio": "f3beb79622dc96752849f7262223a284b0cd65f3c1bb7f14a7d08bccdde0abdb"
+   "audio": "f3beb79622dc96752849f7262223a284b0cd65f3c1bb7f14a7d08bccdde0abdb",
+   "heard": "evidence a patient could find themselves google reviews instagram the website how you answered scored and explained every month the next shop scores us too",
+   "unheard": [],
+   "extra": []
   },
   "a-rate": {
    "text": "60dad6bc12e1e2c4149661e22e56a68ba47a426dd4b3230cd854b1346f68acb4",
    "said": "we don't rate clinics for the public we measure them for their owners and we name nobody",
-   "audio": "a004f8ee128386720ebb8e460a896708b9665dfa73a0c69683b09480ffaf4bc8"
+   "audio": "a004f8ee128386720ebb8e460a896708b9665dfa73a0c69683b09480ffaf4bc8",
+   "heard": "we don't rate clinics for the public we measure them for their owners and we name nobody",
+   "unheard": [],
+   "extra": []
   },
   "a-rivals": {
    "text": "15a3b7ebb5472262991890c39c14009728120e8d15a522b2ce59953723f6c81a",
    "said": "yes we read your rivals every week and your report shows how you sit against the three clinics beside you on the map and what good looks like at the same moment",
-   "audio": "58975801918afe216ddf048e5e5b9fb7262060a55911289726213798e1a03647"
+   "audio": "58975801918afe216ddf048e5e5b9fb7262060a55911289726213798e1a03647",
+   "heard": "yes we read your rivals every week and your report shows how you sit against the three clinics beside you on the map and what good looks like at the same moment",
+   "unheard": [],
+   "extra": []
   },
   "a-rooms": {
    "text": "0d4fb53205b3570a741d45bf1cb8fc114626209e6284af020d97e7b9d28c0024",
    "said": "six scored areas how your team answers a new patient how easily a patient can book your google reputation your marketing how you compare with the clinics around you and how well set up you are online one score across all six we also show whether ai search tools can read your website and see it as a clinic shown not scored",
-   "audio": "d4ffd39dc933a6253701862d4ce287907d6490442e923a1e309814d21d705ddb"
+   "audio": "d4ffd39dc933a6253701862d4ce287907d6490442e923a1e309814d21d705ddb",
+   "heard": "six scored areas how your team answers a new patient how easily a patient can book your google reputation your marketing how you compare with the clinics around you and how well set up you are online one score across all six we also show whether ai search tools can read your website and see it as a clinic shown not scored",
+   "unheard": [],
+   "extra": []
   },
   "a-sample": {
    "text": "9260c9dcf57143829a447fdf7ad36eeb24f9b78494bbf40d3192500d29ee949b",
    "said": "the diagnostic page shows a sample monthly verdict for a fictional clinic your own report carries your own evidence redrawn from your own shop",
-   "audio": "5019561d9bb3f242ed5f506cc48ca3497a4870bb52293440c63cffd0be255abd"
+   "audio": "5019561d9bb3f242ed5f506cc48ca3497a4870bb52293440c63cffd0be255abd",
+   "heard": "the diagnostic page shows a sample monthly verdict for a fictional clinic your own report carries your own evidence redrawn from your own shop",
+   "unheard": [],
+   "extra": []
   },
   "a-scope": {
    "text": "94f001af6246b3d08381d8bf7b58a5ce9f57865742a493194654d0726d2989ac",
    "said": "we started with aesthetic and wellness clinics and the diagnostic works for any clinic patients message dental dermatology hair or physio",
-   "audio": "eab853416e1dee7d17faa0b8304013f94587e25b3d1cd4f7b5d8512a99221245"
+   "audio": "eab853416e1dee7d17faa0b8304013f94587e25b3d1cd4f7b5d8512a99221245",
+   "heard": "we started with aesthetic and wellness clinics and the diagnostic works for any clinic patient's message dental dermatology hair or physio",
+   "unheard": [
+    "patients"
+   ],
+   "extra": [
+    "patient's"
+   ]
   },
   "a-slots": {
    "text": "13c0aee2752a5b0d22ebac920cf7af6c2c8d3ac36231baa51724c517cb29a033",
    "said": "the shop happens on whatsapp we never hold a real appointment so no real patient loses a slot",
-   "audio": "9eb9655b59cd1505ba4f53a6260f4c8d427ddaf2fdefa5f1adfa3ac4aed62213"
+   "audio": "9eb9655b59cd1505ba4f53a6260f4c8d427ddaf2fdefa5f1adfa3ac4aed62213",
+   "heard": "the shop happens on whatsapp we never hold a real appointment so no real patient loses a slot",
+   "unheard": [],
+   "extra": []
   },
   "a-team": {
    "text": "35615a34517ff8ae14fd5d83c769bde39af66034dd320c15e576cd6d35fb2896",
    "said": "vaydin is run by a team in dubai for more message us on whatsapp or write to hello at vaydin dot agency",
-   "audio": "582efb4251e1e498cdf868c6881829e97aeda7256d4f4163881e1c99f9e6ff41"
+   "audio": "582efb4251e1e498cdf868c6881829e97aeda7256d4f4163881e1c99f9e6ff41",
+   "heard": "vadon is run by a team in dubai for more message us on whatsapp or write to hello at vadon agency",
+   "unheard": [
+    "dot",
+    "vaydin",
+    "vaydin"
+   ],
+   "extra": [
+    "vadon",
+    "vadon"
+   ]
   },
   "a-tech": {
    "text": "0eb367578f442c0fc4268a8b1d7289dda272485fc14ee6a4dc5abdc02effbb27",
    "said": "we keep the machinery private what you get is the evidence scored and explained every month",
-   "audio": "acbd2ed13104d5ce24f87752b768b0ea2a47c4b19dcf0970cd124d66611346c8"
+   "audio": "acbd2ed13104d5ce24f87752b768b0ea2a47c4b19dcf0970cd124d66611346c8",
+   "heard": "we keep the machinery private what you get is the evidence scored and explained every month",
+   "unheard": [],
+   "extra": []
   },
   "a-time": {
    "text": "2408ac75e58d5712457667de5f63d02a89370d20ef21c8b6829cf3b4471cd4ca",
    "said": "your first report comes after the first shop then monthly the engine runs on a three month minimum hands on for the first thirty days",
-   "audio": "78e23ff7d29bce09a87404d0fda7288648f39d921d07e640f61b5056c5ac9839"
+   "audio": "78e23ff7d29bce09a87404d0fda7288648f39d921d07e640f61b5056c5ac9839",
+   "heard": "your first report comes after the first shop then monthly the engine runs on a three month minimum hands on for the first 30 days",
+   "unheard": [
+    "thirty"
+   ],
+   "extra": [
+    "30"
+   ]
   },
   "a-unannounced": {
    "text": "43da0ed570bc1d0d877b5d9a0b03a280a14bd0fea0e3c7a599a5d01e5a2889e7",
    "said": "no the shop is unannounced on a day nobody in the clinic can predict so we meet your clinic the way a new patient does",
-   "audio": "8c9494a99686fccb36c4a3784cebb30512fee353575c29550d720d5355ee304d"
+   "audio": "8c9494a99686fccb36c4a3784cebb30512fee353575c29550d720d5355ee304d",
+   "heard": "no the shop is unannounced on a day nobody in the clinic can predict so we meet your clinic the way a new patient does",
+   "unheard": [],
+   "extra": []
   },
   "a-where": {
    "text": "929f42136e1e19e7773877d18e502081cc7085c531e9154917af4e6eda1cc0b4",
    "said": "dubai a dubai free zone company licensed under ifza working with clinics in dubai and the gcc",
-   "audio": "174116db42dfa0fff2a7c8165ea4779893eee24e7545627d170598bec98c47f5"
+   "audio": "174116db42dfa0fff2a7c8165ea4779893eee24e7545627d170598bec98c47f5",
+   "heard": "dubai a dubai free zone company licensed under ifsa working with clinics in dubai and the gcc",
+   "unheard": [
+    "ifza"
+   ],
+   "extra": [
+    "ifsa"
+   ]
   },
   "a-who": {
    "text": "46db739d2e848fa921812faeecb33a56f6bd732438c53741821672f7785683f9",
    "said": "owner led aesthetic and wellness clinics one branch or many",
-   "audio": "87bbee5008f71596e0053bcc5a5b7f43042a1436d0f7acd54ac645d57be7644d"
+   "audio": "87bbee5008f71596e0053bcc5a5b7f43042a1436d0f7acd54ac645d57be7644d",
+   "heard": "owner led aesthetic and wellness clinics one branch or many",
+   "unheard": [],
+   "extra": []
   },
   "a-write": {
    "text": "f6380b8d2dd3e73bb40bff9b1075fe0bf6cb80bb34b47b9269dac0d3f8490a4b",
    "said": "write to hello at vaydin dot agency with what you have in mind",
-   "audio": "a1dc57a73188dbcf733ba5dc5efeee3b9edd4ac117dce705c2e45863c5e52b13"
+   "audio": "a1dc57a73188dbcf733ba5dc5efeee3b9edd4ac117dce705c2e45863c5e52b13",
+   "heard": "write to hello at vadon agency with what you have in mind",
+   "unheard": [
+    "dot",
+    "vaydin"
+   ],
+   "extra": [
+    "vadon"
+   ]
   },
   "a-you": {
    "text": "9a6bc2ef3273cc76e3cfa210a29a2e748835cbe6042b3ba2a233e7030ee7275d",
    "said": "my voice and look are made with ai but my answers are written by vaydin and fixed i'm not a chatbot anything i can't answer a person answers on whatsapp",
-   "audio": "4e4766e87f67be5904deb0d5e01e68a2ea14f9649f136f66839da18d57bfff1d"
+   "audio": "4e4766e87f67be5904deb0d5e01e68a2ea14f9649f136f66839da18d57bfff1d",
+   "heard": "my voice and look are made with ai but my answers are written by vaden and fixed i'm not a chatbot anything i can't answer a person answers on whatsapp",
+   "unheard": [
+    "vaydin"
+   ],
+   "extra": [
+    "vaden"
+   ]
   },
   "g1": {
    "text": "298be169cc07c901bcb7411225be09d57793253bbdb0ad95102f4e6bfbfd157b",
    "said": "you gain the patients you are losing in public a whatsapp inquiry answered at once and booked inside the chat a reply ready for every review the quiet ones invited back and each step counted on one page",
-   "audio": "2c0c2344b8923f039b3809b258d008f780381ea3933ddfded6384859b7ce17c9"
+   "audio": "2c0c2344b8923f039b3809b258d008f780381ea3933ddfded6384859b7ce17c9",
+   "heard": "you gain the patience you are losing in public a whatsapp inquiry answered at once and booked inside the chat a reply ready for every review the quiet ones invited back and each step counted on one page",
+   "unheard": [
+    "patients"
+   ],
+   "extra": [
+    "patience"
+   ]
   },
   "opener": {
    "text": "297eed144d61178ee52f62e17999a0ee8702efd0682d4b0a88551b8c0b705a35",
    "said": "mmm oh hello there i'm vaydin's guide dubai never sleeps neither do your patients with vaydin your clinic never misses them",
-   "audio": "6fdcbe82f07fd1d635c34cbc6b1b06992774100a47624e37e7766795506dae75"
+   "audio": "6fdcbe82f07fd1d635c34cbc6b1b06992774100a47624e37e7766795506dae75",
+   "heard": "mmm oh hello there i'm vadon's guide dubai never sleeps neither do your patients with vadon your clinic never misses them",
+   "unheard": [
+    "vaydin",
+    "vaydin's"
+   ],
+   "extra": [
+    "vadon",
+    "vadon's"
+   ]
   },
   "p-diagnose": {
    "text": "94f88647cb629ebf1028f59144cdf5f10d83c28e9c25eac9af041a5b5cc72a54",
    "said": "this is the diagnostic unannounced a real person messages your clinic on whatsapp like a patient and we read your google and instagram every month you get one score across six areas with the evidence behind it",
-   "audio": "fcdba5d96e3f73ef51248d03b5db7a9b81e449dce865c0476b87fa9a885251cd"
+   "audio": "fcdba5d96e3f73ef51248d03b5db7a9b81e449dce865c0476b87fa9a885251cd",
+   "heard": "this is the diagnostic unannounced a real person messages your clinic on whatsapp like a patient and we read your google and instagram every month you get one score across six areas with the evidence behind it",
+   "unheard": [],
+   "extra": []
   },
   "p-engine": {
    "text": "dc38575dbabb9fb98483dd643036086945ac59b55eea86168c5022c66cf357a2",
    "said": "this page shows the engine on one screen your whatsapp and your google profile flow into one system that answers books reminds invites back and counts nine jobs in the engine and four more built around your clinic",
-   "audio": "878f1ea6892c08879dbfe5dacb7733845bfcca31008e72812c59ad7240736418"
+   "audio": "878f1ea6892c08879dbfe5dacb7733845bfcca31008e72812c59ad7240736418",
+   "heard": "this page shows the engine on one screen your whatsapp and your google profile flow into one system that answers books reminds invites back and counts nine jobs in the engine and four more built around your clinic",
+   "unheard": [],
+   "extra": []
   },
   "p-fix": {
    "text": "24897e68607ed09337aaf56170d3d68d28b47c57a517ad6eb0eea4fe6776da7e",
    "said": "this is the engine we stop reporting the leaks and run the machine whatsapp inquiries answered and booked visits reminded quiet patients invited back your google profile checked and a reply ready for every review with four more built around your clinic you grant access you keep the keys",
-   "audio": "7d96a68d8d12e7697591e67a86962d40b4f8b325bd9e3447851c59769bfee034"
+   "audio": "7d96a68d8d12e7697591e67a86962d40b4f8b325bd9e3447851c59769bfee034",
+   "heard": "this is the engine we stop reporting the leaks and run the machine whatsapp inquiries answered and booked visits reminded quiet patients invited back your google profile checked and a reply ready for every review with four more built around your clinic you grant access you keep the keys",
+   "unheard": [],
+   "extra": []
   },
   "p-grow": {
    "text": "b3802367e728cdb42252946b422b7bcd910ed9bd3badce132e5bf729aad51157",
    "said": "this is grow the third step once the engine runs your clinic we add fuel paid patient demand and instagram run like a channel all counted on the same dashboard",
-   "audio": "98128dd33381b466774cb75da9b3880b8ce74a7d669424418ccc997fbee89e1d"
+   "audio": "98128dd33381b466774cb75da9b3880b8ce74a7d669424418ccc997fbee89e1d",
+   "heard": "this is grow the third step once the engine runs your clinic we add fuel paid patient demand and instagram run like a channel all counted on the same dashboard",
+   "unheard": [],
+   "extra": []
   },
   "p-pricing": {
    "text": "9493bfc2694263e2a30e0862913e55faa51fef479cd2dae0ae24901b4f06480a",
    "said": "every plan is built for your clinic start with the diagnostic and add the engine when the numbers convince you message us on whatsapp and a person sends yours",
-   "audio": "1f8578b400a9754123310f4e781c3c4368ac5fe4efb221508eb32f3f3ca85960"
+   "audio": "1f8578b400a9754123310f4e781c3c4368ac5fe4efb221508eb32f3f3ca85960",
+   "heard": "every plan is built for your clinic start with the diagnostic and add the engine when the numbers convince you message us on whatsapp and a person sends yours",
+   "unheard": [],
+   "extra": []
   },
   "poke-1": {
    "text": "4887f54bf4e6e769253f4508091973b355005ec0118709c7b0430da14e1cfb49",
    "said": "hi there tap a question and i'll explain",
-   "audio": "a261f293171c2d347cf7fed3d83a931fcb1e8c3be2559c7b9bff12f0c17ccace"
+   "audio": "a261f293171c2d347cf7fed3d83a931fcb1e8c3be2559c7b9bff12f0c17ccace",
+   "heard": "hi there tap a question and i'll explain",
+   "unheard": [],
+   "extra": []
   },
   "poke-2": {
    "text": "6fc9ba68a97af31e117b70aa6a0ba14133dfa2befdb409c41872a27472b9a38b",
    "said": "yes i'm listening",
-   "audio": "b41ca998f9da6ae36145939d5b56fe41fbf1c2ff0c512edb9de73426ba3423bc"
+   "audio": "b41ca998f9da6ae36145939d5b56fe41fbf1c2ff0c512edb9de73426ba3423bc",
+   "heard": "yes i'm listening",
+   "unheard": [],
+   "extra": []
   },
   "poke-3": {
    "text": "d33a8845156233114e52a9c8815c6a03d8429c6e24e5199f4dc5b741022f443d",
    "said": "careful i'm working",
    "audio": "50cafb892372ec9f82730d6d82016da47d50a72bc4ccf7ded2c85ec5c2fddf0e",
+   "heard": "careful i'm working",
+   "unheard": [],
+   "extra": [],
    "accepted": true
   },
   "poke-4": {
    "text": "3a61eae1742dcda173345426a6b585902e20fd4bf170684c94e91c59ccdb9a32",
    "said": "okay okay what would you like to know",
-   "audio": "d810c756a159966a8e37356823e297f7bdcb97d530ec2e685b3cda6a1f7dae1b"
+   "audio": "d810c756a159966a8e37356823e297f7bdcb97d530ec2e685b3cda6a1f7dae1b",
+   "heard": "okay okay what would you like to know",
+   "unheard": [],
+   "extra": []
   },
   "poke-5": {
    "text": "5f33d146e7fd17377667f8e7c2509de90d79af766594bdf2defbd96d9eb40efd",
    "said": "i'm a guide not a button",
-   "audio": "aabab6fc0899a53a8cba4f908f8211007f578bdf99dc708cceea19e93e690387"
+   "audio": "aabab6fc0899a53a8cba4f908f8211007f578bdf99dc708cceea19e93e690387",
+   "heard": "i'm a guide not a button",
+   "unheard": [],
+   "extra": []
   },
   "poke-6": {
    "text": "e881e5e27add84bada4b6bf632bdf366d6349527a74f560c61b8a2069ab80afc",
    "said": "sleep in dubai never hibernation mode though until you get serious",
-   "audio": "57b95a2ed8ffc4c6293c6025080a001752c3fd0309220e02708d55215075a5d5"
+   "audio": "57b95a2ed8ffc4c6293c6025080a001752c3fd0309220e02708d55215075a5d5",
+   "heard": "sleep and dubai never hibernation mode though until you get serious",
+   "unheard": [
+    "in"
+   ],
+   "extra": [
+    "and"
+   ]
   },
   "w1": {
    "text": "f02316119dc2abef1d460648d0bbb474c98cd29f6decd46571825845fd2cfa46",
    "said": "vaydin is a dubai company for aesthetic and wellness clinics we measure how your clinic looks to a new patient then run its front door for you whatsapp answered and booked your google profile checked daily and a reply ready for every review with instagram email and your website built around your clinic",
-   "audio": "3a6b856750b6b6fe031ef33649b0e72932775e3e5aecedc192c1de4ee7c5628b"
+   "audio": "3a6b856750b6b6fe031ef33649b0e72932775e3e5aecedc192c1de4ee7c5628b",
+   "heard": "vaidan is a dubai company for aesthetic and wellness clinics we measure how your clinic looks to a new patient then run its front door for you what's app answered and booked your google profile checked daily and a reply ready for every review with instagram email and your website built around your clinic",
+   "unheard": [
+    "vaydin",
+    "whatsapp"
+   ],
+   "extra": [
+    "app",
+    "vaidan",
+    "what's"
+   ]
   },
   "x-bye": {
    "text": "cd84fa9d8130600abe33ffc5fbf3952eaa97a9d8a040c80921f3b407fb899fbe",
    "said": "thank you for stopping by we're on whatsapp whenever you need us",
-   "audio": "e2d0f09460fe6fdab9e44051425ba5549d3087bb36b8e4218a8ba1302ffaaea5"
+   "audio": "e2d0f09460fe6fdab9e44051425ba5549d3087bb36b8e4218a8ba1302ffaaea5",
+   "heard": "thank you for stopping by we're on whatsapp whenever you need us",
+   "unheard": [],
+   "extra": []
   },
   "x-choose": {
    "text": "917b7a49f2d895d14474327b906badbe94f9a78723122dc4a8a092275d0af49a",
    "said": "did you mean one of these",
    "audio": "f594204907a079bd0efb0dc9f3a87ad84f2070fbe180e8e17ca0322b961ec444",
+   "heard": "did you mean one of these",
+   "unheard": [],
+   "extra": [],
    "accepted": true
   },
   "x-hello": {
    "text": "55e1c6050ef87405baff690f2047b9276dfc71c2e44b3131447e80680abf61ed",
    "said": "hi tap a chapter or ask me anything about vaydin",
-   "audio": "6ff884a548e5d598bbaafc4e644752747de801e68516492f100a5638cdcf7aa8"
+   "audio": "6ff884a548e5d598bbaafc4e644752747de801e68516492f100a5638cdcf7aa8",
+   "heard": "hi tap a chapter or ask me anything about vaidin",
+   "unheard": [
+    "vaydin"
+   ],
+   "extra": [
+    "vaidin"
+   ]
   },
   "x-howareyou": {
    "text": "b260dcb929416f3d0575413204c080e5fa81dbb6a62ffc62adedfc36ba9fee0c",
    "said": "i'm very well thank you for asking what would you like to know about vaydin",
-   "audio": "c3ed4bede3a8083cc669a3439a035bac4270c45c51a9277a192fffddc901e8cd"
+   "audio": "c3ed4bede3a8083cc669a3439a035bac4270c45c51a9277a192fffddc901e8cd",
+   "heard": "i'm very well thank you for asking what would you like to know about vaidin",
+   "unheard": [
+    "vaydin"
+   ],
+   "extra": [
+    "vaidin"
+   ]
   },
   "x-kind": {
    "text": "b88fb08ff4c6c64c7b858e683ee95602c67a4635258b601f25604788baff95f5",
    "said": "that's kind of you thank you now how can i help with your clinic",
-   "audio": "5f93b70830fdf12ddffb7e3bc9847f4b3a2f3fa461263177365f780b5c50ad13"
+   "audio": "5f93b70830fdf12ddffb7e3bc9847f4b3a2f3fa461263177365f780b5c50ad13",
+   "heard": "that's kind of you thank you now how can i help with your clinic",
+   "unheard": [],
+   "extra": []
   },
   "x-more": {
    "text": "d701f8d9dee3e13f9fb1e770180d046c056702111263faabb9764571ef54e625",
    "said": "here's everything clinic owners ask me tap one",
-   "audio": "06df299f95b5f4dbbd675f433f6a4791ed529bfa3bd146cb83f861ff0b3fcecb"
+   "audio": "06df299f95b5f4dbbd675f433f6a4791ed529bfa3bd146cb83f861ff0b3fcecb",
+   "heard": "here's everything clinic owners ask me tap 1",
+   "unheard": [
+    "one"
+   ],
+   "extra": [
+    "1"
+   ]
   },
   "x-personal": {
    "text": "3889ac5a71b76fadea4a8d3814a1cd1dfa6f2594b04c1a9cf0d51da2534309c8",
    "said": "i'm vaydin's guide so i only talk about vaydin ask me anything about your clinic",
-   "audio": "02428372f20f0af9d35552c6ca1715461c5d0be8bd64d4293129d8c7d8a45456"
+   "audio": "02428372f20f0af9d35552c6ca1715461c5d0be8bd64d4293129d8c7d8a45456",
+   "heard": "i'm vadon's guide so i only talk about vadon ask me anything about your clinic",
+   "unheard": [
+    "vaydin",
+    "vaydin's"
+   ],
+   "extra": [
+    "vadon",
+    "vadon's"
+   ]
   },
   "x-rude": {
    "text": "e956a4cf447e92a3b101bea08f916782abc94cb2835041562b4c36cf5fa0a837",
    "said": "that's not appropriate but i'm happy to help you with vaydin ask me anything about your clinic",
-   "audio": "40e722abccfcee6f61cb9510f2a987c1fde296fa3de68821eec36c89738e053b"
+   "audio": "40e722abccfcee6f61cb9510f2a987c1fde296fa3de68821eec36c89738e053b",
+   "heard": "but that's not appropriate but i'm happy to help you with vaden ask me anything about your clinic",
+   "unheard": [
+    "vaydin"
+   ],
+   "extra": [
+    "but",
+    "vaden"
+   ]
   },
   "x-thanks": {
    "text": "a07c431db416dcd29946a4e7ecca1d1f317c746b3aa7b3871af41637a1e0137d",
    "said": "you're welcome is there anything else i can help with",
    "audio": "f313a43a474407dc1e61eaf4542688a2bc660e351ddb9e8cc45a442f2abca127",
+   "heard": "you're welcome is there anything else i can help with",
+   "unheard": [],
+   "extra": [],
    "accepted": true
   },
   "x-unknown": {
    "text": "7ce5675c770f61dc2412678b65c727630323f0fae1d872286a6f3bf65872a2fd",
    "said": "i don't have that one yet try a chapter or ask us on whatsapp a person answers",
-   "audio": "dda650c4a7559a76807bcaac6a2bf3f87fab2bb48708ae14d658ea6f594d2340"
+   "audio": "dda650c4a7559a76807bcaac6a2bf3f87fab2bb48708ae14d658ea6f594d2340",
+   "heard": "i don't have that one yet try a chapter or ask us on whatsapp a person answers",
+   "unheard": [],
+   "extra": []
   },
   "x-welcome": {
    "text": "f4887a6dadd863947e12ee9ac97c12163c48491d6985050d30f765a9a741dc1a",
    "said": "hi welcome to this page would you like a short summary of it",
-   "audio": "04e7eda40694d1e6412220b5ca0c3aceb9c02f4cb9fd836a7f3f2596df9fb14b"
+   "audio": "04e7eda40694d1e6412220b5ca0c3aceb9c02f4cb9fd836a7f3f2596df9fb14b",
+   "heard": "hi welcome to this page would you like a short summary of it",
+   "unheard": [],
+   "extra": []
   }
  }
 }
