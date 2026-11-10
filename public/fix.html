@@ -5,21 +5,21 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fix: the Engine &amp; the Estate · Vaydin</title>
-<meta name="description" content="The 13 things Vaydin installs and operates: every inquiry answered, booked, reminded, revived, and your whole digital estate managed. Layer 2 of the Vaydin plan.">
+<meta name="description" content="What the Vaydin engine does on your clinic's own WhatsApp number and Google profile: answers, books, reminds, invites back, and counts. Layer 2 of the Vaydin plan.">
 <link rel="icon" href="vaydin-icon-48.png">
 <link rel="apple-touch-icon" href="vaydin-icon-192.png">
 <link rel="canonical" href="https://vaydin.agency/fix.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vaydin">
 <meta property="og:title" content="Fix: the Engine &amp; the Estate · Vaydin">
-<meta property="og:description" content="The 13 things Vaydin installs and operates: every inquiry answered, booked, reminded, revived, and your whole digital estate managed. Layer 2 of the Vaydin plan.">
+<meta property="og:description" content="What the Vaydin engine does on your clinic's own WhatsApp number and Google profile: answers, books, reminds, invites back, and counts. Layer 2 of the Vaydin plan.">
 <meta property="og:url" content="https://vaydin.agency/fix.html">
 <meta property="og:image" content="https://vaydin.agency/vaydin-og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Fix: the Engine &amp; the Estate · Vaydin">
-<meta name="twitter:description" content="The 13 things Vaydin installs and operates: every inquiry answered, booked, reminded, revived, and your whole digital estate managed. Layer 2 of the Vaydin plan.">
+<meta name="twitter:description" content="What the Vaydin engine does on your clinic's own WhatsApp number and Google profile: answers, books, reminds, invites back, and counts. Layer 2 of the Vaydin plan.">
 <meta name="twitter:image" content="https://vaydin.agency/vaydin-og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -158,6 +158,15 @@
   .inc .sumrow .m{color:var(--ok)} .gone .sumrow .m{color:var(--critical)}
   .sumrow b{color:var(--tx);font-weight:700}
 
+  /* where it stands today */
+  .today{background:var(--bg-card);box-shadow:0 0 0 1px var(--border);padding:8px 42px;max-width:1240px}
+  .trow{display:grid;grid-template-columns:220px 1fr;gap:22px;padding:15px 0;border-top:1px solid var(--border);font-size:14px;color:var(--tx-muted);align-items:baseline}
+  .trow:first-child{border-top:0}
+  .trow .tk{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:var(--tx-faint)}
+  .trow.ok .tk{color:var(--ok)}
+  .trow.wait .tk{color:var(--warn)}
+  .trow.no .tk{color:var(--critical)}
+
   /* trust table */
   .trustwrap{max-width:1240px;margin:0 auto;padding:110px 48px 0}
   .trust{background:var(--bg-card);box-shadow:0 0 0 1px var(--border);padding:48px 52px;display:grid;grid-template-columns:1fr 1fr;gap:52px}
@@ -206,6 +215,8 @@
     .inner{width:92%;padding:20px 20px 18px;bottom:20px}
     .inner h3{font-size:21px}
     .trustwrap{padding:80px 20px 0}
+    .today{padding:4px 22px}
+    .trow{grid-template-columns:1fr;gap:4px}
     .trust{grid-template-columns:1fr;padding:28px 24px;gap:28px}
     .band{padding:64px 22px}
   }
@@ -248,15 +259,15 @@
   <div class="hero-inner">
     <div class="eyebrow">STEP 02 · THE ENGINE &amp; THE ESTATE</div>
     <h1 class="grad-text">We stop reporting the leaks.<br>We start <span class="goldtx">running the machine</span>.</h1>
-    <p class="hero-sub">Thirteen things, installed in thirty days and operated every day after, on your own WhatsApp number, your own Google profile, your own inbox. Your reception just taps ✓.</p>
+    <p class="hero-sub">Nine things on your own WhatsApp number and your own Google profile, each switched on for your clinic one at a time. Nothing to install: your reception just taps ✓.</p>
     <div class="swapline"><span style="color:var(--ok);font-weight:800">✓</span><span><b>Intelligence is included in the engine</b>, and the next unannounced shop scores us too.</span></div>
   </div>
 </header>
 
 <section id="engine">
-  <div class="reveal"><div class="eyebrow">THE ENGINE · SEVEN THINGS THAT CONVERT</div>
-  <h2 class="grad-text">Every patient conversation, carried to the finish.</h2>
-  <p class="section-sub">Swap through the seven. Nothing to install at the clinic: the engine lives where your patients already are.</p></div>
+  <div class="reveal"><div class="eyebrow">THE ENGINE · SIX THINGS, FROM MESSAGE TO VISIT</div>
+  <h2 class="grad-text">From the first message to the visit.</h2>
+  <p class="section-sub">Swap through the six. Nothing to install at the clinic: the engine lives where your patients already are.</p></div>
 
   <div class="deck reveal" id="engineDeck">
     <div class="deckhud"><div class="dn">◈ THE ENGINE · ILLUSTRATION</div><div class="dc" id="engineCount"></div></div>
@@ -265,12 +276,12 @@
       <div class="dcard" id="intake" data-img="assets/img/field-intake.webp">
         <div class="bgimg"></div><div class="grad"></div>
         <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ENGINE 01 / 07</div>
-          <h3>Every inquiry answered &amp; qualified</h3>
-          <p>WhatsApp, Instagram DMs, email: every message answered in minutes, around the clock, in your clinic's voice. Treatment questions answered from your own approved answers; anything clinical goes straight to your team.</p>
+          <div class="fno">ENGINE 01 / 06</div>
+          <h3>Every first message gets your menu</h3>
+          <p>A patient who starts a chat at 2am gets your clinic's menu at 2am: book, treatments, where you are, offers, a person, and a consultation if you offer one. Every answer is wording your clinic approved, and a price is only ever the one you set. Anything typed instead goes straight to your reception, and the patient is told a person will reply.</p>
           <div class="ba">
             <div class="no"><span class="m">✗</span><span>Without: the 2am message waits until morning, if it's ever seen</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: answered <b>in minutes</b>, qualified, moving toward a booking</span></div>
+            <div class="yes"><span class="m">✓</span><span>With: your menu <b>at once</b>, and anything else handed to your team</span></div>
           </div>
         </div>
       </div>
@@ -278,25 +289,12 @@
       <div class="dcard" id="booking" data-img="assets/img/field-booking.webp">
         <div class="bgimg"></div><div class="grad"></div>
         <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ENGINE 02 / 07</div>
-          <h3>Bookings that actually happen</h3>
-          <p>The engine offers real slots, holds the exact one the patient chose, and confirms through your reception with one tap. No double-booking, no lost threads, no "someone will call you back."</p>
+          <div class="fno">ENGINE 02 / 06</div>
+          <h3>Booked inside the chat</h3>
+          <p>The patient taps a treatment, picks a time, and is booked and told in the same chat. Your reception is told at once, with one button if the time has to move. If you prefer, reception confirms every booking first. The engine sees only the bookings made through it, not your own diary: if a time clashes, that button moves it.</p>
           <div class="ba">
             <div class="no"><span class="m">✗</span><span>Without: "let me check and get back to you", and nobody does</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: the offered slot <b>becomes a visit</b>, confirmed in the same conversation</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard" id="consult" data-img="assets/img/field-consult.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ENGINE 03 / 07</div>
-          <h3>Consultations framed to convert</h3>
-          <p>Before the visit, the patient gets the right expectations: what happens, how long, what to bring. Objections your clinic hears every week are answered before they're asked, in wording your team approved.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: the patient arrives unsure, price-shocked, half-decided</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: they arrive <b>ready</b>, and the consult starts warm, not cold</span></div>
+            <div class="yes"><span class="m">✓</span><span>With: the time the patient picked <b>is the booking</b>, in the same chat</span></div>
           </div>
         </div>
       </div>
@@ -304,12 +302,12 @@
       <div class="dcard" id="showup" data-img="assets/img/field-showup.webp">
         <div class="bgimg"></div><div class="grad"></div>
         <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ENGINE 04 / 07</div>
-          <h3>Show-up care that lands</h3>
-          <p>Confirmations and reminders timed to human behaviour, easy reschedules instead of silent no-shows, and a recovery message for anyone who misses. Automatically.</p>
+          <div class="fno">ENGINE 03 / 06</div>
+          <h3>Reminders before each booked visit</h3>
+          <p>A confirmation when they book, then a reminder a day before and another two hours before, or at the times you choose. Each reminder carries two buttons: Confirm and Reschedule. Reschedule shows new times, and the old one is freed the moment a new one is picked. Nothing the clinic starts is sent at night.</p>
           <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: empty chair, blocked doctor hour, nobody knows why</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: no-shows <b>reschedule themselves</b> before the slot is wasted</span></div>
+            <div class="no"><span class="m">✗</span><span>Without: empty chair, blocked doctor hour, no warning</span></div>
+            <div class="yes"><span class="m">✓</span><span>With: the patient who can't come <b>moves the visit in two taps</b></span></div>
           </div>
         </div>
       </div>
@@ -317,12 +315,12 @@
       <div class="dcard" id="dormant" data-img="assets/img/field-dormant.webp">
         <div class="bgimg"></div><div class="grad"></div>
         <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ENGINE 05 / 07</div>
-          <h3>Dormant patients, revived</h3>
-          <p>The quiet list (patients who came once and drifted) re-invited at the right moment with the right reason, from a list you provide. Never spammed, never embarrassing.</p>
+          <div class="fno">ENGINE 04 / 06</div>
+          <h3>The quiet list, invited back</h3>
+          <p>The patients who came once and drifted. You give us the list and mark the ones who agreed to hear from you. Only those are invited: once each, when the last visit is more than three months old or has no date, and no visit is already booked. Your wording, a button to book, a limited number a day, and never a patient who said stop.</p>
           <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: your most valuable asset sits in a spreadsheet, going colder</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: familiar faces <b>come back</b>, the cheapest revenue a clinic has</span></div>
+            <div class="no"><span class="m">✗</span><span>Without: your most valuable list sits in a spreadsheet, going colder</span></div>
+            <div class="yes"><span class="m">✓</span><span>With: the ones you marked hear from your clinic <b>once, politely</b></span></div>
           </div>
         </div>
       </div>
@@ -330,12 +328,12 @@
       <div class="dcard" id="crosssell" data-img="assets/img/field-crosssell.webp">
         <div class="bgimg"></div><div class="grad"></div>
         <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ENGINE 06 / 07</div>
-          <h3>The right next treatment, offered</h3>
-          <p>When a patient books or completes a treatment, the natural next step (your clinic's own protocols, your prices) is offered at the moment it makes sense, never pushed.</p>
+          <div class="fno">ENGINE 05 / 06</div>
+          <h3>The next treatment, offered after the visit</h3>
+          <p>When your reception marks a visit as attended, and you mapped a next treatment to the one they just had, the patient gets one note from your clinic with a button that starts booking it. Your protocols, your wording, never pushed. It starts once the engine has a few bookings behind it.</p>
           <div class="ba">
             <div class="no"><span class="m">✗</span><span>Without: the patient leaves; the next visit is left to chance</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: lifetime value grows from <b>care continuity</b>, not discounting</span></div>
+            <div class="yes"><span class="m">✓</span><span>With: the next step is <b>one tap away</b>, after a visit that happened</span></div>
           </div>
         </div>
       </div>
@@ -343,12 +341,12 @@
       <div class="dcard" id="kpi" data-img="assets/img/field-kpi.webp">
         <div class="bgimg"></div><div class="grad"></div>
         <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ENGINE 07 / 07</div>
-          <h3>Everything counted, live</h3>
-          <p>Inquiries → bookings → visits, on your dashboard, updated as it happens. And the part nobody else offers: the next unannounced shop still meets your clinic the way a patient does, with the engine answering, and grades what it finds. Its reply speed comes from the engine's own records, shown beside the rest.</p>
+          <div class="fno">ENGINE 06 / 06</div>
+          <h3>Each step counted</h3>
+          <p>Patients who wrote in, visits booked, who came and who did not: counted on your page, read fresh each time you open it. Counts, and no money figure of ours. And the next unannounced shop still meets your clinic the way a patient does, with the engine answering, and grades what it finds. The engine's own first-reply time is counted too.</p>
           <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: "how's marketing going?" Nobody truly knows</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: one page, <b>real numbers</b>, measured from outside</span></div>
+            <div class="no"><span class="m">✗</span><span>Without: "how is the front desk doing?" Nobody truly knows</span></div>
+            <div class="yes"><span class="m">✓</span><span>With: one page, <b>real counts</b>, checked from outside</span></div>
           </div>
         </div>
       </div>
@@ -363,46 +361,44 @@
     <div class="sumcols">
       <div class="inc">
         <h5>✓ WHAT YOU GET</h5>
-        <div class="sumrow"><span class="m">✓</span><span><b>24/7 answering</b>: WhatsApp, Instagram, email, in minutes</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Real bookings</b>: the offered slot becomes a confirmed visit</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Consult preparation</b>: patients arrive ready, not cold</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Reminders &amp; reschedules</b>: timed to human behaviour</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Dormant revival</b>: the quiet list re-invited, politely</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Next-treatment offers</b>: your protocols, the right moment</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Live counted dashboard</b>: scored by the next unannounced shop</span></div>
+        <div class="sumrow"><span class="m">✓</span><span><b>Answering, day and night</b>: a first message gets your menu at once</span></div>
+        <div class="sumrow"><span class="m">✓</span><span><b>Real bookings</b>: the time the patient picks is the booking</span></div>
+        <div class="sumrow"><span class="m">✓</span><span><b>Reminders &amp; reschedules</b>: a day before, two hours before, two buttons</span></div>
+        <div class="sumrow"><span class="m">✓</span><span><b>The quiet list</b>: one polite invitation, to patients you marked as agreeing</span></div>
+        <div class="sumrow"><span class="m">✓</span><span><b>The next treatment</b>: offered once, after a visit that happened</span></div>
+        <div class="sumrow"><span class="m">✓</span><span><b>Each step counted</b>: and scored by the next unannounced shop</span></div>
       </div>
       <div class="gone">
-        <h5>✗ WHAT DISAPPEARS</h5>
-        <div class="sumrow"><span class="m">✗</span><span>The 2am message nobody ever saw</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>"Someone will call you back", and nobody does</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>Price-shocked patients walking out of consults</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>Silent no-shows and blocked doctor hours</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>Your best patients going cold in a spreadsheet</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>Next visits left to chance</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>"How's marketing going?" Nobody truly knows</span></div>
+        <h5>✗ WHAT IT REPLACES</h5>
+        <div class="sumrow"><span class="m">✗</span><span>The 2am hello that waited until morning</span></div>
+        <div class="sumrow"><span class="m">✗</span><span>Phone tag to find a time</span></div>
+        <div class="sumrow"><span class="m">✗</span><span>The visit nobody was reminded of</span></div>
+        <div class="sumrow"><span class="m">✗</span><span>The past-patient list nobody ever writes to</span></div>
+        <div class="sumrow"><span class="m">✗</span><span>The visit that ends without a word from the clinic</span></div>
+        <div class="sumrow"><span class="m">✗</span><span>"How is the front desk doing?" answered by feel</span></div>
       </div>
     </div>
   </div>
 </section>
 
 <section id="estate">
-  <div class="reveal"><div class="eyebrow">THE ESTATE · SIX THINGS THAT GET YOU FOUND</div>
-  <h2 class="grad-text">Your digital front door, kept immaculate.</h2>
-  <p class="section-sub">Everywhere a patient can find you or judge you: watched, answered, kept current. This is what turns strangers into inquiries the engine can convert.</p></div>
+  <div class="reveal"><div class="eyebrow">THE ESTATE · THREE THINGS FOR YOUR GOOGLE REPUTATION</div>
+  <h2 class="grad-text">Your Google front door, checked every day.</h2>
+  <p class="section-sub">Where a new patient judges you before they ever write: your Google profile and your reviews. Checked, answered and asked for.</p></div>
 
   <div class="deck reveal" id="estateDeck">
-    <div class="deckhud"><div class="dn">◈ THE ESTATE · LIVE SYSTEM</div><div class="dc" id="estateCount"></div></div>
+    <div class="deckhud"><div class="dn">◈ THE ESTATE · ILLUSTRATION</div><div class="dc" id="estateCount"></div></div>
     <div class="stage" id="estateStage">
 
       <div class="dcard" id="google" data-img="assets/img/estate-google.webp">
         <div class="bgimg"></div><div class="grad"></div>
         <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ESTATE 01 / 06</div>
-          <h3>Google, managed</h3>
-          <p>Your Business Profile checked weekly: information accuracy, photos, posts, Q&amp;A. The map result is a ranking, and we work it like one, because "injectables near me" is won or lost right there.</p>
+          <div class="fno">ESTATE 01 / 03</div>
+          <h3>Your Google profile, checked daily</h3>
+          <p>Once a day the engine reads your Business Profile and checks four things: that the hours Google shows match the hours you gave us, that Google has not edited the profile on its own, that it does not show you as closed, and that the listing is in good standing. It changes nothing: you fix it in Google's own screen. Showing you what it finds on your page is not built yet.</p>
           <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: wrong hours, old photos, unanswered questions, all quietly costing trust</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: the profile that <b>wins the search</b>, kept current without you thinking about it</span></div>
+            <div class="no"><span class="m">✗</span><span>Without: wrong hours on the map result, found by a patient at a locked door</span></div>
+            <div class="yes"><span class="m">✓</span><span>With: the engine <b>checks every day</b>, where today nobody does</span></div>
           </div>
         </div>
       </div>
@@ -410,12 +406,12 @@
       <div class="dcard" id="reviews" data-img="assets/img/estate-reviews.webp">
         <div class="bgimg"></div><div class="grad"></div>
         <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ESTATE 02 / 06</div>
-          <h3>Every review answered within 24 hours</h3>
-          <p>Drafted by the engine, approved by a human, written in your voice. And written safely: healthcare replies have rules. We never confirm someone was a patient, never discuss treatment publicly.</p>
+          <div class="fno">ESTATE 02 / 03</div>
+          <h3>Every review, a reply ready</h3>
+          <p>When a review lands, the engine picks the reply your clinic approved for that star rating and sends it to your reception on WhatsApp: Post reply, or Don't reply. One tap and it is on Google within minutes. The engine adds only your clinic's name and phone: never the reviewer's name, never a treatment.</p>
           <div class="ba">
             <div class="no"><span class="m">✗</span><span>Without: the angry review sits unanswered for days, read by everyone who searches you</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: every voice acknowledged <b>professionally, fast, safely</b></span></div>
+            <div class="yes"><span class="m">✓</span><span>With: a reply is <b>one tap away</b>, in wording you already approved</span></div>
           </div>
         </div>
       </div>
@@ -423,51 +419,12 @@
       <div class="dcard" id="review-growth" data-img="assets/img/estate-reviewgrowth.webp">
         <div class="bgimg"></div><div class="grad"></div>
         <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ESTATE 03 / 06</div>
-          <h3>Reviews that grow</h3>
-          <p>Happy patients asked at the right moment: after a confirmed visit, once, politely. Your rating compounds month after month, and rating is the first thing every new patient checks.</p>
+          <div class="fno">ESTATE 03 / 03</div>
+          <h3>Every attended patient asked for a review</h3>
+          <p>A couple of hours after a visit your reception marked as attended, the patient gets one polite request with your Google review link. At most once a year. Every attended patient is asked, not only the happy ones: that is Google's rule, and we keep it.</p>
           <div class="ba">
             <div class="no"><span class="m">✗</span><span>Without: only the angry ones bother; your average sinks unfairly</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: your happiest patients <b>finally get asked</b>, and the stars follow</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard" id="email" data-img="assets/img/estate-email.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ESTATE 04 / 06</div>
-          <h3>Email, connected</h3>
-          <p>Your info@ inbox joins the same engine: same approved answers, same booking flow, same escalation to your team. An email inquiry is a patient too.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: the inbox is a graveyard checked "when someone has time"</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: answered like WhatsApp, <b>in minutes, toward a booking</b></span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard" id="instagram" data-img="assets/img/estate-igdms.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ESTATE 05 / 06</div>
-          <h3>Instagram DMs, booked like inquiries</h3>
-          <p>A DM at midnight is a patient at noon. Story replies, comment follow-ups, DMs: qualified and carried to booking exactly like WhatsApp, because for aesthetic clinics Instagram is the front door.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: DMs pile up unread under the notifications</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: the DM becomes <b>a name in the calendar</b></span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard" id="website" data-img="assets/img/estate-website.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ESTATE 06 / 06</div>
-          <h3>Website concierge</h3>
-          <p>New treatment? Changed hours? A price update? One WhatsApp to us and it's live within 48 hours. No chasing a web guy who built it two years ago and disappeared.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: the site says Ramadan hours in November</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: always current, <b>changed before you follow up</b></span></div>
+            <div class="yes"><span class="m">✓</span><span>With: every patient who came <b>gets asked</b>, once a year at most</span></div>
           </div>
         </div>
       </div>
@@ -482,53 +439,62 @@
     <div class="sumcols">
       <div class="inc">
         <h5>✓ WHAT YOU GET</h5>
-        <div class="sumrow"><span class="m">✓</span><span><b>Google profile managed</b>: checked and worked weekly</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Every review answered</b>: &lt;24h, your voice, healthcare-safe</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Review growth</b>: happy patients asked at the right moment</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Email connected</b>: the inbox joins the engine</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Instagram DMs booked</b>: the front door, finally answered</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Website concierge</b>: any change live within 48 hours</span></div>
+        <div class="sumrow"><span class="m">✓</span><span><b>Google profile checked</b>: every day, against the hours you gave us</span></div>
+        <div class="sumrow"><span class="m">✓</span><span><b>Review replies ready</b>: your approved wording, one tap to post</span></div>
+        <div class="sumrow"><span class="m">✓</span><span><b>Review requests</b>: every attended patient asked, once a year at most</span></div>
       </div>
       <div class="gone">
-        <h5>✗ WHAT DISAPPEARS</h5>
-        <div class="sumrow"><span class="m">✗</span><span>Wrong hours and dead photos on the map result</span></div>
+        <h5>✗ WHAT IT REPLACES</h5>
+        <div class="sumrow"><span class="m">✗</span><span>A profile nobody checks from one month to the next</span></div>
         <div class="sumrow"><span class="m">✗</span><span>The angry review sitting unanswered for weeks</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>A rating sinking because only angry people write</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>The inbox graveyard checked "when someone has time"</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>DMs buried under the notifications</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>The site still showing Ramadan hours in November</span></div>
+        <div class="sumrow"><span class="m">✗</span><span>A rating that sinks because only the unhappy write</span></div>
       </div>
     </div>
+  </div>
+</section>
+
+<section id="today">
+  <div class="reveal"><div class="eyebrow">BUILT, NOT YET RUNNING</div>
+  <h2 class="grad-text">Where the engine stands today.</h2>
+  <p class="section-sub">Everything above is what the engine does, not a client's result. This is exactly how far it has come.</p></div>
+
+  <div class="today reveal">
+    <div class="trow ok"><span class="tk">BUILT AND TESTED</span><span>Built and tested with the engine's own tests and on our own test phones. The two Google parts have not yet run on a real Google profile.</span></div>
+    <div class="trow wait"><span class="tk">NOT RUNNING YET</span><span>No clinic runs on the engine yet.</span></div>
+    <div class="trow wait"><span class="tk">SWITCHED ON PER CLINIC</span><span>Each of the nine is off until it is switched on for your clinic, one at a time.</span></div>
+    <div class="trow wait"><span class="tk">WAITING ON WHATSAPP</span><span>Reminders and the other messages a clinic starts need WhatsApp to approve their wording. None is approved yet, and our WhatsApp provider account opens with the first clinic.</span></div>
+    <div class="trow wait"><span class="tk">WAITING ON GOOGLE</span><span>The profile check and the review replies wait for Google to approve our access, and the check's findings do not show on your page yet.</span></div>
+    <div class="trow no"><span class="tk">NOT BUILT</span><span>Instagram messages and email. Today the engine answers WhatsApp only.</span></div>
+    <div class="trow"><span class="tk">DONE BY A PERSON</span><span>Website changes: you message us, and a person makes the change.</span></div>
   </div>
 </section>
 
 <div class="trustwrap" id="access">
   <div class="reveal"><div class="eyebrow">HOW WE CONNECT, AND WHAT WE NEVER TOUCH</div>
   <h2 class="grad-text">You grant access. You keep the keys.</h2>
-  <p class="section-sub">No passwords, no software installed at the clinic, and every access revocable by you in one click.</p></div>
+  <p class="section-sub">No passwords, and no software installed at the clinic. Your WhatsApp number and your Google profile stay in your own accounts.</p></div>
 
   <div class="trust reveal">
     <div class="ask">
       <h3>What we ask for</h3>
       <ul>
-        <li><span class="m">✓</span><span><b>WhatsApp</b>: your number runs on WhatsApp Business infrastructure; handed back whole if we ever part</span></li>
-        <li><span class="m">✓</span><span><b>Instagram</b>: partner access through Meta Business Manager, the official delegation</span></li>
-        <li><span class="m">✓</span><span><b>Google</b>: you invite us as a profile manager; one click to revoke</span></li>
-        <li><span class="m">✓</span><span><b>Email</b>: forwarding or delegated access to the inquiries inbox only</span></li>
-        <li><span class="m">✓</span><span><b>Website</b>: editor access for the concierge changes</span></li>
+        <li><span class="m">✓</span><span><b>WhatsApp</b>: your number stays in your clinic's own Meta account; we connect to it on one call, through an official WhatsApp Business provider</span></li>
+        <li><span class="m">✓</span><span><b>Google</b>: you add us as a manager on your Business Profile, never as its owner</span></li>
+        <li><span class="m">✓</span><span><b>The quiet list</b>: only if you want the invitations: your past patients, with the ones who agreed marked</span></li>
+        <li><span class="m">✓</span><span><b>Website</b>: editor access, only if you want us to make the changes</span></li>
       </ul>
     </div>
     <div class="never">
       <h3>What we never touch</h3>
       <ul>
-        <li><span class="m">✗</span><span><b>Your patient records</b>: your medical system stays yours; we never import it</span></li>
-        <li><span class="m">✗</span><span><b>Your passwords</b>: every connection is official delegation, never a shared login</span></li>
-        <li><span class="m">✗</span><span><b>Clinical conversations</b>: anything medical routes to your team, always</span></li>
-        <li><span class="m">✗</span><span><b>Your money</b>: payments stay between you and your patients</span></li>
+        <li><span class="m">✗</span><span><b>Your medical system</b>: we never connect to it</span></li>
+        <li><span class="m">✗</span><span><b>Your passwords</b>: we never ask for one. Every connection is made from your own account, and your reception only taps inside WhatsApp</span></li>
+        <li><span class="m">✗</span><span><b>Clinical questions</b>: anything a patient types goes to your team; the engine answers only from the menu you approved</span></li>
+        <li><span class="m">✗</span><span><b>Your money</b>: the engine takes no payment; that stays between you and your patients</span></li>
         <li><span class="m">✗</span><span><b>Your ad accounts' billing</b>: spend is paid direct, never marked up</span></li>
       </ul>
     </div>
-    <div class="foot">We keep only the conversations we handle and the bookings we confirm: encrypted, minimal, and deleted on schedule. The full access list is written into your agreement, item by item.</div>
+    <div class="foot">What the engine keeps: each patient who messages your WhatsApp, every message both ways, the bookings, a record of what it did, and the quiet list you gave us. Stored encrypted. When you leave, a person here deletes it once 30 days have passed, and the backups a week after that.</div>
   </div>
 </div>
 

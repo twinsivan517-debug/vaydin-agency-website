@@ -5,21 +5,21 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Inside the engine · Vaydin</title>
-<meta name="description" content="The Vaydin engine, live on one screen: every channel a patient can reach your clinic on, flowing into one system that answers, books, reminds, revives, and counts.">
+<meta name="description" content="The Vaydin engine on one screen: your clinic's WhatsApp and Google profile flowing into one system that answers, books, reminds, invites back, and counts.">
 <link rel="icon" href="vaydin-icon-48.png">
 <link rel="apple-touch-icon" href="vaydin-icon-192.png">
 <link rel="canonical" href="https://vaydin.agency/engine.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vaydin">
 <meta property="og:title" content="Inside the engine · Vaydin">
-<meta property="og:description" content="The Vaydin engine, live on one screen: every channel a patient can reach your clinic on, flowing into one system that answers, books, reminds, revives, and counts.">
+<meta property="og:description" content="The Vaydin engine on one screen: your clinic's WhatsApp and Google profile flowing into one system that answers, books, reminds, invites back, and counts.">
 <meta property="og:url" content="https://vaydin.agency/engine.html">
 <meta property="og:image" content="https://vaydin.agency/vaydin-og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Inside the engine · Vaydin">
-<meta name="twitter:description" content="The Vaydin engine, live on one screen: every channel a patient can reach your clinic on, flowing into one system that answers, books, reminds, revives, and counts.">
+<meta name="twitter:description" content="The Vaydin engine on one screen: your clinic's WhatsApp and Google profile flowing into one system that answers, books, reminds, invites back, and counts.">
 <meta name="twitter:image" content="https://vaydin.agency/vaydin-og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -183,6 +183,18 @@
   .cmp-foot a{font-size:13px;color:var(--volt)}
   .cmp-foot a:hover{color:var(--tx)}
 
+  /* ---------- where it stands today ---------- */
+  #today{max-width:1240px;margin:0 auto;padding:110px 48px 0}
+  #today h2{font-family:var(--display);font-weight:400;font-size:clamp(28px,3.3vw,44px);line-height:1.15;margin:0 0 14px;max-width:720px;text-wrap:balance}
+  #today .section-sub{margin-bottom:34px}
+  .today{background:rgba(9,15,12,0.75);box-shadow:0 0 0 1px var(--border);padding:8px 34px}
+  .trow{display:grid;grid-template-columns:210px 1fr;gap:22px;padding:15px 0;border-top:1px solid rgba(27,43,48,0.7);font-size:14px;color:var(--tx-muted);align-items:baseline}
+  .trow:first-child{border-top:0}
+  .trow .tk{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:var(--tx-faint)}
+  .trow.ok .tk{color:var(--ok)}
+  .trow.wait .tk{color:var(--warn)}
+  .trow.no .tk{color:var(--critical)}
+
   /* ---------- cta band ---------- */
   .band{margin-top:130px;background:linear-gradient(180deg, transparent 0%, rgba(9,15,12,0.8) 50%, transparent 100%);
     border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:96px 48px;text-align:center}
@@ -227,6 +239,9 @@
     .hud{position:fixed;left:22px;right:22px;top:auto;bottom:22px;width:auto;transform:translateY(12px)}
     .hud.on{transform:none}
     #compare{padding:80px 22px 0}
+    #today{padding:72px 22px 0}
+    .today{padding:4px 20px}
+    .trow{grid-template-columns:1fr;gap:4px}
     .cmp-frame{grid-template-columns:1fr}
     .cmp-sel{border-right:0;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;padding:14px 10px}
     .cmp-sel .gh{display:none}
@@ -269,39 +284,35 @@
 <script>(function(){var b=document.querySelector(".nav-burger"),l=document.querySelector(".nav-links");if(b&&l){b.addEventListener("click",function(){var o=l.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false");});l.addEventListener("click",function(e){if(e.target.tagName==="A"){l.classList.remove("open");b.setAttribute("aria-expanded","false");}});}})();</script>
 
 <div class="stage">
-  <canvas id="field" width="900" height="900" aria-label="The Vaydin engine: ten channels, three layers, one core. Signals flowing through one system"></canvas>
+  <canvas id="field" width="900" height="900" aria-label="The Vaydin engine: six kinds of work, three layers, one core. Signals flowing through one system"></canvas>
   <div class="stage-shade"></div>
 
   <div class="console">
     <div class="eyebrow"><span class="pulse"></span>INSIDE THE VAYDIN ENGINE</div>
-    <h1 class="grad-text">One engine.<br>Thirteen jobs.<br>Working while you sleep.</h1>
-    <p>Every channel a patient can reach you on flows into <b>one system</b> that answers, books, reminds, revives, and counts. <b>Press a field</b> and watch the engine pull it in, then read what it does for you.</p>
+    <h1 class="grad-text">One engine.<br>Nine jobs.<br>Working while you sleep.</h1>
+    <p>Your WhatsApp and your Google profile flow into <b>one system</b> that answers, books, reminds, invites back, and counts. <b>Press a field</b> and watch the engine pull it in, then read what it does for you.</p>
 
     <div class="fgroup">
-      <div class="gh">THE ENGINE · 7 FIELDS</div>
-      <button class="frow" data-field="intake"><span class="dot" style="background:#25D366"></span><span class="fn">Every inquiry answered &amp; qualified</span><span class="arr">→</span></button>
-      <button class="frow" data-field="booking"><span class="dot" style="background:#e8d48b"></span><span class="fn">Bookings that actually happen</span><span class="arr">→</span></button>
-      <button class="frow" data-field="consult"><span class="dot" style="background:#34e3f0"></span><span class="fn">Consultations framed to convert</span><span class="arr">→</span></button>
-      <button class="frow" data-field="showup"><span class="dot" style="background:#4ade80"></span><span class="fn">Show-up care that lands</span><span class="arr">→</span></button>
-      <button class="frow" data-field="dormant"><span class="dot" style="background:#fb923c"></span><span class="fn">Dormant patients, revived</span><span class="arr">→</span></button>
-      <button class="frow" data-field="crosssell"><span class="dot" style="background:#a78bfa"></span><span class="fn">The right next treatment, offered</span><span class="arr">→</span></button>
-      <button class="frow" data-field="kpi"><span class="dot" style="background:#f5d978"></span><span class="fn">Everything counted, live</span><span class="arr">→</span></button>
+      <div class="gh">THE ENGINE · 6 FIELDS</div>
+      <button class="frow" data-field="intake"><span class="dot" style="background:#25D366"></span><span class="fn">Every first message gets your menu</span><span class="arr">→</span></button>
+      <button class="frow" data-field="booking"><span class="dot" style="background:#e8d48b"></span><span class="fn">Booked inside the chat</span><span class="arr">→</span></button>
+      <button class="frow" data-field="showup"><span class="dot" style="background:#4ade80"></span><span class="fn">Reminders before each booked visit</span><span class="arr">→</span></button>
+      <button class="frow" data-field="dormant"><span class="dot" style="background:#fb923c"></span><span class="fn">The quiet list, invited back</span><span class="arr">→</span></button>
+      <button class="frow" data-field="crosssell"><span class="dot" style="background:#a78bfa"></span><span class="fn">The next treatment, offered after the visit</span><span class="arr">→</span></button>
+      <button class="frow" data-field="kpi"><span class="dot" style="background:#f5d978"></span><span class="fn">Each step counted</span><span class="arr">→</span></button>
     </div>
     <div class="fgroup">
-      <div class="gh">THE ESTATE · 6 FIELDS</div>
-      <button class="frow" data-field="google"><span class="dot" style="background:#4285F4"></span><span class="fn">Google, managed</span><span class="arr">→</span></button>
-      <button class="frow" data-field="reviews"><span class="dot" style="background:#fbbf24"></span><span class="fn">Every review answered</span><span class="arr">→</span></button>
-      <button class="frow" data-field="review-growth"><span class="dot" style="background:#fbbf24"></span><span class="fn">Reviews that grow</span><span class="arr">→</span></button>
-      <button class="frow" data-field="email"><span class="dot" style="background:#60a5fa"></span><span class="fn">Email, connected</span><span class="arr">→</span></button>
-      <button class="frow" data-field="instagram"><span class="dot" style="background:#E1306C"></span><span class="fn">Instagram DMs, booked like inquiries</span><span class="arr">→</span></button>
-      <button class="frow" data-field="website"><span class="dot" style="background:#34e3f0"></span><span class="fn">Website concierge</span><span class="arr">→</span></button>
+      <div class="gh">THE ESTATE · 3 FIELDS</div>
+      <button class="frow" data-field="google"><span class="dot" style="background:#4285F4"></span><span class="fn">Your Google profile, checked daily</span><span class="arr">→</span></button>
+      <button class="frow" data-field="reviews"><span class="dot" style="background:#fbbf24"></span><span class="fn">Every review, a reply ready</span><span class="arr">→</span></button>
+      <button class="frow" data-field="review-growth"><span class="dot" style="background:#fbbf24"></span><span class="fn">Every attended patient asked for a review</span><span class="arr">→</span></button>
     </div>
   </div>
 
   <div class="hud" id="hud">
     <span class="bk tl"></span><span class="bk tr"></span><span class="bk bl"></span><span class="bk br"></span>
     <button class="hx" id="hudclose" aria-label="Close">×</button>
-    <div class="hh" id="hud-count">FIELD 01/13</div>
+    <div class="hh" id="hud-count">FIELD 01/09</div>
     <h3 id="hud-title"></h3>
     <p class="hp" id="hud-exp"></p>
     <div class="chs" id="hud-chs"></div>
@@ -325,10 +336,9 @@
 
   <div class="cmp-frame reveal">
     <span class="bk tl"></span><span class="bk tr"></span><span class="bk bl"></span><span class="bk br"></span>
-    <div class="cmp-counter" id="cmp-count">01/13</div>
+    <div class="cmp-counter" id="cmp-count">01/09</div>
     <div class="cmp-sel" id="cmp-sel">
       <div class="gh">THE ENGINE</div>
-      <div class="gh" data-after="7" style="display:none">THE ESTATE</div>
     </div>
     <div class="cmp-body">
       <div class="cmp-title" id="cmp-title"></div>
@@ -351,6 +361,23 @@
   </div>
 </section>
 
+<section id="today">
+  <div class="reveal">
+    <div class="sec-eyebrow">BUILT, NOT YET RUNNING</div>
+    <h2 class="grad-text">Where the engine stands today.</h2>
+    <p class="section-sub">Everything above is what the engine does, not a client's result. This is exactly how far it has come.</p>
+  </div>
+  <div class="today reveal">
+    <div class="trow ok"><span class="tk">BUILT AND TESTED</span><span>Built and tested with the engine's own tests and on our own test phones. The two Google parts have not yet run on a real Google profile.</span></div>
+    <div class="trow wait"><span class="tk">NOT RUNNING YET</span><span>No clinic runs on the engine yet.</span></div>
+    <div class="trow wait"><span class="tk">SWITCHED ON PER CLINIC</span><span>Each of the nine is off until it is switched on for your clinic, one at a time.</span></div>
+    <div class="trow wait"><span class="tk">WAITING ON WHATSAPP</span><span>Reminders and the other messages a clinic starts need WhatsApp to approve their wording. None is approved yet, and our WhatsApp provider account opens with the first clinic.</span></div>
+    <div class="trow wait"><span class="tk">WAITING ON GOOGLE</span><span>The profile check and the review replies wait for Google to approve our access, and the check's findings do not show on your page yet.</span></div>
+    <div class="trow no"><span class="tk">NOT BUILT</span><span>Instagram messages and email. Today the engine answers WhatsApp only.</span></div>
+    <div class="trow"><span class="tk">DONE BY A PERSON</span><span>Website changes: you message us, and a person makes the change.</span></div>
+  </div>
+</section>
+
 <div class="band">
   <h2 class="grad-text">This engine runs on your clinic's own numbers.</h2>
   <p>It starts with the diagnostic: an unannounced measurement of how your clinic answers, books, and follows through. The engine is Step 02 of your plan.</p>
@@ -370,148 +397,109 @@
   /* ================= FIELD DATA: one object drives console, HUD, comparison ================= */
   var FIELDS = {
     'intake': {
-      name:'Every inquiry answered & qualified', group:'engine', ch:['WHATSAPP','INSTAGRAM','EMAIL'],
-      exp:'A patient who writes at 9pm is answered at 9pm, in your clinic\'s voice, in their language. The engine asks what your best receptionist would ask, and hands your team a qualified patient, not a cold message.',
+      name:'Every first message gets your menu', group:'engine', ch:['WHATSAPP'],
+      exp:'A patient who starts a chat at 9pm gets your clinic\'s menu at 9pm: book, treatments, where you are, offers, a person, and a consultation if you offer one. Every answer is wording your clinic approved, and a price is only ever the one you set. Anything the patient types instead goes to your reception, and the patient is told a person will reply.',
       off:['An evening WhatsApp inquiry sits unread until morning',
            'The patient messages three clinics, and the fastest reply wins',
            'Your team types the same five answers, all day, between patients'],
-      on:['Answered <b>within minutes</b>, day and night, in the patient\'s language',
-          'Qualified before your staff joins: treatment, timing, expectations',
-          'Escalated to a human the moment a human matters']
+      on:['Your menu <b>at once</b>, day and night, in your approved words',
+          'In Arabic for a patient who writes in Arabic letters, once you set it up',
+          'A typed question goes to your reception, never to a guess']
     },
     'booking': {
-      name:'Bookings that actually happen', group:'engine', ch:['BOOKING','WHATSAPP'],
-      exp:'Interest is not a booking. The engine walks the patient from "how much is it?" to a confirmed slot, and never lets a conversation end without a next step.',
+      name:'Booked inside the chat', group:'engine', ch:['BOOKING','WHATSAPP'],
+      exp:'Interest is not a booking. The patient taps a treatment, picks a time, and is booked and told in the same chat. Your reception is told at once, with one button if the time has to move. If you prefer, reception confirms every booking first. The engine sees only the bookings made through it, not your own diary: if a time clashes, that button moves it.',
       off:['"I\'ll think about it" is where conversations go to die',
            'Patients are asked to call back during working hours',
-           'Nobody knows who almost booked last week'],
-      on:['Every conversation driven to <b>a slot, a consult, or a follow-up</b>',
-          'The booking happens inside the chat, no phone tag',
-          'Every almost-booking is remembered and gently revisited']
-    },
-    'consult': {
-      name:'Consultations framed to convert', group:'engine', ch:['WHATSAPP','BOOKING'],
-      exp:'The consultation is where treatment plans are accepted or lost. The engine prepares the patient before they arrive (what to expect, what to ask), so your doctor talks to someone ready to decide.',
-      off:['The patient arrives cold: the first fifteen minutes are spent selling',
-           'A no-decision consult leaves with a brochure and is never heard from again',
-           'Follow-up depends on whoever happened to remember'],
-      on:['The patient arrives <b>prepared</b>, briefed on the treatment and the process',
-          'A structured follow-up lands after every consultation',
-          'The quiet ones get a well-timed, well-worded nudge']
+           'A booking waits until someone has time to open the diary'],
+      on:['Treatment, time, booked: <b>inside the chat</b>, no phone tag',
+          'A consultation is on the same menu, if you offer one',
+          'Reception is told at once, with a button if the time has to move']
     },
     'showup': {
-      name:'Show-up care that lands', group:'engine', ch:['SHOW-UP','WHATSAPP'],
-      exp:'An empty chair is the most expensive hour of your day. The engine runs a reminder cadence that feels like care, not spam: confirmation, day-before, morning-of, with rescheduling one tap away.',
+      name:'Reminders before each booked visit', group:'engine', ch:['SHOW-UP','WHATSAPP'],
+      exp:'An empty chair is the most expensive hour of your day. The patient gets a confirmation when they book, then a reminder a day before and another two hours before, or at the times you choose. Each reminder carries two buttons: Confirm and Reschedule. Nothing the clinic starts is sent at night: it waits until 8 in the morning.',
       off:['A no-show costs the slot, the prep, and the treatment revenue',
            'One generic reminder SMS, if any',
-           'When a patient doesn\'t show, nobody follows up'],
-      on:['A cadence that feels like <b>care</b>, in the patient\'s language',
-          'Rescheduling is one tap, so silence becomes a new time',
-          'A no-show turns into a rebooking conversation, automatically']
+           'A patient who cannot come has no easy way to say so'],
+      on:['A reminder <b>a day before and two hours before</b>',
+          'Reschedule: new times, two taps, and the old time is freed',
+          'In wording your clinic approved']
     },
     'dormant': {
-      name:'Dormant patients, revived', group:'engine', ch:['RECOVERY','WHATSAPP','EMAIL'],
-      exp:'Your patient list is an asset that goes cold silently. The engine notices who hasn\'t returned when they should have, and writes to them like your clinic remembers them. Because now it does.',
+      name:'The quiet list, invited back', group:'engine', ch:['RECOVERY','WHATSAPP'],
+      exp:'Your patient list goes cold silently. You give us the list of past patients and mark the ones who agreed to hear from you. Only those are invited: once each, when the last visit is more than three months old or has no date, and no visit is already booked. Your wording, with a button to book. A patient who ever said stop is never invited.',
       off:['Patients quietly drift away after their treatment ends',
-           'Nobody notices an absence: there is no list of who went quiet',
+           'The list of past patients sits in a spreadsheet, untouched',
            'Reactivation is an occasional blast that reads like advertising'],
-      on:['Silence is <b>noticed on time</b>: the engine tracks who should be back',
-          'A personal revival message at the right moment, not a campaign',
-          'The comeback is booked in the same conversation']
+      on:['<b>One invitation</b>, once, with a button to book',
+          'Only patients you marked as agreeing, never one who said stop',
+          'A limited number a day, never at night, never a blast']
     },
     'crosssell': {
-      name:'The right next treatment, offered', group:'engine', ch:['WHATSAPP','BOOKING'],
-      exp:'After the first treatment comes the aftercare plan; after the consultation, the natural next step. The engine knows what follows and offers it at the right moment, as advice from your clinic, not as a pitch.',
+      name:'The next treatment, offered after the visit', group:'engine', ch:['WHATSAPP','BOOKING'],
+      exp:'When your reception marks a visit as attended, and you mapped a next treatment to the one they just had, the patient gets one note from your clinic with a button that starts booking it. The note itself names no treatment and pushes nothing. It starts once the engine has a few bookings behind it.',
       off:['The next treatment is mentioned only if the doctor remembers',
            'A patient\'s value ends at one visit',
            'When it is offered, it sounds like upselling'],
-      on:['A <b>relevant next step</b>, timed to the treatment cycle',
-          'Framed as care and aftercare, in your clinic\'s voice',
-          'Patient lifetime grows without anyone pushing']
+      on:['Sent only <b>after a visit that happened</b>',
+          'One tap starts booking the next treatment you mapped',
+          'One note, your wording, nothing pushed']
     },
     'kpi': {
-      name:'Everything counted, live', group:'engine', ch:['ALL'],
-      exp:'Every conversation, booking, review and reply lands on one dashboard you can open any morning. Not our claims. Counts. And the same diagnostic that found your leaks keeps scoring us after we fix them.',
+      name:'Each step counted', group:'engine', ch:['ALL'],
+      exp:'What the engine does is counted on your page, read fresh each time you open it: patients who wrote in, visits booked, who came and who did not, how fast the first reply went out, how long a review waited. Counts, not our claims, and no money figure. And the same diagnostic that found your leaks keeps scoring the clinic after we start, us included.',
       off:['"How is the front desk doing?" is answered by feel',
-           'No number connects inquiries to bookings to revenue',
+           'No number connects inquiries to bookings to visits',
            'Vendors grade their own homework'],
-      on:['One dashboard, <b>live counts</b>: open it any morning',
-          'Inquiry to booking, visible end to end',
+      on:['<b>Counts</b>, from the engine\'s own records',
+          'Wrote in, booked, came: each step counted',
           'We are scored by the same diagnostic that found the leaks']
     },
     'google': {
-      name:'Google, managed', group:'estate', ch:['GOOGLE'],
-      exp:'For most new patients, your Google profile is your front door. The engine keeps it accurate, active and working the map ranking. Checked every week, without you asking.',
-      off:['Old hours, old prices, unanswered questions on the profile',
-           'The clinic below you posts weekly, and sits above you on the map',
-           'Nobody owns it, so nobody touches it'],
-      on:['A <b>weekly sweep</b>: info accuracy, posts, photos, Q&A',
-          'The profile works the ranking instead of embarrassing it',
-          'One owner: us, and you never think about it again']
+      name:'Your Google profile, checked daily', group:'estate', ch:['GOOGLE'],
+      exp:'For most new patients, your Google profile is your front door. Once a day the engine reads it and checks four things: that the hours Google shows match the hours you gave us, that Google has not edited the profile on its own, that it does not show you as closed, and that the listing is in good standing. It changes nothing: you fix it in Google\'s own screen. Showing you what it finds on your page is not built yet.',
+      off:['Old hours on the profile, and a patient at a locked door',
+           'A change nobody at the clinic made, noticed weeks later',
+           'Nobody at the clinic looks at it for months'],
+      on:['A <b>daily check</b> of the hours Google shows against yours',
+          'An edit Google made on its own, a "closed" label, a suspended listing: each checked for',
+          'It only reads: nothing on your profile is changed by us']
     },
     'reviews': {
-      name:'Every review answered', group:'estate', ch:['REVIEWS'],
-      exp:'Every review answered within 24 hours, in your voice: drafted by the engine, approved by a human, and compliant with patient-privacy rules most front desks have never read.',
+      name:'Every review, a reply ready', group:'estate', ch:['REVIEWS','WHATSAPP'],
+      exp:'When a review lands, the engine picks the reply your clinic approved for that star rating and sends it to your reception on WhatsApp with two buttons: Post reply, or Don\'t reply. One tap and it is on Google within minutes. The engine adds only your clinic\'s name and phone: never the reviewer\'s name, never a treatment.',
       off:['A bad review sits unanswered for weeks, in public',
-           'A well-meaning reply confirms a patient visited: a privacy breach',
+           'Each reply is written from scratch, whenever someone finds the time',
            'The tone changes with whoever happens to reply'],
-      on:['Every review answered <b>within 24 hours</b>',
-          'Privacy-safe wording, every time (the rules are built in)',
-          'One consistent voice: yours']
+      on:['A reply <b>ready for one tap</b>, for every new review',
+          'Wording you approved once, by star rating',
+          'If it waits, your reception is nudged once, and the wait is counted']
     },
     'review-growth': {
-      name:'Reviews that grow', group:'estate', ch:['REVIEWS','WHATSAPP'],
-      exp:'Happy patients rarely review on their own. The engine asks them at the right moment (after a confirmed visit, never spammed), so your rating compounds month after month.',
+      name:'Every attended patient asked for a review', group:'estate', ch:['REVIEWS','WHATSAPP'],
+      exp:'Happy patients rarely review on their own. A couple of hours after a visit your reception marked as attended, the patient gets one polite request with your Google review link. At most once a year, and every attended patient is asked, not only the happy ones: that is Google\'s rule, and we keep it.',
       off:['Mostly the unhappy ones write reviews',
            'The rating has not moved in a year',
            'Staff is told to ask, and forgets by Tuesday'],
-      on:['Asked at the <b>right moment</b>, after a confirmed visit',
-          'A steady stream of real reviews from real patients',
-          'The rating compounds, month after month']
-    },
-    'email': {
-      name:'Email, connected', group:'estate', ch:['EMAIL'],
-      exp:'The inbox stops being a graveyard. The same brain that answers your WhatsApp answers your email: same knowledge, same qualification, same escalation to your team.',
-      off:['Email inquiries answered days later, or never',
-           'The inbox gives different answers than the front desk',
-           'Nothing connects the inbox to the booking calendar'],
-      on:['The <b>same brain</b>, the same speed, on email',
-          'One knowledge base: every channel says the same thing',
-          'Escalated to your team the moment a human matters']
-    },
-    'instagram': {
-      name:'Instagram DMs, booked like inquiries', group:'estate', ch:['INSTAGRAM'],
-      exp:'A DM at midnight is a patient at noon. Story replies and DMs get answered, qualified and booked exactly like WhatsApp inquiries, because for your patients, Instagram is the clinic.',
-      off:['DMs sit behind whoever holds the account password',
-           'Story replies scroll away and vanish',
-           'A "check DM please" comment is a patient nobody claims'],
-      on:['Answered <b>in minutes</b>, like every other channel',
-          'Qualified and booked inside the conversation',
-          'Nothing scrolls away: every DM is an inquiry on the dashboard']
-    },
-    'website': {
-      name:'Website concierge', group:'estate', ch:['WEBSITE'],
-      exp:'Hours, prices, a new treatment, a new doctor: one WhatsApp message to us, changed within 48 hours. Your site stops drifting out of date.',
-      off:['Last year\'s prices are live right now',
-           'The old agency charges per change and takes weeks',
-           'So nobody asks, and the site quietly rots'],
-      on:['One message → <b>done within 48 hours</b>',
-          'Hours, prices, treatments: always current',
-          'No tickets, no chasing, no invoices per comma']
+      on:['Asked <b>after a visit that happened</b>, never before',
+          'One request, at most once a year',
+          'Everyone is asked, as Google requires']
     }
   };
-  var ORDER = ['intake','booking','consult','showup','dormant','crosssell','kpi','google','reviews','review-growth','email','instagram','website'];
-  var DOTS = {'intake':'#25D366','booking':'#e8d48b','consult':'#34e3f0','showup':'#4ade80','dormant':'#fb923c','crosssell':'#a78bfa','kpi':'#f5d978','google':'#4285F4','reviews':'#fbbf24','review-growth':'#fbbf24','email':'#60a5fa','instagram':'#E1306C','website':'#34e3f0'};
+  var ORDER = ['intake','booking','showup','dormant','crosssell','kpi','google','reviews','review-growth'];
+  var TOTAL = ('0' + ORDER.length).slice(-2);
+  var DOTS = {'intake':'#25D366','booking':'#e8d48b','showup':'#4ade80','dormant':'#fb923c','crosssell':'#a78bfa','kpi':'#f5d978','google':'#4285F4','reviews':'#fbbf24','review-growth':'#fbbf24'};
 
   /* ================= ticker (labeled illustration) ================= */
   var flows = [
-    ['WHATSAPP 21:14', 'INTAKE', 'QUALIFIED', '<span class="done">BOOKED</span>'],
-    ['INSTAGRAM DM', 'INTAKE', 'CONSULT FRAMED', '<span class="done">BOOKED</span>'],
-    ['NEW REVIEW', 'REPLY DRAFTED', 'OWNER APPROVED', '<span class="done">POSTED</span>'],
-    ['SILENT 90 DAYS', 'REVIVAL MESSAGE', '<span class="done">RE-BOOKED</span>'],
-    ['NO-SHOW RISK', 'REMINDER CADENCE', '<span class="done">SHOWED UP</span>'],
-    ['GOOGLE PROFILE', 'WEEKLY SWEEP', '<span class="done">CURRENT</span>'],
-    ['EMAIL INQUIRY', 'SAME BRAIN', '<span class="done">ANSWERED</span>']
+    ['WHATSAPP 21:14', 'MENU', 'TIME PICKED', '<span class="done">BOOKED</span>'],
+    ['BOOKED', 'REMINDER · DAY BEFORE', 'REMINDER · 2 HOURS', '<span class="done">CONFIRMED</span>'],
+    ['NEW REVIEW', 'APPROVED REPLY PICKED', 'RECEPTION TAPS', '<span class="done">POSTED</span>'],
+    ['QUIET LIST', 'LAST VISIT 90+ DAYS', '<span class="done">ONE INVITATION</span>'],
+    ['VISIT ATTENDED', 'REVIEW REQUEST', '<span class="done">SENT ONCE</span>'],
+    ['GOOGLE PROFILE', 'DAILY CHECK', '<span class="done">HOURS MATCH</span>'],
+    ['TYPED QUESTION', 'TO YOUR RECEPTION', '<span class="done">PATIENT TOLD</span>']
   ];
   var tEl = document.getElementById('tickerline'), fi = 0;
   function nextFlow(){
@@ -544,7 +532,7 @@
 
   /* build selector rows (after the ENGINE header; ESTATE header before index 7) */
   ORDER.forEach(function(id, i){
-    if(i === 7){
+    if(i > 0 && FIELDS[id].group === 'estate' && FIELDS[ORDER[i - 1]].group === 'engine'){
       var gh = document.createElement('div');
       gh.className = 'gh'; gh.textContent = 'THE ESTATE';
       sel.appendChild(gh);
@@ -555,7 +543,6 @@
     b.addEventListener('click', function(){ selectField(id, true); });
     sel.appendChild(b);
   });
-  sel.querySelector('.gh[data-after]') && sel.removeChild(sel.querySelector('.gh[data-after]'));
 
   function fillCompare(id){
     var F = FIELDS[id];
@@ -563,7 +550,7 @@
     cmpExp.textContent = F.exp;
     cmpOff.innerHTML = F.off.map(function(r){ return '<div class="crow"><span class="ic">⚠</span><span>' + r + '</span></div>'; }).join('');
     cmpOn.innerHTML  = F.on.map(function(r){ return '<div class="crow"><span class="ic">✓</span><span>' + r + '</span></div>'; }).join('');
-    cmpCount.textContent = (('0' + (ORDER.indexOf(id) + 1)).slice(-2)) + '/13';
+    cmpCount.textContent = (('0' + (ORDER.indexOf(id) + 1)).slice(-2)) + '/' + TOTAL;
     sel.querySelectorAll('.srow').forEach(function(b){
       b.classList.toggle('on', b.getAttribute('data-field') === id);
     });
@@ -590,8 +577,8 @@
     var F = FIELDS[id];
     hudTitle.textContent = F.name;
     hudExp.textContent = F.exp;
-    hudCount.textContent = 'FIELD ' + ('0' + (ORDER.indexOf(id) + 1)).slice(-2) + '/13 · ' + (F.group === 'engine' ? 'THE ENGINE' : 'THE ESTATE');
-    hudChs.innerHTML = (F.ch[0] === 'ALL' ? ['EVERY CHANNEL'] : F.ch).map(function(c){ return '<span>' + c + '</span>'; }).join('');
+    hudCount.textContent = 'FIELD ' + ('0' + (ORDER.indexOf(id) + 1)).slice(-2) + '/' + TOTAL + ' · ' + (F.group === 'engine' ? 'THE ENGINE' : 'THE ESTATE');
+    hudChs.innerHTML = (F.ch[0] === 'ALL' ? ['EVERY FIELD'] : F.ch).map(function(c){ return '<span>' + c + '</span>'; }).join('');
     hud.classList.add('on');
   }
   document.getElementById('hudclose').addEventListener('click', function(){ hud.classList.remove('on'); });
@@ -610,7 +597,7 @@
     var id = row.getAttribute('data-field');
     var chs = FIELDS[id].ch;
     function chSet(){
-      if(chs[0] === 'ALL') return new Set(['WHATSAPP','INSTAGRAM','GOOGLE','REVIEWS','EMAIL','BOOKING','SHOW-UP','RECOVERY','WEBSITE','ADS']);
+      if(chs[0] === 'ALL') return new Set(['WHATSAPP','GOOGLE','REVIEWS','BOOKING','SHOW-UP','RECOVERY']);
       return new Set(chs);
     }
     row.addEventListener('mouseenter', function(){ hl = chSet(); });
@@ -650,15 +637,11 @@
   ];
   var sats = [
     {label:'WHATSAPP',  color:'#25D366', icon:'chat'},
-    {label:'INSTAGRAM', color:'#E1306C', icon:'camera'},
     {label:'GOOGLE',    color:'#4285F4', icon:'pin'},
     {label:'REVIEWS',   color:'#fbbf24', icon:'star'},
-    {label:'EMAIL',     color:'#60a5fa', icon:'mail'},
     {label:'BOOKING',   color:'#e8d48b', icon:'cal'},
     {label:'SHOW-UP',   color:'#4ade80', icon:'check'},
-    {label:'RECOVERY',  color:'#fb923c', icon:'refresh'},
-    {label:'WEBSITE',   color:'#34e3f0', icon:'globe'},
-    {label:'ADS',       color:'#a78bfa', icon:'mega'}
+    {label:'RECOVERY',  color:'#fb923c', icon:'refresh'}
   ];
   var sparks = [], bolts = [];
   var t = 0;
@@ -671,10 +654,6 @@
     switch(type){
       case 'chat':
         ctx.beginPath(); ctx.arc(0, 0, s*0.55, 0.6, 6.1); ctx.lineTo(-s*0.55, s*0.62); ctx.closePath(); ctx.stroke(); break;
-      case 'camera':
-        ctx.strokeRect(-s*0.55, -s*0.45, s*1.1, s*0.9);
-        ctx.beginPath(); ctx.arc(0, 0, s*0.22, 0, 7); ctx.stroke();
-        ctx.beginPath(); ctx.arc(s*0.32, -s*0.24, s*0.06, 0, 7); ctx.fill(); break;
       case 'pin':
         ctx.beginPath(); ctx.arc(0, -s*0.15, s*0.38, Math.PI*0.9, Math.PI*2.1); ctx.lineTo(0, s*0.55); ctx.closePath(); ctx.stroke();
         ctx.beginPath(); ctx.arc(0, -s*0.15, s*0.12, 0, 7); ctx.fill(); break;
@@ -686,9 +665,6 @@
           ctx.lineTo(Math.cos(a2)*s*0.24, Math.sin(a2)*s*0.24);
         }
         ctx.closePath(); ctx.fill(); break;
-      case 'mail':
-        ctx.strokeRect(-s*0.55, -s*0.38, s*1.1, s*0.76);
-        ctx.beginPath(); ctx.moveTo(-s*0.55, -s*0.38); ctx.lineTo(0, s*0.08); ctx.lineTo(s*0.55, -s*0.38); ctx.stroke(); break;
       case 'cal':
         ctx.strokeRect(-s*0.5, -s*0.4, s*1.0, s*0.85);
         ctx.beginPath(); ctx.moveTo(-s*0.5, -s*0.12); ctx.lineTo(s*0.5, -s*0.12); ctx.stroke();
@@ -698,15 +674,6 @@
       case 'refresh':
         ctx.beginPath(); ctx.arc(0, 0, s*0.45, -0.4, 4.6); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(s*0.55, -s*0.35); ctx.lineTo(s*0.42, -s*0.05); ctx.lineTo(s*0.15, -s*0.32); ctx.closePath(); ctx.fill(); break;
-      case 'globe':
-        ctx.beginPath(); ctx.arc(0, 0, s*0.5, 0, 7); ctx.stroke();
-        ctx.beginPath(); ctx.ellipse(0, 0, s*0.22, s*0.5, 0, 0, 7); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(-s*0.5, 0); ctx.lineTo(s*0.5, 0); ctx.stroke(); break;
-      case 'mega':
-        ctx.beginPath();
-        ctx.moveTo(-s*0.5, -s*0.15); ctx.lineTo(s*0.15, -s*0.45); ctx.lineTo(s*0.15, s*0.45); ctx.lineTo(-s*0.5, s*0.15);
-        ctx.closePath(); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(s*0.28, -s*0.2); ctx.arc(s*0.28, 0, s*0.28, -0.9, 0.9); ctx.stroke(); break;
     }
     ctx.restore();
   }
