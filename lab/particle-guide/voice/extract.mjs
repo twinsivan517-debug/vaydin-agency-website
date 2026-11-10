@@ -1,40 +1,17 @@
 // Every spoken line of the site with its file name, read from the site's own sources. node extract.mjs SITE_DIR OUT_JSON
-import { readdirSync, writeFileSync } from "node:fs";
-import { pathToFileURL } from "node:url";
-import { join } from "node:path";
+// The walk itself is lines.mjs, shared with scripts/voice-lines.test.mjs, so the test reads lines exactly as this does.
+import { writeFileSync } from "node:fs";
+import { collect } from "./lines.mjs";
 
 const [site, out] = process.argv.slice(2);
-const lib = (f) => import(pathToFileURL(join(site, "src", "lib", f)).href);
-const lines = {};
-const clashes = [];
-const add = (audio, text, from) => {
-  if (!audio) return;
-  const id = audio.replace(/^.*\//, "").replace(/\.mp3$/, "");
-  if (lines[id] && lines[id].text !== text) {
-    clashes.push(id);
-    console.error(`two texts for ${id} (${lines[id].from} and ${from})`);
-  }
-  lines[id] = { text, from };
-};
-const walk = (v, from) => {
-  if (Array.isArray(v)) v.forEach((x) => walk(x, from));
-  else if (v && typeof v === "object") {
-    if (typeof v.text === "string" && typeof v.audio === "string") add(v.audio, v.text, from);
-    Object.values(v).forEach((x) => walk(x, from));
-  }
-};
-for (const f of ["pitch.ts", "talk.ts", "pages.ts"]) walk(await lib(f), f);
-const answers = await lib("answers.ts");
-walk(answers, "answers.ts");
-const { ANSWERS } = answers;
-for (const a of ANSWERS) add(a.voice || `/voice/a-${a.id}.mp3`, a.answer, "answers.ts");
-const disk = readdirSync(join(site, "public", "voice")).filter((f) => f.endsWith(".mp3")).map((f) => f.slice(0, -4));
+const { lines, clashes, disk } = await collect(site);
+for (const c of clashes) console.error(`two texts for ${c.id} (${c.first} and ${c.second})`);
 console.log("lines found", Object.keys(lines).length, "files on disk", disk.length);
 console.log("on disk, no text:", disk.filter((d) => !lines[d]).join(" ") || "none");
 console.log("text, no file:", Object.keys(lines).filter((l) => !disk.includes(l)).join(" ") || "none");
 /* One recording, two texts: whichever came last would be recorded, so nothing is written (2026-11-10). */
 if (clashes.length) {
-  console.error(`refused: ${clashes.join(" ")} ha${clashes.length > 1 ? "ve" : "s"} two texts; nothing written`);
+  console.error(`refused: ${clashes.map((c) => c.id).join(" ")} ha${clashes.length > 1 ? "ve" : "s"} two texts; nothing written`);
   process.exit(1);
 }
 writeFileSync(out, JSON.stringify(lines, null, 1));
