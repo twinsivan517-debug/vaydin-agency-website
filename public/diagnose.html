@@ -56,7 +56,7 @@
       padding:13px 40px;background:rgba(9,15,12,0.93);backdrop-filter:blur(12px);
       border-bottom:1px solid rgba(47,159,119,0.30)}
   .brand{display:flex;align-items:center;gap:13px}
-  .brand img{width:32px;height:32px}
+  .brand img{width:auto;height:32px}
   .wordmark{font-family:var(--display);font-size:20px;letter-spacing:0.32em;color:var(--gold-light)}
   .nav-links{display:flex;gap:36px;align-items:center;font-size:15px}
   .nav-links a{position:relative;padding:8px 1px;color:var(--chip-hi);letter-spacing:0.05em;font-weight:500;opacity:0.84;
@@ -118,7 +118,7 @@
     nav{gap:14px}
     .wordmark{font-size:16px;letter-spacing:0.2em}
     .brand{gap:9px}
-    .brand img{width:28px;height:28px}
+    .brand img{width:auto;height:28px}
     .nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;
       background:rgba(4,7,6,0.995);border-bottom:1px solid rgba(47,159,119,0.30);padding:6px 22px 12px;box-shadow:0 24px 40px rgba(0,0,0,0.5)}
     .nav-links.open{display:flex}
@@ -146,8 +146,9 @@
   .dg-stage canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
   .dg-screen{position:relative;z-index:1;height:440px}
   .dg-list{position:relative;z-index:1;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px}
-  .dg-oc{display:grid;grid-template-columns:46px 1fr;gap:14px;align-items:start;opacity:0.38;transition:opacity .8s var(--ease)}
-  .dg-oc.on{opacity:1}
+  .dg-oc{display:grid;grid-template-columns:46px 1fr;gap:14px;align-items:start;transition:opacity .8s var(--ease)}
+  .dg-list.dim .dg-oc{opacity:0.38}
+  .dg-list.dim .dg-oc.on{opacity:1}
   .dg-oc .dg-slot{width:46px;height:46px}
   .dg-oc h2{font-family:var(--display);font-weight:400;font-size:18px;line-height:1.38;margin:3px 0 3px;max-width:none;color:var(--tx)}
   .dg-oc p{margin:0;font-size:14.5px;line-height:1.5;color:var(--tx-muted);max-width:540px}
@@ -639,6 +640,9 @@
   layout();
   if (reduced){ settle(); }
   else {
+    var list = document.querySelector('.dg-list');
+    /* The lines are lit unless this film runs: dimmed only from here, and lit again by any error on the page. */
+    list.classList.add('dim'); window.addEventListener('error', function(){ list.classList.remove('dim'); });
     new IntersectionObserver(function(es){
       es.forEach(function(e){
         visible = e.isIntersecting && e.intersectionRatio >= 0.2;
