@@ -63,7 +63,11 @@ const DRAW: Record<string, [string, Draw]> = {
     for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + (k * Math.PI) / 5, r = k % 2 ? 40 : 92; g.lineTo(110 + Math.cos(a) * r, 116 + Math.sin(a) * r); }
     g.closePath(); g.stroke();
   }],
-  camera: ["#a78bfa", (g) => { rr(g, 32, 32, 156, 156, 44); g.stroke(); g.beginPath(); g.arc(110, 110, 38, 0, 7); g.stroke(); dot(g, 152, 68, 8); }],
+  /* A classic camera, never Instagram's mark (the owner's rule, 11 Nov): a wide body, a raised top, a lens. */
+  camera: ["#a78bfa", (g) => {
+    rr(g, 22, 70, 176, 118, 18); g.stroke(); line(g, 72, 70, 86, 42, 134, 42, 148, 70);
+    g.beginPath(); g.arc(110, 129, 38, 0, 7); g.stroke();
+  }],
   web: ["#34e3f0", (g) => {
     rr(g, 24, 38, 172, 144, 18); g.stroke(); line(g, 24, 78, 196, 78); [46, 68, 90].forEach((x) => dot(g, x, 58, 6));
     g.lineWidth = 8; line(g, 48, 110, 172, 110); line(g, 48, 136, 150, 136); line(g, 48, 160, 120, 160);
