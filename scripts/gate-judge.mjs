@@ -27,3 +27,9 @@ export function judge({ cand, anchor, tolerance, floors, budget, tier, tiers, re
 
 // Main refuses on any finding; a gate/** branch only reports.
 export const exitCode = (fails, reportOnly) => (fails.length && !reportOnly ? 1 : 0);
+
+// The pages judged, each beside the anchor page it must not fall behind on the same runner. /app.html is held to
+// the anchor's own /app.html when the anchor has one; an anchor older than the page has none, so it is held to
+// grow.html, the same static shell and canvas pattern. A candidate without /app.html is judged on home alone.
+export const pairs = (candHasApp, anchorHasApp) => [{ page: "home", cand: "/", anchor: "/" },
+  ...(candHasApp ? [{ page: "app", cand: "/app.html", anchor: anchorHasApp ? "/app.html" : "/grow.html" }] : [])];

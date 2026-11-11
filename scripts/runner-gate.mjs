@@ -19,7 +19,7 @@
 import { execFileSync, spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { scan as secretScan } from "./secret-scan.mjs";
-import { exitCode, judge } from "./gate-judge.mjs";
+import { exitCode, judge, pairs } from "./gate-judge.mjs";
 
 const RUNS = Number(process.env.RUNS || 5);
 const FLOORS = JSON.parse(readFileSync(".github/ship-floors.json", "utf8"));
@@ -33,12 +33,11 @@ const LIGHTHOUSE = "lighthouse@13.5.0";
 const CAND = { name: "candidate", dir: "out", port: 4173 };
 const LIVE = { name: "anchor", dir: process.env.ANCHOR_OUT || "", port: 4174 };
 const reportOnly = (process.env.GITHUB_REF || "").startsWith("refs/heads/gate/");
-/* The pages judged, each paired with the anchor page it must not fall behind on the same runner. A new page has no
-   anchor of its own, so /app.html (WEB-G, the owner's approved plan of 2026-11-10) is held to the anchor's grow.html:
-   the same static shell and canvas pattern, where the Next home would be a lax bar. HONEST LIMIT: the tolerance was
-   measured home against home (the A/A test), not grow against /app. */
-const PAIRS = [{ page: "home", cand: "/", anchor: "/" },
-  ...(existsSync(`${CAND.dir}/app.html`) ? [{ page: "app", cand: "/app.html", anchor: "/grow.html" }] : [])];
+/* The pages judged (gate-judge.mjs pairs): /app.html is held to the anchor's own /app.html once the anchor has one,
+   until then to its grow.html. HONEST LIMIT: the tolerance was measured home against home (the A/A test of
+   2026-11-09); /app's own A/A test (branch gate/aa-app, its rule in that branch's floors file) measures /app against
+   itself. */
+const PAIRS = pairs(existsSync(`${CAND.dir}/app.html`), Boolean(LIVE.dir) && existsSync(`${LIVE.dir}/app.html`));
 const fails = [];
 
 const site = JSON.parse(readFileSync("site.json", "utf8"));
