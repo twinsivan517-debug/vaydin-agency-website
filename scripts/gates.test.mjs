@@ -7,7 +7,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { exitCode, judge, pairs } from "./gate-judge.mjs";
-import { scanPushed } from "./secret-scan.mjs";
+import { privateWords, scanPushed } from "./secret-scan.mjs";
 
 let cases = 0;
 const test = (name, fn) => { try { fn(); cases++; } catch (e) { console.error(`FAILED: ${name}`); throw e; } };
@@ -144,6 +144,55 @@ test("deleting a branch pushes no bytes and passes", () => {
   const { dir, commit } = repo();
   const start = commit("a.ts", "export const a = 1;\n", "start");
   assert.deepEqual(pushed(dir, ZERO, start), []);
+});
+
+// --- private words (lesson 22): whole words, any case, in pushed files and messages; the list lives outside ---
+// The words below are invented, so this public file carries no real one.
+const listFile = (text) => { const p = join(mkdtempSync(join(tmpdir(), "words-")), "list.txt"); writeFileSync(p, text); return p; };
+const WORDS = privateWords(listFile("# a comment\nZorblax Quint\nqux@example.test\n")).words;
+const pushedWith = (dir, local, remote) => {
+  const was = process.cwd();
+  process.chdir(dir);
+  try { return scanPushed(`refs/heads/main ${local} refs/heads/main ${remote}\n`, WORDS); } finally { process.chdir(was); }
+};
+const SCAN = resolve("scripts/secret-scan.mjs");
+const hook = (dir, local, remote, list) => spawnSync(process.execPath, [SCAN, "--pre-push"],
+  { cwd: dir, encoding: "utf8", input: `refs/heads/main ${local} refs/heads/main ${remote}\n`, env: { ...process.env, VAYDIN_PRIVATE_WORDS: list } });
+
+test("a private word in a pushed file is refused, naming its commit and the list's line, never the word", () => {
+  const { dir, commit } = repo();
+  const start = commit("a.ts", "export const a = 1;\n", "start");
+  const bad = commit("page.html", "<p>Made by zorblax quint.</p>\n", "page");
+  const found = pushedWith(dir, bad, start);
+  assert.equal(found.length, 1, found.join("; "));
+  assert.ok(found[0].startsWith(bad.slice(0, 7)) && /page\.html .*line 2 of the list/.test(found[0]) && !/zorblax/i.test(found[0]), found[0]);
+});
+test("a private word in a pushed commit's message is refused", () => {
+  const { dir, commit } = repo();
+  const start = commit("a.ts", "export const a = 1;\n", "start");
+  const bad = commit("b.ts", "export const b = 2;\n", "ask qux@example.test first");
+  assert.ok(pushedWith(dir, bad, start).some((f) => /its message carries a private word \(line 3 of the list\)/.test(f)));
+});
+test("a word inside a longer word is not the private word", () => {
+  const { dir, commit } = repo();
+  const start = commit("a.ts", "export const a = 1;\n", "start");
+  const ok = commit("c.py", "np.zorblaxquintalg(x)  # Zorblax Quinted\n", "maths");
+  assert.deepEqual(pushedWith(dir, ok, start), []);
+});
+test("the list fails closed: missing, or comments only", () => {
+  assert.match(privateWords(join(tmpdir(), `no-such-list-${process.pid}.txt`)).error, /not on this machine/);
+  assert.match(privateWords(listFile("# only a comment\n\n")).error, /no words/);
+});
+test("the pre-push hook refuses a clean push when the list is missing, and passes it when the list is there", () => {
+  const { dir, commit } = repo();
+  const start = commit("a.ts", "export const a = 1;\n", "start");
+  const next = commit("b.ts", "export const b = 2;\n", "next");
+  const missing = hook(dir, next, start, join(dir, "missing.txt"));
+  assert.equal(missing.status, 1, missing.stdout + missing.stderr);
+  assert.match(missing.stderr, /not on this machine/);
+  const present = hook(dir, next, start, listFile("Zorblax Quint\n"));
+  assert.equal(present.status, 0, present.stdout + present.stderr);
+  assert.match(present.stdout, /1 private words checked/);
 });
 
 console.log(`${cases} gate cases passed`);

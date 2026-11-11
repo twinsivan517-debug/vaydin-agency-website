@@ -1,6 +1,7 @@
 #!/bin/sh
 # Armed by `npm install` (the prepare script points git at this folder).
 # Since 2026-11-09 the ship gate runs on a GitHub runner (pages.yml, scripts/runner-gate.mjs). What stays on
-# the laptop is the one check that must happen BEFORE the bytes reach the public repo: no key, no secret file.
+# the laptop is the one check that must happen BEFORE the bytes reach the public repo: no key, no secret file,
+# and no private word (lesson 22: the list lives outside this repo; no list, no push).
 # It reads the commits being pushed (git hands them on stdin), never the disk.
 exec node scripts/secret-scan.mjs --pre-push
