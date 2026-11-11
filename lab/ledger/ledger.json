@@ -188,7 +188,8 @@
   "tag": "task:CORE-F0 + task:CORE-3",
   "read": "core 2026-11-10: OK (A7)",
   "where": [
-   "app.html"
+   "app.html",
+   "doors.ts"
   ]
  },
  {
@@ -4673,7 +4674,7 @@
   ]
  },
  {
-  "s": "The five pages",
+  "s": "The six pages",
   "tag": "none",
   "read": "",
   "where": [
@@ -4762,6 +4763,14 @@
   "s": "System Engine Thirteen jobs.",
   "tag": "task:L2-JOBS",
   "read": "Layer 2 2026-11-10: OK (270)",
+  "where": [
+   "index.html"
+  ]
+ },
+ {
+  "s": "One link One place Your clinic, in one place.",
+  "tag": "task:CORE-F0 + task:CORE-3",
+  "read": "",
   "where": [
    "index.html"
   ]

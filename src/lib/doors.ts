@@ -1,4 +1,4 @@
-/* The five pages behind the home page, as the tiles beside him show them:
+/* The six pages behind the home page, as the tiles beside him show them:
    each with its page's own headline (as of 2026-10-21), in that page's own
    colour, so the two never disagree. Order and addresses as in PAGES. */
 
@@ -32,6 +32,13 @@ export const DOORS: Door[] = [
     href: "/engine.html",
     accent: "#a78bfa",
     title: "Thirteen jobs. Nine in the engine, four built around you.",
+  },
+  {
+    word: "One place",
+    tag: "One link",
+    href: "/app.html",
+    accent: "#c9a44a",
+    title: "Your clinic, in one place.",
   },
   {
     word: "Your plan",

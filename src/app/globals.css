@@ -110,7 +110,7 @@ body {
 /* The doors beside him: each in its page's colour, lit while he names it. */
 .hero-doors {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.35rem;
 }
 

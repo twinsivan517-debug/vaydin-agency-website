@@ -8,7 +8,7 @@ import json
 import re
 import sys
 
-# A word (its start) -> what his body shows. First match wins; a door is one of the five pages under him.
+# A word (its start) -> what his body shows. First match wins; a door is one of the six pages under him.
 SHAPES = [
     (r"^dubai", "skyline"), (r"^whatsapp", "chat"), (r"^google", "search"), (r"^review", "star"), (r"^instagram", "camera"),
     (r"^website", "web"), (r"^(book|booked|booking|bookings|appointment)$", "calendar"), (r"^remind", "bell"),
@@ -19,7 +19,7 @@ SHAPES = [
     (r"^(minimum|monthly|month|weekly)$", "clock"),
 ]
 DOORS = [(r"^(diagnostic|unannounced|shopper|shop|shops|intelligence|measure)$", 0), (r"^(fix|immaculate)$", 1),
-         (r"^(grow|growth|fuel|demand)$", 2), (r"^(engine)$", 3), (r"^(plan|plans)$", 4)]
+         (r"^(grow|growth|fuel|demand)$", 2), (r"^(engine)$", 3), (r"^(plan|plans)$", 5)]
 # An acting direction -> how his eyes look for the words it covers.
 EYES = {"warm": "happy", "curious": "wide", "skeptical": "think", "laughs": "wink", "serious": "line", "sighs": "sad",
         "confident": "sparkle", "softly": "blink"}

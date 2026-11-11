@@ -426,8 +426,8 @@ export function Stage() {
         </div>
       </div>
 
-      {/* The five pages beside him, the doors his light rings when he names one. */}
-      <nav className="hero-doors wakes" aria-label="The five pages">
+      {/* The six pages beside him, the doors his light rings when he names one. */}
+      <nav className="hero-doors wakes" aria-label="The six pages">
         {DOORS.map((d) => (
           <a key={d.href} href={d.href} data-figure-door="" className="hero-door" style={{ "--accent": d.accent } as React.CSSProperties}>
             <small>{d.step ?? d.tag}</small>
