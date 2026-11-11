@@ -65,6 +65,25 @@ test("an anchor older than /app holds it to grow.html", () => {
 test("a candidate without /app.html is judged on home alone", () => {
   assert.deepEqual(pairs(false, true).map((p) => p.page), ["home"]);
 });
+test("a rebuilt room is judged beside the anchor's own copy of that page (2026-11-11)", () => {
+  assert.deepEqual(pairs(true, true, ["diagnose"]).map((p) => [p.page, p.cand, p.anchor]),
+    [["home", "/", "/"], ["app", "/app.html", "/app.html"], ["diagnose", "/diagnose.html", "/diagnose.html"]]);
+  assert.deepEqual(pairs(true, true).map((p) => p.page), ["home", "app"]);
+});
+test("a rebuilt room with no number of its own is refused on main; the other pages are judged as before", () => {
+  const runs = { home: { candidate: five(90), anchor: five(90) }, app: { candidate: five(90), anchor: five(90) },
+    diagnose: { candidate: five(90), anchor: five(90) } };
+  const r = judgePages(pairs(true, true, ["diagnose"]), runs, { ...base, tolerance: { home: 2, app: 5 }, anchorCommit: "c9945eb" });
+  assert.equal(r.fails.length, 1, r.fails.join("; "));
+  assert.match(r.fails[0], /^diagnose \(\/diagnose\.html\): .*no tolerance yet/);
+  const ok = judgePages(pairs(true, true, ["diagnose"]), runs, { ...base, tolerance: { home: 2, app: 5, diagnose: 4 }, anchorCommit: "c9945eb" });
+  assert.deepEqual(ok.fails, []);
+});
+test("the runner gate finds the rebuilt rooms by their data-room list and judges them", () => {
+  const src = readFileSync(resolve("scripts/runner-gate.mjs"), "utf8");
+  assert.match(src, /includes\(' data-room="'\)/);
+  assert.match(src, /const PAIRS = pairs\([^\n]*, ROOMS\);/);
+});
 test("one tolerance number holds every page; a per-page map holds each page to its own", () => {
   assert.equal(toleranceFor(3, "home"), 3);
   assert.equal(toleranceFor(3, "app"), 3);

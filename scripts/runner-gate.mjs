@@ -17,7 +17,7 @@
 // This is not a visitor's phone on mobile data, and it does not make the page faster: about 0.4 s of
 // Next.js start-up on the home is a real cost on every phone.
 import { execFileSync, spawn } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { scan as secretScan } from "./secret-scan.mjs";
 import { auditTally, exitCode, failingAudits, judgePages, pairs } from "./gate-judge.mjs";
 
@@ -35,8 +35,11 @@ const LIVE = { name: "anchor", dir: process.env.ANCHOR_OUT || "", port: 4174 };
 const reportOnly = (process.env.GITHUB_REF || "").startsWith("refs/heads/gate/");
 /* The pages judged (gate-judge.mjs pairs): /app.html is held to the anchor's own /app.html once the anchor has one,
    until then to its grow.html. Each page's tolerance comes from an A/A test of that page against itself (the floors
-   file's aa_rule_app and history.aa_app, 2026-11-11). */
-const PAIRS = pairs(existsSync(`${CAND.dir}/app.html`), Boolean(LIVE.dir) && existsSync(`${LIVE.dir}/app.html`));
+   file's aa_rule_app and history.aa_app, 2026-11-11). A rebuilt room (its list marked data-room) is judged beside the
+   anchor's own copy of that page, and refused on main until its own A/A number is written. */
+const ROOMS = (existsSync(CAND.dir) ? readdirSync(CAND.dir) : []).filter((f) => f.endsWith(".html") && readFileSync(`${CAND.dir}/${f}`, "utf8").includes(' data-room="'))
+  .map((f) => f.replace(/\.html$/, "")).sort();
+const PAIRS = pairs(existsSync(`${CAND.dir}/app.html`), Boolean(LIVE.dir) && existsSync(`${LIVE.dir}/app.html`), ROOMS);
 const fails = [];
 
 const site = JSON.parse(readFileSync("site.json", "utf8"));

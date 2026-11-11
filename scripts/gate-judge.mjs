@@ -31,8 +31,11 @@ export const exitCode = (fails, reportOnly) => (fails.length && !reportOnly ? 1 
 // The pages judged, each beside the anchor page it must not fall behind on the same runner. /app.html is held to
 // the anchor's own /app.html when the anchor has one; an anchor older than the page has none, so it is held to
 // grow.html, the same static shell and canvas pattern. A candidate without /app.html is judged on home alone.
-export const pairs = (candHasApp, anchorHasApp) => [{ page: "home", cand: "/", anchor: "/" },
-  ...(candHasApp ? [{ page: "app", cand: "/app.html", anchor: anchorHasApp ? "/app.html" : "/grow.html" }] : [])];
+// rooms: the inner pages the candidate has rebuilt (their list carries data-room, 2026-11-11), each held to the
+// anchor's own copy of the same page; with no tolerance of its own yet, main refuses it (toleranceFor).
+export const pairs = (candHasApp, anchorHasApp, rooms = []) => [{ page: "home", cand: "/", anchor: "/" },
+  ...(candHasApp ? [{ page: "app", cand: "/app.html", anchor: anchorHasApp ? "/app.html" : "/grow.html" }] : []),
+  ...rooms.map((room) => ({ page: room, cand: `/${room}.html`, anchor: `/${room}.html` }))];
 
 // The floors file's tolerance is one number for every page, or one per page ({ home: 2, app: 5 }), each set by an
 // A/A test of that page. A page with no number of its own gets null: main then refuses, as before any A/A test.
