@@ -170,7 +170,7 @@
   @media (max-width: 900px){
     .dg-hero{padding:96px 22px 0}
     .dg-stage{grid-template-columns:1fr;gap:14px;padding:18px 22px 0}
-    .dg-screen{height:250px}
+    .dg-screen{height:290px}
     .dg-oc{grid-template-columns:38px 1fr;gap:12px}
     .dg-oc .dg-slot{width:38px;height:38px}
     .dg-oc h2{font-size:16.5px}
@@ -241,23 +241,25 @@
 </footer>
 
 <script>
-/* The diagnostic, drawn (the owner's word of 2026-11-11: the page shows, the corner talks). A laptop in dust; one
-   pool of dust inside it becomes each scene in turn as its line lights: a person's message reaching a clinic and
-   the moment it is answered; two clinics racing to answer one patient; a search passing over a rating, a camera
-   and a pin, with the clinics around; the reads folding into one ring of six parts, one of them red, with the way
-   to fix it; three seekers reaching the site and a key turning; the ring on a phone that keeps watching; the red
-   parts flying into thirteen slots. Plain symbols only, never a brand's mark, nothing written and no number drawn
-   (his 13 May lock), in One place's hand (its helpers, copied). Runs only while on screen and settles; with
-   reduced motion the last picture is drawn once. */
+/* The diagnostic as a silent film (the owner's word of 2026-11-11: told by the drawing alone, so one who cannot
+   read still follows it; he talks only from the corner). One night street, then the map, then the street again:
+   a person messages your clinic (the red pin) and a clock starts; the clinic next door answers at once, yours stays
+   dark till morning, and the person walks next door; the view rises over the map and a sweep reads every clinic's
+   stars, its reviews and its camera; the reads run into one ring of six parts, one short and red until a spark
+   fills it; three seekers find your site shut, a key turns, they read it as a clinic; the ring lands on a phone that
+   keeps watching; the red parts fill thirteen slots in a turning machine; night again, a new message, your clinic
+   answers at once and the person walks in. Plain symbols only, never a brand's mark, nothing written and no digit
+   drawn (his 13 May lock). Every frame is a function of its time, so it can be drawn at any second: it runs only
+   while on screen and settles on the last frame; with reduced motion the last frame is drawn once. */
 (function(){
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var stage = document.getElementById('dgstage'), cv = document.getElementById('dgcanvas'), ctx = cv.getContext('2d');
   var slot = document.getElementById('dgslot'), items = [].slice.call(document.querySelectorAll('.dg-oc'));
-  var GOLD = '#e8d48b', RED = '#f87171', GREEN = '#4ade80', CYAN = '#34e3f0', VIOLET = '#a78bfa', SUN = '#f5d978', FAINT = '#6f8378';
-  var BEATS = [1.2, 3.6, 6.0, 8.4, 10.6, 12.8, 15.0];  /* when each line lights and its scene forms */
-  var SLOT_COLORS = [GREEN, SUN, CYAN, GOLD, CYAN, GOLD, GREEN];
-  var W, H, dpr, scr, frameDots = [], pool = [], scenes = [], glyphs = [], N = 0;
-  var t0 = 0, raf = 0, visible = false, done = false;
+  var GOLD = '#e8d48b', RED = '#f87171', GREEN = '#4ade80', CYAN = '#34e3f0', VIOLET = '#a78bfa', SUN = '#f5d978', FAINT = '#6f8378', WHITE = '#f3ead9';
+  var BEATS = [1.0, 6.0, 11.5, 17.5, 22.0, 26.5, 30.0], END = 36.6;  /* when each line lights; the film's length */
+  var SLOT_COLORS = [GOLD, SUN, CYAN, GREEN, CYAN, GOLD, GREEN], SLOT_SYMS = ['chat', 'clock', 'lens', 'ring', 'key', 'phone', 'tick'];
+  var W, H, dpr, F, U, sky = [], skyline = [], roads = [], pins = [], glyphs = [], rivers = [], seekers = [], unitCache = {};
+  var t0 = 0, raf = 0, visible = false, done = false, full = 2 * Math.PI;
 
   function rnd(seed){ return function(){ seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }; }
   function outline(x, y, w, h, r, n){
@@ -299,152 +301,344 @@
   function sample(strokes, n){
     var ls = strokes.map(length), total = ls.reduce(function(a, b){ return a + b; }, 0), out = [];
     strokes.forEach(function(s, i){
-      var m = Math.max(4, Math.round(n * ls[i] / total)), j;
+      var m = Math.max(3, Math.round(n * ls[i] / total)), j;
       for (j = 0; j < m; j++) out.push(along(s, ls[i] * j / m));
     });
     return out;
   }
-  function fit(p, n){ var out = [], k; for (k = 0; k < n; k++) out.push(p[Math.floor(k * p.length / n)]); return out; }
-  var full = 2 * Math.PI;
 
   /* the symbols, as strokes in a unit box (-1..1) */
   var SYM = {
-    person: function(){ return [arc(0, -0.45, 0.28, 0.28, 0, full, 24), arc(0, 0.85, 0.62, 0.62, Math.PI, full, 26)]; },
     chat: function(){ return [closed(outline(-0.9, -0.7, 1.8, 1.15, 0.3, 60)), [[-0.5, 0.45], [-0.62, 0.85], [-0.12, 0.45]],
       arc(-0.4, -0.12, 0.08, 0.08, 0, full, 8), arc(0, -0.12, 0.08, 0.08, 0, full, 8), arc(0.4, -0.12, 0.08, 0.08, 0, full, 8)]; },
-    clinic: function(){ return [closed(outline(-0.75, -0.55, 1.5, 1.4, 0.1, 50)), [[-0.28, 0.12], [0.28, 0.12]], [[0, -0.16], [0, 0.4]]]; },
     clock: function(){ return [arc(0, 0, 0.85, 0.85, 0, full, 44), [[0, 0], [0, -0.55]], [[0, 0], [0.4, 0.2]]]; },
     tick: function(){ return [[[-0.75, 0.05], [-0.25, 0.5], [0.8, -0.65]]]; },
-    star: function(){ var p = [], k; for (k = 0; k <= 10; k++){ var a = -Math.PI/2 + k * Math.PI / 5, r = k % 2 ? 0.38 : 0.9; p.push([r*Math.cos(a), r*Math.sin(a)]); } return [p]; },
+    star: function(){ var p = [], k; for (k = 0; k <= 10; k++){ var a = -Math.PI/2 + k * Math.PI / 5, r = k % 2 ? 0.4 : 0.95; p.push([r*Math.cos(a), r*Math.sin(a)]); } return [p]; },
     camera: function(){ return [closed(outline(-0.9, -0.4, 1.8, 1.1, 0.18, 60)), [[-0.38, -0.4], [-0.24, -0.62], [0.24, -0.62], [0.38, -0.4]], arc(0, 0.15, 0.32, 0.32, 0, full, 28)]; },
     pin: function(){ var b = Math.acos(0.55 / 1.2); return [[[0, 0.95]].concat(arc(0, -0.25, 0.55, 0.55, Math.PI/2 + b, Math.PI/2 - b + full, 40), [[0, 0.95]]), arc(0, -0.25, 0.2, 0.2, 0, full, 20)]; },
     lens: function(){ return [arc(-0.18, -0.18, 0.55, 0.55, 0, full, 40), [[0.22, 0.22], [0.8, 0.8]]]; },
-    globe: function(){ return [arc(0, 0, 0.9, 0.9, 0, full, 48), arc(0, 0, 0.38, 0.9, 0, full, 40), [[-0.9, 0], [0.9, 0]]]; },
     key: function(){ return [arc(-0.5, 0, 0.32, 0.32, 0, full, 26), [[-0.18, 0], [0.85, 0]], [[0.55, 0], [0.55, 0.3]], [[0.78, 0], [0.78, 0.25]]]; },
-    phone: function(){ return [closed(outline(-0.48, -0.95, 0.96, 1.9, 0.16, 60)), [[-0.12, 0.78], [0.12, 0.78]]]; },
-    arrow: function(){ return [[[-0.85, 0], [0.8, 0]], [[0.4, -0.38], [0.85, 0], [0.4, 0.38]]]; },
-    line: function(){ return [[[-1, 0], [1, 0]]]; },
+    phone: function(){ return [closed(outline(-0.48, -0.95, 0.96, 1.9, 0.16, 60)), [[-0.12, 0.8], [0.12, 0.8]]]; },
+    cross: function(){ return [[[-0.8, 0], [0.8, 0]], [[0, -0.8], [0, 0.8]]]; },
+    moon: function(){ return [arc(0, 0, 0.9, 0.9, -1.9, 1.9, 40).concat(arc(0.42, 0, 0.62, 0.78, 1.35, -1.35, 30))]; },
+    sun: function(){ var s = [arc(0, 0, 0.5, 0.5, 0, full, 32)], k; for (k = 0; k < 10; k++){ var a = k / 10 * full; s.push([[0.68*Math.cos(a), 0.68*Math.sin(a)], [0.92*Math.cos(a), 0.92*Math.sin(a)]]); } return s; },
+    watch: function(){ return [arc(0, 0.08, 0.82, 0.82, 0, full, 44), [[-0.16, -0.86], [0.16, -0.86]], [[0, -0.74], [0, -0.86]]]; },
+    gear: function(){ var s = [arc(0, 0, 0.66, 0.66, 0, full, 48), arc(0, 0, 0.22, 0.22, 0, full, 18)], k; for (k = 0; k < 10; k++){ var a = k / 10 * full; s.push([[0.66*Math.cos(a), 0.66*Math.sin(a)], [0.92*Math.cos(a), 0.92*Math.sin(a)]]); } return s; },
     ring: function(){ var p = [], k; for (k = 0; k < 6; k++){ var a0 = -Math.PI/2 + k * Math.PI/3 + 0.12; p.push(arc(0, 0, 0.85, 0.85, a0, a0 + Math.PI/3 - 0.24, 8)); } return p; }
   };
-  /* the six parts of one score: five as they stand, the part that leaks in red */
-  function ring(cx, cy, r){
-    var parts = [], k;
-    for (k = 0; k < 6; k++){ var a0 = -Math.PI/2 + k * Math.PI/3 + 0.09, a1 = a0 + Math.PI/3 - 0.18;
-      parts.push({ s: [arc(cx, cy, r, r, a0, a1, 14)], c: k === 2 ? RED : (k % 2 ? GOLD : GREEN), w: 1 }); }
-    return parts;
+  function unit(name, n){ var k = name + n; return unitCache[k] || (unitCache[k] = sample(SYM[name](), n)); }
+
+  var clamp = function(x){ return x < 0 ? 0 : x > 1 ? 1 : x; };
+  var E = function(x){ x = clamp(x); return 1 - Math.pow(1 - x, 3); };
+  var EIO = function(x){ x = clamp(x); return x < 0.5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2; };
+  var EB = function(x){ x = clamp(x); var c = 1.6, c3 = c + 1; return 1 + c3 * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+  /* 0..1: in from a over fi seconds, out from b over fo seconds */
+  function win(t, a, b, fi, fo){ if (t < a || t > b + fo) return 0; return (fi ? E((t - a) / fi) : 1) * (fo && t > b ? 1 - E((t - b) / fo) : 1); }
+  function lerp(a, b, f){ return a + (b - a) * f; }
+  function rgba(h, a){ var n = parseInt(h.slice(1), 16); return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')'; }
+
+  /* drawing: a dot, a glow, a line of dots, a symbol made of dots that gathers as `g` goes 0 to 1 */
+  function dot(x, y, s, c, a){ if (a <= 0.01) return; ctx.globalAlpha = a > 1 ? 1 : a; ctx.fillStyle = c; ctx.fillRect(x - s/2, y - s/2, s, s); }
+  function glow(x, y, r, c, a){ if (a <= 0.01 || r <= 0) return; var g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, rgba(c, a)); g.addColorStop(1, rgba(c, 0)); ctx.globalAlpha = 1; ctx.fillStyle = g; ctx.fillRect(x - r, y - r, 2*r, 2*r); }
+  function line(x0, y0, x1, y1, c, a, step, s){ var n = Math.max(2, Math.round(Math.hypot(x1 - x0, y1 - y0) / (step || 3))), k; for (k = 0; k <= n; k++) dot(x0 + (x1 - x0) * k / n, y0 + (y1 - y0) * k / n, s || 1.7, c, a); }
+  function sym(name, x, y, h, c, a, g, rot){
+    if (a <= 0.01) return;
+    var P = unit(name, Math.max(14, Math.min(90, Math.round(h / 1.6)))), cs = Math.cos(rot || 0), sn = Math.sin(rot || 0), k;
+    for (k = 0; k < P.length; k++){
+      var p = P[k], s = SEEDS[k % SEEDS.length], gi = g >= 1 ? 1 : EB(g * 1.4 - s[2] * 0.4);
+      dot(x + (p[0]*cs - p[1]*sn) * h + s[0] * U * 0.3 * (1 - gi), y + (p[0]*sn + p[1]*cs) * h + s[1] * U * 0.3 * (1 - gi), 1.9, c, a * (0.3 + 0.7 * gi));
+    }
   }
-  /* a scene: parts placed on the screen, sampled into exactly N coloured points */
-  function scene(parts){
-    var placed = parts.map(function(p){
-      var st = p.s.map(function(s){ return s.map(function(q){ return p.u ? [p.x + q[0] * p.h, p.y + q[1] * p.h] : q; }); });
-      return { st: st, c: p.c, len: st.map(length).reduce(function(a, b){ return a + b; }, 0) * (p.w || 1) };
-    });
-    var total = placed.reduce(function(a, p){ return a + p.len; }, 0), out = [];
-    placed.forEach(function(p){ sample(p.st, Math.max(8, Math.round(N * p.len / total))).forEach(function(q){ out.push([q[0], q[1], p.c]); }); });
-    return fit(out, N);
+  var SEEDS = (function(){ var r = rnd(29), out = [], k; for (k = 0; k < 97; k++) out.push([r() * 2 - 1, r() * 2 - 1, r()]); return out; })();
+  /* a message flying from (x0, y0) to (x1, y1) over an arc: a bright head, a fading trail, a splash where it lands */
+  function comet(x0, y0, x1, y1, ta, dur, c, lift, t){
+    var p = (t - ta) / dur;
+    if (p < 0 || p > 1.3) return;
+    var mx = (x0 + x1) / 2, my = Math.min(y0, y1) - lift;
+    var at = function(u){ var a = (1-u)*(1-u), b = 2*(1-u)*u, d = u*u; return [a*x0 + b*mx + d*x1, a*y0 + b*my + d*y1]; };
+    if (p <= 1){
+      var e = EIO(p), k;
+      for (k = 1; k < 22; k++){ var u = e - k * 0.016; if (u < 0) break; var P = at(u); dot(P[0], P[1], 2.4 - k * 0.07, c, (1 - k / 22) * 0.85); }
+      var Hd = at(e); glow(Hd[0], Hd[1], U * 0.06, c, 0.55); dot(Hd[0], Hd[1], 3.4, WHITE, 1);
+      return;
+    }
+    var sp = (p - 1) / 0.3;
+    for (var j = 0; j < 16; j++){ var an = j / 16 * full; dot(x1 + Math.cos(an) * U * 0.07 * E(sp), y1 + Math.sin(an) * U * 0.07 * E(sp), 2, c, 1 - sp); }
   }
-  function at(sym, x, y, h, c, w){ return { s: SYM[sym](), u: 1, x: x, y: y, h: h, c: c, w: w }; }
-  function dots(list, c){ return { s: list.map(function(q){ return arc(q[0], q[1], 1.6, 1.6, 0, full, 6); }), c: c, w: 1 }; }
+  /* a person in dust: head, body, an arm that may hold up a glowing phone, legs that walk */
+  function person(x, yb, h, c, a, walk, phone){
+    if (a <= 0.01) return;
+    var hr = h * 0.12, hy = yb - h * 0.86, hip = yb - h * 0.4, sh = yb - h * 0.68, k, sw = Math.sin(walk * 9);
+    var bob = walk ? Math.abs(Math.cos(walk * 9)) * h * 0.03 : 0;
+    hy -= bob; sh -= bob; hip -= bob;
+    for (k = 0; k < 18; k++){ var an = k / 18 * full; dot(x + Math.cos(an) * hr, hy + Math.sin(an) * hr, 1.9, c, a); }
+    line(x, hy + hr, x, hip, c, a, 2.6);
+    line(x - h * 0.13, sh + h * 0.03, x + h * 0.13, sh + h * 0.03, c, a * 0.8, 2.6);
+    line(x, hip, x + Math.sin(sw * 0.5) * h * 0.2, yb, c, a, 2.6);
+    line(x, hip, x - Math.sin(sw * 0.5) * h * 0.2, yb, c, a, 2.6);
+    if (phone > 0){
+      line(x + h * 0.12, sh + h * 0.03, x + h * 0.22, sh - h * 0.14, c, a, 2.6);
+      glow(x + h * 0.24, sh - h * 0.2, h * 0.22, CYAN, 0.45 * phone * a);
+      line(x + h * 0.21, sh - h * 0.27, x + h * 0.27, sh - h * 0.13, WHITE, a, 1.8, 2.2);
+    } else {
+      line(x + h * 0.13, sh + h * 0.03, x + h * 0.16 - sw * h * 0.06, hip + h * 0.02, c, a * 0.85, 2.6);
+      line(x - h * 0.13, sh + h * 0.03, x - h * 0.16 + sw * h * 0.06, hip + h * 0.02, c, a * 0.85, 2.6);
+    }
+  }
+  /* a clinic: walls, four windows that light, a door, a cross on the roof */
+  function clinic(cx, yb, s, c, a, lit, sign){
+    if (a <= 0.01) return;
+    var w = s * 0.82, x0 = cx - w / 2, y0 = yb - s, k;
+    line(x0, yb, x0, y0, c, a, 3); line(x0, y0, x0 + w, y0, c, a, 3); line(x0 + w, y0, x0 + w, yb, c, a, 3);
+    for (k = 0; k < 4; k++){
+      var wx = x0 + w * (k % 2 ? 0.6 : 0.16), wy = y0 + s * (k < 2 ? 0.16 : 0.42), ww = w * 0.24, wh = s * 0.17;
+      if (lit > 0){ glow(wx + ww/2, wy + wh/2, ww * 1.1, SUN, 0.5 * lit * a); ctx.globalAlpha = 0.55 * lit * a; ctx.fillStyle = SUN; ctx.fillRect(wx, wy, ww, wh); }
+      line(wx, wy, wx + ww, wy, c, a * 0.7, 3, 1.4); line(wx, wy + wh, wx + ww, wy + wh, c, a * 0.7, 3, 1.4);
+      line(wx, wy, wx, wy + wh, c, a * 0.7, 3, 1.4); line(wx + ww, wy, wx + ww, wy + wh, c, a * 0.7, 3, 1.4);
+    }
+    var dw = w * 0.24, dh = s * 0.3;
+    line(cx - dw/2, yb, cx - dw/2, yb - dh, c, a, 3); line(cx - dw/2, yb - dh, cx + dw/2, yb - dh, c, a, 3); line(cx + dw/2, yb - dh, cx + dw/2, yb, c, a, 3);
+    sym('cross', cx, y0 - s * 0.12, s * 0.09, sign || c, a, 1);
+  }
 
   function layout(){
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     var r = stage.getBoundingClientRect();
     W = r.width; H = r.height;
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var s = slot.getBoundingClientRect(), sw = Math.min(s.width * 0.9, 540), sh = Math.min(sw * 0.62, s.height * 0.8);
-    sw = Math.min(sw, sh / 0.62);
-    scr = { x: s.left - r.left + (s.width - sw) / 2, y: s.top - r.top + (s.height - sh * 1.12) / 2, w: sw, h: sh };
-    var rr = rnd(5), X = function(f){ return scr.x + scr.w * f; }, Y = function(f){ return scr.y + scr.h * f; }, u = scr.h;
-    /* the laptop: a screen, and a base under it */
-    var edge = outline(scr.x, scr.y, sw, sh, sw * 0.035, W < 700 ? 240 : 330);
-    var base = sample([[[X(-0.07), Y(1.06)], [X(1.07), Y(1.06)]], [[X(0.42), Y(1.03)], [X(0.58), Y(1.03)]]], W < 700 ? 60 : 80);
-    frameDots = edge.concat(base).map(function(p){ return { sx: rr() * W, sy: rr() * H, tx: p[0], ty: p[1], d: rr() * 0.5 }; });
-    N = W < 700 ? 300 : 420;
-    var pins = [[0.62, 0.3], [0.86, 0.26], [0.74, 0.55], [0.9, 0.62], [0.6, 0.78]];
-    var grid = [], k;
-    for (k = 0; k < 13; k++) grid.push([X(0.58 + (k % 5) * 0.075), Y(0.32 + Math.floor(k / 5) * 0.18)]);
-    scenes = [
-      /* the shop: a person's message to a clinic, and when it was answered, on a line of time */
-      scene([at('person', X(0.16), Y(0.42), u * 0.15, GOLD), at('chat', X(0.45), Y(0.36), u * 0.12, GREEN),
-             at('clinic', X(0.78), Y(0.42), u * 0.16, SUN), { s: [[[X(0.14), Y(0.82)], [X(0.86), Y(0.82)]]], c: FAINT, w: 0.6 },
-             at('clock', X(0.62), Y(0.82), u * 0.07, GREEN)]),
-      /* the race: one patient, two clinics; the one that answers first glows, the other is late */
-      scene([at('person', X(0.16), Y(0.5), u * 0.15, GOLD), at('clinic', X(0.78), Y(0.26), u * 0.14, GREEN),
-             at('tick', X(0.93), Y(0.26), u * 0.07, GREEN), at('clinic', X(0.78), Y(0.74), u * 0.14, FAINT),
-             at('clock', X(0.93), Y(0.74), u * 0.07, RED), at('arrow', X(0.46), Y(0.36), u * 0.12, GREEN)]),
-      /* the reads: a search passes over a rating, a camera and a pin; the clinics around show up */
-      scene([at('lens', X(0.13), Y(0.24), u * 0.11, CYAN), at('star', X(0.14), Y(0.5), u * 0.08, SUN),
-             at('line', X(0.33), Y(0.5), u * 0.11, GOLD, 0.5), at('camera', X(0.14), Y(0.7), u * 0.08, VIOLET),
-             at('line', X(0.33), Y(0.7), u * 0.11, GOLD, 0.5), at('pin', X(0.62), Y(0.3), u * 0.09, RED)]
-             .concat(pins.slice(1).map(function(p){ return at('pin', X(p[0]), Y(p[1]), u * 0.065, FAINT); }))
-             .concat([at('star', X(0.7), Y(0.3), u * 0.04, SUN)])),
-      /* one score: the reads fold into a ring of six parts; the part that leaks is red, with the way to fix it */
-      scene(ring(X(0.4), Y(0.5), u * 0.3).concat([at('arrow', X(0.78), Y(0.62), u * 0.1, RED), at('tick', X(0.9), Y(0.62), u * 0.07, GREEN)])),
-      /* AI search: three seekers reach the site, a key turns, and it reads as a clinic */
-      scene([at('globe', X(0.2), Y(0.5), u * 0.17, CYAN), dots([[X(0.42), Y(0.3)], [X(0.46), Y(0.5)], [X(0.42), Y(0.7)]], CYAN),
-             at('key', X(0.62), Y(0.5), u * 0.12, SUN), at('clinic', X(0.85), Y(0.5), u * 0.13, GREEN)]),
-      /* your phone: the ring on one link, kept watching */
-      scene([at('phone', X(0.5), Y(0.5), u * 0.36, GOLD)].concat(ring(X(0.5), Y(0.44), u * 0.12))),
-      /* into the engine: the red parts fly to thirteen slots */
-      scene(ring(X(0.2), Y(0.5), u * 0.14).concat([at('arrow', X(0.4), Y(0.5), u * 0.09, RED), dots(grid, GREEN)]))
-    ];
-    var pr = rnd(9);
-    pool = [];
-    for (k = 0; k < N; k++) pool.push({ sx: X(0.1 + pr() * 0.8), sy: Y(0.1 + pr() * 0.8), d: pr() * 0.45 });
-    /* each line's own small symbol, flown out of the screen into its slot */
-    var SLOT_SYMS = ['chat', 'clock', 'lens', 'ring', 'key', 'phone', 'tick'], gr = rnd(17);
+    var s = slot.getBoundingClientRect();
+    F = { x: s.left - r.left + 2, y: s.top - r.top + 2, w: s.width - 4, h: s.height - 4 };
+    U = F.h;
+    var R = rnd(7), k;
+    /* stars in the night sky, the skyline, the ground */
+    sky = []; for (k = 0; k < 64; k++) sky.push([F.x + R() * F.w, F.y + R() * F.h * 0.55, R() * 6, 0.6 + R() * 1.2]);
+    var yg = F.y + F.h * 0.86, towers = [[0.02, 0.07, 0.2], [0.1, 0.06, 0.32], [0.17, 0.05, 0.24], [0.24, 0.07, 0.38], [0.33, 0.03, 0.62],
+      [0.38, 0.06, 0.3], [0.66, 0.06, 0.28], [0.73, 0.04, 0.42], [0.91, 0.07, 0.34], [0.97, 0.04, 0.22]];
+    skyline = [];
+    towers.forEach(function(b){ var x = F.x + F.w * b[0], w = F.w * b[1], h = U * b[2];
+      skyline.push([[x, yg], [x, yg - h], [x + w, yg - h], [x + w, yg]]);
+      if (b[2] > 0.6) skyline.push([[x + w / 2, yg - h], [x + w / 2, yg - h - U * 0.12]]); });
+    skyline = sample(skyline, Math.round(F.w / 2.6));
+    /* the map: roads, your clinic and five around it, each with its stars */
+    roads = [];
+    [0.25, 0.55, 0.85].forEach(function(f){ roads.push([[F.x, F.y + F.h * f], [F.x + F.w, F.y + F.h * f]]); });
+    [0.2, 0.5, 0.8].forEach(function(f){ roads.push([[F.x + F.w * f, F.y], [F.x + F.w * f, F.y + F.h]]); });
+    roads = sample(roads, Math.round((F.w + F.h) / 3));
+    var spots = [[0.5, 0.56, 3, 1], [0.22, 0.34, 4, 0], [0.8, 0.3, 5, 0], [0.18, 0.78, 2, 0], [0.84, 0.74, 4, 0], [0.62, 0.86, 3, 0]];
+    var cx = F.x + F.w * 0.5, cy = F.y + F.h * 0.56;
+    pins = spots.map(function(p){ var x = F.x + F.w * p[0], y = F.y + F.h * p[1], b = Math.atan2(y - cy, x - cx);
+      return { x: x, y: y, lit: p[2], mine: p[3], bear: b < -Math.PI / 2 ? b + full : b, dist: Math.hypot(x - cx, y - cy) }; });
+    /* the reads running into the ring */
+    var rr = rnd(13); rivers = [];
+    for (k = 0; k < 150; k++){ var pi = Math.floor(rr() * pins.length), si = Math.floor(rr() * 5), seg = Math.floor(rr() * 6);
+      rivers.push({ pin: pi, star: si, seg: seg, u: rr(), d: rr() * 0.6, lift: (rr() - 0.5) * U * 0.3 }); }
+    /* each line's own small symbol, flown out of the film into its slot */
+    var gr = rnd(17);
     glyphs = items.map(function(li, i){
-      var sl = li.querySelector('.dg-slot').getBoundingClientRect(), cx = sl.left - r.left + sl.width/2, cy = sl.top - r.top + sl.height/2;
+      var sl = li.querySelector('.dg-slot').getBoundingClientRect(), gx = sl.left - r.left + sl.width/2, gy = sl.top - r.top + sl.height/2;
       return { at: BEATS[i], color: SLOT_COLORS[i], pts: sample(SYM[SLOT_SYMS[i]](), W < 700 ? 36 : 48).map(function(q){
-        return { sx: X(0.3 + gr() * 0.4), sy: Y(0.3 + gr() * 0.4), tx: cx + q[0] * sl.width * 0.36, ty: cy + q[1] * sl.width * 0.36 }; }) };
+        return { sx: F.x + F.w * (0.3 + gr() * 0.4), sy: F.y + F.h * (0.3 + gr() * 0.4), tx: gx + q[0] * sl.width * 0.36, ty: gy + q[1] * sl.width * 0.36 }; }) };
     });
   }
-  var ease = function(x){ x = Math.max(0, Math.min(1, x)); return 1 - Math.pow(1 - x, 3); };
+
+  /* the six parts of one score: where each sits, how full, which colour */
+  var LEVELS = [0.92, 0.78, 0.34, 0.86, 0.72, 0.82];
+  function scoreRing(t, cx, cy, rad, a){
+    if (a <= 0.01) return;
+    var k, j;
+    for (k = 0; k < 6; k++){
+      var a0 = -Math.PI/2 + k * Math.PI/3 + 0.08, span = Math.PI/3 - 0.16, f = E((t - 18.3 - k * 0.12) / 1.2), lv = LEVELS[k] * f, col = k % 2 ? GOLD : GREEN, al = a;
+      if (k === 2){ var fix = E((t - 20.6) / 0.8); lv = lerp(LEVELS[2] * f, 0.9, fix); col = t > 20.9 ? GREEN : RED; if (t < 20.6) al = a * (0.65 + 0.35 * Math.sin(t * 7)); }
+      var n = Math.max(6, Math.round(rad * span / 3));
+      for (j = 0; j <= n; j++){ var an = a0 + span * j / n; dot(cx + Math.cos(an) * rad, cy + Math.sin(an) * rad, 1.5, FAINT, a * 0.35); }
+      var m = Math.round(n * lv);
+      for (j = 0; j <= m; j++){ var an2 = a0 + span * j / n; dot(cx + Math.cos(an2) * rad, cy + Math.sin(an2) * rad, 2.6, col, al); }
+      if (m > 0){ var ae = a0 + span * m / n; glow(cx + Math.cos(ae) * rad, cy + Math.sin(ae) * rad, rad * 0.16, col, 0.35 * al); }
+    }
+  }
 
   function draw(t){
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
-    var g = ease(t / 1.4);
-    var gl = ctx.createRadialGradient(scr.x + scr.w/2, scr.y + scr.h/2, 4, scr.x + scr.w/2, scr.y + scr.h/2, scr.w * 0.6);
-    gl.addColorStop(0, 'rgba(232,212,139,' + (0.1 * g) + ')'); gl.addColorStop(1, 'rgba(232,212,139,0)');
-    ctx.fillStyle = gl; ctx.fillRect(scr.x, scr.y, scr.w, scr.h);
-    ctx.fillStyle = GOLD;
-    for (var i = 0; i < frameDots.length; i++){
-      var d = frameDots[i], e = ease((t - d.d) / 1.3);
-      ctx.globalAlpha = 0.35 + 0.65 * e;
-      ctx.fillRect(d.sx + (d.tx - d.sx) * e - 1, d.sy + (d.ty - d.sy) * e - 1, 2, 2);
+    if (!(F.w > 40 && F.h > 40)) return t > END;
+    ctx.globalCompositeOperation = 'source-over';
+    var form = E(t / 1.1), k, j;
+    /* the film's frame */
+    ctx.save();
+    ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(F.x, F.y, F.w, F.h, U * 0.05); else ctx.rect(F.x, F.y, F.w, F.h); ctx.clip();
+    var street = win(t, 0, 11.0, 0.9, 1.0) + win(t, 31.2, 99, 0.8, 0), map = win(t, 11.6, 30.8, 0.9, 0.8);
+    var dawn = t < 11.5 ? E((t - 7.2) / 2.4) : 0;
+    /* the sky: night, turning to morning while your clinic sleeps */
+    if (street > 0.01){
+      var gs = ctx.createLinearGradient(0, F.y, 0, F.y + F.h);
+      gs.addColorStop(0, 'rgba(' + Math.round(lerp(6, 46, dawn)) + ',' + Math.round(lerp(10, 30, dawn)) + ',' + Math.round(lerp(22, 44, dawn)) + ',' + (0.9 * street * form) + ')');
+      gs.addColorStop(1, 'rgba(' + Math.round(lerp(8, 70, dawn)) + ',' + Math.round(lerp(14, 46, dawn)) + ',' + Math.round(lerp(14, 30, dawn)) + ',' + (0.9 * street * form) + ')');
+      ctx.globalAlpha = 1; ctx.fillStyle = gs; ctx.fillRect(F.x, F.y, F.w, F.h);
     }
-    /* the pool: from the scene before to the scene now */
-    var cur = -1, k;
-    for (k = 0; k < BEATS.length; k++) if (t >= BEATS[k]) cur = k;
-    for (k = 0; k < N; k++){
-      var P = pool[k], from = cur > 0 ? scenes[cur - 1][k] : [P.sx, P.sy, GOLD], to = cur >= 0 ? scenes[cur][k] : from;
-      var m = cur >= 0 ? ease((t - BEATS[cur] - P.d) / 1.1) : 0;
-      ctx.fillStyle = m > 0.5 ? to[2] : from[2];
-      ctx.globalAlpha = cur >= 0 ? 0.55 + 0.45 * m : 0.25 * g;
-      ctx.fillRect(from[0] + (to[0] - from[0]) * m - 1, from[1] + (to[1] - from[1]) * m - 1, 2, 2);
+    if (map > 0.01){ ctx.globalAlpha = 0.85 * map; ctx.fillStyle = '#06100f'; ctx.fillRect(F.x, F.y, F.w, F.h); }
+    ctx.globalCompositeOperation = 'lighter';
+
+    /* ===== the street (the first two acts, and the last) ===== */
+    if (street > 0.01){
+      ctx.save();
+      var zoom = t < 12 ? 1 - 0.16 * E((t - 11) / 1) : 1, mcx = F.x + F.w / 2, mcy = F.y + F.h * 0.6;
+      ctx.translate(mcx, mcy); ctx.scale(zoom, zoom); ctx.translate(-mcx, -mcy);
+      var A = street * form, yg = F.y + F.h * 0.86, xA = F.x + F.w * 0.5, xB = F.x + F.w * 0.8, sA = U * 0.34, sB = U * 0.3, ph = U * 0.26;
+      var night = 1 - dawn;
+      for (k = 0; k < sky.length; k++){ var st = sky[k]; dot(st[0], st[1], st[3], WHITE, A * night * (0.25 + 0.5 * Math.abs(Math.sin(t * 1.3 + st[2])))); }
+      /* the moon sets and the sun rises while the clock above your clinic spins */
+      sym('moon', F.x + F.w * lerp(0.86, 0.98, dawn), F.y + F.h * lerp(0.16, 0.5, dawn), U * 0.07, WHITE, A * (1 - dawn) * 0.9, form);
+      if (dawn > 0){ var sx = F.x + F.w * 0.16, sy = F.y + F.h * lerp(0.95, 0.24, dawn); glow(sx, sy, U * 0.2, SUN, 0.35 * dawn * A); sym('sun', sx, sy, U * 0.07, SUN, dawn * A, 1, t * 0.4); }
+      for (k = 0; k < skyline.length; k++){ var sp = skyline[k], sd = SEEDS[k % SEEDS.length]; dot(sp[0], sp[1] + (1 - E(form * 1.3 - sd[2] * 0.3)) * U * 0.2, 1.6, FAINT, A * 0.55); }
+      line(F.x, yg, F.x + F.w, yg, FAINT, A * 0.5, 5, 1.5);
+      var late = t > 31.2, litA = late ? E((t - 33.2) / 0.4) : 0, litB = late ? 0.7 : E((t - 6.8) / 0.4);
+      clinic(xA, yg, sA, GOLD, A, litA, late && t > 33.7 ? GREEN : null);
+      clinic(xB, yg, sB, late ? FAINT : (t > 6.8 ? GREEN : FAINT), A * (late ? 0.7 : 1), litB);
+      /* your clinic, marked: the red pin, green once it answers at once */
+      var pinY = yg - sA - U * 0.26 + Math.sin(t * 2.2) * U * 0.012;
+      sym('pin', xA, pinY, U * 0.05, late && t > 33.7 ? GREEN : RED, A, form);
+      if (!late){
+        /* act one: a person messages your clinic; a clock starts; the conversation is written down */
+        var p1x = F.x + F.w * 0.13, walking = t > 8.0 && t < 10.3, to = E((t - 8.0) / 2.3);
+        if (t > 8.0) p1x = lerp(F.x + F.w * 0.13, xB - U * 0.02, to);
+        var send = win(t, 1.6, 2.6, 0.3, 0.4) + win(t, 5.6, 6.2, 0.2, 0.3);
+        person(p1x, yg, ph, WHITE, A * (1 - E((t - 10.4) / 0.6) * 0.5), walking ? t : 0, send);
+        comet(p1x + ph * 0.24, yg - ph * 0.9, xA, yg - sA * 0.15, 2.4, 1.4, SUN, U * 0.28, t);
+        var wa = win(t, 3.8, 10.4, 0.4, 0.5), spin = t < 7.2 ? (t - 3.8) * 0.8 : 2.72 + (t - 7.2) * 9;
+        if (wa > 0){ var wx = xA + U * 0.17, wy = yg - sA - U * 0.22; sym('watch', wx, wy, U * 0.065, RED, wa * A, 1);
+          line(wx, wy + U * 0.005, wx + Math.sin(spin) * U * 0.045, wy + U * 0.005 - Math.cos(spin) * U * 0.045, WHITE, wa * A, 1.6, 2); }
+        var na = win(t, 4.2, 10.2, 0.4, 0.5);
+        if (na > 0){ var nx = F.x + F.w * 0.13, ny = yg - ph - U * 0.17; sym('chat', nx, ny, U * 0.055, GOLD, na * A * 0.9, E((t - 4.2) / 0.8));
+          for (k = 0; k < 3; k++){ var lw = E((t - 4.6 - k * 0.45) / 0.4); line(nx + U * 0.075, ny - U * 0.025 + k * U * 0.025, nx + U * 0.075 + U * 0.08 * lw, ny - U * 0.025 + k * U * 0.025, GOLD, na * A * 0.8 * (lw > 0 ? 1 : 0), 2.2, 1.6); } }
+        /* act two: the clinic next door answers at once; the person walks there; yours answers in the morning, to no one */
+        comet(F.x + F.w * 0.13 + ph * 0.24, yg - ph * 0.9, xB, yg - sB * 0.15, 6.0, 0.7, SUN, U * 0.22, t);
+        comet(xB, yg - sB * 0.3, F.x + F.w * 0.13 + ph * 0.1, yg - ph * 0.95, 6.9, 0.5, GREEN, U * 0.18, t);
+        sym('tick', xB + U * 0.14, yg - sB - U * 0.02, U * 0.05, GREEN, win(t, 7.4, 10.6, 0.3, 0.5) * A, E((t - 7.4) / 0.6));
+        comet(xA, yg - sA * 0.2, F.x + F.w * 0.13, yg - ph * 0.7, 10.0, 0.8, FAINT, U * 0.2, t);
+        if (t > 10.8 && t < 12){ var bp = (t - 10.8) / 1.0; for (k = 0; k < 20; k++){ var sd2 = SEEDS[k]; dot(F.x + F.w * 0.13 + sd2[0] * U * 0.08 * bp, yg - ph * 0.7 + (sd2[1] * 0.5 + bp) * U * 0.15, 1.8, FAINT, 0.8 * (1 - bp)); } }
+      } else {
+        /* the last act: a new message, answered at once, and the person walks in */
+        var p2x = lerp(F.x + F.w * 0.1, xA, E((t - 34.0) / 1.6)), inside = 1 - E((t - 35.6) / 0.6);
+        person(p2x, yg, ph, WHITE, street * win(t, 31.8, 99, 0.6, 0) * inside, t > 34 && t < 35.6 ? t : 0, win(t, 32.2, 33.0, 0.2, 0.3));
+        comet(F.x + F.w * 0.1 + ph * 0.24, yg - ph * 0.9, xA, yg - sA * 0.15, 32.5, 0.7, SUN, U * 0.24, t);
+        comet(xA, yg - sA * 0.3, F.x + F.w * 0.1 + ph * 0.1, yg - ph * 0.95, 33.3, 0.4, GREEN, U * 0.18, t);
+        sym('tick', xA + U * 0.16, yg - sA - U * 0.02, U * 0.05, GREEN, win(t, 33.7, 99, 0.3, 0) * street, E((t - 33.7) / 0.6));
+        if (t > 35.4) glow(xA, yg - sA * 0.15, U * 0.12, SUN, 0.5 * E((t - 35.4) / 0.6));
+      }
+      ctx.restore();
     }
-    /* the phone keeps watching: a ring goes out from it, while it is on screen */
-    if (cur === 5){
-      var q = ((t - BEATS[5] - 1) / 1.6) % 1, rad = scr.h * (0.42 + 0.22 * q);
-      if (t > BEATS[5] + 1){ ctx.fillStyle = GREEN; ctx.globalAlpha = 0.7 * (1 - q);
-        for (k = 0; k < 36; k++){ var a = k / 36 * full; ctx.fillRect(scr.x + scr.w * 0.5 + rad * 0.62 * Math.cos(a) - 0.9, scr.y + scr.h * 0.5 + rad * Math.sin(a) - 0.9, 1.8, 1.8); } }
+
+    /* ===== the map (acts three to seven) ===== */
+    if (map > 0.01){
+      ctx.save();
+      var mz = 1 + 0.18 * (1 - E((t - 11.6) / 1.1)), Mx = F.x + F.w / 2, My = F.y + F.h * 0.56;
+      ctx.translate(Mx, My); ctx.scale(mz, mz); ctx.translate(-Mx, -My);
+      var dim = 1 - 0.65 * E((t - 17.6) / 0.8);
+      for (k = 0; k < roads.length; k++) dot(roads[k][0], roads[k][1], 1.3, FAINT, map * 0.4 * dim);
+      /* act three: a sweep from your clinic reads every clinic around it */
+      var sweep = -Math.PI / 2 + (t - 12.6) * 1.9;
+      if (t > 12.6 && t < 16.6){
+        var sa = win(t, 12.6, 16.0, 0.3, 0.6);
+        for (j = 0; j < 7; j++){ var an = sweep - j * 0.07, rr2 = U * 0.06; for (k = 0; k < 26; k++){ rr2 += U * 0.028; dot(Mx + Math.cos(an) * rr2, My + Math.sin(an) * rr2, 1.6, CYAN, sa * map * (1 - j / 7) * 0.7); } }
+      }
+      for (k = 0; k < pins.length; k++){
+        var P = pins[k], read = P.mine ? 12.8 : 12.6 + Math.max(0, (P.bear + Math.PI / 2)) / 1.9 + 0.05, pa = map * dim;
+        sym('pin', P.x, P.y, U * (P.mine ? 0.06 : 0.045), P.mine ? RED : (t > read ? CYAN : FAINT), pa, E((t - 11.8 - k * 0.08) / 0.9));
+        if (P.mine) glow(P.x, P.y - U * 0.02, U * 0.09, RED, 0.25 * pa);
+        if (t > read){
+          for (j = 0; j < 5; j++){ var ang = -Math.PI * 0.85 + j * Math.PI * 0.175, sx2 = P.x + Math.cos(ang) * U * 0.1, sy2 = P.y - U * 0.03 + Math.sin(ang) * U * 0.1;
+            var on = j < P.lit, sf = E((t - read - j * 0.08) / 0.5);
+            sym('star', sx2, sy2, U * 0.02, on ? SUN : FAINT, pa * sf * (on ? 1 : 0.6), sf); if (on) glow(sx2, sy2, U * 0.03, SUN, 0.25 * pa * sf); }
+          for (j = 0; j < 2; j++){ var bt = (t - read - 0.3 - j * 0.5) / 1.6; if (bt > 0 && bt < 1) sym('chat', P.x + (j ? 1 : -1) * U * 0.05, P.y - U * 0.1 - bt * U * 0.18, U * 0.022, j ? GOLD : WHITE, pa * (1 - bt) * 0.9, 1); }
+        }
+      }
+      /* the camera: a flash over your clinic */
+      var ft = t - 14.4;
+      if (ft > 0 && ft < 2.6){ var me = pins[0]; sym('camera', me.x + U * 0.15, me.y - U * 0.15, U * 0.035, VIOLET, map * dim * win(t, 14.4, 16.4, 0.3, 0.6), E(ft / 0.6));
+        if (ft > 0.6 && ft < 1.3){ var fr = (ft - 0.6) / 0.7; glow(me.x + U * 0.15, me.y - U * 0.15, U * 0.12 * (0.5 + fr), WHITE, 0.6 * (1 - fr) * map); } }
+      /* act four: the reads run into one ring of six parts; one is short and red until a spark fills it */
+      var ringA = win(t, 17.6, 30.8, 0.6, 0.8);
+      var rcx = F.x + F.w * 0.5, rcy = F.y + F.h * 0.5, rad = U * 0.3;
+      var toCorner = E((t - 22.0) / 0.8), toPhone = E((t - 26.6) / 0.8), toLeft = E((t - 30.0) / 0.6);
+      rcx = lerp(rcx, F.x + F.w * 0.14, toCorner); rcy = lerp(rcy, F.y + F.h * 0.2, toCorner); rad = lerp(rad, U * 0.08, toCorner);
+      rcx = lerp(rcx, F.x + F.w * 0.5, toPhone); rcy = lerp(rcy, F.y + F.h * 0.46, toPhone);
+      rcx = lerp(rcx, F.x + F.w * 0.24, toLeft); rad = lerp(rad, U * 0.065, toLeft);
+      if (t > 17.5 && t < 20){
+        for (k = 0; k < rivers.length; k++){
+          var rv = rivers[k], p = (t - 17.6 - rv.d) / 1.3; if (p < 0 || p > 1) continue;
+          var Pn = pins[rv.pin], sx3 = Pn.x + (rv.star - 2) * U * 0.03, sy3 = Pn.y - U * 0.1, a3 = -Math.PI/2 + rv.seg * Math.PI/3 + 0.08 + rv.u * (Math.PI/3 - 0.16);
+          var tx = rcx + Math.cos(a3) * rad, ty = rcy + Math.sin(a3) * rad, e3 = EIO(p), mx2 = (sx3 + tx) / 2 + rv.lift, my2 = (sy3 + ty) / 2 - U * 0.1;
+          var qx = (1-e3)*(1-e3)*sx3 + 2*(1-e3)*e3*mx2 + e3*e3*tx, qy = (1-e3)*(1-e3)*sy3 + 2*(1-e3)*e3*my2 + e3*e3*ty;
+          dot(qx, qy, 2, rv.pin === 0 ? RED : SUN, 0.8 * Math.sin(Math.PI * p));
+        }
+      }
+      scoreRing(t, rcx, rcy, rad, ringA);
+      comet(F.x + F.w * 0.94, F.y + F.h * 0.1, rcx + Math.cos(-Math.PI/2 + 2 * Math.PI/3 + 0.5) * rad, rcy + Math.sin(-Math.PI/2 + 2 * Math.PI/3 + 0.5) * rad, 19.9, 0.7, GREEN, U * 0.1, t);
+      /* act five: three seekers find your site shut; a key turns; they read it as a clinic */
+      var wA = win(t, 22.4, 26.4, 0.6, 0.6), wcx = F.x + F.w * 0.6, wcy = F.y + F.h * 0.46, ww = U * 0.4, wh = U * 0.3;
+      if (wA > 0.01){
+        var pts = outline(wcx - ww/2, wcy - wh/2, ww, wh, U * 0.03, Math.round((ww + wh) / 2.2));
+        for (k = 0; k < pts.length; k++) dot(pts[k][0], pts[k][1], 1.8, CYAN, wA * map);
+        line(wcx - ww/2, wcy - wh/2 + U * 0.05, wcx + ww/2, wcy - wh/2 + U * 0.05, CYAN, wA * map * 0.6, 3, 1.4);
+        var readIt = E((t - 25.4) / 0.6);
+        sym('cross', wcx, wcy + U * 0.03, U * 0.06, readIt > 0.5 ? GREEN : FAINT, wA * map, 1);
+        if (readIt > 0) glow(wcx, wcy + U * 0.03, U * 0.14, GREEN, 0.5 * readIt * wA);
+        var open = E((t - 24.6) / 0.6), shw = (ww / 2 - U * 0.01) * (1 - open);
+        if (shw > 1){ for (k = 0; k < 9; k++){ var yy = wcy - wh/2 + U * 0.07 + k * (wh - U * 0.09) / 8; line(wcx - ww/2 + U * 0.01, yy, wcx - ww/2 + U * 0.01 + shw, yy, FAINT, wA * map * 0.8, 3, 1.4); line(wcx + ww/2 - U * 0.01 - shw, yy, wcx + ww/2 - U * 0.01, yy, FAINT, wA * map * 0.8, 3, 1.4); } }
+        var kA = win(t, 23.8, 25.0, 0.4, 0.5);
+        sym('key', wcx, wcy + wh * 0.5 + U * 0.12, U * 0.06, SUN, kA * map, E((t - 23.8) / 0.6), Math.PI / 2 * E((t - 24.2) / 0.4));
+        if (t > 23.6 && t < 24.3){ var bf = (t - 23.6) / 0.7; glow(wcx + ww / 2, wcy, U * 0.12 * (0.6 + bf), RED, 0.5 * (1 - bf) * map); }
+        for (k = 0; k < 3; k++){
+          var ta2 = 22.6 + k * 0.3, arr = 23.6 + k * 0.3, sx4 = F.x + F.w * 1.04, sy4 = F.y + F.h * (0.22 + k * 0.28);
+          var hx = wcx + ww / 2 + U * 0.08, hy = wcy + (k - 1) * U * 0.09;
+          var px, py, sa2 = win(t, ta2, 25.7, 0.3, 0.4);
+          if (t < arr){ var e4 = EIO((t - ta2) / (arr - ta2)); px = lerp(sx4, hx, e4); py = lerp(sy4, hy, e4) - Math.sin(Math.PI * e4) * U * 0.08; }
+          else if (t < 25.0){ px = hx + Math.cos(t * 3 + k * 2) * U * 0.02 + (k === 0 && t < 24.2 ? U * 0.05 * Math.sin(Math.PI * clamp((t - 23.6) / 0.6)) : 0); py = hy + Math.sin(t * 3 + k * 2) * U * 0.02; }
+          else { var e5 = E((t - 25.0 - k * 0.12) / 0.6); px = lerp(hx, wcx, e5); py = lerp(hy, wcy, e5); sa2 *= 1 - e5 * 0.8; }
+          if (sa2 > 0){ glow(px, py, U * 0.05, CYAN, 0.6 * sa2 * map); dot(px, py, 3.4, WHITE, sa2 * map);
+            for (j = 1; j < 8; j++) dot(px + j * U * 0.012, py, 2.2 - j * 0.2, CYAN, sa2 * map * (1 - j / 8) * (t < arr ? 0.8 : 0.2)); }
+        }
+      }
+      /* act six: the ring lands on a phone that keeps watching */
+      var phA = win(t, 26.6, 31.0, 0.6, 0.8), phx = lerp(F.x + F.w * 0.5, F.x + F.w * 0.24, toLeft), phs = lerp(U * 0.3, U * 0.22, toLeft);
+      if (phA > 0.01){
+        glow(phx, F.y + F.h * 0.5, phs * 0.9, GOLD, 0.12 * phA * map); sym('phone', phx, F.y + F.h * 0.5, phs, GOLD, phA * map, E((t - 26.6) / 0.8));
+        for (k = 0; k < 3; k++){ var pt = (t - 27.8 - k * 1.1) / 1.1; if (pt > 0 && pt < 1 && t < 30.2){
+          for (j = 0; j < 40; j++){ var an5 = j / 40 * full, rp = phs * (0.75 + 0.6 * pt); dot(phx + Math.cos(an5) * rp * 0.62, F.y + F.h * 0.5 + Math.sin(an5) * rp, 1.7, GREEN, (1 - pt) * phA * map * 0.8); } } }
+        for (k = 0; k < 4; k++){ var sk = (t - 27.4 - k * 0.7) % 2.8; if (sk > 0 && sk < 0.6 && t < 30.2){ var sd3 = SEEDS[k * 7]; glow(phx + sd3[0] * phs * 0.35, F.y + F.h * 0.5 - phs * 0.55, U * 0.03, SUN, 0.8 * (1 - sk / 0.6) * phA); } }
+      }
+      /* act seven: the red parts fill thirteen slots in a turning machine */
+      var mA = win(t, 29.8, 31.0, 0.6, 0.8);
+      if (mA > 0.01){
+        var gx = F.x + F.w * 0.7, gy = F.y + F.h * 0.5, spinG = t > 30.6 ? (t - 30.6) * 1.6 : 0;
+        sym('gear', gx - U * 0.06, gy, U * 0.17, GOLD, mA * map * 0.55, E((t - 29.8) / 0.8), spinG);
+        sym('gear', gx + U * 0.15, gy - U * 0.1, U * 0.1, GOLD, mA * map * 0.55, E((t - 29.9) / 0.8), -spinG * 1.6);
+        for (k = 0; k < 13; k++){
+          var col = k % 5, row = Math.floor(k / 5), sx5 = gx - U * 0.2 + col * U * 0.1 + (row === 2 ? U * 0.1 : 0), sy5 = gy - U * 0.12 + row * U * 0.12;
+          var hit = 30.6 + k * 0.06 + 0.6, fl = (t - 30.6 - k * 0.06) / 0.6;
+          for (j = 0; j < 14; j++){ var an6 = j / 14 * full; dot(sx5 + Math.cos(an6) * U * 0.026, sy5 + Math.sin(an6) * U * 0.026, 1.6, t > hit ? GREEN : FAINT, mA * map); }
+          if (t > hit) glow(sx5, sy5, U * 0.04, GREEN, 0.45 * mA * map);
+          if (fl > 0 && fl < 1){ var e6 = EIO(fl); dot(lerp(phx, sx5, e6), lerp(F.y + F.h * 0.46, sy5, e6) - Math.sin(Math.PI * e6) * U * 0.1, 3, RED, mA * map); }
+        }
+      }
+      ctx.restore();
     }
+    ctx.restore();
+    ctx.globalCompositeOperation = 'source-over';
+    /* the frame's edge, in dust */
+    var edge = outline(F.x, F.y, F.w, F.h, U * 0.05, Math.round((F.w + F.h) / 2.4));
+    for (k = 0; k < edge.length; k++){ var ed = SEEDS[k % SEEDS.length], ee = E(t / 1.1 - ed[2] * 0.4); dot(lerp(F.x + F.w / 2, edge[k][0], ee), lerp(F.y + F.h / 2, edge[k][1], ee), 1.8, GOLD, 0.25 + 0.4 * ee); }
+    /* each line lights with its act, and its symbol flies into its slot */
     var lit = 0;
-    for (var j = 0; j < glyphs.length; j++){
-      var G = glyphs[j], ge = ease((t - G.at) / 1.1);
+    for (j = 0; j < glyphs.length; j++){
+      var G = glyphs[j], ge = E((t - G.at) / 1.1);
       if (t < G.at) continue;
       lit = j + 1;
-      ctx.fillStyle = G.color;
-      for (k = 0; k < G.pts.length; k++){
-        var gq = G.pts[k];
-        ctx.globalAlpha = 0.25 + 0.75 * ge;
-        ctx.fillRect(gq.sx + (gq.tx - gq.sx) * ge - 1.1, gq.sy + (gq.ty - gq.sy) * ge - 1.1, 2.2, 2.2);
-      }
+      for (k = 0; k < G.pts.length; k++){ var gq = G.pts[k]; dot(gq.sx + (gq.tx - gq.sx) * ge, gq.sy + (gq.ty - gq.sy) * ge, 2.2, G.color, 0.25 + 0.75 * ge); }
     }
     ctx.globalAlpha = 1;
     for (var n = 0; n < items.length; n++) items[n].classList.toggle('on', n < lit);
-    return t > BEATS[6] + 1.8;
+    return t > END;
   }
   function frame(now){
     if (!t0) t0 = now;
