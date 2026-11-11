@@ -19,12 +19,12 @@
 import { execFileSync, spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { scan as secretScan } from "./secret-scan.mjs";
-import { exitCode, judge, pairs } from "./gate-judge.mjs";
+import { exitCode, judge, pairs, toleranceFor } from "./gate-judge.mjs";
 
 const RUNS = Number(process.env.RUNS || 5);
 const FLOORS = JSON.parse(readFileSync(".github/ship-floors.json", "utf8"));
 const ABSOLUTE = FLOORS.floors;       // accessibility, best practices, SEO: one place, the floors file
-const TOLERANCE = FLOORS.tolerance;   // null until the A/A test sets it
+const TOLERANCE = FLOORS.tolerance;   // one number, or one per page (gate-judge.mjs toleranceFor); null until set
 const BYTES = { static: 600_000, motion: 1_500_000, "3d": 5_000_000 };   // web-studio's SHIP_BYTES
 const STORY_PATH = "/frames/";                                           // web-studio's SHIP_STORY_PATH
 const MOTION_SAFE = /prefers-reduced-motion|useReducedMotion|motion-reduce:/;
@@ -34,9 +34,8 @@ const CAND = { name: "candidate", dir: "out", port: 4173 };
 const LIVE = { name: "anchor", dir: process.env.ANCHOR_OUT || "", port: 4174 };
 const reportOnly = (process.env.GITHUB_REF || "").startsWith("refs/heads/gate/");
 /* The pages judged (gate-judge.mjs pairs): /app.html is held to the anchor's own /app.html once the anchor has one,
-   until then to its grow.html. HONEST LIMIT: the tolerance was measured home against home (the A/A test of
-   2026-11-09); /app's own A/A test (branch gate/aa-app, its rule in that branch's floors file) measures /app against
-   itself. */
+   until then to its grow.html. Each page's tolerance comes from an A/A test of that page against itself (the floors
+   file's aa_rule_app and history.aa_app, 2026-11-11). */
 const PAIRS = pairs(existsSync(`${CAND.dir}/app.html`), Boolean(LIVE.dir) && existsSync(`${LIVE.dir}/app.html`));
 const fails = [];
 
@@ -113,7 +112,7 @@ try {
   for (const p of PAIRS) for (const t of targets) console.log(`[runner-gate] ${p.page} ${t.name.padEnd(9)} ${at(t, p)} performance in run order ${JSON.stringify(runs[p.page][t.name].map((r) => r.scores.performance))} · benchmark ${JSON.stringify(runs[p.page][t.name].map((r) => r.bench))}`);
 
   for (const p of PAIRS) {
-    const verdict = judge({ cand: runs[p.page].candidate, anchor: runs[p.page].anchor?.length ? runs[p.page].anchor : null, tolerance: TOLERANCE,
+    const verdict = judge({ cand: runs[p.page].candidate, anchor: runs[p.page].anchor?.length ? runs[p.page].anchor : null, tolerance: toleranceFor(TOLERANCE, p.page),
       floors: ABSOLUTE, budget: BYTES[site.tier], tier: site.tier, tiers: Object.keys(BYTES), reportOnly, anchorName: `${FLOORS.anchor} ${p.anchor}` });
     for (const line of verdict.log) console.log(line.replace("[runner-gate]", `[runner-gate] ${p.page}:`));
     fails.push(...verdict.fails.map((f) => `${p.page} (${p.cand}): ${f}`));

@@ -33,3 +33,8 @@ export const exitCode = (fails, reportOnly) => (fails.length && !reportOnly ? 1 
 // grow.html, the same static shell and canvas pattern. A candidate without /app.html is judged on home alone.
 export const pairs = (candHasApp, anchorHasApp) => [{ page: "home", cand: "/", anchor: "/" },
   ...(candHasApp ? [{ page: "app", cand: "/app.html", anchor: anchorHasApp ? "/app.html" : "/grow.html" }] : [])];
+
+// The floors file's tolerance is one number for every page, or one per page ({ home: 2, app: 5 }), each set by an
+// A/A test of that page. A page with no number of its own gets null: main then refuses, as before any A/A test.
+export const toleranceFor = (tolerance, page) =>
+  tolerance !== null && typeof tolerance === "object" ? (Number.isFinite(tolerance[page]) ? tolerance[page] : null) : (tolerance ?? null);

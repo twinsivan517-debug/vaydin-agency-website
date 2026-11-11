@@ -60,9 +60,9 @@ push to `main` builds the commit AND a fixed anchor commit (`.github/ship-floors
 only on the owner's word), serves both as `npm start` does, and runs Lighthouse on each home,
 and on `/app.html` beside the anchor's own `/app.html` once the anchor has one (until then its
 `grow.html`): one discarded warm-up, then 5 runs each, interleaved. Performance passes when the
-candidate's median is no more than the tolerance under the anchor's; the tolerance comes from an
-A/A test (the anchor against itself, 5 runners; `/app`'s own on branch `gate/aa-app`) and until
-it is written main never deploys.
+candidate's median is no more than that page's tolerance under the anchor's. Each page's
+tolerance comes from an A/A test of that page against itself (5 runners): home 2, `/app` 5 since
+2026-11-11, anchor `c9945eb`; a page with no number never deploys.
 Accessibility, best practices and SEO keep absolute floors; page weight, dead links on the
 home, reduce motion and secrets are judged as web-studio's `ship_check` judges them. The deploy
 job needs the gate (`scripts/runner-gate.mjs`, `.github/workflows/pages.yml`). A `gate/**`

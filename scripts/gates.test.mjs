@@ -6,7 +6,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { exitCode, judge, pairs } from "./gate-judge.mjs";
+import { exitCode, judge, pairs, toleranceFor } from "./gate-judge.mjs";
 import { privateWords, scanPushed } from "./secret-scan.mjs";
 
 let cases = 0;
@@ -64,6 +64,23 @@ test("an anchor older than /app holds it to grow.html", () => {
 });
 test("a candidate without /app.html is judged on home alone", () => {
   assert.deepEqual(pairs(false, true).map((p) => p.page), ["home"]);
+});
+test("one tolerance number holds every page; a per-page map holds each page to its own", () => {
+  assert.equal(toleranceFor(3, "home"), 3);
+  assert.equal(toleranceFor(3, "app"), 3);
+  assert.equal(toleranceFor({ home: 2, app: 5 }, "home"), 2);
+  assert.equal(toleranceFor({ home: 2, app: 5 }, "app"), 5);
+});
+test("a page with no tolerance of its own gets none, and main refuses it", () => {
+  assert.equal(toleranceFor({ home: 2 }, "app"), null);
+  assert.equal(toleranceFor(null, "home"), null);
+  assert.equal(toleranceFor(undefined, "home"), null);
+  assert.match(verdict({ tolerance: toleranceFor({ home: 2 }, "app") }).fails[0], /no tolerance yet/);
+});
+test("the per-page numbers judge each page: 4 under passes /app at 5 and refuses home at 2", () => {
+  const tol = { home: 2, app: 5 };
+  assert.deepEqual(verdict({ anchor: five(84), tolerance: toleranceFor(tol, "app") }).fails, []);
+  assert.match(verdict({ anchor: five(84), tolerance: toleranceFor(tol, "home") }).fails[0], /more than 2 under/);
 });
 
 // --- the runner gate, end to end, when it cannot measure ------------------------------------------------
