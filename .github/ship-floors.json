@@ -1,12 +1,14 @@
 {
-  "_why": "Ship gate on the GitHub runner (scripts/runner-gate.mjs). The candidate is measured side by side with the ANCHOR on one runner. The anchor moves only on the owner's word. Each page's tolerance comes from an A/A test of that page against itself on 5 separate runners, written here before any candidate is judged: home 2 and app 5, set 2026-11-11 from runs 42982070509..42985537009 against the anchor c9945eb (history.aa_app); home's earlier 3 came from runs 42629296271..42631926595 against 4396036 (history.aa_v3). A page with no number of its own means main never deploys.",
+  "_why": "Ship gate on the GitHub runner (scripts/runner-gate.mjs). The candidate is measured side by side with the ANCHOR on one runner. The anchor moves only on the owner's word. Each page's tolerance comes from an A/A test of that page against itself on 5 separate runners, written here before any candidate is judged: home 2 and app 5, set 2026-11-11 from runs 42982070509..42985537009 against the anchor c9945eb (history.aa_app); diagnose 2, set 2026-11-11 from runs 43067572799..43074095787 on gate/aa-diagnose (history.aa_diagnose); home's earlier 3 came from runs 42629296271..42631926595 against 4396036 (history.aa_v3). A page with no number of its own means main never deploys.",
   "anchor": "c9945eb",
   "tolerance": {
     "home": 2,
-    "app": 5
+    "app": 5,
+    "diagnose": 2
   },
   "aa_rule": "Written 2026-11-09 before any A/A job ran. Branch gate/aa = the anchor's site + these gate files, so both sides build identical bytes. 5 jobs (the owner's pick, 2026-11-09, on web-studio's review; first written as 3, changed before any job counted), one after another, each on its own runner; each job gives d = candidate median - anchor median. A job whose log says the gate could not measure does not count and is run again (run 42628188860, d = +1, did not count: it crashed after measuring, the keep-alive bug fixed since). tolerance = the largest |d| of the 5, plus 1. If that largest |d| is over 5, nothing is written: the side-by-side method is too noisy here, and the owner decides what next.",
   "aa_rule_app": "Written 2026-11-11 before any job of this test ran. Branch gate/aa-app = the live site c9945eb + the gate change that holds /app.html to the anchor's own /app.html (bd43d39); the anchor on this branch is c9945eb, so both sides build the same commit. 5 jobs, one after another, each on its own runner, RUNS=5 per side as on main; each job gives, per page, d = candidate median - anchor median, for home and for /app. A job whose log says the gate could not measure does not count and is run again. Per page: tolerance = the largest |d| of the 5, plus 1. If a page's largest |d| is over 5, no number is written for that page: the side-by-side method is too noisy for it, and the owner decides what next (for example /app report-only, or more runs per job). Moving main's anchor to c9945eb and every number written are the owner's word.",
+  "aa_rule_diagnose": "Written 2026-11-11 before any job of this test ran (the owner's word: \"run the speed check\"). Branch gate/aa-diagnose = rooms/diagnose at dff98d6 (the Diagnose film 3f0fcde + the gate change that judges every rebuilt room beside the anchor's own copy of that page) + this file; the anchor on this branch is dff98d6, so both sides build the same commit. 5 jobs, one after another, each on its own runner (the first by the push, four by hand), RUNS=5 per side as on main; each job gives, for /diagnose.html, d = candidate median - anchor median. A job whose log says the gate could not measure does not count and is run again. tolerance = the largest |d| of the 5, plus 1. If that largest |d| is over 5, no number is written: the side-by-side method is too noisy for this page, and the owner decides what next. Writing the number into main's tolerance is the owner's word; main's anchor stays c9945eb.",
   "floors": {
     "accessibility": 95,
     "best-practices": 90,
@@ -102,6 +104,49 @@
         ]
       },
       "note": "5 jobs, one after another, all counted. The runners' own scores ranged 82 to 97 on home and 78 to 89 on /app while the side-by-side gap stayed within 1 on home and 4 on /app. By aa_rule_app: home 1 + 1 = 2, app 4 + 1 = 5. The anchor moved 4396036 -> c9945eb and these two numbers were written on the owner's word, 2026-11-11 (on 2026-11-10 c9945eb's home measured 97 against 4396036's 97, so the move accepts no loss on home)."
+    },
+    "aa_diagnose": {
+      "commit": "b4c663e (gate/aa-diagnose: rooms/diagnose at dff98d6 + aa_rule_diagnose; both sides build dff98d6)",
+      "runs": [
+        43067572799,
+        43069225621,
+        43070959708,
+        43072604258,
+        43074095787
+      ],
+      "difference_candidate_minus_anchor": {
+        "diagnose": [
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "home": [
+          -2,
+          -2,
+          0,
+          1,
+          0
+        ],
+        "app": [
+          0,
+          8,
+          1,
+          0,
+          0
+        ]
+      },
+      "machine_medians_anchor": {
+        "diagnose": [
+          88,
+          89,
+          88,
+          90,
+          90
+        ]
+      },
+      "note": "5 jobs, one after another (the first by the push, four by hand), all counted: no log says the gate could not measure. By aa_rule_diagnose: diagnose 1 + 1 = 2, written on the owner's word (his tap, 2026-11-11 18:13Z). The page measured was dff98d6's; the page going to main is eb6d9e2's, the same film with its last act's timing changed. home's and /app's differences are recorded, not used: /app's +8 (run 43069225621, the runner's scores in two groups, about 78 and 90) is over its own 5, and the owner's call (his tap, 2026-11-11) is to judge every page by the median of its per-round differences, as its own round with its own A/A after Diagnose ships."
     }
   }
 }
