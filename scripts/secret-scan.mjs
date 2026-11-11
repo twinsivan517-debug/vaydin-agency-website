@@ -11,12 +11,12 @@
 // PRIVATE WORDS (--pre-push only; lesson 22, 2026-11-11): the houses' private names, addresses and places never reach
 // this public repo. The list lives OUTSIDE it: web-studio's brain/leak_patterns.txt (one literal per line, # starts
 // a comment, never committed), or the file VAYDIN_PRIVATE_WORDS names. Each word is matched whole, in any case, in
-// every text file a pushed commit adds or changes, in each such file's path, in each pushed commit's whole message
-// and in the names of the refs being pushed; a finding names the list's line, never the word. Fail closed: no list,
-// or a list with no words, refuses the push.
+// every text file a pushed commit adds or changes, in each such file's path, in each pushed commit's whole message,
+// its author and committer (names and e-mails) and in the names of the refs being pushed; a finding names the list's
+// line, never the word. Fail closed: no list, or a list with no words, refuses the push. This repo's author name is
+// "Vaydin" from 2026-11-11 (the owner's word); commits already public are left as they are.
 // HONEST LIMIT: exact words only (a paraphrase, a quote or a verdict passes); a file is skipped as binary by its
-// extension or when it holds a NUL byte, so a text file with one NUL is not read; the author and committer fields
-// are not read (the owner's decision on the author name is pending, 2026-11-11); laptop only, the runner has no
+// extension or when it holds a NUL byte, so a text file with one NUL is not read; laptop only, the runner has no
 // list; `git push --no-verify` skips the hook.
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
@@ -84,7 +84,10 @@ export function scanPushed(stdin, words = []) {
     catch { commits = git(["rev-list", local, "--not", "--remotes"]); }   // the remote's tip is unknown here
     for (const sha of commits.split("\n").filter(Boolean)) {
       const short = sha.slice(0, 7);
-      if (words.length) privateHits(git(["log", "-1", "--format=%B", sha]), words, `${short} its message`, found);
+      if (words.length) {
+        privateHits(git(["log", "-1", "--format=%B", sha]), words, `${short} its message`, found);
+        privateHits(git(["log", "-1", "--format=%an%n%ae%n%cn%n%ce", sha]), words, `${short} its author or committer`, found);
+      }
       const names = git(["diff-tree", "--root", "-m", "--no-commit-id", "-r", "-z", "--name-only", "--diff-filter=AMRC", sha]);
       for (const rel of new Set(names.split("\0").filter(Boolean))) {
         const read = (p) => git(["cat-file", "blob", `${sha}:${p}`]);
