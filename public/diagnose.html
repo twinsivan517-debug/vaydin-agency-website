@@ -79,7 +79,6 @@
   .nav-burger svg{width:18px;height:14px;display:block}
 
   /* ---------- the stage ---------- */
-  .stage{position:relative;height:100vh;min-height:680px;overflow:hidden}
   .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.26em;color:var(--critical);margin-bottom:10px;display:flex;align-items:center;gap:10px}
   .pulse{width:8px;height:8px;border-radius:50%;background:var(--critical);animation:pulse 2.2s infinite}
   @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(248,113,113,0.4)}50%{opacity:.45;box-shadow:0 0 0 6px rgba(248,113,113,0)}}
@@ -92,17 +91,8 @@
   
 
   /* ---------- shared section ---------- */
-  section{max-width:1240px;margin:0 auto;padding:110px 48px 0;position:relative;z-index:1}
   .sec-eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:0.26em;color:var(--critical);margin-bottom:14px}
   h2{font-family:var(--display);font-weight:400;font-size:clamp(28px,3.3vw,44px);line-height:1.15;margin:0 0 14px;max-width:760px;text-wrap:balance}
-
-  /* ---------- the speed gap: two inboxes, one evening (frameless, live{display:grid;grid-template-columns:1fr 300px 1fr;gap:48px;align-items:center;margin-top:4px}
-  .ring{position:relative;width:300px;height:300px;margin:0 auto}
-  .ring svg{width:100%;height:100%;transform:rotate(-90deg)}
-  .ring circle{fill:none;stroke-width:2}
-  @media (max-width:1060px){
-    .ring{order:-1;width:230px;height:230px}
-  }
 
   /* ---------- cta band ---------- */
   .band{margin:130px auto 0;background:linear-gradient(180deg, transparent 0%, rgba(9,15,12,0.8) 50%, transparent 100%);
@@ -135,8 +125,6 @@
     .nav-links a{padding:13px 2px;font-size:17px;border-bottom:1px solid rgba(255,255,255,0.05)}
     .nav-links a:last-child{border-bottom:0}
     .nav-links a::after{bottom:8px;right:auto;width:28px}
-    .stage{height:auto;min-height:0;padding:110px 22px 40px}
-    section{padding:80px 22px 0}
     .band{padding:72px 22px}
   }
   @media (max-width: 380px){
@@ -150,7 +138,7 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Vaydin Agency", "item": "https://vaydin.agency/"}, {"@type": "ListItem", "position": 2, "name": "The Diagnostic", "item": "https://vaydin.agency/diagnose.html"}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Service", "name": "Clinic mystery shopping in Dubai", "serviceType": "Clinic mystery shopping", "description": "Clinic mystery shopping in Dubai: unannounced, every 30 to 60 days, a real person messages your clinic on WhatsApp as a new patient. One score, six areas.", "url": "https://vaydin.agency/diagnose.html", "provider": {"@type": "Organization", "@id": "https://vaydin.agency/#organization", "name": "Vaydin", "url": "https://vaydin.agency/"}, "areaServed": [{"@type": "City", "name": "Dubai"}, {"@type": "Country", "name": "United Arab Emirates"}, {"@type": "Place", "name": "GCC"}]}</script>
 <style>
-  /* The diagnostic, drawn (2026-11-11): a laptop in dust beside his ten lines, in One place's manner. */
+  /* The diagnostic as a silent film (2026-11-11), beside his ten lines, in One place's manner. */
   .dg-hero{max-width:1240px;margin:0 auto;padding:108px 48px 0;text-align:center}
   .dg-hero h1{margin:0 auto;max-width:760px}
   .dg-hero h1 .h1-line{justify-content:center}
@@ -256,7 +244,7 @@
   var stage = document.getElementById('dgstage'), cv = document.getElementById('dgcanvas'), ctx = cv.getContext('2d');
   var slot = document.getElementById('dgslot'), items = [].slice.call(document.querySelectorAll('.dg-oc'));
   var GOLD = '#e8d48b', RED = '#f87171', GREEN = '#4ade80', CYAN = '#34e3f0', VIOLET = '#a78bfa', SUN = '#f5d978', FAINT = '#6f8378', WHITE = '#f3ead9';
-  var BEATS = [1.0, 6.0, 11.5, 17.5, 22.0, 26.5, 30.0], END = 36.6;  /* when each line lights; the film's length */
+  var BEATS = [1.0, 6.0, 11.5, 17.5, 22.0, 26.5, 30.0], END = 37.4;  /* when each line lights; the film's length */
   var SLOT_COLORS = [GOLD, SUN, CYAN, GREEN, CYAN, GOLD, GREEN], SLOT_SYMS = ['chat', 'clock', 'lens', 'ring', 'key', 'phone', 'tick'];
   var W, H, dpr, F, U, sky = [], skyline = [], roads = [], pins = [], glyphs = [], rivers = [], seekers = [], unitCache = {};
   var t0 = 0, raf = 0, visible = false, done = false, full = 2 * Math.PI;
@@ -466,7 +454,7 @@
     /* the film's frame */
     ctx.save();
     ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(F.x, F.y, F.w, F.h, U * 0.05); else ctx.rect(F.x, F.y, F.w, F.h); ctx.clip();
-    var street = win(t, 0, 11.0, 0.9, 1.0) + win(t, 31.2, 99, 0.8, 0), map = win(t, 11.6, 30.8, 0.9, 0.8);
+    var street = win(t, 0, 11.0, 0.9, 1.0) + win(t, 32.0, 99, 0.8, 0), map = win(t, 11.6, 31.6, 0.9, 0.8);
     var dawn = t < 11.5 ? E((t - 7.2) / 2.4) : 0;
     /* the sky: night, turning to morning while your clinic sleeps */
     if (street > 0.01){
@@ -491,12 +479,12 @@
       if (dawn > 0){ var sx = F.x + F.w * 0.16, sy = F.y + F.h * lerp(0.95, 0.24, dawn); glow(sx, sy, U * 0.2, SUN, 0.35 * dawn * A); sym('sun', sx, sy, U * 0.07, SUN, dawn * A, 1, t * 0.4); }
       for (k = 0; k < skyline.length; k++){ var sp = skyline[k], sd = SEEDS[k % SEEDS.length]; dot(sp[0], sp[1] + (1 - E(form * 1.3 - sd[2] * 0.3)) * U * 0.2, 1.6, FAINT, A * 0.55); }
       line(F.x, yg, F.x + F.w, yg, FAINT, A * 0.5, 5, 1.5);
-      var late = t > 31.2, litA = late ? E((t - 33.2) / 0.4) : 0, litB = late ? 0.7 : E((t - 6.8) / 0.4);
-      clinic(xA, yg, sA, GOLD, A, litA, late && t > 33.7 ? GREEN : null);
+      var late = t > 32.0, litA = late ? E((t - 34.0) / 0.4) : 0, litB = late ? 0.7 : E((t - 6.8) / 0.4);
+      clinic(xA, yg, sA, GOLD, A, litA, late && t > 34.5 ? GREEN : null);
       clinic(xB, yg, sB, late ? FAINT : (t > 6.8 ? GREEN : FAINT), A * (late ? 0.7 : 1), litB);
       /* your clinic, marked: the red pin, green once it answers at once */
       var pinY = yg - sA - U * 0.26 + Math.sin(t * 2.2) * U * 0.012;
-      sym('pin', xA, pinY, U * 0.05, late && t > 33.7 ? GREEN : RED, A, form);
+      sym('pin', xA, pinY, U * 0.05, late && t > 34.5 ? GREEN : RED, A, form);
       if (!late){
         /* act one: a person messages your clinic; a clock starts; the conversation is written down */
         var p1x = F.x + F.w * 0.13, walking = t > 8.0 && t < 10.3, to = E((t - 8.0) / 2.3);
@@ -518,12 +506,12 @@
         if (t > 10.8 && t < 12){ var bp = (t - 10.8) / 1.0; for (k = 0; k < 20; k++){ var sd2 = SEEDS[k]; dot(F.x + F.w * 0.13 + sd2[0] * U * 0.08 * bp, yg - ph * 0.7 + (sd2[1] * 0.5 + bp) * U * 0.15, 1.8, FAINT, 0.8 * (1 - bp)); } }
       } else {
         /* the last act: a new message, answered at once, and the person walks in */
-        var p2x = lerp(F.x + F.w * 0.1, xA, E((t - 34.0) / 1.6)), inside = 1 - E((t - 35.6) / 0.6);
-        person(p2x, yg, ph, WHITE, street * win(t, 31.8, 99, 0.6, 0) * inside, t > 34 && t < 35.6 ? t : 0, win(t, 32.2, 33.0, 0.2, 0.3));
-        comet(F.x + F.w * 0.1 + ph * 0.24, yg - ph * 0.9, xA, yg - sA * 0.15, 32.5, 0.7, SUN, U * 0.24, t);
-        comet(xA, yg - sA * 0.3, F.x + F.w * 0.1 + ph * 0.1, yg - ph * 0.95, 33.3, 0.4, GREEN, U * 0.18, t);
-        sym('tick', xA + U * 0.16, yg - sA - U * 0.02, U * 0.05, GREEN, win(t, 33.7, 99, 0.3, 0) * street, E((t - 33.7) / 0.6));
-        if (t > 35.4) glow(xA, yg - sA * 0.15, U * 0.12, SUN, 0.5 * E((t - 35.4) / 0.6));
+        var p2x = lerp(F.x + F.w * 0.1, xA, E((t - 34.8) / 1.6)), inside = 1 - E((t - 36.4) / 0.6);
+        person(p2x, yg, ph, WHITE, street * win(t, 32.4, 99, 0.6, 0) * inside, t > 34.8 && t < 36.4 ? t : 0, win(t, 33.0, 33.8, 0.2, 0.3));
+        comet(F.x + F.w * 0.1 + ph * 0.24, yg - ph * 0.9, xA, yg - sA * 0.15, 33.3, 0.7, SUN, U * 0.24, t);
+        comet(xA, yg - sA * 0.3, F.x + F.w * 0.1 + ph * 0.1, yg - ph * 0.95, 34.1, 0.4, GREEN, U * 0.18, t);
+        sym('tick', xA + U * 0.16, yg - sA - U * 0.02, U * 0.05, GREEN, win(t, 34.5, 99, 0.3, 0) * street, E((t - 34.5) / 0.6));
+        if (t > 36.2) glow(xA, yg - sA * 0.15, U * 0.12, SUN, 0.5 * E((t - 36.2) / 0.6));
       }
       ctx.restore();
     }
@@ -557,7 +545,7 @@
       if (ft > 0 && ft < 2.6){ var me = pins[0]; sym('camera', me.x + U * 0.15, me.y - U * 0.15, U * 0.035, VIOLET, map * dim * win(t, 14.4, 16.4, 0.3, 0.6), E(ft / 0.6));
         if (ft > 0.6 && ft < 1.3){ var fr = (ft - 0.6) / 0.7; glow(me.x + U * 0.15, me.y - U * 0.15, U * 0.12 * (0.5 + fr), WHITE, 0.6 * (1 - fr) * map); } }
       /* act four: the reads run into one ring of six parts; one is short and red until a spark fills it */
-      var ringA = win(t, 17.6, 30.8, 0.6, 0.8);
+      var ringA = win(t, 17.6, 31.6, 0.6, 0.8);
       var rcx = F.x + F.w * 0.5, rcy = F.y + F.h * 0.5, rad = U * 0.3;
       var toCorner = E((t - 22.0) / 0.8), toPhone = E((t - 26.6) / 0.8), toLeft = E((t - 30.0) / 0.6);
       rcx = lerp(rcx, F.x + F.w * 0.14, toCorner); rcy = lerp(rcy, F.y + F.h * 0.2, toCorner); rad = lerp(rad, U * 0.08, toCorner);
@@ -608,14 +596,14 @@
         for (k = 0; k < 4; k++){ var sk = (t - 27.4 - k * 0.7) % 2.8; if (sk > 0 && sk < 0.6 && t < 30.2){ var sd3 = SEEDS[k * 7]; glow(phx + sd3[0] * phs * 0.35, F.y + F.h * 0.5 - phs * 0.55, U * 0.03, SUN, 0.8 * (1 - sk / 0.6) * phA); } }
       }
       /* act seven: the red parts fill thirteen slots in a turning machine */
-      var mA = win(t, 29.8, 31.0, 0.6, 0.8);
+      var mA = win(t, 29.8, 31.6, 0.5, 0.8);
       if (mA > 0.01){
         var gx = F.x + F.w * 0.7, gy = F.y + F.h * 0.5, spinG = t > 30.6 ? (t - 30.6) * 1.6 : 0;
         sym('gear', gx - U * 0.06, gy, U * 0.17, GOLD, mA * map * 0.55, E((t - 29.8) / 0.8), spinG);
         sym('gear', gx + U * 0.15, gy - U * 0.1, U * 0.1, GOLD, mA * map * 0.55, E((t - 29.9) / 0.8), -spinG * 1.6);
         for (k = 0; k < 13; k++){
           var col = k % 5, row = Math.floor(k / 5), sx5 = gx - U * 0.2 + col * U * 0.1 + (row === 2 ? U * 0.1 : 0), sy5 = gy - U * 0.12 + row * U * 0.12;
-          var hit = 30.6 + k * 0.06 + 0.6, fl = (t - 30.6 - k * 0.06) / 0.6;
+          var hit = 30.3 + k * 0.05 + 0.55, fl = (t - 30.3 - k * 0.05) / 0.55;
           for (j = 0; j < 14; j++){ var an6 = j / 14 * full; dot(sx5 + Math.cos(an6) * U * 0.026, sy5 + Math.sin(an6) * U * 0.026, 1.6, t > hit ? GREEN : FAINT, mA * map); }
           if (t > hit) glow(sx5, sy5, U * 0.04, GREEN, 0.45 * mA * map);
           if (fl > 0 && fl < 1){ var e6 = EIO(fl); dot(lerp(phx, sx5, e6), lerp(F.y + F.h * 0.46, sy5, e6) - Math.sin(Math.PI * e6) * U * 0.1, 3, RED, mA * map); }
