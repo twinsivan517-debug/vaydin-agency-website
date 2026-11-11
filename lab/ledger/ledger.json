@@ -8488,6 +8488,150 @@
   ]
  },
  {
+  "s": "Every thirty to sixty days, unannounced, a real person messages your clinic on WhatsApp, like any new patient.",
+  "tag": "task:CORE-F4",
+  "read": "core 2026-11-11: OK (manual_shop.md:56; a real person, by design)",
+  "where": [
+   "pages.ts",
+   "voice:dg-01"
+  ]
+ },
+ {
+  "s": "We ask what patients ask: the treatment, the price, when they can come.",
+  "tag": "task:CORE-F4",
+  "read": "core 2026-11-11: OK (audit_output.py:30-38)",
+  "where": [
+   "pages.ts",
+   "voice:dg-02"
+  ]
+ },
+ {
+  "s": "And we record what your clinic said, and when.",
+  "tag": "task:CORE-F4",
+  "read": "core 2026-11-11: OK (the stored Shop Transcript, shop_finalize.md:7-9)",
+  "where": [
+   "pages.ts",
+   "voice:dg-02"
+  ]
+ },
+ {
+  "s": "A patient messaging tonight books whoever answers first, and best.",
+  "tag": "none",
+  "read": "core 2026-11-11: OK (no Layer 1 fact; bold copy, not a benchmark)",
+  "where": [
+   "pages.ts",
+   "voice:dg-03"
+  ]
+ },
+ {
+  "s": "Before that message, they have seen your Google rating, your reviews and your Instagram.",
+  "tag": "task:CORE-F1 + task:CORE-F3",
+  "read": "core 2026-11-11: OK (Google weekly, Instagram monthly)",
+  "where": [
+   "pages.ts",
+   "voice:dg-04"
+  ]
+ },
+ {
+  "s": "We read those too.",
+  "tag": "task:CORE-F1 + task:CORE-F3",
+  "read": "core 2026-11-11: OK (Google weekly, Instagram monthly)",
+  "where": [
+   "pages.ts",
+   "voice:dg-04"
+  ]
+ },
+ {
+  "s": "And we read the clinics around you: how you compare, and when a rival's rating moves.",
+  "tag": "task:CORE-F5",
+  "read": "core 2026-11-11: OK (face.md section 7; moved.py:74-81)",
+  "where": [
+   "pages.ts",
+   "voice:dg-05"
+  ]
+ },
+ {
+  "s": "It all becomes one score from six areas.",
+  "tag": "task:CORE-F0",
+  "read": "core 2026-11-11: OK (its reword of line 5)",
+  "where": [
+   "pages.ts",
+   "voice:dg-06"
+  ]
+ },
+ {
+  "s": "Every finding shows its evidence, and every leak comes with what to change.",
+  "tag": "task:CORE-F0",
+  "read": "core 2026-11-11: OK (its reword: only leaks carry a fix)",
+  "where": [
+   "pages.ts",
+   "voice:dg-06"
+  ]
+ },
+ {
+  "s": "And we check AI search: can ChatGPT, Claude and Perplexity read your site, and see that it's a clinic?",
+  "tag": "task:CORE-F7",
+  "read": "core 2026-11-11: OK (ai_access.py:15-16, :44-49; see that, its OK of the reword)",
+  "where": [
+   "pages.ts",
+   "voice:dg-07"
+  ]
+ },
+ {
+  "s": "It lives on one private link on your phone, and it keeps watching.",
+  "tag": "task:CORE-F0",
+  "read": "core 2026-11-11: OK (one private link; Google weekly, the pulse twice a day)",
+  "where": [
+   "pages.ts",
+   "voice:dg-08"
+  ]
+ },
+ {
+  "s": "Every leak maps to one of our thirteen jobs.",
+  "tag": "task:L2-JOBS",
+  "read": "Layer 2 2026-11-11: OK (all five leak classes land on jobs 1 and 2; its message is the source)",
+  "where": [
+   "pages.ts",
+   "voice:dg-09"
+  ]
+ },
+ {
+  "s": "Fix it yourself, or we run it for you.",
+  "tag": "task:CORE-F0 + task:L2-JOBS",
+  "read": "core 2026-11-11: OK (fix it yourself: the Prescription's tick) | Layer 2 2026-11-11: OK (an offer; each job's condition in Step 02's room)",
+  "where": [
+   "pages.ts",
+   "voice:dg-09"
+  ]
+ },
+ {
+  "s": "That's Step two.",
+  "tag": "none",
+  "read": "Layer 2 2026-11-11: OK (Step 02 = the engine's install)",
+  "where": [
+   "pages.ts",
+   "voice:dg-09"
+  ]
+ },
+ {
+  "s": "Month to month.",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:44 \"3-month minimum. Intelligence: month to month, 30 days' written notice\"",
+  "read": "main house 2026-11-11: OK (the diagnostic's term, said in the Diagnose room; no price) | core 2026-11-11: OK (a term)",
+  "where": [
+   "pages.ts",
+   "voice:dg-10"
+  ]
+ },
+ {
+  "s": "The findings earn the next step, or they don't.",
+  "tag": "none",
+  "read": "core 2026-11-11: OK (as its twin on the live page)",
+  "where": [
+   "pages.ts",
+   "voice:dg-10"
+  ]
+ },
+ {
   "s": "This page shows what you see once Vaydin works for your clinic: one link on your phone, how patients find you read for you every week and every month, one score with what to fix first, and, once the Engine runs, what it did, counted.",
   "tag": "task:CORE-F0 + task:CORE-3 + job:6",
   "read": "core 2026-11-10: true words applied | Layer 2 2026-11-10: true words applied",

@@ -36,6 +36,24 @@ export const SUMMARIES: Record<string, Line> = {
   ),
 };
 
+/* A room told on its own stage, one sentence a scene (the owner's round of 2026-11-11: the long text and the photos
+   leave, the particles explain). Each line is spoken and stands under the stage as written. Diagnose's ten were read
+   by core (no holds; 5 reworded) and Layer 2 (9), and approved by the owner, 2026-11-11. */
+export const ROOMS: Record<string, Line[]> = {
+  diagnose: [
+    line("dg-01", "Every thirty to sixty days, unannounced, a real person messages your clinic on WhatsApp, like any new patient."),
+    line("dg-02", "We ask what patients ask: the treatment, the price, when they can come. And we record what your clinic said, and when."),
+    line("dg-03", "A patient messaging tonight books whoever answers first, and best."),
+    line("dg-04", "Before that message, they have seen your Google rating, your reviews and your Instagram. We read those too."),
+    line("dg-05", "And we read the clinics around you: how you compare, and when a rival's rating moves."),
+    line("dg-06", "It all becomes one score from six areas. Every finding shows its evidence, and every leak comes with what to change."),
+    line("dg-07", "And we check AI search: can ChatGPT, Claude and Perplexity read your site, and see that it's a clinic?"),
+    line("dg-08", "It lives on one private link on your phone, and it keeps watching."),
+    line("dg-09", "Every leak maps to one of our thirteen jobs. Fix it yourself, or we run it for you. That's Step two."),
+    line("dg-10", "Month to month. The findings earn the next step, or they don't."),
+  ],
+};
+
 /* In the corner there are no chapter chips to point at: a greeting is met
    with the welcome, and a question he cannot answer with the list. */
 export const inCorner = (r: Reply): Reply | "welcome" | "more" => (r.kind === "greeting" ? "welcome" : r.kind === "unknown" ? "more" : r);

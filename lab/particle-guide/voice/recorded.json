@@ -500,6 +500,106 @@
     "vaden"
    ]
   },
+  "dg-01": {
+   "text": "7ab9344ed838cb6c9933b24ee0652a945780a2b46b18e50b00ff24c8a26da803",
+   "said": "every thirty to sixty days unannounced a real person messages your clinic on whatsapp like any new patient",
+   "audio": "fae299881b84230b98cffdb8428e4c21f8c4b47fe10e56807e8752af3fbce12a",
+   "heard": "every 30 to 60 days unannounced a real person messages your clinic on whatsapp like any new patient",
+   "unheard": [
+    "sixty",
+    "thirty"
+   ],
+   "extra": [
+    "30",
+    "60"
+   ]
+  },
+  "dg-02": {
+   "text": "6256b35fdbe614504aeb49f097e2d4094ef97609710730983d4a9bbcd842967c",
+   "said": "we ask what patients ask the treatment the price when they can come and we record what your clinic said and when",
+   "audio": "2b3ddc4c6c0ef3cd3d749e49605563e67d4738d6968d18c33878a0a5e66e7845",
+   "heard": "we ask what patients ask the treatment the price when they can come and we record what your clinic said and when",
+   "unheard": [],
+   "extra": []
+  },
+  "dg-03": {
+   "text": "5086a21f7c2af4e59df4191af02947bca39ff2486fed4d9a43fa6035fe59d109",
+   "said": "a patient messaging tonight books whoever answers first and best",
+   "audio": "5faa6957498a835fcc43ebfea65e2357ba5cfad9eb3240175c9ed5cf3f7de4cf",
+   "heard": "a patient messaging tonight books whoever answers first and best",
+   "unheard": [],
+   "extra": []
+  },
+  "dg-04": {
+   "text": "41c0b01630f2b46b8811e5b189ab51869b8a6846828b9e89f8ad841c2c7f4a5d",
+   "said": "before that message they have seen your google rating your reviews and your instagram we read those too",
+   "audio": "35d2fc64452e36b7da4f2b943fa076fcc82fd86b14164ba9ef19b8f0e76193b4",
+   "heard": "before that message they have seen your google rating your reviews and your instagram we read those too",
+   "unheard": [],
+   "extra": []
+  },
+  "dg-05": {
+   "text": "829f03d09c696638b8902b696d38ec2d09ccbbc1acbf6679201cc77a705853b9",
+   "said": "and we read the clinics around you how you compare and when a rival's rating moves",
+   "audio": "fc823b87425ced4b41ac820c202ad4726374ebbb0d60d3986c7f77ecc391a78f",
+   "heard": "and we read the clinics around you how you compare and when arrivals rating moves",
+   "unheard": [
+    "a",
+    "rival's"
+   ],
+   "extra": [
+    "arrivals"
+   ]
+  },
+  "dg-06": {
+   "text": "309d94ce8bc3863e77a6bc13300224e5555755f06cefb9be99819e4516b4bbb8",
+   "said": "it all becomes one score from six areas every finding shows its evidence and every leak comes with what to change",
+   "audio": "d9555a13fd5c39b80852463cead7d783f9e1c1ae607454afae6dfbc0cf56f0f6",
+   "heard": "it all becomes one score from six areas every finding shows its evidence and every leak comes with what to change",
+   "unheard": [],
+   "extra": []
+  },
+  "dg-07": {
+   "text": "de2ad156e86d42374ae01066b14eddfd8f5592c96a2812807416c44517816adf",
+   "said": "and we check ai search can chatgpt claude and perplexity read your site and see that it's a clinic",
+   "audio": "2a99303573ed25905119f83e5a5f211f9188d85fbdd2803329d78f8c058beb54",
+   "heard": "and we check ai search can chat gpt claude and perplexity read your site and see that it's a clinic",
+   "unheard": [
+    "chatgpt"
+   ],
+   "extra": [
+    "chat",
+    "gpt"
+   ]
+  },
+  "dg-08": {
+   "text": "7eaf35d2dfd35f0a146b19337a6b1e86b3b08edbba6057cb80f1a1eeba9d14e1",
+   "said": "it lives on one private link on your phone and it keeps watching",
+   "audio": "26794a8f4ca502c837e2ec96c292258bf8f0fe870e3ef9f382cb5420347411f1",
+   "heard": "it lives on one private link on your phone and it keeps watching",
+   "unheard": [],
+   "extra": []
+  },
+  "dg-09": {
+   "text": "29582bfe1645cdc05382c8ff799c16af9cf2073f726eaf6aa5ed6235655761ab",
+   "said": "every leak maps to one of our thirteen jobs fix it yourself or we run it for you that's step two",
+   "audio": "e50788321108953cacd6514361040fb031f6432e66ba306e235def06a466b720",
+   "heard": "every leak maps to one of our 13 jobs fix it yourself or we run it for you that's step two",
+   "unheard": [
+    "thirteen"
+   ],
+   "extra": [
+    "13"
+   ]
+  },
+  "dg-10": {
+   "text": "4a92fa378f6e9d68874ad67b06a1a1d593891e8fdf39b98013d94bdea320491c",
+   "said": "month to month the findings earn the next step or they don't",
+   "audio": "7938bb8f50b738dae6a7fa8ef7b436d24c8a94d4a43a6d05dfe06d303c166e17",
+   "heard": "month to month the findings earn the next step or they don't",
+   "unheard": [],
+   "extra": []
+  },
   "g1": {
    "text": "6947c0a31c95e2a3d6f2b169d362236dbb19aad2cfccfd99ff2d5ae25bf24aeb",
    "said": "you gain the patients you are losing in public a whatsapp inquiry answered at once and booked inside the chat a reply ready for every new review the quiet ones you marked invited back and each step counted on one page",

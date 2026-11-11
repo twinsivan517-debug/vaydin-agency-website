@@ -31,6 +31,17 @@ SCENES = {
     "p-grow": [(r"^bookings$", None), (r"^proven$", {"shape": "chart"}), (r"^books$", {"shape": "calendar"})],
     "p-app": [(r"^read$", {"shape": "search"})],
     "p-pricing": [(r"^numbers$", {"shape": "chart"})],
+    # The Diagnose room, one scene a sentence (2026-11-11). No doors: the room has no tiles under him.
+    "dg-01": [(r"^unannounced$", None), (r"^person$", {"shape": "person"})],
+    "dg-02": [(r"^ask$", {"shape": "chat"}), (r"^come$", {"shape": "calendar"}), (r"^record$", {"shape": "clock"})],
+    "dg-03": [(r"^tonight$", {"shape": "moon"}), (r"^answers$", {"shape": "clock"})],
+    "dg-04": [(r"^message$", {"shape": "chat"})],
+    "dg-05": [(r"^read$", None), (r"^compare$", {"shape": "chart"}), (r"^rating$", {"shape": "star"})],
+    "dg-06": [(r"^evidence$", {"shape": "report"}), (r"^change$", {"shape": "gear"})],
+    "dg-07": [(r"^search$", {"shape": "search"}), (r"^read$", {"shape": "key"})],
+    "dg-08": [(r"^phone$", {"shape": "app"}), (r"^watching$", {"shape": "bell"})],
+    "dg-09": [(r"^leak$", {"shape": "report"}), (r"^maps$", {"shape": "arrow"}), (r"^fix$", None), (r"^run$", {"shape": "gear"})],
+    "dg-10": [(r"^month$", {"shape": "calendar"}), (r"^findings$", {"shape": "report"}), (r"^step$", {"shape": "arrow"})],
 }
 # An acting direction -> how his eyes look for the words it covers.
 EYES = {"warm": "happy", "curious": "wide", "skeptical": "think", "laughs": "wink", "serious": "line", "sighs": "sad",
