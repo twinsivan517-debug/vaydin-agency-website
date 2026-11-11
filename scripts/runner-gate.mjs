@@ -4,9 +4,9 @@
 // PAIRED, because no single machine holds still: on 2026-11-09 the laptop scored the same bytes 79 to 90, and
 // one GitHub runner scored the same commit 69 to 94 within a single job while the next runner gave 70 to 73.
 // So the gate measures a fixed ANCHOR commit and the candidate on the same runner, back to back: one
-// discarded warm-up each, then RUNS interleaved runs each. Rule: candidate performance median >= anchor
-// median - tolerance. The anchor (.github/ship-floors.json) moves only on the owner's word, so losses cannot
-// ratchet push after push. The tolerance is measured first by an A/A test (the anchor against itself on
+// discarded warm-up each, then RUNS interleaved runs each. Rule: the median of the per-round differences
+// (candidate - anchor, round by round) >= -tolerance (gate-judge.mjs pairedDifference; the owner's pick 2026-11-11).
+// The anchor (.github/ship-floors.json) moves only on the owner's word, so losses cannot ratchet push after push. The tolerance is measured first by an A/A test (the anchor against itself on
 // separate runners) and written down before any candidate is judged; until then main never deploys.
 // Accessibility, best practices and SEO keep absolute floors. Weight, dead links, reduce motion and secrets
 // are judged as web-studio's laptop ship_check judged them (spine/rituals/ship_check.py verdict()).

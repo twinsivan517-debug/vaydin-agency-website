@@ -6,7 +6,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { SPOKEN_ROOMS, auditTally, exitCode, failingAudits, judge, judgePages, pairs, toleranceFor, unmeasuredRooms } from "./gate-judge.mjs";
+import { SPOKEN_ROOMS, auditTally, exitCode, failingAudits, judge, judgePages, pairedDifference, pairs, toleranceFor, unmeasuredRooms } from "./gate-judge.mjs";
 import { privateWords, scanPushed } from "./secret-scan.mjs";
 
 let cases = 0;
@@ -23,10 +23,21 @@ const verdict = (over) => judge({ cand: five(80), anchor: five(84), ...base, ...
 test("a candidate 4 under the anchor is refused at tolerance 3", () => {
   const { fails } = verdict({});
   assert.equal(fails.length, 1);
-  assert.match(fails[0], /more than 3 under the anchor's 84/);
+  assert.match(fails[0], /more than 3 under the anchor's, measured side by side: the paired rounds differ by -4 \(medians 80 and 84\)/);
 });
 test("a candidate exactly 3 under passes", () => assert.deepEqual(verdict({ anchor: five(83) }).fails, []));
 test("a faster candidate passes", () => assert.deepEqual(verdict({ anchor: five(70) }).fails, []));
+test("the paired rounds are judged: a runner switching speed groups mid-job is not a loss, a steady loss is", () => {
+  // GitHub's own runs, scores in run order: 43069225621's /app (medians +8) and 42984681328's /app (medians -4).
+  assert.equal(pairedDifference([92, 79, 90, 87, 78], [79, 78, 90, 77, 79]), 1);
+  assert.equal(pairedDifference([82, 78, 77, 73, 79], [92, 77, 82, 82, 83]), -5);
+  const cand = [92, 79, 90, 87, 78].map((p) => run(p)), anchor = [79, 78, 90, 77, 79].map((p) => run(p));
+  assert.deepEqual(judge({ cand: anchor, anchor: cand, ...base }).fails, [], "medians 79 vs 87 (-8), paired -1, at 3");
+  const slower = [92, 79, 90, 87, 78].map((p) => run(p - 6));
+  assert.match(judge({ cand: slower, anchor: cand, ...base, tolerance: 5 }).fails[0], /differ by -6/);
+  assert.match(judge({ cand: five(80).slice(0, 4), anchor: five(80), ...base }).fails[0], /could not pair the rounds/);
+  assert.equal(pairedDifference([], []), null);
+});
 test("the median is judged, not one lucky run", () => {
   const cand = [69, 90, 90, 94, 94].map((p) => run(p));
   assert.deepEqual(judge({ cand, anchor: five(93), ...base }).fails, []);
@@ -45,7 +56,7 @@ test("weight: unmeasured and over budget both refuse", () => {
   assert.match(verdict({ anchor: five(80), budget: undefined }).fails[0], /must name a tier/);
 });
 test("an absolute floor refuses on its own", () => {
-  const cand = [80, 80, 80].map((p) => run(p, 300_000, 94));
+  const cand = [80, 80, 80, 80, 80].map((p) => run(p, 300_000, 94));   // as many rounds as the anchor: they pair
   assert.equal(judge({ cand, anchor: five(80), ...base }).fails.length, 2);   // accessibility 94, SEO 94
 });
 test("no candidate runs is a failure to measure", () => {
@@ -115,7 +126,7 @@ test("judgePages holds each page to its own tolerance: 4 under refuses home at 2
   const runs = { home: { candidate: five(80), anchor: five(84) }, app: { candidate: five(80), anchor: five(84) } };
   const r = judgePages(pairs(true, true), runs, { ...base, tolerance: { home: 2, app: 5 }, anchorCommit: "c9945eb" });
   assert.equal(r.fails.length, 1, r.fails.join("; "));
-  assert.match(r.fails[0], /^home \(\/\): performance 80 is more than 2 under/);
+  assert.match(r.fails[0], /^home \(\/\): performance is more than 2 under the anchor's, .*differ by -4/);
   assert.ok(r.log.some((l) => /^\[runner-gate\] home: anchor c9945eb \/ median: .* tolerance 2$/.test(l)), r.log.join("\n"));
   assert.ok(r.log.some((l) => /^\[runner-gate\] app: anchor c9945eb \/app\.html median: .* tolerance 5$/.test(l)), r.log.join("\n"));
 });

@@ -2,6 +2,13 @@
 // browser (scripts/gates.test.mjs). runner-gate.mjs measures; this decides. Messages are the gate's own.
 export const median = (xs) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];
 
+// Round i of the candidate and round i of the anchor ran back to back on one runner (runner-gate.mjs interleaves
+// them), so the gate judges the median of the per-round differences, not the difference of two medians: a runner
+// that switches between its two speed groups mid-job moves both sides of most rounds alike (the owner's pick,
+// 2026-11-11 18:04Z; run 43069225621's /app: medians 87 vs 79, +8; paired, +1). null when the rounds cannot pair.
+export const pairedDifference = (cand, anchor) =>
+  cand.length && cand.length === anchor.length ? median(cand.map((c, i) => c - anchor[i])) : null;
+
 // Every room the site speaks (src/lib/pages.ts ROOMS) must be among the pages measured, or the gate refuses: a
 // room list emptied or broken fails CLOSED (the main house's survivor, 2026-11-11). SPOKEN_ROOMS is the command
 // that prints those names, run by the gate and by its test alike.
@@ -20,9 +27,11 @@ export function judge({ cand, anchor, tolerance, floors, budget, tier, tiers, re
   log.push(`[runner-gate] candidate median: performance ${perf} · a11y ${judged.scores.accessibility} · BP ${judged.scores["best-practices"]} · SEO ${judged.scores.seo} · ${judged.bytes == null ? "weight not measured" : judged.bytes.toLocaleString("en") + " b"}`);
   if (anchor?.length) {
     const base = median(anchor.map((r) => r.scores.performance));
-    log.push(`[runner-gate] anchor ${anchorName} median: performance ${base} · difference ${perf - base} · tolerance ${tolerance ?? "not yet measured"}`);
-    if (tolerance == null) { if (!reportOnly) fails.push("no tolerance yet: the A/A test sets it, and main never deploys before it"); }
-    else if (perf < base - tolerance) fails.push(`performance ${perf} is more than ${tolerance} under the anchor's ${base}, measured side by side`);
+    const d = pairedDifference(cand.map((r) => r.scores.performance), anchor.map((r) => r.scores.performance));
+    log.push(`[runner-gate] anchor ${anchorName} median: performance ${base} · difference ${d} (median of ${cand.length} paired rounds; the medians differ by ${perf - base}) · tolerance ${tolerance ?? "not yet measured"}`);
+    if (d == null) fails.push(`the gate could not pair the rounds: ${cand.length} candidate runs, ${anchor.length} anchor runs`);
+    else if (tolerance == null) { if (!reportOnly) fails.push("no tolerance yet: the A/A test sets it, and main never deploys before it"); }
+    else if (d < -tolerance) fails.push(`performance is more than ${tolerance} under the anchor's, measured side by side: the paired rounds differ by ${d} (medians ${perf} and ${base})`);
   } else if (!reportOnly) {
     fails.push("the anchor could not be built to measure side by side: main never deploys unjudged");
   }
