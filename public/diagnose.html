@@ -346,19 +346,6 @@
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Vaydin Agency", "item": "https://vaydin.agency/"}, {"@type": "ListItem", "position": 2, "name": "The Diagnostic", "item": "https://vaydin.agency/diagnose.html"}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Service", "name": "Clinic mystery shopping in Dubai", "serviceType": "Clinic mystery shopping", "description": "Clinic mystery shopping in Dubai: unannounced, every 30 to 60 days, a real person messages your clinic on WhatsApp as a new patient. One score, six areas.", "url": "https://vaydin.agency/diagnose.html", "provider": {"@type": "Organization", "@id": "https://vaydin.agency/#organization", "name": "Vaydin", "url": "https://vaydin.agency/"}, "areaServed": [{"@type": "City", "name": "Dubai"}, {"@type": "Country", "name": "United Arab Emirates"}, {"@type": "Place", "name": "GCC"}]}</script>
-<style>
-  /* The room (2026-11-11): the stage is a frame (src/app/room/[id]/page.tsx); its words stand here as text too. */
-  .room-page{max-width:880px;margin:0 auto;padding:96px 22px 0;text-align:center}
-  .room-page h1{margin:0 auto 6px;max-width:760px}
-  .room-page h1 .h1-line{justify-content:center}
-  .room-frame{display:block;width:100%;height:min(74vh,660px);border:0;background:transparent;margin:0 auto}
-  .room-read{max-width:640px;margin:8px auto 0;text-align:left;color:var(--tx-muted)}
-  .room-read summary{cursor:pointer;text-align:center;font-family:var(--mono);font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold-light);padding:10px 0}
-  .room-read ol{margin:10px 0 0;padding-left:1.4em;line-height:1.6}
-  .room-read li{margin:0 0 8px}
-  .room-page .kill{font-family:var(--serif);font-style:italic;font-size:24px;line-height:1.45;color:var(--tx);margin:44px auto 0;max-width:460px}
-  .room-page + .band{margin-top:70px}
-</style>
 </head>
 <body>
 
@@ -386,26 +373,201 @@
 </nav>
 <script>(function(){var b=document.querySelector(".nav-burger"),l=document.querySelector(".nav-links");if(b&&l){b.addEventListener("click",function(){var o=l.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false");});l.addEventListener("click",function(e){if(e.target.tagName==="A"){l.classList.remove("open");b.setAttribute("aria-expanded","false");}});}})();</script>
 
-<main class="room-page">
-  <h1 class="grad-text"><span class="eyebrow h1-line"><span class="pulse"></span>Step 01 · Clinic mystery shopping in Dubai</span> We measure your clinic<br>the way a patient <span class="red">meets it</span>.</h1>
-  <iframe class="room-frame" src="/room/diagnose.html" title="The Diagnostic, told by Vaydin's guide in ten lines" allow="autoplay"></iframe>
-  <details class="room-read">
-    <summary>Read what he says</summary>
-    <ol data-room="diagnose">
-      <li>Every thirty to sixty days, unannounced, a real person messages your clinic on WhatsApp, like any new patient.</li>
-      <li>We ask what patients ask: the treatment, the price, when they can come. And we record what your clinic said, and when.</li>
-      <li>A patient messaging tonight books whoever answers first, and best.</li>
-      <li>Before that message, they have seen your Google rating, your reviews and your Instagram. We read those too.</li>
-      <li>And we read the clinics around you: how you compare, and when a rival's rating moves.</li>
-      <li>It all becomes one score from six areas. Every finding shows its evidence, and every leak comes with what to change.</li>
-      <li>And we check AI search: can ChatGPT, Claude and Perplexity read your site, and see that it's a clinic?</li>
-      <li>It lives on one private link on your phone, and it keeps watching.</li>
-      <li>Every leak maps to one of our thirteen jobs. Fix it yourself, or we run it for you. That's Step two.</li>
-      <li>Month to month. The findings earn the next step, or they don't.</li>
-    </ol>
-  </details>
-  <p class="kill">Anyone can score your website.<br>We score what your receptionist said to a patient at 9pm.</p>
-</main>
+<div class="stage">
+  <canvas id="radar" width="900" height="900" aria-label="The Vaydin Score radar: six areas of your clinic, measured monthly (sample data)"></canvas>
+  <div class="stage-shade"></div>
+
+  <div class="console">
+    <h1 class="grad-text"><span class="eyebrow h1-line"><span class="pulse"></span>Step 01 · Clinic mystery shopping in Dubai</span> We measure your clinic<br>the way a patient <span class="red">meets it</span>.</h1>
+    <p>Unannounced, every 30 to 60 days, a real person approaches your clinic like any new patient. What the shop finds, and what we read about your clinic online, builds one score from <b>six areas</b>. <b>Press one</b> and watch the scan lock on, then read exactly what we test.</p>
+
+    <div class="fgroup">
+      <div class="gh">HOW YOUR ONE SCORE IS BUILT · SAMPLE</div>
+      <button class="frow" data-dim="team"><span class="dot" style="background:#f87171"></span><span class="fn">How your team answers</span><span class="val" style="color:#f87171">38</span><span class="arr">→</span></button>
+      <button class="frow" data-dim="book"><span class="dot" style="background:#fbbf24"></span><span class="fn">How easily patients can book</span><span class="val" style="color:#fbbf24">52</span><span class="arr">→</span></button>
+      <button class="frow" data-dim="reputation"><span class="dot" style="background:#4ade80"></span><span class="fn">Your Google reputation</span><span class="val" style="color:#4ade80">74</span><span class="arr">→</span></button>
+      <button class="frow" data-dim="marketing"><span class="dot" style="background:#94a3b8"></span><span class="fn">Your marketing reach</span><span class="val" style="color:#94a3b8">61</span><span class="arr">→</span></button>
+      <button class="frow" data-dim="rivals"><span class="dot" style="background:#fbbf24"></span><span class="fn">You versus nearby clinics</span><span class="val" style="color:#fbbf24">58</span><span class="arr">→</span></button>
+      <button class="frow" data-dim="setup"><span class="dot" style="background:#4ade80"></span><span class="fn">How well set up you are</span><span class="val" style="color:#4ade80">88</span><span class="arr">→</span></button>
+      <div class="gh">SHOWN, NOT SCORED</div>
+      <button class="frow" data-dim="ai"><span class="dot" style="background:#94a3b8"></span><span class="fn">Can AI search read your site</span><span class="val" style="color:#94a3b8">6 of 6</span><span class="arr">→</span></button>
+    </div>
+    <div class="snote">SAMPLE · A FICTIONAL CLINIC. YOUR REPORT SHOWS ONE SCORE AND ITS LETTER, BUILT FROM THESE SIX, AND A LETTER FOR EACH CHANNEL.</div>
+  </div>
+
+  <div class="hud" id="hud">
+    <span class="bk tl"></span><span class="bk tr"></span><span class="bk bl"></span><span class="bk br"></span>
+    <button class="hx" id="hudclose" aria-label="Close">×</button>
+    <div class="hh" id="hud-count">AREA 01/06</div>
+    <h3 id="hud-title"></h3>
+    <div class="hscore" id="hud-score"></div>
+    <p class="hp" id="hud-exp"></p>
+    <div class="chs" id="hud-chs"></div>
+    <div class="hlinks">
+      <a href="#doors">How the shop works ↓</a>
+    </div>
+  </div>
+
+  <div class="ticker">
+    <div class="tl">ILLUSTRATION · THE SHOP IN MOTION</div>
+    <div class="tf" id="tickerline"></div>
+  </div>
+</div>
+
+<section id="doors">
+  <div class="reveal">
+    <div class="sec-eyebrow">THE MYSTERY SHOP · THREE DOORS</div>
+    <h2 class="grad-text">Your patients test you every day.<br>Now someone reports the results.</h2>
+    <p class="section-sub">Every new patient walks through one of three doors and forms a verdict long before anyone greets them. We walk through all three, the same way, unannounced. Every 30 to 60 days, on a day nobody in the clinic can predict.</p>
+  </div>
+
+  <div class="shop-wrap">
+    <div class="doors reveal">
+      <div class="door">
+        <div class="dh"><span class="dn">DOOR 01</span></div>
+        <h3>The message</h3>
+        <p>We write to your clinic as a patient, on WhatsApp, because that's where Dubai books. We ask what real patients ask: the treatment, the price, the availability. Then we record <b>what your clinic said, and when.</b></p>
+      </div>
+      <div class="door">
+        <div class="dh"><span class="dn">DOOR 02</span></div>
+        <h3>The profile</h3>
+        <p>Before messaging, a patient has already seen your Google profile, your rating, your latest reviews, your Instagram. We review what they see: <b>the verdict formed before you ever knew they existed.</b></p>
+      </div>
+      <div class="door">
+        <div class="dh"><span class="dn">DOOR 03</span></div>
+        <h3>The follow-through</h3>
+        <p>Most clinics answer once. The real test is what happens after: was a booking offered, did anyone follow up, what happened when we went quiet. <b>That's where revenue leaks, silently.</b></p>
+      </div>
+    </div>
+
+    <div class="chat-frame reveal">
+      <span class="bk tl"></span><span class="bk tr"></span><span class="bk bl"></span><span class="bk br"></span>
+      <div class="chat-label">ILLUSTRATION · AN EXAMPLE FIRST TEST</div>
+      <div class="bubble patient">Hi, I'm interested in a consultation for skin treatment. Is the doctor available this week? What would it cost?<span class="bt">PATIENT · 21:14</span></div>
+      <div class="gapline"><span class="gl"></span><span class="gt">12 HOURS, 24 MINUTES PASS</span><span class="gl"></span></div>
+      <div class="bubble clinic">Hello dear, yes we have availability. Please call us to discuss.<span class="bt">CLINIC · 09:38 NEXT MORNING</span></div>
+      <div class="chat-verdict">
+        WHAT WE RECORD: <span class="red">RESPONSE TIME</span> · <span class="red">NO PRICE GIVEN</span> · <span class="red">NO BOOKING OFFERED</span> · <span class="red">PATIENT ASKED TO CALL</span><br>
+        BY 09:38, THE PATIENT HAS BOOKED THE CLINIC THAT ANSWERED AT 21:20.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="speed">
+  <div class="reveal">
+    <div class="sec-eyebrow">WHY IT MATTERS · THE SPEED GAP</div>
+    <h2 class="grad-text">The whole game is minutes.</h2>
+    <p class="section-sub">A patient messaging clinics tonight will book with whoever answers first and best. This is the gap the diagnostic exists to find.</p>
+  </div>
+  <!-- the speed gap, played out: one patient message, two inboxes, one evening -->
+  <div class="gap reveal" id="gap">
+    <div class="lane lane-red">
+      <div class="lane-eb"><b>THE CLINIC'S OWN INBOX</b> · TONIGHT</div>
+      <div class="lane-t" id="gap-red">0<small>min</small></div>
+      <div class="lane-bar"><i></i><em></em></div>
+      <div class="lane-log">
+        <div><span>21:14</span>Patient asks about lip filler this week</div>
+        <div class="hit"><span>21:20</span>Patient books the clinic that answered</div>
+        <div><span>09:38</span>Next morning the clinic replies: call us</div>
+      </div>
+    </div>
+    <div class="ring" aria-hidden="true">
+      <svg viewBox="0 0 300 300">
+        <circle class="r-base" cx="150" cy="150" r="140"/>
+        <circle class="r-ok" cx="150" cy="150" r="140"/>
+        <circle class="r-base" cx="150" cy="150" r="118"/>
+        <circle class="r-red" cx="150" cy="150" r="118"/>
+      </svg>
+      <div class="ring-c"><b>24/7</b><span><i>after hours</i> the inbox goes dark · <u>the engine</u> replies and books all 24</span></div>
+    </div>
+    <div class="lane lane-green">
+      <div class="lane-eb"><b>THE SAME INBOX</b> · ENGINE ON</div>
+      <div class="lane-t" id="gap-green">0<small>min</small></div>
+      <div class="lane-bar"><i></i><em></em></div>
+      <div class="lane-log">
+        <div><span>21:14</span>Patient asks about lip filler this week</div>
+        <div class="hit"><span>21:14</span>Your menu, sent at once · Book tapped</div>
+        <div><span>21:16</span>Booked in the chat · Thursday 19:00</div>
+      </div>
+    </div>
+  </div>
+  <div class="stats-prov">ILLUSTRATIVE FIGURES · YOUR DIAGNOSTIC SHOWS YOUR OWN, MEASURED NUMBERS</div>
+</section>
+
+<section id="measure">
+  <div class="reveal">
+    <div class="sec-eyebrow">THE STANDARD OF PROOF</div>
+    <h2 class="grad-text">Every finding comes with its evidence.</h2>
+    <p class="section-sub">No scores from a black box. For everything we measure, you get the same four things, so you can check us, challenge us, and act on it.</p>
+  </div>
+
+  <div class="frame-strip reveal">
+    <div class="fs"><div class="n">01 · TESTED</div><h4>What we did</h4><p>The exact approach we made, dated and recorded.</p></div>
+    <div class="fs"><div class="n">02 · FOUND</div><h4>What we found</h4><p>What your clinic actually said and did. Verbatim.</p></div>
+    <div class="fs"><div class="n">03 · BENCHMARK</div><h4>What good looks like</h4><p>Our target for the same moment.</p></div>
+    <div class="fs"><div class="n">04 · ACTION</div><h4>What to do</h4><p>The specific change, in plain language. Or we do it for you. That's Step 02.</p></div>
+  </div>
+</section>
+
+<section id="desk">
+  <div class="reveal">
+    <div class="sec-eyebrow">THE DELIVERABLE</div>
+    <h2 class="grad-text">What lands on your desk, every month.</h2>
+  </div>
+  <div class="desk-wrap">
+    <div class="report-stage" id="report-stage">
+      <div class="stage-bg"></div>
+
+      <div class="rp-card verdict-card">
+        <div class="rp-mono">DEMO CLINIC · MONTHLY VERDICT</div>
+        <div class="vn"><span class="num">61</span><span class="of">/ 100<br>THIS MONTH</span></div>
+        <div class="vline"><span class="red">3 leaks</span> found, worst first</div>
+      </div>
+
+      <div class="rp-card compete-card">
+        <div class="rp-mono">FIRST REPLY · THE RACE YOU'RE IN</div>
+        <div class="cbar you"><div class="cl"><span>YOUR CLINIC</span><span>12H 24M</span></div><div class="track"><div class="fill"></div></div></div>
+        <div class="cbar win"><div class="cl"><span>THE CLINIC THAT WINS</span><span>8 MIN</span></div><div class="track"><div class="fill"></div></div></div>
+      </div>
+
+      <div class="toast t-red p1"><div class="th">FINDING · CRITICAL</div>WhatsApp inquiry: no price given, no booking offered, patient asked to call.</div>
+      <div class="toast t-amber p2"><div class="th">FINDING · WATCH</div>Newest Google review: 2 stars, 9 days ago. Rating trend flat.</div>
+      <div class="toast t-green p3"><div class="th">IMPROVED · SINCE LAST CHECK</div>Google rating: 4.2 → 4.3 since last check.</div>
+
+      <div class="stage-mark">SAMPLE PREVIEW · FICTIONAL CLINIC · YOUR REPORT CARRIES YOUR OWN EVIDENCE</div>
+    </div>
+    <div class="desk-list reveal">
+      <div class="dl"><span class="dot"></span><div><b>The findings, ranked by severity.</b> What leaks most gets fixed first, ranked by how badly it costs you patients, not by drama.</div></div>
+      <div class="dl"><span class="dot"></span><div><b>The evidence behind each one.</b> The actual exchange, the actual timestamps, the actual profile. You see what we saw.</div></div>
+      <div class="dl"><span class="dot"></span><div><b>Your score, one number.</b> Redrawn from your own shop each time.</div></div>
+      <div class="dl"><span class="dot"></span><div><b>What to do about it.</b> Every finding closes with the specific move: yours to make, or ours to run in Step 02. Tick each one off yourself; the tick stays on your own phone.</div></div>
+      <div class="dl"><span class="dot"></span><div><b>A page that keeps watching.</b> One private link, installable on your phone. When something moves (a rating slips, a review lands, a rival's rating changes), it appears dated in "what's new", and when your rating or reviews move, your phone gets that Monday's summary.</div></div>
+      <div class="integrity">
+        OUR RULE: <span class="gr">MEASURED IS LABELED MEASURED</span> · ESTIMATED IS LABELED ESTIMATED · MISSING SAYS "NO DATA". NEVER A NUMBER WE CANNOT SHOW THE SOURCE OF.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="connect">
+  <div class="connect-wrap">
+    <div class="connect-copy reveal">
+      <div class="sec-eyebrow">WHERE THE FINDINGS GO</div>
+      <h2 class="grad-text">The report doesn't end.<br>It becomes the engine.</h2>
+      <p>Every leak the diagnostic finds maps to one of Vaydin's <b>thirteen jobs</b>: slow replies to your menu at once, lost bookings to booking inside the chat, silent patients to the quiet list, wrong hours on Google to the daily check.</p>
+      <p>And the loop closes honestly: after the engine is installed, <b>the same outside reads keep scoring the clinic, and the engine's own work is shown as ours.</b> The diagnostic that sold you the engine becomes the audit that holds it accountable.</p>
+      <p class="kill">Anyone can score your website.<br>We score what your receptionist said to a patient at 9pm.</p>
+      <div class="cta-row">
+        <a class="enter-field" href="fix.html">Step 02: what we fix &amp; run <span class="arr">→</span></a>
+        <a class="enter-field" href="engine.html">See the engine live <span class="arr">→</span></a>
+      </div>
+    </div>
+    <div class="connect-visual reveal">
+      <div class="connect-frame"><img src="assets/img/clinic-reception-desk.webp" alt="The reception running in calm order, where the findings go" loading="lazy"></div>
+    </div>
+  </div>
+</section>
 
 <div class="band">
   <div class="sec-eyebrow" style="text-align:center">STEP 01 · MONTH TO MONTH</div>
@@ -420,5 +582,385 @@
   <div><a href="/">Home</a> · <a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/data-deletion/">Data deletion</a></div>
 </footer>
 
+<script>
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ================= DIMENSION DATA ================= */
+  var DIMS = {
+    'team': {
+      name:'How your team answers', val:38, color:'#f87171',
+      exp:'How fast your team replies to a new patient on WhatsApp, how well they answer, and whether they follow up.',
+      rec:['REPLY SPEED','THE ANSWERS','FOLLOW-UP']
+    },
+    'book': {
+      name:'How easily patients can book', val:52, color:'#fbbf24',
+      exp:'Whether a patient can book online, which booking tool you use, whether the chat offers real times, and whether your site works on a phone.',
+      rec:['ONLINE BOOKING','TIMES OFFERED IN THE CHAT','WORKS ON A PHONE']
+    },
+    'reputation': {
+      name:'Your Google reputation', val:74, color:'#4ade80',
+      exp:'Your Google rating, how many reviews you have, whether recent reviews are rising or falling, and any recent low rating.',
+      rec:['RATING','REVIEW COUNT','RECENT TREND']
+    },
+    'marketing': {
+      name:'Your marketing reach', val:61, color:'#94a3b8', noVerdict:true,
+      exp:'Whether you run adverts, and whether your website is live, shows prices and links to your Instagram.',
+      rec:['ADVERTS RUNNING','PRICES ON YOUR SITE','LINK TO INSTAGRAM']
+    },
+    'rivals': {
+      name:'You versus nearby clinics', val:58, color:'#fbbf24',
+      exp:'Your Google rating and review count against the clinics around you.',
+      rec:['YOUR RATING VS THEIRS','REVIEW COUNTS','THE CLINICS AROUND YOU']
+    },
+    'setup': {
+      name:'How well set up you are', val:88, color:'#4ade80',
+      exp:'Whether you are on WhatsApp, Instagram, a website and Google; whether your listing is claimed and your Instagram is a business account; and whether you have your own website.',
+      rec:['ON EVERY CHANNEL','LISTING CLAIMED','BUSINESS ACCOUNT']
+    },
+    'ai': {
+      name:'Can AI search read your site', shown:'6 of 6 allowed · clinic markup: none', color:'#94a3b8',
+      exp:'Whether AI search tools (ChatGPT, Claude, Perplexity, Google, Bing) are allowed to read your website and can tell it is a clinic.',
+      rec:['AI SEARCH TOOLS CHECKED','ALLOWED TO READ','CLINIC MARKUP']
+    }
+  };
+  var ORDER = ['team','book','reputation','marketing','rivals','setup'];
+  var LABELS = ['TEAM','BOOKING','GOOGLE','MARKETING','RIVALS','SET-UP'];
+
+  /* ================= ticker ================= */
+  var flows = [
+    ['MESSAGE SENT 21:14', 'REPLY TIMED', 'SUBSTANCE READ', '<span class="done">SCORED</span>'],
+    ['GOOGLE PROFILE OPENED', 'HOURS CHECKED', 'Q&A READ', '<span class="done">SCORED</span>'],
+    ['WENT QUIET 3 DAYS', 'FOLLOW-UP WATCHED', '<span class="done">SCORED</span>'],
+    ['REVIEWS READ', 'REPLIES GRADED', '<span class="done">SCORED</span>'],
+    ['PRICES ON SITE', 'CHECKED AGAINST CHAT', '<span class="done">SCORED</span>']
+  ];
+  var tEl = document.getElementById('tickerline'), fi = 0;
+  function nextFlow(){
+    tEl.classList.remove('on');
+    setTimeout(function(){
+      tEl.innerHTML = flows[fi].join('<span class="hop">→</span>');
+      tEl.classList.add('on');
+      fi = (fi + 1) % flows.length;
+    }, 800);
+  }
+  if(tEl){
+    if(reduced){ tEl.innerHTML = flows[0].join('<span class="hop">→</span>'); tEl.classList.add('on'); }
+    else { nextFlow(); setInterval(nextFlow, 4200); }
+  }
+
+  /* ================= reveal on scroll ================= */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold: 0.12});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  /* ================= the speed gap: one evening, two inboxes, looped while on screen ================= */
+  var gap = document.getElementById('gap');
+  if(gap){
+    var G = {
+      red:   {t: document.getElementById('gap-red'),   bar: gap.querySelector('.lane-red .lane-bar i'),   dot: gap.querySelector('.lane-red .lane-bar em'),   log: gap.querySelectorAll('.lane-red .lane-log div')},
+      green: {t: document.getElementById('gap-green'), bar: gap.querySelector('.lane-green .lane-bar i'), dot: gap.querySelector('.lane-green .lane-bar em'), log: gap.querySelectorAll('.lane-green .lane-log div')},
+      ringOk: gap.querySelector('.r-ok'), ringRed: gap.querySelector('.r-red')
+    };
+    var RED_MIN = 744, GREEN_MIN = 2, DARK = 15/24;            /* 12h 24m (21:14 -> 09:38, same evening as the chat above) · 2 min to the booking (the menu goes at once) · hours the inbox is dark; all illustrative */
+    var C_OK = 879.6, C_RED = 741.4;
+    function fmt(min){
+      min = Math.round(min);
+      if(min < 60) return min + '<small>min</small>';
+      return Math.floor(min/60) + '<small>h</small> ' + (min%60) + '<small>m</small>';
+    }
+    function paint(p, pg, pr){ /* p: red timeline 0..1 · pg: green 0..1 · pr: ring 0..1 */
+      var e = 1 - Math.pow(1 - p, 2.2);
+      G.red.t.innerHTML = fmt(RED_MIN * e);
+      G.red.bar.style.width = (e * 100) + '%';
+      G.red.dot.style.left = (e * 100) + '%'; G.red.dot.style.opacity = p > 0 && p < 1 ? 1 : 0;
+      G.red.log[0].classList.toggle('on', p > 0.02);
+      G.red.log[1].classList.toggle('on', e > 6/RED_MIN);     /* 21:20: the patient is gone six minutes in; the clock keeps running */
+      G.red.log[2].classList.toggle('on', p >= 1);
+      var g = Math.min(1, pg);
+      G.green.t.innerHTML = g >= 1 ? '&lt;1<small>min</small>' : '0<small>min</small>';   /* the first reply, the menu, goes at once */
+      G.green.bar.style.width = 'max(' + (g * GREEN_MIN / RED_MIN * 100) + '%, ' + (g * 10) + 'px)';
+      G.green.dot.style.left = G.green.bar.style.width; G.green.dot.style.opacity = g >= 1 ? 1 : 0;
+      G.green.log[0].classList.toggle('on', pg > 0.02);
+      G.green.log[1].classList.toggle('on', pg >= 1);
+      G.green.log[2].classList.toggle('on', pg >= 2.2);
+      G.ringOk.style.strokeDashoffset = C_OK * (1 - Math.min(1, pr));
+      G.ringRed.style.strokeDashoffset = C_RED * (1 - DARK * e);
+    }
+    if(reduced){
+      paint(1, 3, 1);
+    } else {
+      var gvis = false, gStart = null, RUN = 6800, HOLD = 3200, RESET = 700, T = RUN + HOLD + RESET;
+      new IntersectionObserver(function(es){ gvis = es[0].isIntersecting; if(gvis){ gStart = null; requestAnimationFrame(gframe); } }, {threshold: 0.25}).observe(gap);
+      function gframe(now){
+        if(!gvis) return;
+        if(gStart === null) gStart = now;
+        var t = (now - gStart) % T;
+        if(t < RUN){ paint(t / RUN, t / 900, t / 1600); }
+        else if(t < RUN + HOLD){ paint(1, 3, 1); }
+        else { paint(0, 0, 0); }
+        requestAnimationFrame(gframe);
+      }
+    }
+  }
+
+  /* ================= chat choreography: patient msg -> long gap -> late reply ================= */
+  var chat = document.querySelector('.chat-frame');
+  if(chat){
+    var cio = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var seq = [
+            [chat.querySelector('.bubble.patient'), 300],
+            [chat.querySelector('.gapline'), 1400],
+            [chat.querySelector('.bubble.clinic'), 2300]
+          ];
+          seq.forEach(function(s){ setTimeout(function(){ s[0].classList.add('in'); }, s[1]); });
+          cio.unobserve(chat);
+        }
+      });
+    }, {threshold: 0.4});
+    cio.observe(chat);
+  }
+
+  /* ================= report preview stage: cards tilt in, toasts arrive live ================= */
+  var rstage = document.getElementById('report-stage');
+  if(rstage){
+    var rcards = rstage.querySelectorAll('.rp-card');
+    var toasts = Array.prototype.slice.call(rstage.querySelectorAll('.toast'));
+    var sio = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting) return;
+        rcards.forEach(function(c, i){ setTimeout(function(){ c.classList.add('in'); }, i * 350); });
+        toasts.forEach(function(tt, i){ setTimeout(function(){ tt.classList.add('show'); }, 900 + i * 700); });
+        if(!reduced){
+          var ti = 0;
+          setInterval(function(){
+            var tt = toasts[ti];
+            tt.classList.remove('show');
+            setTimeout(function(){ tt.classList.add('show'); }, 520);
+            ti = (ti + 1) % toasts.length;
+          }, 4200);
+        }
+        sio.unobserve(rstage);
+      });
+    }, {threshold: 0.35});
+    sio.observe(rstage);
+  }
+
+  /* ================= HUD ================= */
+  var hud = document.getElementById('hud');
+  var hudTitle = document.getElementById('hud-title'), hudExp = document.getElementById('hud-exp');
+  var hudChs = document.getElementById('hud-chs'), hudCount = document.getElementById('hud-count');
+  var hudScore = document.getElementById('hud-score');
+  var hudTimer = null;
+
+  function band(v){ return v < 50 ? 'CRITICAL' : (v < 70 ? 'NEEDS WORK' : 'HEALTHY'); }
+  function showHud(id){
+    var D = DIMS[id];
+    hudTitle.textContent = D.name;
+    hudExp.textContent = D.exp;
+    var at = ORDER.indexOf(id);
+    hudCount.textContent = at < 0 ? 'SHOWN, NOT SCORED' : 'AREA ' + ('0' + (at + 1)).slice(-2) + '/06';
+    hudScore.innerHTML = D.shown ? 'SAMPLE READ: <span style="color:' + D.color + '">' + D.shown + '</span>'
+      : 'SAMPLE SCORE: <span style="color:' + D.color + '">' + D.val + ' / 100 · ' + (D.noVerdict ? 'NOT ENOUGH MEASURED FOR A VERDICT' : band(D.val)) + '</span>';
+    hudChs.innerHTML = D.rec.map(function(c){ return '<span>' + c + '</span>'; }).join('');
+    hud.classList.add('on');
+  }
+  document.getElementById('hudclose').addEventListener('click', function(){
+    hud.classList.remove('on'); lockAxis = -1;
+  });
+
+  /* ================= the radar ================= */
+  var canvas = document.getElementById('radar');
+  var canvasLive = !!(canvas && canvas.getContext && canvas.offsetParent !== null);
+  var lockAxis = -1;      /* -1 = free sweep; else index of locked dimension */
+  var burst = 0;          /* burst animation 1 -> 0 at locked vertex */
+  var hoverAxis = -1;
+
+  document.querySelectorAll('.frow').forEach(function(row){
+    var id = row.getAttribute('data-dim');
+    var idx = ORDER.indexOf(id);
+    row.addEventListener('mouseenter', function(){ hoverAxis = idx; });
+    row.addEventListener('mouseleave', function(){ hoverAxis = -1; });
+    row.addEventListener('click', function(){
+      document.querySelectorAll('.frow').forEach(function(r){ r.classList.toggle('live', r === row); });
+      if(!canvasLive || reduced){ showHud(id); return; }
+      hud.classList.remove('on');
+      lockAxis = idx; burst = 1;
+      if(hudTimer) clearTimeout(hudTimer);
+      hudTimer = setTimeout(function(){ showHud(id); }, 900);
+    });
+  });
+
+  if(!canvasLive){ var relight = function(){ if(canvas && canvas.offsetParent !== null){ window.removeEventListener('resize', relight); location.reload(); } }; window.addEventListener('resize', relight); return; }
+  var ctx = canvas.getContext('2d');
+  var W, H, cx, cy, R;
+  function size(){
+    var s = Math.min(window.innerHeight * 1.0, window.innerWidth * 0.62, 980);
+    W = canvas.width = s; H = canvas.height = s;
+    canvas.style.width = s + 'px'; canvas.style.height = s + 'px';
+    cx = W/2; cy = H/2; R = s/2;
+  }
+  size(); window.addEventListener('resize', size);
+
+  var t = 0;
+  var sweep = -Math.PI/2;          /* sweep angle */
+  var drawP = 0;                   /* 0..1 polygon draw-in */
+  var scoreP = 0;                  /* 0..1 center count-up */
+  var TARGET = 61;
+
+  function axisAngle(i){ return -Math.PI/2 + i * Math.PI/3; }
+
+  function draw(){
+    t += 0.004;
+    if(drawP < 1) drawP = Math.min(1, drawP + 0.008);
+    if(scoreP < 1) scoreP = Math.min(1, scoreP + 0.007);
+    var ease = 1 - Math.pow(1 - drawP, 3);
+    ctx.clearRect(0,0,W,H);
+
+    var maxR = R*0.62, labR = R*0.76;
+
+    /* sweep motion: free rotation, or ease toward locked axis */
+    if(lockAxis >= 0){
+      var target = axisAngle(lockAxis);
+      var d = ((((target - sweep + Math.PI*3) % (Math.PI*2)) + Math.PI*2) % (Math.PI*2)) - Math.PI;
+      sweep += d * 0.12;
+    } else {
+      sweep += 0.0075;
+    }
+
+    /* grid rings (hexagons at 25/50/75/100) */
+    for(var g=1; g<=4; g++){
+      var gr = maxR * g/4;
+      ctx.beginPath();
+      for(var i=0;i<=6;i++){
+        var a = axisAngle(i % 6);
+        var x = cx + Math.cos(a)*gr, y = cy + Math.sin(a)*gr;
+        i ? ctx.lineTo(x,y) : ctx.moveTo(x,y);
+      }
+      ctx.strokeStyle = 'rgba(122,38,34,' + (g === 4 ? 0.5 : 0.22) + ')';
+      ctx.lineWidth = g === 4 ? 1 : 0.6;
+      ctx.stroke();
+    }
+
+    /* axis lines + labels */
+    ctx.textAlign = 'center';
+    for(var i=0;i<6;i++){
+      var a = axisAngle(i);
+      var D = DIMS[ORDER[i]];
+      var lit = (i === lockAxis) || (i === hoverAxis);
+      ctx.strokeStyle = lit ? 'rgba(248,113,113,0.55)' : 'rgba(122,38,34,0.35)';
+      ctx.lineWidth = lit ? 1.2 : 0.7;
+      ctx.beginPath(); ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + Math.cos(a)*maxR*1.06, cy + Math.sin(a)*maxR*1.06); ctx.stroke();
+
+      var lx = cx + Math.cos(a)*labR, ly = cy + Math.sin(a)*labR;
+      ctx.save();
+      ctx.globalAlpha = lit ? 1 : 0.8;
+      ctx.shadowColor = D.color; ctx.shadowBlur = lit ? 14 : 6;
+      ctx.fillStyle = D.color;
+      ctx.font = '600 11px IBM Plex Mono, monospace';
+      ctx.fillText(LABELS[i], lx, ly - 3);
+      ctx.font = '10px IBM Plex Mono, monospace';
+      ctx.fillText(Math.round(D.val * ease), lx, ly + 13);
+      ctx.restore();
+    }
+
+    /* score polygon */
+    var pts = [];
+    for(var i=0;i<6;i++){
+      var a = axisAngle(i);
+      var r = maxR * (DIMS[ORDER[i]].val/100) * ease;
+      pts.push([cx + Math.cos(a)*r, cy + Math.sin(a)*r]);
+    }
+    ctx.beginPath();
+    pts.forEach(function(p,i){ i ? ctx.lineTo(p[0],p[1]) : ctx.moveTo(p[0],p[1]); });
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(248,113,113,0.10)';
+    ctx.fill();
+    ctx.save();
+    ctx.shadowColor = '#e8d48b'; ctx.shadowBlur = 8;
+    ctx.strokeStyle = 'rgba(232,212,139,0.85)'; ctx.lineWidth = 1.4;
+    ctx.stroke();
+    ctx.restore();
+
+    /* vertices: colored by band; pulse when sweep passes */
+    for(var i=0;i<6;i++){
+      var D = DIMS[ORDER[i]];
+      var a = axisAngle(i);
+      var da = Math.abs(((((a - sweep + Math.PI*3) % (Math.PI*2)) + Math.PI*2) % (Math.PI*2)) - Math.PI);
+      var near = Math.max(0, 1 - da/0.5);
+      ctx.save();
+      ctx.shadowColor = D.color; ctx.shadowBlur = 6 + near*14;
+      ctx.fillStyle = D.color;
+      ctx.beginPath(); ctx.arc(pts[i][0], pts[i][1], 3 + near*2.5, 0, 7); ctx.fill();
+      ctx.restore();
+    }
+
+    /* burst at locked vertex */
+    if(burst > 0 && lockAxis >= 0){
+      burst -= 0.03;
+      var P = pts[lockAxis];
+      ctx.save();
+      ctx.strokeStyle = 'rgba(248,113,113,' + Math.max(burst,0)*0.7 + ')';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(P[0], P[1], (1-burst)*46 + 6, 0, 7); ctx.stroke();
+      ctx.strokeStyle = 'rgba(232,212,139,' + Math.max(burst,0)*0.4 + ')';
+      ctx.beginPath(); ctx.arc(P[0], P[1], (1-burst)*74 + 10, 0, 7); ctx.stroke();
+      ctx.restore();
+    }
+
+    /* the sweep: red radar arm with fading trail */
+    ctx.save();
+    for(var k=0;k<26;k++){
+      var a = sweep - k*0.014;
+      ctx.strokeStyle = 'rgba(248,113,113,' + (0.30 * (1 - k/26)) + ')';
+      ctx.lineWidth = k === 0 ? 1.6 : 1;
+      ctx.beginPath(); ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + Math.cos(a)*maxR*1.06, cy + Math.sin(a)*maxR*1.06); ctx.stroke();
+    }
+    ctx.shadowColor = '#f87171'; ctx.shadowBlur = 10;
+    ctx.fillStyle = '#f87171';
+    ctx.beginPath(); ctx.arc(cx + Math.cos(sweep)*maxR*1.06, cy + Math.sin(sweep)*maxR*1.06, 2.6, 0, 7); ctx.fill();
+    ctx.restore();
+
+    /* center: breathing core + score count-up */
+    var breath = 1 + Math.sin(t*2.2) * 0.05;
+    var coreR = R*0.135;
+    var g2 = ctx.createRadialGradient(cx, cy, 4, cx, cy, coreR*2.1*breath);
+    g2.addColorStop(0, 'rgba(245,217,120,0.55)');
+    g2.addColorStop(0.4, 'rgba(201,164,74,0.20)');
+    g2.addColorStop(1, 'rgba(201,164,74,0)');
+    ctx.fillStyle = g2;
+    ctx.beginPath(); ctx.arc(cx, cy, coreR*2.1*breath, 0, 7); ctx.fill();
+    ctx.fillStyle = 'rgba(4,7,6,0.92)';
+    ctx.beginPath(); ctx.arc(cx, cy, coreR*breath, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#e8d48b'; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.arc(cx, cy, coreR*breath, 0, 7); ctx.stroke();
+    ctx.save();
+    ctx.shadowColor = '#f87171'; ctx.shadowBlur = 10;
+    ctx.strokeStyle = 'rgba(248,113,113,0.75)'; ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.arc(cx, cy, coreR*1.22, sweep, sweep + 1.1); ctx.stroke();
+    ctx.restore();
+
+    var sEase = 1 - Math.pow(1 - scoreP, 3);
+    ctx.fillStyle = '#e8d48b'; ctx.textAlign = 'center';
+    ctx.font = '52px Cormorant Garamond, Georgia, serif';
+    ctx.fillText(Math.round(TARGET * sEase), cx, cy + 10);
+    ctx.fillStyle = 'rgba(157,176,166,0.85)';
+    ctx.font = '9px IBM Plex Mono, monospace';
+    ctx.fillText('VAYDIN SCORE · SAMPLE', cx, cy + 32);
+
+    if(!reduced) requestAnimationFrame(draw);
+  }
+  if(reduced){ drawP = 1; scoreP = 1; }
+  draw();
+})();
+</script>
+<script src="/guide/corner.js" defer></script>
 </body>
 </html>
