@@ -53,6 +53,15 @@ export const ROOMS: Record<string, Line[]> = {
     line("dg-09", "Every leak maps to one of our thirteen jobs. Fix it yourself, or we run it for you. That's Step two."),
     line("dg-10", "Month to month. The findings earn the next step, or they don't."),
   ],
+  /* Engine: the words its page already carried and the houses already read (its compare heading and its thirteen
+     job names, Layer 2's), shown only, never recorded (his pick, style #8, 2026-11-11). */
+  engine: [
+    "The same clinic. The same patients. A different machine underneath.",
+    "Every first message gets your menu", "Booked inside the chat", "Reminders before each booked visit",
+    "The quiet list, invited back", "The next treatment, offered after the visit", "Each step counted",
+    "Your Google profile, checked daily", "Every new review, a reply ready", "Every attended patient asked for a review",
+    "Consultations, prepared", "Instagram DMs, connected", "Email, connected", "Website concierge",
+  ].map((text, i) => ({ id: `en-${String(i).padStart(2, "0")}`, text })),
 };
 
 /* In the corner there are no chapter chips to point at: a greeting is met

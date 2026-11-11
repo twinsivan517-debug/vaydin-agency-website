@@ -389,7 +389,10 @@ check("every room's page carries its lines word for word, in order", () => {
     const page = readFileSync(new URL(`public/${room}.html`, root), "utf8");
     const list = page.match(new RegExp(`<ol [^>]*data-room="${room}"[^>]*>([\\s\\S]*?)</ol>`));
     assert.ok(list, `public/${room}.html carries no list marked data-room="${room}"`);
-    const shown = [...list[1].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map((m) => plain(m[1])).join(" ");
+    /* A list that marks its lines (data-line) is read by those alone, so a group heading between them is no line. */
+    const marked = /<li\b[^>]*\bdata-line\b/.test(list[1]);
+    const shown = [...list[1].matchAll(/<li\b([^>]*)>([\s\S]*?)<\/li>/g)].filter((m) => !marked || /\bdata-line\b/.test(m[1]))
+      .map((m) => plain(m[2])).join(" ");
     assert.equal(shown, lines.map((l) => l.text).join(" "), `public/${room}.html's lines differ from src/lib/pages.ts ROOMS.${room}`);
   }
 });
