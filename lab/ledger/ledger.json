@@ -1730,7 +1730,7 @@
  },
  {
   "s": "Tick each one off yourself; the tick stays on your own phone.",
-  "tag": "task:CORE-F0",
+  "tag": "task:CORE-F0 + task:CORE-16",
   "read": "core 2026-11-10: true words applied",
   "where": [
    "diagnose.html"
