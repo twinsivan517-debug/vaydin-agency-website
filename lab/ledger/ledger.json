@@ -249,6 +249,14 @@
   ]
  },
  {
+  "s": "And whether ChatGPT, Claude and Perplexity can read your site and tell it's a clinic.",
+  "tag": "task:CORE-F4",
+  "read": "",
+  "where": [
+   "app.html"
+  ]
+ },
+ {
   "s": "One score, and what to fix first.",
   "tag": "task:CORE-F0",
   "read": "core 2026-11-10: OK (A5)",
