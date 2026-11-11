@@ -9,7 +9,7 @@
 // says in plain words what the recording does not say; the same words in a new order are caught only by `said`; cues.json
 // is checked for presence only; src/ is scanned for literal /voice/<id>.mp3 paths only.
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { collect, referenced, words } from "../lab/particle-guide/voice/lines.mjs";
@@ -74,9 +74,13 @@ for (const [id, v] of Object.entries(cues)) for (const c of v.cues) {
     fails.push(`${id}: a cue rings door ${c.door}, and the home page has ${DOORS.length} tiles (src/lib/doors.ts)`);
   if (c.shape && !drawn.has(c.shape)) fails.push(`${id}: a cue names the shape "${c.shape}", which src/lib/figure/shapes.ts does not draw`);
 }
-const byPlace = /ACCENT\[\s*(door|doorShown|aimAt|c\.door)\b/;
-if (byPlace.test(readFileSync(join(site, "src/lib/figure/engine.ts"), "utf8")))
-  fails.push("src/lib/figure/engine.ts picks a door's colour by its place in a fixed list: read the tile's own --accent");
+/* Any index into the colour list that is not a plain number is refused, in every file under src/, whatever the
+   variable is called (2026-11-11: the main house planted ACCENT[litDoor] and the four-name pattern passed it).
+   Honest limit: an alias (const A = ACCENT; A[door]) still passes. */
+const byPlace = /\bACCENT\s*(?:\?\.\s*)?\[\s*(?!\d+\s*\])|\bACCENT\s*\.\s*at\s*\(/;
+for (const f of readdirSync(join(site, "src"), { recursive: true }).filter((f) => /\.tsx?$/.test(f)))
+  if (byPlace.test(readFileSync(join(site, "src", f), "utf8")))
+    fails.push(`src/${f.replaceAll("\\", "/")} picks a colour from ACCENT by a variable, not a plain number: read the tile's own --accent`);
 for (const id of referenced(site)) {
   if (id in extras) fails.push(`src/ plays /voice/${id}.mp3, which _extras says no page plays`);
   else if (!lines[id]) fails.push(`src/ plays /voice/${id}.mp3, which no checked line speaks: the walk in lines.mjs misses it`);
