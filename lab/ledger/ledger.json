@@ -4761,8 +4761,8 @@
  },
  {
   "s": "First 30 days Fix We stop reporting the leaks.",
-  "tag": "none",
-  "read": "",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:78",
+  "read": "main house 2026-11-11: OK (its range read of 50d1358..5f7dd11: First 30 days agrees with CLAUDE_BUSINESS.md:78)",
   "where": [
    "index.html"
   ]
@@ -8473,8 +8473,8 @@
  },
  {
   "s": "First 30 days",
-  "tag": "none",
-  "read": "",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:78",
+  "read": "main house 2026-11-11: OK (its range read of 50d1358..5f7dd11: First 30 days agrees with CLAUDE_BUSINESS.md:78)",
   "where": [
    "doors.ts"
   ]
