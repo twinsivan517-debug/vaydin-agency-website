@@ -216,6 +216,14 @@
   ]
  },
  {
+  "s": "Intelligence · what we read",
+  "tag": "task:CORE-F4 + task:CORE-F0",
+  "read": "",
+  "where": [
+   "app.html"
+  ]
+ },
+ {
   "s": "Your clinic, as a patient meets it.",
   "tag": "task:CORE-F4",
   "read": "core 2026-11-10: OK (A12)",
@@ -251,6 +259,14 @@
   "s": "Six areas, each with its evidence, ranked by what costs you patients most.",
   "tag": "task:CORE-F0",
   "read": "core 2026-11-10 revised: OK (A6)",
+  "where": [
+   "app.html"
+  ]
+ },
+ {
+  "s": "The Engine · what it runs",
+  "tag": "task:L2-JOBS + job:2 + job:9",
+  "read": "",
   "where": [
    "app.html"
   ]
