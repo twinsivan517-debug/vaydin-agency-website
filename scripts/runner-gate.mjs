@@ -19,7 +19,7 @@
 import { execFileSync, spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { scan as secretScan } from "./secret-scan.mjs";
-import { exitCode, judge, pairs, toleranceFor } from "./gate-judge.mjs";
+import { exitCode, judgePages, pairs } from "./gate-judge.mjs";
 
 const RUNS = Number(process.env.RUNS || 5);
 const FLOORS = JSON.parse(readFileSync(".github/ship-floors.json", "utf8"));
@@ -111,12 +111,10 @@ try {
     runs[p.page][t.name].push(lighthouse(t, `${p.page}-${n}`, at(t, p)));
   for (const p of PAIRS) for (const t of targets) console.log(`[runner-gate] ${p.page} ${t.name.padEnd(9)} ${at(t, p)} performance in run order ${JSON.stringify(runs[p.page][t.name].map((r) => r.scores.performance))} · benchmark ${JSON.stringify(runs[p.page][t.name].map((r) => r.bench))}`);
 
-  for (const p of PAIRS) {
-    const verdict = judge({ cand: runs[p.page].candidate, anchor: runs[p.page].anchor?.length ? runs[p.page].anchor : null, tolerance: toleranceFor(TOLERANCE, p.page),
-      floors: ABSOLUTE, budget: BYTES[site.tier], tier: site.tier, tiers: Object.keys(BYTES), reportOnly, anchorName: `${FLOORS.anchor} ${p.anchor}` });
-    for (const line of verdict.log) console.log(line.replace("[runner-gate]", `[runner-gate] ${p.page}:`));
-    fails.push(...verdict.fails.map((f) => `${p.page} (${p.cand}): ${f}`));
-  }
+  const judged = judgePages(PAIRS, runs, { tolerance: TOLERANCE, anchorCommit: FLOORS.anchor,
+    floors: ABSOLUTE, budget: BYTES[site.tier], tier: site.tier, tiers: Object.keys(BYTES), reportOnly });
+  for (const line of judged.log) console.log(line);
+  fails.push(...judged.fails);
   // Lighthouse ran through execFileSync, which blocks this process's event loop for minutes; meanwhile the
   // server closed the idle keep-alive socket from up(). Without one yield, the next fetch writes into that dead
   // socket: "fetch failed" (ECONNRESET). Proven 2026-11-09: run 42628188860 failed here, and a local repro

@@ -3,10 +3,10 @@
 // it cannot measure. A fake key is assembled at run time, so this file never carries one.
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { exitCode, judge, pairs, toleranceFor } from "./gate-judge.mjs";
+import { exitCode, judge, judgePages, pairs, toleranceFor } from "./gate-judge.mjs";
 import { privateWords, scanPushed } from "./secret-scan.mjs";
 
 let cases = 0;
@@ -81,6 +81,19 @@ test("the per-page numbers judge each page: 4 under passes /app at 5 and refuses
   const tol = { home: 2, app: 5 };
   assert.deepEqual(verdict({ anchor: five(84), tolerance: toleranceFor(tol, "app") }).fails, []);
   assert.match(verdict({ anchor: five(84), tolerance: toleranceFor(tol, "home") }).fails[0], /more than 2 under/);
+});
+test("judgePages holds each page to its own tolerance: 4 under refuses home at 2, passes /app at 5", () => {
+  const runs = { home: { candidate: five(80), anchor: five(84) }, app: { candidate: five(80), anchor: five(84) } };
+  const r = judgePages(pairs(true, true), runs, { ...base, tolerance: { home: 2, app: 5 }, anchorCommit: "c9945eb" });
+  assert.equal(r.fails.length, 1, r.fails.join("; "));
+  assert.match(r.fails[0], /^home \(\/\): performance 80 is more than 2 under/);
+  assert.ok(r.log.some((l) => /^\[runner-gate\] home: anchor c9945eb \/ median: .* tolerance 2$/.test(l)), r.log.join("\n"));
+  assert.ok(r.log.some((l) => /^\[runner-gate\] app: anchor c9945eb \/app\.html median: .* tolerance 5$/.test(l)), r.log.join("\n"));
+});
+test("the gate hands the floors file's tolerance to judgePages as read, never one page's number", () => {
+  const src = readFileSync(resolve("scripts/runner-gate.mjs"), "utf8");
+  assert.match(src, /\nconst TOLERANCE = FLOORS\.tolerance;/);
+  assert.match(src, /judgePages\(PAIRS, runs, \{ tolerance: TOLERANCE, anchorCommit: FLOORS\.anchor,/);
 });
 
 // --- the runner gate, end to end, when it cannot measure ------------------------------------------------

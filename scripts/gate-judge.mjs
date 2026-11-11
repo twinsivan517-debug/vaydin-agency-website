@@ -38,3 +38,17 @@ export const pairs = (candHasApp, anchorHasApp) => [{ page: "home", cand: "/", a
 // A/A test of that page. A page with no number of its own gets null: main then refuses, as before any A/A test.
 export const toleranceFor = (tolerance, page) =>
   tolerance !== null && typeof tolerance === "object" ? (Number.isFinite(tolerance[page]) ? tolerance[page] : null) : (tolerance ?? null);
+
+// Every page judged beside its anchor page, each at its own tolerance. runs: { [page]: { candidate: [...], anchor:
+// [...] } }. The join of page and tolerance lives here, where a test can hold it, not in the measuring script.
+export function judgePages(pagePairs, runs, { tolerance, anchorCommit, ...common }) {
+  const fails = [], log = [];
+  for (const p of pagePairs) {
+    const anchor = runs[p.page]?.anchor;
+    const verdict = judge({ ...common, cand: runs[p.page]?.candidate, anchor: anchor?.length ? anchor : null,
+      tolerance: toleranceFor(tolerance, p.page), anchorName: `${anchorCommit} ${p.anchor}` });
+    log.push(...verdict.log.map((line) => line.replace("[runner-gate]", `[runner-gate] ${p.page}:`)));
+    fails.push(...verdict.fails.map((f) => `${p.page} (${p.cand}): ${f}`));
+  }
+  return { fails, log };
+}
