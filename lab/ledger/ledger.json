@@ -4683,7 +4683,7 @@
   ]
  },
  {
-  "s": "Diagnose Fix Grow Engine One place Your plan",
+  "s": "Diagnose Engine Fix Grow One place Your plan",
   "tag": "none",
   "read": "",
   "where": [
@@ -4744,7 +4744,15 @@
   ]
  },
  {
-  "s": "Step 02 Fix We stop reporting the leaks.",
+  "s": "Step 02 Engine Thirteen jobs.",
+  "tag": "task:L2-JOBS",
+  "read": "",
+  "where": [
+   "index.html"
+  ]
+ },
+ {
+  "s": "First 30 days Fix We stop reporting the leaks.",
   "tag": "none",
   "read": "",
   "where": [
@@ -4755,14 +4763,6 @@
   "s": "Step 03 Grow Everything fixed?",
   "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:85 \"only on an active Engine, NEVER standalone\"",
   "read": "main house 2026-11-10: OK",
-  "where": [
-   "index.html"
-  ]
- },
- {
-  "s": "System Engine Thirteen jobs.",
-  "tag": "task:L2-JOBS",
-  "read": "Layer 2 2026-11-10: OK (270)",
   "where": [
    "index.html"
   ]
@@ -8459,6 +8459,14 @@
   "s": "We measure your clinic the way a patient meets it.",
   "tag": "none",
   "read": "core 2026-11-10: no claim (138)",
+  "where": [
+   "doors.ts"
+  ]
+ },
+ {
+  "s": "First 30 days",
+  "tag": "none",
+  "read": "",
   "where": [
    "doors.ts"
   ]

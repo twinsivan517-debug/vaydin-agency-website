@@ -21,9 +21,9 @@ export const WHATSAPP_SHOWN = "+971 50 555 3148";
    what an owner sees, as outcomes, never screens. */
 export const PAGES: [string, string][] = [
   ["Diagnose", "/diagnose.html"],
+  ["Engine", "/engine.html"],
   ["Fix", "/fix.html"],
   ["Grow", "/grow.html"],
-  ["Engine", "/engine.html"],
   ["One place", "/app.html"],
   ["Your plan", "/pricing.html"],
 ];

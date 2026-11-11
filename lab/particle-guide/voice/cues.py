@@ -18,8 +18,8 @@ SHAPES = [
     (r"^(access|keys)$", "key"), (r"^(map|rivals)$", "pin"), (r"^(patient|patients)$", "person"), (r"^(clinic|clinics)$", "clinic"),
     (r"^(minimum|monthly|month|weekly)$", "clock"),
 ]
-DOORS = [(r"^(diagnostic|unannounced|shopper|shop|shops|intelligence|measure)$", 0), (r"^(fix|immaculate)$", 1),
-         (r"^(grow|growth|fuel|demand)$", 2), (r"^(engine)$", 3), (r"^(plan|plans)$", 5)]
+DOORS = [(r"^(diagnostic|unannounced|shopper|shop|shops|intelligence|measure)$", 0), (r"^(engine)$", 1),
+         (r"^(fix|immaculate)$", 2), (r"^(grow|growth|fuel|demand)$", 3), (r"^(plan|plans)$", 5)]
 # An acting direction -> how his eyes look for the words it covers.
 EYES = {"warm": "happy", "curious": "wide", "skeptical": "think", "laughs": "wink", "serious": "line", "sighs": "sad",
         "confident": "sparkle", "softly": "blink"}
@@ -86,7 +86,7 @@ def plan(text, timed, dur, digits=True):
                 hit = {"door": door}; break
         nxt = words[i + 1] if i + 1 < len(words) else ""
         if w == "front" and nxt == "door":
-            hit = {"door": 1}
+            hit = {"door": 2}
         if w == "hello" and nxt == "at":
             hit = {"shape": "mail"}
         # "One place", "one link" (WEB-G): his body becomes the empty phone.
