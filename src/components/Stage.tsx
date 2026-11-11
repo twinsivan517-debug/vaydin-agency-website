@@ -35,6 +35,9 @@ const long = (text: string) => (text.length > 250 ? "3" : text.length > 170 ? "2
 
 const glide = (): ScrollBehavior => (window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth");
 
+/* Shown in his cloud once a tile's own line has played, never spoken: the way in, while his arrow flies to the tile. */
+const OPEN_HINT: Line = { id: "x-open", text: "Press the tile again to open its page." };
+
 /* The page dims while he sleeps and lights up when his light reaches the logo. */
 function lightUp() {
   document.body.classList.remove("site-asleep");
@@ -264,7 +267,7 @@ export function Stage() {
     unlock();
     lightUp();
     setTold(d.href);
-    dispatch({ type: "say", lines: [line] });
+    dispatch({ type: "say", lines: [line, OPEN_HINT] });
   }
 
   function tap(id: ChapterId) {
@@ -455,7 +458,7 @@ export function Stage() {
             className={told === d.href ? "hero-door told" : "hero-door"}
             style={{ "--accent": d.accent } as React.CSSProperties}
           >
-            <small>{told === d.href ? "Open the page →" : (d.step ?? d.tag)}</small>
+            <small>{told === d.href ? "Press again →" : (d.step ?? d.tag)}</small>
             <b>{d.word}</b>
             <span>{d.title}</span>
           </a>
