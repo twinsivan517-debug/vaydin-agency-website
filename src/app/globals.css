@@ -656,3 +656,58 @@ body.site-awake .mark::before {
   50% { opacity: 1; transform: translateY(-0.15em); }
 }
 
+
+/* A room's stage (src/components/Room.tsx): the line he is saying, under him, and the
+   ten steps with the one button. Above his canvas (z 25), so a tap always lands. */
+.room-line {
+  position: relative;
+  z-index: 30;
+  min-height: 4.4em;
+  max-width: 34rem;
+  margin: 0.5rem auto 0;
+  text-align: center;
+  font-size: clamp(1.05rem, 4.4vw, 1.35rem);
+  line-height: 1.45;
+  color: var(--foreground);
+  text-wrap: balance;
+}
+.room-controls {
+  position: relative;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 0.75rem;
+}
+.room-dots {
+  display: flex;
+  gap: 0.45rem;
+}
+.room-dots button {
+  width: 0.7rem;
+  height: 0.7rem;
+  padding: 0;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  background: transparent;
+  cursor: pointer;
+}
+.room-dots button.done {
+  background: color-mix(in srgb, var(--gold) 45%, transparent);
+}
+.room-dots button.on {
+  background: var(--gold-bright);
+  border-color: var(--gold-bright);
+}
+.room-main {
+  min-height: 2.75rem;
+  padding: 0.55rem 1.4rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--gold) 60%, transparent);
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
+  color: var(--gold-bright);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+}

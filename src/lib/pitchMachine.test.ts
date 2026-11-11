@@ -6,7 +6,7 @@ import { ANSWERS, CHOOSE, GROUPS, HELLO, MORE, UNKNOWN, UNLISTED, answer, answer
 import { afterTalk, followUp, match, yesNo, type Reply } from "./match.ts";
 import { CHAPTERS, POKES, RESTING, SLEEPING } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
-import { SUMMARIES, WELCOME, inCorner } from "./pages.ts";
+import { ROOMS, SUMMARIES, WELCOME, inCorner } from "./pages.ts";
 import { TALK } from "./talk.ts";
 
 const run = (events: Event[], from: State = START) => events.reduce(reduce, from);
@@ -375,8 +375,26 @@ check("every page that carries him has its summary, and the frame's page exists"
   const carrying = readdirSync(new URL("public/", root)).filter(
     (f) => f.endsWith(".html") && readFileSync(new URL(`public/${f}`, root), "utf8").includes('src="/guide/corner.js"'),
   );
-  assert.deepEqual(carrying.map((f) => f.replace(/\.html$/, "")).sort(), Object.keys(SUMMARIES).sort());
+  /* A room told on its own stage carries him there, never in the corner too (2026-11-11). */
+  const corner = Object.keys(SUMMARIES).filter((p) => !(p in ROOMS)).sort();
+  assert.deepEqual(carrying.map((f) => f.replace(/\.html$/, "")).sort(), corner);
   for (const path of ["public/guide/corner.js", "src/app/corner/page.tsx"]) assert.ok(existsSync(new URL(path, root)), path);
+});
+
+/* The owner's round of 2026-11-11: a room's page holds its stage, and carries every line he says there as text,
+   word for word and in order, for a visitor without sound and for search. */
+check("every room's page holds its stage and carries his lines as text, word for word", () => {
+  const root = new URL("../../", import.meta.url);
+  assert.ok(existsSync(new URL("src/app/room/[id]/page.tsx", root)), "the room frame's page");
+  const unescape = (s: string) => s.replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+  for (const [room, lines] of Object.entries(ROOMS)) {
+    const page = readFileSync(new URL(`public/${room}.html`, root), "utf8");
+    assert.ok(page.includes(`src="/room/${room}.html"`), `public/${room}.html holds no stage for its room`);
+    const list = page.match(new RegExp(`<ol data-room="${room}">([\\s\\S]*?)</ol>`));
+    assert.ok(list, `public/${room}.html carries no <ol data-room="${room}">`);
+    const items = [...list[1].matchAll(/<li>([\s\S]*?)<\/li>/g)].map((m) => unescape(m[1].trim()));
+    assert.deepEqual(items, lines.map((l) => l.text), `public/${room}.html's lines differ from what he says (src/lib/pages.ts ROOMS)`);
+  }
 });
 
 /* The review of 2026-10-20: a business question was met as rudeness or

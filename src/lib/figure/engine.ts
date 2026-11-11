@@ -13,9 +13,13 @@ import { HEAD, VIS, eyeAt, headZ, makeBody, type Eyes } from "./body";
 export type Cue = { t0: number; t1: number; shape?: string; door?: number; chips?: number; wave?: number; eyes?: Eyes | "blink" };
 /* `end: "mark"`: the line closes a chapter, and he signs off with the Vaydin mark once it has played to its end. */
 export type Cues = Record<string, { dur: number; cues: Cue[]; beats: number[]; end?: string }>;
+/* All he reads of what plays: which recording, where in it, whether it runs, and whether it played to its end.
+   An audio element is one; a room's silent playhead (src/components/Room.tsx) is another, so he acts a line out
+   with no sound allowed yet. */
+export type Playhead = Pick<HTMLAudioElement, "src" | "currentTime" | "paused" | "ended">;
 export type FigureInput = {
   mode: "sleep" | "opener" | "talk" | "idle" | "rest";
-  audio: HTMLAudioElement | null;
+  audio: Playhead | null;
   stage: HTMLElement | null;
   doors: HTMLElement[];
   /* The question chips, each carrying its colour as `--glow`; at most six. */

@@ -8,7 +8,7 @@
    dents him and counts as a poke. */
 
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
-import { runFigure, type Cues, type FigureInput } from "@/lib/figure/engine";
+import { runFigure, type Cues, type FigureInput, type Playhead } from "@/lib/figure/engine";
 
 /* What the page may ask of its guide. He has no clips, so only `unlock` and
    `opener` matter, and the greeting is always his recording. */
@@ -23,7 +23,7 @@ export type GuideHandle = {
 
 type Props = {
   mode: FigureInput["mode"];
-  audio: () => HTMLAudioElement | null;
+  audio: () => Playhead | null;
   pokeable: boolean;
   onPoke: (at: number, point?: { x: number; y: number }) => void;
   /* His light has reached the logo: the page may light. */
