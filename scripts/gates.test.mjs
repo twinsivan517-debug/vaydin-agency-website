@@ -210,6 +210,17 @@ test("a private word in a pushed commit's author or committer is refused", () =>
   assert.ok(found.some((f) => f.startsWith(byMail.slice(0, 7)) && /its author or committer carries a private word \(line 3 of the list\)/.test(f)), found.join("; "));
   assert.equal(found.length, 2, found.join("; "));
 });
+test("a private word in the committer alone, with a clean author, is refused", () => {
+  const { dir, g, commit } = repo();
+  const start = commit("a.ts", "export const a = 1;\n", "start");
+  writeFileSync(join(dir, "b.ts"), "export const b = 2;\n");
+  g("add", "-A");
+  execFileSync("git", ["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "-m", "clean"],
+    { cwd: dir, env: { ...process.env, GIT_COMMITTER_NAME: "Plimbo Smith", GIT_COMMITTER_EMAIL: "t@t" } });
+  const byCommitter = g("rev-parse", "HEAD");
+  assert.equal(g("log", "-1", "--format=%an", byCommitter), "t");
+  assert.deepEqual(pushedWith(dir, byCommitter, start), [`${byCommitter.slice(0, 7)} its author or committer carries a private word (line 4 of the list)`]);
+});
 test("a word inside a longer word is not the private word", () => {
   const { dir, commit } = repo();
   const start = commit("a.ts", "export const a = 1;\n", "start");
