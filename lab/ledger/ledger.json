@@ -349,7 +349,8 @@
   "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:88 \"NEVER the dashboard UI\"",
   "read": "main house 2026-11-10: by his ruling (A3)",
   "where": [
-   "app.html"
+   "app.html",
+   "diagnose.html"
   ]
  },
  {
@@ -736,279 +737,6 @@
   ]
  },
  {
-  "s": "How your team answers",
-  "tag": "task:CORE-F4",
-  "read": "core 2026-11-10: OK (104)",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "How fast your team replies to a new patient on WhatsApp, how well they answer, and whether they follow up.",
-  "tag": "task:CORE-F4",
-  "read": "core 2026-11-10: OK (105)",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "How easily patients can book",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (16)",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "Whether a patient can book online, which booking tool you use, whether the chat offers real times, and whether your site works on a phone.",
-  "tag": "task:CORE-F2",
-  "read": "core 2026-11-10: OK (99)",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "TIMES OFFERED IN THE CHAT",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "WORKS ON A PHONE",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "Your Google reputation",
-  "tag": "task:CORE-F1",
-  "read": "core 2026-11-10: OK (89)",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "Your Google rating, how many reviews you have, whether recent reviews are rising or falling, and any recent low rating.",
-  "tag": "task:CORE-F1",
-  "read": "core 2026-11-10: OK (90)",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "Your marketing reach",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (17)",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "Whether you run adverts, and whether your website is live, shows prices and links to your Instagram.",
-  "tag": "task:CORE-F6",
-  "read": "core 2026-11-10 revised: OK (145)",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "PRICES ON YOUR SITE",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "LINK TO INSTAGRAM",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "You versus nearby clinics",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (18)",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "Your Google rating and review count against the clinics around you.",
-  "tag": "task:CORE-F5",
-  "read": "core 2026-11-10: OK (142)",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "YOUR RATING VS THEIRS",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "THE CLINICS AROUND YOU",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "How well set up you are",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (19)",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "Whether you are on WhatsApp, Instagram, a website and Google; whether your listing is claimed and your Instagram is a business account; and whether you have your own website.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (20)",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "ON EVERY CHANNEL",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "Can AI search read your site",
-  "tag": "task:CORE-F7",
-  "read": "core 2026-11-10: OK (146)",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "6 of 6 allowed · clinic markup: none",
-  "tag": "task:CORE-F7",
-  "read": "core 2026-11-10: OK (147)",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "Whether AI search tools (ChatGPT, Claude, Perplexity, Google, Bing) are allowed to read your website and can tell it is a clinic.",
-  "tag": "task:CORE-F7",
-  "read": "core 2026-11-10: OK (148)",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "AI SEARCH TOOLS CHECKED",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "ALLOWED TO READ",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "MESSAGE SENT 21:14",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "GOOGLE PROFILE OPENED",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "Q&A READ",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "WENT QUIET 3 DAYS",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "FOLLOW-UP WATCHED",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "PRICES ON SITE",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "CHECKED AGAINST CHAT",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "SHOWN, NOT SCORED",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html",
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "NOT ENOUGH MEASURED FOR A VERDICT",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
-  "s": "VAYDIN SCORE · SAMPLE",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (script)"
-  ]
- },
- {
   "s": "Clinic mystery shopping in Dubai · The Diagnostic · Vaydin",
   "tag": "none",
   "read": "core 2026-11-10: no claim (106)",
@@ -1018,17 +746,9 @@
   ]
  },
  {
-  "s": "The reception running in calm order, where the findings go",
+  "s": "The diagnostic, drawn, one part at a time",
   "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html (meta)"
-  ]
- },
- {
-  "s": "The Vaydin Score radar: six areas of your clinic, measured monthly (sample data)",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10 revised: OK (21)",
+  "read": "web-studio 2026-11-11: no claim (the drawing's label)",
   "where": [
    "diagnose.html (label)"
   ]
@@ -1042,811 +762,163 @@
   ]
  },
  {
-  "s": "Unannounced, every 30 to 60 days, a real person approaches your clinic like any new patient.",
+  "s": "Every thirty to sixty days, unannounced, a real person messages your clinic on WhatsApp, like any new patient.",
   "tag": "task:CORE-F4",
-  "read": "core 2026-11-10: OK (108)",
+  "read": "core 2026-11-11: OK (manual_shop.md:56; a real person, by design)",
   "where": [
-   "diagnose.html"
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-01"
   ]
  },
  {
-  "s": "What the shop finds, and what we read about your clinic online, builds one score from six areas.",
+  "s": "We ask what patients ask: the treatment, the price, when they can come.",
   "tag": "task:CORE-F4",
-  "read": "core 2026-11-10: OK (109)",
+  "read": "core 2026-11-11: OK (audit_output.py:30-38)",
   "where": [
-   "diagnose.html"
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-02"
   ]
  },
  {
-  "s": "Press one and watch the scan lock on, then read exactly what we test.",
+  "s": "And we record what your clinic said, and when.",
+  "tag": "task:CORE-F4",
+  "read": "core 2026-11-11: OK (the stored Shop Transcript, shop_finalize.md:7-9)",
+  "where": [
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-02"
+  ]
+ },
+ {
+  "s": "A patient messaging tonight books whoever answers first, and best.",
   "tag": "none",
-  "read": "",
+  "read": "core 2026-11-11: OK (no Layer 1 fact; bold copy, not a benchmark)",
   "where": [
-   "diagnose.html"
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-03"
   ]
  },
  {
-  "s": "HOW YOUR ONE SCORE IS BUILT · SAMPLE",
-  "tag": "none",
-  "read": "",
+  "s": "Before that message, they have seen your Google rating, your reviews and your Instagram.",
+  "tag": "task:CORE-F1 + task:CORE-F3",
+  "read": "core 2026-11-11: OK (Google weekly, Instagram monthly)",
   "where": [
-   "diagnose.html"
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-04"
   ]
  },
  {
-  "s": "How your team answers 38 →",
-  "tag": "task:CORE-F4",
-  "read": "core 2026-11-10: OK as a labelled sample (110)",
+  "s": "We read those too.",
+  "tag": "task:CORE-F1 + task:CORE-F3",
+  "read": "core 2026-11-11: OK (Google weekly, Instagram monthly)",
   "where": [
-   "diagnose.html"
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-04"
   ]
  },
  {
-  "s": "How easily patients can book 52 →",
+  "s": "And we read the clinics around you: how you compare, and when a rival's rating moves.",
+  "tag": "task:CORE-F5",
+  "read": "core 2026-11-11: OK (face.md section 7; moved.py:74-81)",
+  "where": [
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-05"
+  ]
+ },
+ {
+  "s": "It all becomes one score from six areas.",
   "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK as a labelled sample (22)",
+  "read": "core 2026-11-11: OK (its reword of line 5)",
   "where": [
-   "diagnose.html"
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-06"
   ]
  },
  {
-  "s": "Your Google reputation 74 →",
-  "tag": "task:CORE-F1",
-  "read": "core 2026-11-10: OK as a labelled sample (91)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Your marketing reach 61 →",
+  "s": "Every finding shows its evidence, and every leak comes with what to change.",
   "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK as a labelled sample (23)",
+  "read": "core 2026-11-11: OK (its reword: only leaks carry a fix)",
   "where": [
-   "diagnose.html"
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-06"
   ]
  },
  {
-  "s": "You versus nearby clinics 58 →",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK as a labelled sample (24)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "How well set up you are 88 →",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK as a labelled sample (25)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Can AI search read your site 6 of 6 →",
+  "s": "And we check AI search: can ChatGPT, Claude and Perplexity read your site, and see that it's a clinic?",
   "tag": "task:CORE-F7",
-  "read": "core 2026-11-10: OK (149)",
+  "read": "core 2026-11-11: OK (ai_access.py:15-16, :44-49; see that, its OK of the reword)",
   "where": [
-   "diagnose.html"
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-07"
   ]
  },
  {
-  "s": "SAMPLE · A FICTIONAL CLINIC.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "YOUR REPORT SHOWS ONE SCORE AND ITS LETTER, BUILT FROM THESE SIX, AND A LETTER FOR EACH CHANNEL.",
+  "s": "It lives on one private link on your phone, and it keeps watching.",
   "tag": "task:CORE-F0",
-  "read": "core 2026-11-10 revised: OK (26)",
+  "read": "core 2026-11-11: OK (one private link; Google weekly, the pulse twice a day)",
   "where": [
-   "diagnose.html"
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-08"
   ]
  },
  {
-  "s": "How the shop works ↓",
-  "tag": "none",
-  "read": "core 2026-11-10: no claim (111)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "ILLUSTRATION · THE SHOP IN MOTION",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "THE MYSTERY SHOP · THREE DOORS",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Your patients test you every day.",
-  "tag": "none",
-  "read": "core 2026-11-10: no claim (27)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Now someone reports the results.",
-  "tag": "none",
-  "read": "core 2026-11-10: no claim (28)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Every new patient walks through one of three doors and forms a verdict long before anyone greets them.",
-  "tag": "none",
-  "read": "core 2026-11-10: no claim (29)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "We walk through all three, the same way, unannounced.",
-  "tag": "task:CORE-F4",
-  "read": "core 2026-11-10 revised: OK (112)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Every 30 to 60 days, on a day nobody in the clinic can predict.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (30)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "We write to your clinic as a patient, on WhatsApp, because that's where Dubai books.",
-  "tag": "task:CORE-F4",
-  "read": "core 2026-11-10: OK (113)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "We ask what real patients ask: the treatment, the price, the availability.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (31)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Then we record what your clinic said, and when.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (32)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Before messaging, a patient has already seen your Google profile, your rating, your latest reviews, your Instagram.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "We review what they see: the verdict formed before you ever knew they existed.",
-  "tag": "none",
-  "read": "core 2026-11-10: no claim (33)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "The follow-through",
-  "tag": "none",
-  "read": "core 2026-11-10: no claim (114)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Most clinics answer once.",
-  "tag": "task:CORE-F4",
-  "read": "core 2026-11-10 revised: OK (115)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "The real test is what happens after: was a booking offered, did anyone follow up, what happened when we went quiet.",
-  "tag": "task:CORE-F4",
-  "read": "core 2026-11-10: OK (116)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "That's where revenue leaks, silently.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "ILLUSTRATION · AN EXAMPLE FIRST TEST",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Hi, I'm interested in a consultation for skin treatment.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Is the doctor available this week?",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "What would it cost?",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "PATIENT · 21:14",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "12 HOURS, 24 MINUTES PASS",
-  "tag": "task:CORE-F4",
-  "read": "core 2026-11-10: OK (A15)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Hello dear, yes we have availability.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Please call us to discuss.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "CLINIC · 09:38 NEXT MORNING",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "WHAT WE RECORD: RESPONSE TIME · NO PRICE GIVEN · NO BOOKING OFFERED · PATIENT ASKED TO CALL",
-  "tag": "task:CORE-F4",
-  "read": "core 2026-11-10 revised: OK (117)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "BY 09:38, THE PATIENT HAS BOOKED THE CLINIC THAT ANSWERED AT 21:20.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "WHY IT MATTERS · THE SPEED GAP",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "The whole game is minutes.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "A patient messaging clinics tonight will book with whoever answers first and best.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "This is the gap the diagnostic exists to find.",
-  "tag": "none",
-  "read": "core 2026-11-10: no claim (34)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "THE CLINIC'S OWN INBOX · TONIGHT",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "21:14 Patient asks about lip filler this week",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "21:20 Patient books the clinic that answered",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "09:38 Next morning the clinic replies: call us",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "24/7 after hours the inbox goes dark · the engine replies and books all 24",
-  "tag": "job:1 + job:2",
-  "read": "Layer 2 2026-11-10: OK (25)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "THE SAME INBOX · ENGINE ON",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "21:14 Your menu, sent at once · Book tapped",
-  "tag": "job:1 + job:2",
-  "read": "Layer 2 2026-11-10: OK (26)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "21:16 Booked in the chat · Thursday 19:00",
-  "tag": "job:2",
-  "read": "Layer 2 2026-11-10: OK (100)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "ILLUSTRATIVE FIGURES · YOUR DIAGNOSTIC SHOWS YOUR OWN, MEASURED NUMBERS",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "THE STANDARD OF PROOF",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Every finding comes with its evidence.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (35)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "No scores from a black box.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (36)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "For everything we measure, you get the same four things, so you can check us, challenge us, and act on it.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10 revised: OK (37)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "What we did",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (38)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "The exact approach we made, dated and recorded.",
-  "tag": "task:CORE-F4",
-  "read": "core 2026-11-10: OK (118)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "What we found",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (39)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "What your clinic actually said and did.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (40)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "What good looks like",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (41)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Our target for the same moment.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: true words applied",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "What to do",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (43)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "The specific change, in plain language.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10 revised: OK (44)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Or we do it for you.",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (260)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "That's Step 02.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "What lands on your desk, every month.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10 revised: OK (45)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "DEMO CLINIC · MONTHLY VERDICT",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "3 leaks found, worst first",
-  "tag": "task:CORE-F0 + task:CORE-H",
-  "read": "core 2026-11-10: true words applied (46)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "FIRST REPLY · THE RACE YOU'RE IN",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "YOUR CLINIC 12H 24M",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "THE CLINIC THAT WINS 8 MIN",
-  "tag": "task:CORE-F4",
-  "read": "core 2026-11-10: OK (A17)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "WhatsApp inquiry: no price given, no booking offered, patient asked to call.",
-  "tag": "task:CORE-F4",
-  "read": "core 2026-11-10 revised: OK (119)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Newest Google review: 2 stars, 9 days ago.",
-  "tag": "task:CORE-F1",
-  "read": "core 2026-11-10: true words applied",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Rating trend flat.",
-  "tag": "task:CORE-F1",
-  "read": "core 2026-11-10: OK (93)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "IMPROVED · SINCE LAST CHECK",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Google rating: 4.2 → 4.3 since last check.",
-  "tag": "task:CORE-F1",
-  "read": "core 2026-11-10: OK (94)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "SAMPLE PREVIEW · FICTIONAL CLINIC · YOUR REPORT CARRIES YOUR OWN EVIDENCE",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "The findings, ranked by severity.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (47)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "What leaks most gets fixed first, ranked by how badly it costs you patients, not by drama.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10 revised: OK (48)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "The evidence behind each one.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (49)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "The actual exchange, the actual timestamps, the actual profile.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (50)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "You see what we saw.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (51)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Your score, one number.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (52)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Redrawn from your own shop each time.",
-  "tag": "task:CORE-F0 + task:CORE-H",
-  "read": "core 2026-11-10: true words applied",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "What to do about it.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (53)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Every finding closes with the specific move: yours to make, or ours to run in Step 02.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10 revised: OK (54)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Tick each one off yourself; the tick stays on your own phone.",
-  "tag": "task:CORE-F0 + task:CORE-16",
-  "read": "core 2026-11-10: true words applied",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "A page that keeps watching.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (56)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "One private link, installable on your phone.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10: OK (57)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "When something moves (a rating slips, a review lands, a rival's rating changes), it appears dated in \"what's new\", and when your rating or reviews move, your phone gets that Monday's summary.",
-  "tag": "task:CORE-F5 + task:CORE-F1",
-  "read": "core 2026-11-10: true words applied",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "OUR RULE: MEASURED IS LABELED MEASURED · ESTIMATED IS LABELED ESTIMATED · MISSING SAYS \"NO DATA\".",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10 revised: OK (58)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "NEVER A NUMBER WE CANNOT SHOW THE SOURCE OF.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "WHERE THE FINDINGS GO",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "The report doesn't end.",
-  "tag": "none",
-  "read": "core 2026-11-10: no claim (59)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "It becomes the engine.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Every leak the diagnostic finds maps to one of Vaydin's thirteen jobs: slow replies to your menu at once, lost bookings to booking inside the chat, silent patients to the quiet list, wrong hours on Google to the daily check.",
+  "s": "Every leak maps to one of our thirteen jobs.",
   "tag": "task:L2-JOBS",
-  "read": "Layer 2 2026-11-10: OK (261)",
+  "read": "Layer 2 2026-11-11: OK (all five leak classes land on jobs 1 and 2; vaydin-layer2 playbooks/CLINIC-CONFIG.md:7, its commit 5ff3790)",
   "where": [
-   "diagnose.html"
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-09"
   ]
  },
  {
-  "s": "And the loop closes honestly: after the engine is installed, the same outside reads keep scoring the clinic, and the engine's own work is shown as ours.",
-  "tag": "task:CORE-4",
-  "read": "core 2026-11-10: true words applied",
+  "s": "Fix it yourself, or we run it for you.",
+  "tag": "task:CORE-F0 + task:L2-JOBS",
+  "read": "core 2026-11-11: OK (fix it yourself: the Prescription's tick) | Layer 2 2026-11-11: OK (an offer; each job's condition in Step 02's room)",
   "where": [
-   "diagnose.html"
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-09"
   ]
  },
  {
-  "s": "The diagnostic that sold you the engine becomes the audit that holds it accountable.",
-  "tag": "task:CORE-4",
-  "read": "core 2026-11-10 revised: OK (4)",
+  "s": "That's Step two.",
+  "tag": "none",
+  "read": "Layer 2 2026-11-11: OK (Step 02 = the engine's install)",
   "where": [
-   "diagnose.html"
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-09"
+  ]
+ },
+ {
+  "s": "Month to month.",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:44 \"3-month minimum. Intelligence: month to month, 30 days' written notice\"",
+  "read": "main house 2026-11-11: OK (the diagnostic's term, said in the Diagnose room; no price) | core 2026-11-11: OK (a term)",
+  "where": [
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-10"
+  ]
+ },
+ {
+  "s": "The findings earn the next step, or they don't.",
+  "tag": "none",
+  "read": "core 2026-11-11: OK (as its twin on the live page)",
+  "where": [
+   "diagnose.html",
+   "pages.ts",
+   "voice:dg-10"
   ]
  },
  {
@@ -1861,22 +933,6 @@
   "s": "We score what your receptionist said to a patient at 9pm.",
   "tag": "task:CORE-F4",
   "read": "core 2026-11-10 revised: OK (121)",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "Step 02: what we fix & run →",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "diagnose.html"
-  ]
- },
- {
-  "s": "See the engine live →",
-  "tag": "none",
-  "read": "",
   "where": [
    "diagnose.html"
   ]
@@ -8485,150 +7541,6 @@
   "read": "",
   "where": [
    "doors.ts"
-  ]
- },
- {
-  "s": "Every thirty to sixty days, unannounced, a real person messages your clinic on WhatsApp, like any new patient.",
-  "tag": "task:CORE-F4",
-  "read": "core 2026-11-11: OK (manual_shop.md:56; a real person, by design)",
-  "where": [
-   "pages.ts",
-   "voice:dg-01"
-  ]
- },
- {
-  "s": "We ask what patients ask: the treatment, the price, when they can come.",
-  "tag": "task:CORE-F4",
-  "read": "core 2026-11-11: OK (audit_output.py:30-38)",
-  "where": [
-   "pages.ts",
-   "voice:dg-02"
-  ]
- },
- {
-  "s": "And we record what your clinic said, and when.",
-  "tag": "task:CORE-F4",
-  "read": "core 2026-11-11: OK (the stored Shop Transcript, shop_finalize.md:7-9)",
-  "where": [
-   "pages.ts",
-   "voice:dg-02"
-  ]
- },
- {
-  "s": "A patient messaging tonight books whoever answers first, and best.",
-  "tag": "none",
-  "read": "core 2026-11-11: OK (no Layer 1 fact; bold copy, not a benchmark)",
-  "where": [
-   "pages.ts",
-   "voice:dg-03"
-  ]
- },
- {
-  "s": "Before that message, they have seen your Google rating, your reviews and your Instagram.",
-  "tag": "task:CORE-F1 + task:CORE-F3",
-  "read": "core 2026-11-11: OK (Google weekly, Instagram monthly)",
-  "where": [
-   "pages.ts",
-   "voice:dg-04"
-  ]
- },
- {
-  "s": "We read those too.",
-  "tag": "task:CORE-F1 + task:CORE-F3",
-  "read": "core 2026-11-11: OK (Google weekly, Instagram monthly)",
-  "where": [
-   "pages.ts",
-   "voice:dg-04"
-  ]
- },
- {
-  "s": "And we read the clinics around you: how you compare, and when a rival's rating moves.",
-  "tag": "task:CORE-F5",
-  "read": "core 2026-11-11: OK (face.md section 7; moved.py:74-81)",
-  "where": [
-   "pages.ts",
-   "voice:dg-05"
-  ]
- },
- {
-  "s": "It all becomes one score from six areas.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-11: OK (its reword of line 5)",
-  "where": [
-   "pages.ts",
-   "voice:dg-06"
-  ]
- },
- {
-  "s": "Every finding shows its evidence, and every leak comes with what to change.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-11: OK (its reword: only leaks carry a fix)",
-  "where": [
-   "pages.ts",
-   "voice:dg-06"
-  ]
- },
- {
-  "s": "And we check AI search: can ChatGPT, Claude and Perplexity read your site, and see that it's a clinic?",
-  "tag": "task:CORE-F7",
-  "read": "core 2026-11-11: OK (ai_access.py:15-16, :44-49; see that, its OK of the reword)",
-  "where": [
-   "pages.ts",
-   "voice:dg-07"
-  ]
- },
- {
-  "s": "It lives on one private link on your phone, and it keeps watching.",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-11: OK (one private link; Google weekly, the pulse twice a day)",
-  "where": [
-   "pages.ts",
-   "voice:dg-08"
-  ]
- },
- {
-  "s": "Every leak maps to one of our thirteen jobs.",
-  "tag": "task:L2-JOBS",
-  "read": "Layer 2 2026-11-11: OK (all five leak classes land on jobs 1 and 2; its message is the source)",
-  "where": [
-   "pages.ts",
-   "voice:dg-09"
-  ]
- },
- {
-  "s": "Fix it yourself, or we run it for you.",
-  "tag": "task:CORE-F0 + task:L2-JOBS",
-  "read": "core 2026-11-11: OK (fix it yourself: the Prescription's tick) | Layer 2 2026-11-11: OK (an offer; each job's condition in Step 02's room)",
-  "where": [
-   "pages.ts",
-   "voice:dg-09"
-  ]
- },
- {
-  "s": "That's Step two.",
-  "tag": "none",
-  "read": "Layer 2 2026-11-11: OK (Step 02 = the engine's install)",
-  "where": [
-   "pages.ts",
-   "voice:dg-09"
-  ]
- },
- {
-  "s": "Month to month.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:44 \"3-month minimum. Intelligence: month to month, 30 days' written notice\"",
-  "read": "main house 2026-11-11: OK (the diagnostic's term, said in the Diagnose room; no price) | core 2026-11-11: OK (a term)",
-  "where": [
-   "pages.ts",
-   "voice:dg-10"
-  ]
- },
- {
-  "s": "The findings earn the next step, or they don't.",
-  "tag": "none",
-  "read": "core 2026-11-11: OK (as its twin on the live page)",
-  "where": [
-   "pages.ts",
-   "voice:dg-10"
   ]
  },
  {

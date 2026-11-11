@@ -6,7 +6,7 @@ import { ANSWERS, CHOOSE, GROUPS, HELLO, MORE, UNKNOWN, UNLISTED, answer, answer
 import { afterTalk, followUp, match, yesNo, type Reply } from "./match.ts";
 import { CHAPTERS, POKES, RESTING, SLEEPING } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
-import { SUMMARIES, WELCOME, inCorner } from "./pages.ts";
+import { ROOMS, SUMMARIES, WELCOME, inCorner } from "./pages.ts";
 import { TALK } from "./talk.ts";
 
 const run = (events: Event[], from: State = START) => events.reduce(reduce, from);
@@ -377,6 +377,21 @@ check("every page that carries him has its summary, and the frame's page exists"
   );
   assert.deepEqual(carrying.map((f) => f.replace(/\.html$/, "")).sort(), Object.keys(SUMMARIES).sort());
   for (const path of ["public/guide/corner.js", "src/app/corner/page.tsx"]) assert.ok(existsSync(new URL(path, root)), path);
+});
+
+/* The owner's round of 2026-11-11: a room's page shows its lines beside its drawing, word for word and in order,
+   as the houses read them (src/lib/pages.ts ROOMS); a line changed in one place and not the other is red. */
+check("every room's page carries its lines word for word, in order", () => {
+  const root = new URL("../../", import.meta.url);
+  const plain = (s: string) => s.replace(/<[^>]+>/g, " ").replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
+  for (const [room, lines] of Object.entries(ROOMS)) {
+    const page = readFileSync(new URL(`public/${room}.html`, root), "utf8");
+    const list = page.match(new RegExp(`<ol [^>]*data-room="${room}"[^>]*>([\\s\\S]*?)</ol>`));
+    assert.ok(list, `public/${room}.html carries no list marked data-room="${room}"`);
+    const shown = [...list[1].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map((m) => plain(m[1])).join(" ");
+    assert.equal(shown, lines.map((l) => l.text).join(" "), `public/${room}.html's lines differ from src/lib/pages.ts ROOMS.${room}`);
+  }
 });
 
 /* The review of 2026-10-20: a business question was met as rudeness or

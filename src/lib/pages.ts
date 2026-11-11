@@ -36,9 +36,10 @@ export const SUMMARIES: Record<string, Line> = {
   ),
 };
 
-/* A room told on its own stage, one sentence a scene (the owner's round of 2026-11-11: the long text and the photos
-   leave, the particles explain). Each line is spoken and stands under the stage as written. Diagnose's ten were read
-   by core (no holds; 5 reworded) and Layer 2 (9), and approved by the owner, 2026-11-11. */
+/* A room's lines (the owner's round of 2026-11-11: the long text and the photos leave, the particles explain). They
+   stand beside the room's drawing as written (public/<room>.html, the list marked data-room), and the page speaks
+   none of them: he talks only from the corner. Recorded in Jon's voice and parked: no page plays them yet (his "ok",
+   2026-11-11). Diagnose's ten were read by core (no holds; 5 reworded) and Layer 2 (9), approved by the owner. */
 export const ROOMS: Record<string, Line[]> = {
   diagnose: [
     line("dg-01", "Every thirty to sixty days, unannounced, a real person messages your clinic on WhatsApp, like any new patient."),
