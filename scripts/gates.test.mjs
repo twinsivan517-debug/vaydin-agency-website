@@ -95,6 +95,14 @@ test("the gate hands the floors file's tolerance to judgePages as read, never on
   assert.match(src, /\nconst TOLERANCE = FLOORS\.tolerance;/);
   assert.match(src, /judgePages\(PAIRS, runs, \{ tolerance: TOLERANCE, anchorCommit: FLOORS\.anchor,/);
 });
+// A pin, not a stubbed run: a way to hand runner-gate.mjs numbers it never measured would be a door to a pass.
+// The road from `fails` to exit 1 is driven end to end above ("main fails closed when the gate cannot measure").
+test("the gate's page findings reach the refusal", () => {
+  const src = readFileSync(resolve("scripts/runner-gate.mjs"), "utf8");
+  assert.match(src, /const judged = judgePages\(/);
+  assert.match(src, /\n {2}fails\.push\(\.\.\.judged\.fails\);\r?\n/);
+  assert.match(src, /if \(exitCode\(fails, reportOnly\)\) process\.exit\(1\);/);
+});
 
 // --- the runner gate, end to end, when it cannot measure ------------------------------------------------
 const GATE = resolve("scripts/runner-gate.mjs");
