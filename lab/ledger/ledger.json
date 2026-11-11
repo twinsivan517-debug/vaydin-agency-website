@@ -219,7 +219,7 @@
  {
   "s": "Intelligence · what we read",
   "tag": "task:CORE-F4 + task:CORE-F0",
-  "read": "",
+  "read": "core 2026-11-11: OK (P1)",
   "where": [
    "app.html"
   ]
@@ -267,7 +267,7 @@
  {
   "s": "The Engine · what it runs",
   "tag": "task:L2-JOBS + job:2 + job:9",
-  "read": "",
+  "read": "Layer 2 2026-11-11: OK (P1)",
   "where": [
    "app.html"
   ]
@@ -4770,7 +4770,7 @@
  {
   "s": "One link One place Your clinic, in one place.",
   "tag": "task:CORE-F0 + task:CORE-3",
-  "read": "",
+  "read": "core 2026-11-11: OK (P2)",
   "where": [
    "index.html"
   ]
