@@ -11,10 +11,13 @@
 // PRIVATE WORDS (--pre-push only; lesson 22, 2026-11-11): the houses' private names, addresses and places never reach
 // this public repo. The list lives OUTSIDE it: web-studio's brain/leak_patterns.txt (one literal per line, # starts
 // a comment, never committed), or the file VAYDIN_PRIVATE_WORDS names. Each word is matched whole, in any case, in
-// every text file a pushed commit adds or changes and in each pushed commit's message; a finding names the list's
-// line, never the word. Fail closed: no list, or a list with no words, refuses the push.
-// HONEST LIMIT: exact words only (a paraphrase, a quote or a verdict passes); binary files are skipped; laptop only,
-// the runner has no list; `git push --no-verify` skips the hook.
+// every text file a pushed commit adds or changes, in each such file's path, in each pushed commit's whole message
+// and in the names of the refs being pushed; a finding names the list's line, never the word. Fail closed: no list,
+// or a list with no words, refuses the push.
+// HONEST LIMIT: exact words only (a paraphrase, a quote or a verdict passes); a file is skipped as binary by its
+// extension or when it holds a NUL byte, so a text file with one NUL is not read; the author and committer fields
+// are not read (the owner's decision on the author name is pending, 2026-11-11); laptop only, the runner has no
+// list; `git push --no-verify` skips the hook.
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -73,8 +76,9 @@ export function scan() {
 export function scanPushed(stdin, words = []) {
   const found = [];
   for (const line of stdin.split("\n").map((s) => s.trim()).filter(Boolean)) {
-    const [, local, , remote] = line.split(/\s+/);
+    const [localRef, local, remoteRef, remote] = line.split(/\s+/);
     if (!local || ZERO.test(local)) continue;                  // deleting a branch pushes no bytes
+    if (words.length) privateHits(`${localRef} ${remoteRef}`, words, "a pushed ref's name", found);
     let commits;
     try { commits = git(["rev-list", ...(remote && !ZERO.test(remote) ? [`${remote}..${local}`] : [local, "--not", "--remotes"])]); }
     catch { commits = git(["rev-list", local, "--not", "--remotes"]); }   // the remote's tip is unknown here
@@ -85,10 +89,13 @@ export function scanPushed(stdin, words = []) {
       for (const rel of new Set(names.split("\0").filter(Boolean))) {
         const read = (p) => git(["cat-file", "blob", `${sha}:${p}`]);
         judge(rel, read, found, `${short} `);
-        if (!words.length || BINARY.test(rel)) continue;
+        if (!words.length) continue;
+        const pathHit = words.some(({ re }) => re.test(rel));
+        if (pathHit) privateHits(rel, words, `${short} a file path`, found);
+        if (BINARY.test(rel)) continue;
         let text;
         try { text = read(rel); } catch { continue; }
-        if (!text.includes("\u0000")) privateHits(text, words, `${short} ${rel} `, found);
+        if (!text.includes("\u0000")) privateHits(text, words, `${short} ${pathHit ? "a file whose path carries a private word," : rel} `, found);
       }
     }
   }

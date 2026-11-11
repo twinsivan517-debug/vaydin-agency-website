@@ -149,11 +149,11 @@ test("deleting a branch pushes no bytes and passes", () => {
 // --- private words (lesson 22): whole words, any case, in pushed files and messages; the list lives outside ---
 // The words below are invented, so this public file carries no real one.
 const listFile = (text) => { const p = join(mkdtempSync(join(tmpdir(), "words-")), "list.txt"); writeFileSync(p, text); return p; };
-const WORDS = privateWords(listFile("# a comment\nZorblax Quint\nqux@example.test\n")).words;
-const pushedWith = (dir, local, remote) => {
+const WORDS = privateWords(listFile("# a comment\nZorblax Quint\nqux@example.test\nPlimbo\n")).words;
+const pushedWith = (dir, local, remote, ref = "refs/heads/main") => {
   const was = process.cwd();
   process.chdir(dir);
-  try { return scanPushed(`refs/heads/main ${local} refs/heads/main ${remote}\n`, WORDS); } finally { process.chdir(was); }
+  try { return scanPushed(`${ref} ${local} ${ref} ${remote}\n`, WORDS); } finally { process.chdir(was); }
 };
 const SCAN = resolve("scripts/secret-scan.mjs");
 const hook = (dir, local, remote, list) => spawnSync(process.execPath, [SCAN, "--pre-push"],
@@ -172,6 +172,27 @@ test("a private word in a pushed commit's message is refused", () => {
   const start = commit("a.ts", "export const a = 1;\n", "start");
   const bad = commit("b.ts", "export const b = 2;\n", "ask qux@example.test first");
   assert.ok(pushedWith(dir, bad, start).some((f) => /its message carries a private word \(line 3 of the list\)/.test(f)));
+});
+test("a private word on a later line of a pushed commit's message is refused", () => {
+  const { dir, commit } = repo();
+  const start = commit("a.ts", "export const a = 1;\n", "start");
+  const bad = commit("b.ts", "export const b = 2;\n", "tidy the page\n\nThe second paragraph asks qux@example.test first.");
+  assert.ok(pushedWith(dir, bad, start).some((f) => /its message carries a private word \(line 3 of the list\)/.test(f)));
+});
+test("a private word in a pushed file's path is refused, and the path is not printed", () => {
+  const { dir, commit } = repo();
+  const start = commit("a.ts", "export const a = 1;\n", "start");
+  const bad = commit("plimbo-plan.md", "clean text\n", "notes");
+  const found = pushedWith(dir, bad, start);
+  assert.ok(found.some((f) => f.startsWith(bad.slice(0, 7)) && /a file path carries a private word \(line 4 of the list\)/.test(f)), found.join("; "));
+  assert.ok(!found.some((f) => /plimbo/i.test(f)), found.join("; "));
+});
+test("a private word in the name of a pushed ref is refused", () => {
+  const { dir, commit } = repo();
+  const start = commit("a.ts", "export const a = 1;\n", "start");
+  const next = commit("b.ts", "export const b = 2;\n", "next");
+  const found = pushedWith(dir, next, start, "refs/heads/plimbo-fix");
+  assert.deepEqual(found, ["a pushed ref's name carries a private word (line 4 of the list)"]);
 });
 test("a word inside a longer word is not the private word", () => {
   const { dir, commit } = repo();
