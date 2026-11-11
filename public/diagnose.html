@@ -588,7 +588,7 @@
         }
       }
       /* act six: the ring lands on a phone that keeps watching */
-      var phA = win(t, 26.6, 31.0, 0.6, 0.8), phx = lerp(F.x + F.w * 0.5, F.x + F.w * 0.24, toLeft), phs = lerp(U * 0.3, U * 0.22, toLeft);
+      var phA = win(t, 26.6, 31.6, 0.6, 0.8), phx = lerp(F.x + F.w * 0.5, F.x + F.w * 0.24, toLeft), phs = lerp(U * 0.3, U * 0.22, toLeft);
       if (phA > 0.01){
         glow(phx, F.y + F.h * 0.5, phs * 0.9, GOLD, 0.12 * phA * map); sym('phone', phx, F.y + F.h * 0.5, phs, GOLD, phA * map, E((t - 26.6) / 0.8));
         for (k = 0; k < 3; k++){ var pt = (t - 27.8 - k * 1.1) / 1.1; if (pt > 0 && pt < 1 && t < 30.2){
