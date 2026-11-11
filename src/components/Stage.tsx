@@ -1,7 +1,7 @@
 "use client";
 
 /* The hero: him, in gold dots, with his cloud and the card he shows on one
-   side and the five doors on the other; under him a box to ask him anything
+   side and the six doors on the other; under him a box to ask him anything
    and the questions. On a first visit he wakes by himself in the dark room:
    his dots gather, part of his light flies to the logo, and as it lands a
    shimmer crosses the page and lights it. He stays silent until the first
@@ -11,7 +11,8 @@
 import { useEffect, useEffectEvent, useReducer, useRef, useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
 import { Figure } from "@/components/Figure";
-import { DOORS } from "@/lib/doors";
+import { DOORS, type Door } from "@/lib/doors";
+import { SUMMARIES } from "@/lib/pages";
 import type { GuideHandle } from "@/components/Figure";
 import { MORE, UNKNOWN, answer, answerLine, type Answer } from "@/lib/answers";
 import { afterTalk, followUp, match, type Reply } from "@/lib/match";
@@ -77,6 +78,8 @@ export function Stage() {
   const ripples = useRef(0);
   /* Spun around (or shaken by scrolling) while he speaks: a note over his head instead of dizziness, keyed so a second one replays it. */
   const [spun, setSpun] = useState<{ n: number; how: "spin" | "shake" } | null>(null);
+  /* The tile he last told: pressed again, it opens its page. */
+  const [told, setTold] = useState<string | null>(null);
 
   useEffect(() => {
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -250,6 +253,18 @@ export function Stage() {
       document.body.style.cursor = "";
     };
   }, [state.phase]);
+
+  /* A tile, first pressed: he tells its page in that page's own recorded words, his body turning
+     through the scene its words cue. Pressed again, or opened in a new tab, it is a plain link. */
+  function door(event: React.MouseEvent<HTMLAnchorElement>, d: Door) {
+    const line = SUMMARIES[d.page];
+    if (!line || told === d.href || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    unlock();
+    lightUp();
+    setTold(d.href);
+    dispatch({ type: "say", lines: [line] });
+  }
 
   function tap(id: ChapterId) {
     if (chapter(id).clip === "opener") return wake();
@@ -426,11 +441,19 @@ export function Stage() {
         </div>
       </div>
 
-      {/* The six pages beside him, the doors his light rings when he names one. */}
+      {/* The six pages beside him, the doors his light rings when he names one. A first press has him
+          tell the page; the tile then says it opens, and a second press opens it. */}
       <nav className="hero-doors wakes" aria-label="The six pages">
         {DOORS.map((d) => (
-          <a key={d.href} href={d.href} data-figure-door="" className="hero-door" style={{ "--accent": d.accent } as React.CSSProperties}>
-            <small>{d.step ?? d.tag}</small>
+          <a
+            key={d.href}
+            href={d.href}
+            onClick={(event) => door(event, d)}
+            data-figure-door=""
+            className={told === d.href ? "hero-door told" : "hero-door"}
+            style={{ "--accent": d.accent } as React.CSSProperties}
+          >
+            <small>{told === d.href ? "Open the page →" : (d.step ?? d.tag)}</small>
             <b>{d.word}</b>
             <span>{d.title}</span>
           </a>

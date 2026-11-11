@@ -8811,6 +8811,14 @@
   ]
  },
  {
+  "s": "Open the page →",
+  "tag": "none",
+  "read": "",
+  "where": [
+   "src/components/Stage.tsx"
+  ]
+ },
+ {
   "s": "Ask me about your clinic…",
   "tag": "none",
   "read": "",

@@ -74,6 +74,16 @@ const DRAW: Record<string, [string, Draw]> = {
   }],
   /* "One place" (WEB-G): a phone's outline and nothing inside it, the owner's lock of 13 May (never the product's screens). */
   app: ["#e8d48b", (g) => { g.lineWidth = 9; rr(g, 62, 12, 96, 196, 24); g.stroke(); }],
+  /* The engine (WEB-G, the tiles' scenes): a gear, ten teeth round a ring, a hub in the middle, in the Engine page's violet. */
+  gear: ["#a78bfa", (g) => {
+    g.beginPath();
+    for (let k = 0; k < 20; k++) {
+      const r = k % 2 ? 66 : 88, a0 = (k / 20) * Math.PI * 2 - Math.PI / 2, a1 = ((k + 1) / 20) * Math.PI * 2 - Math.PI / 2;
+      g.lineTo(110 + r * Math.cos(a0), 110 + r * Math.sin(a0)); g.lineTo(110 + r * Math.cos(a1), 110 + r * Math.sin(a1));
+    }
+    g.closePath(); g.stroke();
+    g.beginPath(); g.arc(110, 110, 26, 0, 7); g.stroke();
+  }],
   bell: ["#f5d978", (g) => {
     g.beginPath(); g.moveTo(54, 160); g.quadraticCurveTo(66, 140, 66, 100); g.bezierCurveTo(66, 48, 154, 48, 154, 100); g.quadraticCurveTo(154, 140, 166, 160); g.closePath(); g.stroke();
     dot(g, 110, 182, 12); line(g, 110, 34, 110, 50);

@@ -140,6 +140,7 @@ body {
 .hero-door span { display: none; }
 
 .hero-door.lit,
+.hero-door.told,
 .hero-door:hover,
 .hero-door:focus-visible {
   border-color: var(--accent);

@@ -20,6 +20,18 @@ SHAPES = [
 ]
 DOORS = [(r"^(diagnostic|unannounced|shopper|shop|shops|intelligence|measure)$", 0), (r"^(engine)$", 1),
          (r"^(fix|immaculate)$", 2), (r"^(grow|growth|fuel|demand)$", 3), (r"^(plan|plans)$", 5)]
+# A tile's own line, told as a scene when its tile is pressed (the owner's call of 2026-11-11): a word -> what his body
+# shows, checked before everything else for that line; None shows nothing, so the next word's shape has room.
+SCENES = {
+    "p-diagnose": [(r"^person$", {"shape": "person"}), (r"^clinic$", None), (r"^read$", {"shape": "search"}), (r"^google$", None), (r"^evidence$", {"shape": "report"}),
+                   (r"^page$", {"shape": "app"})],
+    "p-engine": [(r"^screen$", {"shape": "app"}), (r"^system$", {"shape": "gear"}), (r"^books$", {"shape": "calendar"}),
+                 (r"^invites$", {"shape": "heart"}), (r"^counts$", {"shape": "chart"})],
+    "p-fix": [(r"^engine$", {"door": 2}), (r"^machine$", {"shape": "gear"})],
+    "p-grow": [(r"^bookings$", None), (r"^proven$", {"shape": "chart"}), (r"^books$", {"shape": "calendar"})],
+    "p-app": [(r"^read$", {"shape": "search"})],
+    "p-pricing": [(r"^numbers$", {"shape": "chart"})],
+}
 # An acting direction -> how his eyes look for the words it covers.
 EYES = {"warm": "happy", "curious": "wide", "skeptical": "think", "laughs": "wink", "serious": "line", "sighs": "sad",
         "confident": "sparkle", "softly": "blink"}
@@ -53,7 +65,7 @@ def norm(w):
     return re.sub(r"[^a-z0-9']", "", w.lower())
 
 
-def plan(text, timed, dur, digits=True):
+def plan(text, timed, dur, digits=True, scene=()):
     # The script's words and tags, aligned to the words heard, so a tag or a word in the script gets a time.
     # A hyphen splits a word ("three-month" is heard as two), so each half finds its time.
     tokens = re.findall(r"\[[^\]]+\]|[^\s\[\]-]+", text)
@@ -80,6 +92,13 @@ def plan(text, timed, dur, digits=True):
     shown = {}
     for i, w in enumerate(words):
         t = when[i]
+        scened = next(((h,) for pat, h in scene if re.match(pat, w)), None)
+        if scened:
+            if scened[0]:
+                key = json.dumps(scened[0])
+                if t - last_body >= 0.55 and t - shown.get(key, -9) >= 3.5:
+                    cues.append({"t0": round(max(0, t - 0.12), 2), **scened[0]}); last_body = t; shown[key] = t
+            continue
         hit = None
         for pat, door in DOORS:
             if re.match(pat, w):
@@ -142,7 +161,7 @@ def main():
     for i, text in script.items():
         if i not in words:
             continue
-        cues, beats = plan(text, words[i]["words"], words[i]["dur"], digits=i not in NO_DIGITS)
+        cues, beats = plan(text, words[i]["words"], words[i]["dur"], digits=i not in NO_DIGITS, scene=SCENES.get(i, ()))
         out[i] = {"dur": words[i]["dur"], "cues": cues, "beats": beats}
         if i in SIGN_OFF:
             out[i]["end"] = "mark"
