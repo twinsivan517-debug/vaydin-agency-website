@@ -206,15 +206,19 @@
 </footer>
 
 <script>
-/* The one picture: dust gathers into a phone whose screen stays empty (the owner's lock of 13 May: never the
-   product's screens on a public page), then one symbol per outcome rises out of it to the slot beside its words.
-   Runs only while on screen, stops once settled; with reduced motion the settled picture is drawn once. */
+/* The one picture: four plain symbols drawn in dust (a map pin, a camera, a globe, a chat bubble: where patients
+   meet a clinic, never a brand's logo) flow into a phone and settle as one screen of four rows with nothing written
+   on it (the owner's lock of 13 May: no product screen on a public page, no numbers). Then one symbol per
+   outcome rises out of it to the slot beside its words. Runs only while on screen, stops once settled; with reduced
+   motion the settled picture is drawn once. */
 (function(){
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var stage = document.getElementById('stage'), cv = document.getElementById('onecanvas'), ctx = cv.getContext('2d');
   var slot = document.getElementById('phoneSlot'), items = [].slice.call(document.querySelectorAll('.oc'));
   var COLORS = ['#34e3f0', '#f87171', '#e8d48b', '#a78bfa', '#4ade80', '#25D366'];
-  var W, H, dpr, phone, dots = [], glyphs = [], t0 = 0, raf = 0, visible = false, done = false;
+  var PLACE_COLORS = ['#f87171', '#a78bfa', '#34e3f0', '#4ade80'];  /* pin, camera, globe, chat: the site's own colours */
+  var ROWS = [0.25, 0.41, 0.57, 0.73], LAND = 3.0;  /* the four rows on the screen; when the first outcome rises */
+  var W, H, dpr, phone, dots = [], glyphs = [], places = [], t0 = 0, raf = 0, visible = false, done = false;
 
   function rnd(seed){ return function(){ seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }; }
   /* points along a rounded rectangle's outline */
@@ -255,6 +259,43 @@
     }
     return p;
   }
+  /* the four places as strokes in a unit box (-1..1), each stroke a polyline, then dots spaced evenly along them */
+  function arc(cx, cy, rx, ry, a0, a1, seg){
+    var p = [], k;
+    for (k = 0; k <= seg; k++){ var a = a0 + (a1 - a0) * k / seg; p.push([cx + rx*Math.cos(a), cy + ry*Math.sin(a)]); }
+    return p;
+  }
+  function closed(o){ return o.concat([o[0]]); }
+  function place(i){
+    var full = 2 * Math.PI;
+    if (i === 0){ var b = Math.acos(0.55 / 1.2);  /* map pin: a round head over a point, a hole in the head */
+      return [[[0, 0.95]].concat(arc(0, -0.25, 0.55, 0.55, Math.PI/2 + b, Math.PI/2 - b + full, 40), [[0, 0.95]]),
+              arc(0, -0.25, 0.2, 0.2, 0, full, 20)]; }
+    if (i === 1)  /* camera: a wide body, a raised top, a lens */
+      return [closed(outline(-0.9, -0.4, 1.8, 1.1, 0.18, 60)), [[-0.38, -0.4], [-0.24, -0.62], [0.24, -0.62], [0.38, -0.4]],
+              arc(0, 0.15, 0.32, 0.32, 0, full, 28)];
+    if (i === 2)  /* globe: a circle, one meridian, the equator */
+      return [arc(0, 0, 0.9, 0.9, 0, full, 48), arc(0, 0, 0.38, 0.9, 0, full, 40), [[-0.9, 0], [0.9, 0]]];
+    return [closed(outline(-0.9, -0.7, 1.8, 1.15, 0.3, 60)), [[-0.5, 0.45], [-0.62, 0.85], [-0.12, 0.45]],  /* chat bubble, three dots */
+            arc(-0.4, -0.12, 0.08, 0.08, 0, full, 8), arc(0, -0.12, 0.08, 0.08, 0, full, 8), arc(0.4, -0.12, 0.08, 0.08, 0, full, 8)];
+  }
+  function length(s){ var L = 0; for (var k = 1; k < s.length; k++) L += Math.hypot(s[k][0] - s[k-1][0], s[k][1] - s[k-1][1]); return L; }
+  function along(s, d){
+    for (var k = 1; k < s.length; k++){
+      var L = Math.hypot(s[k][0] - s[k-1][0], s[k][1] - s[k-1][1]);
+      if (d <= L || k === s.length - 1){ var f = L ? Math.min(1, d / L) : 0; return [s[k-1][0] + (s[k][0] - s[k-1][0]) * f, s[k-1][1] + (s[k][1] - s[k-1][1]) * f]; }
+      d -= L;
+    }
+    return s[0];
+  }
+  function sample(strokes, n){
+    var ls = strokes.map(length), total = ls.reduce(function(a, b){ return a + b; }, 0), out = [];
+    strokes.forEach(function(s, i){
+      var m = Math.max(4, Math.round(n * ls[i] / total)), j;
+      for (j = 0; j < m; j++) out.push(along(s, ls[i] * j / m));
+    });
+    return out;
+  }
 
   function layout(){
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -269,16 +310,30 @@
     glyphs = items.map(function(li, i){
       var sl = li.querySelector('.slot').getBoundingClientRect(), cx = sl.left - r.left + sl.width/2, cy = sl.top - r.top + sl.height/2;
       var half = sl.width * 0.36, pts = symbol(i, W < 700 ? 40 : 56);
-      return { cx: cx, cy: cy, at: 1.7 + i * 0.75, color: COLORS[i],
+      return { cx: cx, cy: cy, at: LAND + i * 0.75, color: COLORS[i],
         pts: pts.map(function(q){ return { sx: phone.x + phone.w/2 + (rr()-0.5) * phone.w * 0.5, sy: phone.y + phone.h * (0.3 + rr()*0.4), tx: cx + q[0]*half, ty: cy + q[1]*half }; }) };
+    });
+    /* the four places: formed beside the phone (pin and camera left, globe and chat right), then one row each on its screen */
+    var side = Math.max(40, (s.width - pw) / 2), half0 = Math.min(side * 0.32, pw * 0.22, 34), half1 = pw * 0.11;
+    var lx = phone.x - side / 2, rx = phone.x + phone.w + side / 2, top = phone.y + ph * 0.26, low = phone.y + ph * 0.72;
+    var starts = [[lx, top], [lx, low], [rx, top], [rx, low]], rowX = phone.x + pw * 0.26;
+    var lineX0 = phone.x + pw * 0.44, lineX1 = phone.x + pw * 0.8, pr = rnd(11);
+    places = starts.map(function(st, i){
+      var strokes = place(i), unit = strokes.map(length).reduce(function(a, b){ return a + b; }, 0);
+      var pts = sample(strokes, Math.max(36, Math.min(110, Math.round(unit * half0 / 3.2)))), ry = phone.y + ph * ROWS[i];
+      var line = [], m = Math.max(6, Math.round((lineX1 - lineX0) / 5)), k;
+      for (k = 0; k <= m; k++) line.push(lineX0 + (lineX1 - lineX0) * k / m);
+      return { color: PLACE_COLORS[i], at: 1.5 + i * 0.16, y: ry, line: line,
+        pts: pts.map(function(q){ return { sx: pr() * W, sy: pr() * H, d: pr() * 0.35,
+          mx: st[0] + q[0] * half0, my: st[1] + q[1] * half0, tx: rowX + q[0] * half1, ty: ry + q[1] * half1 }; }) };
     });
   }
   var ease = function(x){ x = Math.max(0, Math.min(1, x)); return 1 - Math.pow(1 - x, 3); };
 
   function draw(t){
     ctx.clearRect(0, 0, W, H);
-    var g = ease(t / 1.6);
-    /* the screen: a glow, and nothing drawn on it */
+    var g = 0.55 * ease(t / 1.6) + 0.45 * ease((t - 2.4) / 0.9);
+    /* the screen: a glow that brightens as the four land, and nothing written on it */
     var gl = ctx.createRadialGradient(phone.x + phone.w/2, phone.y + phone.h/2, 4, phone.x + phone.w/2, phone.y + phone.h/2, phone.h * 0.55);
     gl.addColorStop(0, 'rgba(232,212,139,' + (0.16 * g) + ')'); gl.addColorStop(1, 'rgba(232,212,139,0)');
     ctx.fillStyle = gl; ctx.fillRect(phone.x, phone.y, phone.w, phone.h);
@@ -287,6 +342,19 @@
       var d = dots[i], e = ease((t - d.d) / 1.3);
       ctx.globalAlpha = 0.35 + 0.65 * e;
       ctx.fillRect(d.sx + (d.tx - d.sx) * e - 1, d.sy + (d.ty - d.sy) * e - 1, 2, 2);
+    }
+    for (var p = 0; p < places.length; p++){
+      var P = places[p], fly = ease((t - P.at) / 1.2), le = ease((t - P.at - 0.9) / 0.7);
+      ctx.fillStyle = P.color;
+      for (var n = 0; n < P.pts.length; n++){
+        var c = P.pts[n], fe = ease((t - c.d) / 1.1), fx = c.sx + (c.mx - c.sx) * fe, fy = c.sy + (c.my - c.sy) * fe;
+        ctx.globalAlpha = 0.3 + 0.7 * fe;
+        ctx.fillRect(fx + (c.tx - fx) * fly - 1, fy + (c.ty - fy) * fly - 1, 2, 2);
+      }
+      if (le > 0){
+        ctx.fillStyle = '#e8d48b'; ctx.globalAlpha = 0.45 * le;
+        for (var L = 0; L < P.line.length && L <= le * (P.line.length - 1); L++) ctx.fillRect(P.line[L] - 0.8, P.y - 0.8, 1.6, 1.6);
+      }
     }
     var lit = 0;
     for (var j = 0; j < glyphs.length; j++){
