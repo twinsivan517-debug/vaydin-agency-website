@@ -6,7 +6,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { exitCode, judge, judgePages, pairs, toleranceFor } from "./gate-judge.mjs";
+import { auditTally, exitCode, failingAudits, judge, judgePages, pairs, toleranceFor } from "./gate-judge.mjs";
 import { privateWords, scanPushed } from "./secret-scan.mjs";
 
 let cases = 0;
@@ -279,6 +279,35 @@ test("the pre-push hook refuses a clean push when the list is missing, and passe
   const present = hook(dir, next, start, listFile("Zorblax Quint\n"));
   assert.equal(present.status, 0, present.stdout + present.stderr);
   assert.match(present.stdout, /1 private words checked/);
+});
+
+// --- the runner gate names every failing audit (2026-11-11) ----------------------------------------------
+const lhr = (bp) => ({
+  categories: {
+    performance: { auditRefs: [{ id: "largest-contentful-paint", weight: 25 }] },
+    "best-practices": { auditRefs: [{ id: "errors-in-console", weight: 1 }, { id: "inspector-issues", weight: 1 },
+      { id: "deprecations", weight: 0 }, { id: "notification-on-start", weight: 1 }] },
+    seo: { auditRefs: [{ id: "link-text", weight: 1 }] },
+  },
+  audits: { "largest-contentful-paint": { score: 0.2 }, "errors-in-console": { score: bp },
+    "inspector-issues": { score: 1 }, deprecations: { score: 0 }, "notification-on-start": { score: null },
+    "link-text": { score: 1 } },
+});
+test("failingAudits names a weighted audit under 1 outside performance, and nothing else", () => {
+  assert.deepEqual(failingAudits(lhr(0)), ["best-practices:errors-in-console"]);
+  assert.deepEqual(failingAudits(lhr(1)), []);            // the known miss: every weighted audit passes
+});
+test("auditTally counts runs per audit and marks one the anchor never failed as NEW", () => {
+  const cand = [{ failing: ["best-practices:errors-in-console", "seo:link-text"] }, { failing: ["best-practices:errors-in-console"] }];
+  const anchor = [{ failing: ["best-practices:errors-in-console"] }, { failing: [] }];
+  assert.equal(auditTally(cand, anchor), "best-practices:errors-in-console 2/2 · seo:link-text 1/2 NEW");
+  assert.equal(auditTally(anchor), "best-practices:errors-in-console 1/2");
+  assert.equal(auditTally([{ failing: [] }]), "none");
+});
+test("the runner gate keeps each run's failing audits and prints them per page", () => {
+  const src = readFileSync(resolve("scripts/runner-gate.mjs"), "utf8");
+  assert.match(src, /failing: failingAudits\(d\)/);
+  assert.match(src, /failing audits: \$\{auditTally\(/);
 });
 
 console.log(`${cases} gate cases passed`);

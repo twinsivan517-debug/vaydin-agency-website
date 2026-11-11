@@ -52,3 +52,20 @@ export function judgePages(pagePairs, runs, { tolerance, anchorCommit, ...common
   }
   return { fails, log };
 }
+
+// Every audit that costs a point in accessibility, best practices or SEO, by id, so a new failure cannot hide behind
+// an old one at the same score (the main house, 2026-11-11: /app's best practices sat at 96 on two runs and the gate
+// never said why). Performance is left out: its audits are timings, not pass or fail. lhr: one Lighthouse report.
+export const failingAudits = (lhr) => Object.entries(lhr.categories || {}).filter(([k]) => k !== "performance")
+  .flatMap(([k, c]) => (c.auditRefs || []).filter((a) => a.weight > 0 && typeof lhr.audits?.[a.id]?.score === "number"
+    && lhr.audits[a.id].score < 1).map((a) => `${k}:${a.id}`));
+
+// One side's runs -> "best-practices:errors-in-console 5/5 · seo:link-text 1/5", or "none". against: the other
+// side's runs; an audit failing here and in none of those is marked NEW.
+export function auditTally(runs, against = null) {
+  const n = new Map();
+  for (const r of runs) for (const id of new Set(r.failing || [])) n.set(id, (n.get(id) || 0) + 1);
+  const seen = against && new Set(against.flatMap((r) => r.failing || []));
+  return [...n].sort(([a], [b]) => a.localeCompare(b))
+    .map(([id, k]) => `${id} ${k}/${runs.length}${seen && !seen.has(id) ? " NEW" : ""}`).join(" · ") || "none";
+}

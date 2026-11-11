@@ -19,7 +19,7 @@
 import { execFileSync, spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { scan as secretScan } from "./secret-scan.mjs";
-import { exitCode, judgePages, pairs } from "./gate-judge.mjs";
+import { auditTally, exitCode, failingAudits, judgePages, pairs } from "./gate-judge.mjs";
 
 const RUNS = Number(process.env.RUNS || 5);
 const FLOORS = JSON.parse(readFileSync(".github/ship-floors.json", "utf8"));
@@ -64,7 +64,7 @@ function lighthouse(t, label, path = "/") {
   const story = reqs.filter((r) => String(r.url || "").includes(STORY_PATH)).reduce((s, r) => s + (r.transferSize || 0), 0);
   const weight = d.audits?.["total-byte-weight"]?.numericValue;
   const bytes = weight ? Math.round(weight - story) : null;   // null = not measured, a refusal (as ship_check)
-  return { scores, bytes, bench: Math.round(d.environment?.benchmarkIndex || 0) };
+  return { scores, bytes, bench: Math.round(d.environment?.benchmarkIndex || 0), failing: failingAudits(d) };
 }
 
 async function deadLinks(t, path = "/") {
@@ -110,6 +110,7 @@ try {
   for (let n = 0; n < RUNS; n++) for (const p of PAIRS) for (const t of (n % 2 ? [...targets].reverse() : targets))
     runs[p.page][t.name].push(lighthouse(t, `${p.page}-${n}`, at(t, p)));
   for (const p of PAIRS) for (const t of targets) console.log(`[runner-gate] ${p.page} ${t.name.padEnd(9)} ${at(t, p)} performance in run order ${JSON.stringify(runs[p.page][t.name].map((r) => r.scores.performance))} · benchmark ${JSON.stringify(runs[p.page][t.name].map((r) => r.bench))}`);
+  for (const p of PAIRS) for (const t of targets) console.log(`[runner-gate] ${p.page} ${t.name.padEnd(9)} failing audits: ${auditTally(runs[p.page][t.name], t === CAND ? runs[p.page].anchor : null)}`);
 
   const judged = judgePages(PAIRS, runs, { tolerance: TOLERANCE, anchorCommit: FLOORS.anchor,
     floors: ABSOLUTE, budget: BYTES[site.tier], tier: site.tier, tiers: Object.keys(BYTES), reportOnly });
