@@ -6,7 +6,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { auditTally, exitCode, failingAudits, judge, judgePages, pairs, toleranceFor } from "./gate-judge.mjs";
+import { SPOKEN_ROOMS, auditTally, exitCode, failingAudits, judge, judgePages, pairs, toleranceFor, unmeasuredRooms } from "./gate-judge.mjs";
 import { privateWords, scanPushed } from "./secret-scan.mjs";
 
 let cases = 0;
@@ -83,6 +83,16 @@ test("the runner gate finds the rebuilt rooms by their data-room list and judges
   const src = readFileSync(resolve("scripts/runner-gate.mjs"), "utf8");
   assert.match(src, /includes\(' data-room="'\)/);
   assert.match(src, /const PAIRS = pairs\([^\n]*, ROOMS\);/);
+});
+test("a room the site speaks but the gate did not measure is refused: an emptied room list fails closed", () => {
+  const spoken = JSON.parse(execFileSync(process.execPath, SPOKEN_ROOMS, { encoding: "utf8" }));
+  assert.ok(spoken.includes("diagnose") && spoken.includes("engine"), `the command read: ${spoken}`);
+  assert.deepEqual(unmeasuredRooms(spoken, pairs(true, true, spoken).map((p) => p.page)), []);
+  const emptied = unmeasuredRooms(spoken, pairs(true, true, []).map((p) => p.page));
+  assert.equal(emptied.length, spoken.length);
+  assert.match(emptied[0], /is spoken in src\/lib\/pages\.ts but was not measured/);
+  const src = readFileSync(resolve("scripts/runner-gate.mjs"), "utf8");
+  assert.match(src, /fails\.push\(\.\.\.unmeasuredRooms\(JSON\.parse\(execFileSync\(process\.execPath, SPOKEN_ROOMS/);
 });
 test("one tolerance number holds every page; a per-page map holds each page to its own", () => {
   assert.equal(toleranceFor(3, "home"), 3);

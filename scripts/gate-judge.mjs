@@ -2,6 +2,14 @@
 // browser (scripts/gates.test.mjs). runner-gate.mjs measures; this decides. Messages are the gate's own.
 export const median = (xs) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];
 
+// Every room the site speaks (src/lib/pages.ts ROOMS) must be among the pages measured, or the gate refuses: a
+// room list emptied or broken fails CLOSED (the main house's survivor, 2026-11-11). SPOKEN_ROOMS is the command
+// that prints those names, run by the gate and by its test alike.
+export const SPOKEN_ROOMS = ["--experimental-strip-types", "--no-warnings", "--input-type=module", "-e",
+  'const { ROOMS } = await import("./src/lib/pages.ts"); console.log(JSON.stringify(Object.keys(ROOMS)));'];
+export const unmeasuredRooms = (spoken, measured) => spoken.filter((r) => !measured.includes(r))
+  .map((r) => `room "${r}" is spoken in src/lib/pages.ts but was not measured`);
+
 // cand, anchor: Lighthouse runs, each { scores: { performance, accessibility, ... }, bytes }.
 // anchor null or empty = the anchor could not be built. tolerance null = the A/A test has not set it.
 export function judge({ cand, anchor, tolerance, floors, budget, tier, tiers, reportOnly, anchorName = "" }) {

@@ -19,7 +19,7 @@
 import { execFileSync, spawn } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { scan as secretScan } from "./secret-scan.mjs";
-import { auditTally, exitCode, failingAudits, judgePages, pairs } from "./gate-judge.mjs";
+import { SPOKEN_ROOMS, auditTally, exitCode, failingAudits, judgePages, pairs, unmeasuredRooms } from "./gate-judge.mjs";
 
 const RUNS = Number(process.env.RUNS || 5);
 const FLOORS = JSON.parse(readFileSync(".github/ship-floors.json", "utf8"));
@@ -41,6 +41,9 @@ const ROOMS = (existsSync(CAND.dir) ? readdirSync(CAND.dir) : []).filter((f) => 
   .map((f) => f.replace(/\.html$/, "")).sort();
 const PAIRS = pairs(existsSync(`${CAND.dir}/app.html`), Boolean(LIVE.dir) && existsSync(`${LIVE.dir}/app.html`), ROOMS);
 const fails = [];
+try {
+  fails.push(...unmeasuredRooms(JSON.parse(execFileSync(process.execPath, SPOKEN_ROOMS, { encoding: "utf8" })), PAIRS.map((p) => p.page)));
+} catch (e) { fails.push(`the gate could not read the rooms in src/lib/pages.ts: ${e.message}`); }
 
 const site = JSON.parse(readFileSync("site.json", "utf8"));
 console.log(`[runner-gate] chrome ${tryRun("google-chrome", ["--version"])} · image ${process.env.ImageVersion || "?"} · runs ${RUNS} each`);
