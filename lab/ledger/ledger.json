@@ -250,8 +250,8 @@
  },
  {
   "s": "And whether ChatGPT, Claude and Perplexity can read your site and tell it's a clinic.",
-  "tag": "task:CORE-F4",
-  "read": "",
+  "tag": "task:CORE-F7",
+  "read": "core 2026-11-11: OK (P3)",
   "where": [
    "app.html"
   ]
