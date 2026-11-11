@@ -80,6 +80,7 @@ export function Stage() {
   const [spun, setSpun] = useState<{ n: number; how: "spin" | "shake" } | null>(null);
   /* The tile he last told: pressed again, it opens its page. */
   const [told, setTold] = useState<string | null>(null);
+  const toldDoor = DOORS.findIndex((d) => d.href === told);
 
   useEffect(() => {
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -432,6 +433,7 @@ export function Stage() {
             }}
             onSpun={(how) => setSpun((was) => ({ n: (was?.n ?? 0) + 1, how }))}
             label={first || state.phase === "asleep" ? "Wake him up" : "Poke him"}
+            aim={toldDoor >= 0 ? { door: toldDoor, line: SUMMARIES[DOORS[toldDoor].page]?.id ?? "" } : null}
           />
           {spun && (
             <span key={spun.n} aria-hidden="true" className="spin-pop">

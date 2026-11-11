@@ -118,6 +118,8 @@ const DRAW: Record<string, [string, Draw]> = {
     g.closePath(); g.stroke();
     g.beginPath(); g.arc(110, 110, 26, 0, 7); g.stroke();
   }],
+  /* The way in: an arrow pointing right, centred, which he turns toward the tile he has just told. */
+  arrow: ["#f5d978", (g) => { g.lineWidth = 14; line(g, 30, 110, 176, 110); line(g, 124, 58, 182, 110, 124, 162); }],
 };
 
 /* Dots spread over a drawing's ink, denser where it is more opaque. */

@@ -21,7 +21,29 @@ export type FigureInput = {
   /* The question chips, each carrying its colour as `--glow`; at most six. */
   chips: HTMLElement[];
   logo: HTMLElement | null;
+  /* A tile just pressed: its door and the line it plays. Played to its end, that line leaves him an arrow aimed at the tile. */
+  aim?: { door: number; line: string } | null;
 };
+
+/* How a shape moves while he shows it (`age`: seconds since it formed), in its own units (-1..1, y up): turned by
+   `a` about (px, py), stretched by (kx, ky) about the same point, then moved by (ox, oy). Two shapes also move a part:
+   the clock its hands, the chat bubble its three dots. Under reduced motion only the arrow's aim is kept. */
+type Move = { a: number; px: number; py: number; kx: number; ky: number; ox: number; oy: number; part: string; age: number };
+const STILL: Move = { a: 0, px: 0, py: 0, kx: 1, ky: 1, ox: 0, oy: 0, part: "", age: 0 };
+const ease = (x: number) => 1 - Math.pow(1 - Math.max(0, Math.min(1, x)), 3);
+function moveOf(name: string, age: number, aimAng: number, still: boolean): Move {
+  const m = { ...STILL, age };
+  if (name === "arrow") { m.a = aimAng; if (still) { const push = 0.09 * Math.max(0, Math.sin(age * 4)); m.ox = Math.cos(aimAng) * push; m.oy = Math.sin(aimAng) * push; } return m; }
+  if (!still) return m;
+  if (name === "gear") m.a = -age * 1.6;
+  else if (name === "bell") { m.py = 0.69; m.a = 0.26 * Math.sin(age * 6); }
+  else if (name === "search") { m.ox = 0.08 * Math.cos(age * 3); m.oy = 0.08 * Math.sin(age * 3); }
+  else if (name === "heart") { m.py = -0.05; m.kx = m.ky = 1 + 0.09 * Math.max(0, Math.sin(age * 6.5)) ** 3; }
+  else if (name === "chart") { m.py = -0.73; m.ky = age < 0.8 ? 0.15 + 0.85 * ease(age / 0.8) : 1 + 0.03 * Math.sin(age * 4); }
+  else if (name === "star") { m.py = -0.055; m.a = 0.22 * Math.sin(age * 3); }
+  else if (name === "clock" || name === "chat") m.part = name;
+  return m;
+}
 
 const EYE_REST: [number, number, number] = [1, 0.906, 0.69];
 const EYE_SAD: [number, number, number] = [0.62, 0.72, 1];
@@ -242,6 +264,7 @@ export function runFigure(
 
   let phaseWas = read().mode, wakeT = phaseWas === "sleep" ? -1 : -99, last = performance.now(), raf = 0, nextBlink = 3, blinkUntil = 0;
   let yaw = 0, pitch = 0, roll = 0, lookX = 0, lookY = 0, logoUntil = 0, litFired = false, palDirty = false, signing = "", markUntil = 0;
+  let aimAt = -1, arrowFrom = 0, arrowUntil = 0;
   let litDoor = -1, litChips = false, litLogo = false;
   /* At least half of it inside the window. */
   const inView = (el: HTMLElement) => {
@@ -267,10 +290,11 @@ export function runFigure(
     const a = inp.audio, src = a && !a.paused && a.src ? a.src.replace(/^.*\//, "").replace(/\.mp3.*$/, "") : "", lt = a ? a.currentTime : 0;
     const rec = src ? cues[src] : undefined;
     let shape: Shape | null = null, sky = false, door = -1, chips = false, hail = false, cueEyes: Eyes | null = null, beat = 0;
+    let shapeName = "", shapeAge = 0, aimAng = 0;
     if (rec) {
       for (const c of rec.cues) if (lt >= c.t0 && lt < c.t1) {
         const drawn = c.shape ? SH.get(c.shape) : undefined;
-        if (drawn) { shape = drawn; sky = c.shape === "skyline"; }
+        if (drawn) { shape = drawn; sky = c.shape === "skyline"; shapeName = c.shape!; shapeAge = lt - c.t0; }
         /* A door is rung only where it can be seen: on a phone the doors may sit below the fold. */
         if (c.door !== undefined && inp.doors[c.door] && inView(inp.doors[c.door])) door = c.door;
         if (c.chips && inp.chips.length) chips = true;
@@ -281,9 +305,19 @@ export function runFigure(
     }
     if (src.startsWith("poke-")) cueEyes = POKED[src] ?? cueEyes;
     /* A closing line that plays to its end (not one stopped) leaves the Vaydin mark for a moment, until anything else plays. */
-    if (src) signing = rec?.end === "mark" ? src : "";
-    else if (signing) { if (a?.ended && SH.get("mark")) markUntil = t + 2.4; signing = ""; }
+    /* A tile's own line, pressed and played to its end, leaves an arrow aimed at that tile instead: the way in. */
+    if (src) { signing = rec?.end === "mark" ? src : ""; aimAt = inp.aim && inp.aim.line === src ? inp.aim.door : -1; }
+    else if (signing) {
+      if (a?.ended && aimAt >= 0 && inp.doors[aimAt]) { arrowFrom = t; arrowUntil = t + 4; markUntil = 0; }
+      else if (a?.ended && SH.get("mark")) markUntil = t + 2.4;
+      signing = "";
+    }
     if (!src && t < markUntil && !asleep) shape = SH.get("mark") ?? shape;
+    if (!src && t < arrowUntil && !asleep && aimAt >= 0 && inp.doors[aimAt]) {
+      const r = inp.doors[aimAt].getBoundingClientRect(), [dx, dy] = toWorld(r.left + r.width / 2, r.top + r.height / 2);
+      const arrow = SH.get("arrow");
+      if (arrow) { shape = arrow; shapeName = "arrow"; shapeAge = t - arrowFrom; aimAng = Math.atan2(dy - (cy - S * 0.4), dx - cx); }
+    }
     /* Aimed again whenever the tile moves on screen, as it does when the page scrolls under him. */
     if (door >= 0) {
       const r = inp.doors[door].getBoundingClientRect();
@@ -371,6 +405,8 @@ export function runFigure(
     const wave = waving ? 1 : 0, wa = wave * (2.2 + 0.35 * Math.sin(t * 11)), cwv = Math.cos(wa), swv = Math.sin(wa);
     const eyeH = 1 + beat * 0.18, eyeB = 1.15 + beat * 0.45;
     const isz = S * (sky ? 0.56 : 0.5), icy = cy + S * (sky ? -0.45 : -0.4);
+    const mv = shape ? moveOf(shapeName, shapeAge, aimAng, !reduce) : STILL, mc = Math.cos(mv.a), ms = Math.sin(mv.a);
+    const handA = mv.part === "clock" ? -mv.age * 2 : 0, hc = Math.cos(handA), hs = Math.sin(handA);
     const logoR = inp.logo ? inp.logo.getBoundingClientRect() : null;
     for (let k = holes.length - 1; k >= 0; k--) if (t - holes[k].t > holes[k].life) holes.splice(k, 1);
 
@@ -385,7 +421,16 @@ export function runFigure(
         tx = lx2; ty = ly2; tz = 0; b = 0.9; sp2 = 2.2;
       } else if (formed && body && shape) {
         const q = j * 3;
-        tx = cx + shape.pts[q] * isz; ty = icy + shape.pts[q + 1] * isz; tz = shape.pts[q + 2] * isz;
+        let sx = shape.pts[q], sy = shape.pts[q + 1];
+        /* The clock's hands turn inside its ring; the chat bubble's three dots rise one after another, as typing. */
+        if (mv.part === "clock" && sx * sx + sy * sy < 0.38) { const rx = sx * hc - sy * hs; sy = sx * hs + sy * hc; sx = rx; }
+        else if (mv.part === "chat" && Math.abs(sy - 0.136) < 0.1) {
+          const k = sx < -0.15 ? 0 : sx < 0.15 ? 1 : 2;
+          if (Math.abs(sx - (k - 1) * 0.29) < 0.1) sy += 0.07 * Math.max(0, Math.sin(mv.age * 9 - k * 1.3));
+        }
+        const ux = (sx - mv.px) * mv.kx, uy = (sy - mv.py) * mv.ky;
+        sx = mv.px + ux * mc - uy * ms + mv.ox; sy = mv.py + ux * ms + uy * mc + mv.oy;
+        tx = cx + sx * isz; ty = icy + sy * isz; tz = shape.pts[q + 2] * isz;
         b = 0.8 + 0.1 * Math.sin(t * 4 + B.seed[i] * 40); sp2 = 4.5; tint = -0.75;
       } else if (formed && body && door >= 0 && doorShown >= 0) {
         const q = j * 3;

@@ -33,6 +33,8 @@ type Props = {
   /* Where given, he is a button by that name for a keyboard or a screen reader: Enter or Space presses him. */
   label?: string;
   small?: boolean;
+  /* The tile just pressed and the line it plays: played to its end, he becomes an arrow aimed at that tile. */
+  aim?: FigureInput["aim"];
 };
 
 export const Figure = forwardRef<GuideHandle, Props>(function Figure(props, ref) {
@@ -66,7 +68,7 @@ export const Figure = forwardRef<GuideHandle, Props>(function Figure(props, ref)
     const start = window.setTimeout(() => {
       run = runFigure(
         canvas,
-        () => ({ mode: latest.current.mode, audio: latest.current.audio(), stage: stage.current, doors, chips, logo }),
+        () => ({ mode: latest.current.mode, audio: latest.current.audio(), stage: stage.current, doors, chips, logo, aim: latest.current.aim }),
         reduce,
         !!latest.current.small,
         () => latest.current.onLit?.(),
