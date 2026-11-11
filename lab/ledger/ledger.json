@@ -7109,8 +7109,8 @@
  },
  {
   "s": "The first thirty days",
-  "tag": "none",
-  "read": "",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:78",
+  "read": "main house 2026-11-11: OK (labels the link to fix.html under hands-on for the first thirty days; agrees with CLAUDE_BUSINESS.md:78)",
   "where": [
    "answers.ts",
    "pitch.ts"
