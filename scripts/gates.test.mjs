@@ -6,7 +6,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { exitCode, judge } from "./gate-judge.mjs";
+import { exitCode, judge, pairs } from "./gate-judge.mjs";
 import { scanPushed } from "./secret-scan.mjs";
 
 let cases = 0;
@@ -55,6 +55,15 @@ test("main exits 1 on any finding; a gate branch exits 0", () => {
   assert.equal(exitCode(["x"], false), 1);
   assert.equal(exitCode(["x"], true), 0);
   assert.equal(exitCode([], false), 0);
+});
+test("an anchor that has /app.html holds /app to its own /app", () => {
+  assert.deepEqual(pairs(true, true).map((p) => [p.page, p.cand, p.anchor]), [["home", "/", "/"], ["app", "/app.html", "/app.html"]]);
+});
+test("an anchor older than /app holds it to grow.html", () => {
+  assert.deepEqual(pairs(true, false).map((p) => [p.page, p.anchor]), [["home", "/"], ["app", "/grow.html"]]);
+});
+test("a candidate without /app.html is judged on home alone", () => {
+  assert.deepEqual(pairs(false, true).map((p) => p.page), ["home"]);
 });
 
 // --- the runner gate, end to end, when it cannot measure ------------------------------------------------
