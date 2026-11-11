@@ -65,6 +65,18 @@ for (const id of disk) {
   if (!cues[id]) fails.push(`${id}.mp3: no cues in public/guide/cues.json (words.py, then cues.py)`);
 }
 for (const id of Object.keys(extras)) if (!disk.includes(id)) fails.push(`_extras names ${id}.mp3, which is not on disk`);
+/* Every door a cue rings is a tile beside him, and every shape it names is one he draws (2026-11-11: the plan cues
+   moved to a sixth door that the engine's colour list did not hold, and he froze on "plan"; an unknown shape fails silently). */
+const { DOORS } = await import("../src/lib/doors.ts");
+const drawn = new Set([...readFileSync(join(site, "src/lib/figure/shapes.ts"), "utf8").matchAll(/(?:^|[\s,{])"?([\w-]+)"?: \["#[0-9a-f]{6}"/gm)].map((m) => m[1]));
+for (const [id, v] of Object.entries(cues)) for (const c of v.cues) {
+  if (c.door !== undefined && !(Number.isInteger(c.door) && c.door >= 0 && c.door < DOORS.length))
+    fails.push(`${id}: a cue rings door ${c.door}, and the home page has ${DOORS.length} tiles (src/lib/doors.ts)`);
+  if (c.shape && !drawn.has(c.shape)) fails.push(`${id}: a cue names the shape "${c.shape}", which src/lib/figure/shapes.ts does not draw`);
+}
+const byPlace = /ACCENT\[\s*(door|doorShown|aimAt|c\.door)\b/;
+if (byPlace.test(readFileSync(join(site, "src/lib/figure/engine.ts"), "utf8")))
+  fails.push("src/lib/figure/engine.ts picks a door's colour by its place in a fixed list: read the tile's own --accent");
 for (const id of referenced(site)) {
   if (id in extras) fails.push(`src/ plays /voice/${id}.mp3, which _extras says no page plays`);
   else if (!lines[id]) fails.push(`src/ plays /voice/${id}.mp3, which no checked line speaks: the walk in lines.mjs misses it`);

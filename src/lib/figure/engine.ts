@@ -150,9 +150,11 @@ export function runFigure(
 
   /* A door: most of his body rings it, the rest glows around it. */
   const doorTgt = new Float32Array(B.nb * 3), doorHalo = new Uint8Array(B.nb);
-  let doorShown = -1, doorAt = "";
+  let doorShown = -1, doorAt = "", doorCol: [number, number, number] = ACCENT[1];
   function aimDoor(el: HTMLElement, d: number, r: DOMRect) {
     const K = B.nb, at = outline(el, r);
+    /* The tile's own colour, as the page sets it: a door's place in the row never picks its colour. */
+    if (d !== doorShown) doorCol = hex(getComputedStyle(el).getPropertyValue("--accent").trim() || "#f5d978");
     for (let j = 0; j < K; j++) {
       const [px, py, a] = at((j + 0.5) / K, (j % 7) * 0.0015);
       doorHalo[j] = j % 5 < 2 ? 1 : 0;
@@ -345,10 +347,10 @@ export function runFigure(
     /* His annoyance, fading over the eight seconds after the last poke: it reddens his resting eyes. */
     const irk = annoy * Math.max(0, 1 - (t - lastPoke) / 8), redden = Math.min(1, irk / 4);
     const rest: [number, number, number] = [0, 1, 2].map((k) => EYE_REST[k] + (ACCENT[0][k] - EYE_REST[k]) * redden) as [number, number, number];
-    const eyeTgt = door >= 0 ? ACCENT[door] : expr === "sad" ? EYE_SAD : expr === "cross" ? ACCENT[0] : shape ? shape.color : rest;
+    const eyeTgt = door >= 0 ? doorCol : expr === "sad" ? EYE_SAD : expr === "cross" ? ACCENT[0] : shape ? shape.color : rest;
     for (let k = 0; k < 3; k++) {
       eyeCol[k] += (eyeTgt[k] - eyeCol[k]) * Math.min(1, dt * 4);
-      shapeCol[k] += ((door >= 0 ? ACCENT[door][k] : shape ? shape.color[k] : shapeCol[k]) - shapeCol[k]) * Math.min(1, dt * 6);
+      shapeCol[k] += ((door >= 0 ? doorCol[k] : shape ? shape.color[k] : shapeCol[k]) - shapeCol[k]) * Math.min(1, dt * 6);
     }
     gl!.uniform3fv(uTint, eyeCol);
     gl!.uniform3fv(uShape, shapeCol);
