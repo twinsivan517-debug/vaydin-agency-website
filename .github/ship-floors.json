@@ -1,14 +1,16 @@
 {
-  "_why": "Ship gate on the GitHub runner (scripts/runner-gate.mjs). The candidate is measured side by side with the ANCHOR on one runner. The anchor moves only on the owner's word. Each page's tolerance comes from an A/A test of that page against itself on 5 separate runners, written here before any candidate is judged: home 2 and app 5, set 2026-11-11 from runs 42982070509..42985537009 against the anchor c9945eb (history.aa_app); diagnose 2, set 2026-11-11 from runs 43067572799..43074095787 on gate/aa-diagnose (history.aa_diagnose); home's earlier 3 came from runs 42629296271..42631926595 against 4396036 (history.aa_v3). A page with no number of its own means main never deploys.",
+  "_why": "Ship gate on the GitHub runner (scripts/runner-gate.mjs). The candidate is measured side by side with the ANCHOR on one runner, and the gate judges the median of the per-round differences. The anchor moves only on the owner's word. Each page's tolerance comes from an A/A test of that page against itself on 5 separate runners, written here before any candidate is judged: home, app, diagnose and engine 3 each, set 2026-11-12 from runs 43164997059..43171174015 on gate/aa-pairs by the paired rule (history.aa_pairs). The numbers before them judged the difference of two medians: home 2 and app 5 (history.aa_app), diagnose 2 (history.aa_diagnose), home 3 before those (history.aa_v3). A page with no number of its own means main never deploys.",
   "anchor": "c9945eb",
   "tolerance": {
-    "home": 2,
-    "app": 5,
-    "diagnose": 2
+    "home": 3,
+    "app": 3,
+    "diagnose": 3,
+    "engine": 3
   },
   "aa_rule": "Written 2026-11-09 before any A/A job ran. Branch gate/aa = the anchor's site + these gate files, so both sides build identical bytes. 5 jobs (the owner's pick, 2026-11-09, on web-studio's review; first written as 3, changed before any job counted), one after another, each on its own runner; each job gives d = candidate median - anchor median. A job whose log says the gate could not measure does not count and is run again (run 42628188860, d = +1, did not count: it crashed after measuring, the keep-alive bug fixed since). tolerance = the largest |d| of the 5, plus 1. If that largest |d| is over 5, nothing is written: the side-by-side method is too noisy here, and the owner decides what next.",
   "aa_rule_app": "Written 2026-11-11 before any job of this test ran. Branch gate/aa-app = the live site c9945eb + the gate change that holds /app.html to the anchor's own /app.html (bd43d39); the anchor on this branch is c9945eb, so both sides build the same commit. 5 jobs, one after another, each on its own runner, RUNS=5 per side as on main; each job gives, per page, d = candidate median - anchor median, for home and for /app. A job whose log says the gate could not measure does not count and is run again. Per page: tolerance = the largest |d| of the 5, plus 1. If a page's largest |d| is over 5, no number is written for that page: the side-by-side method is too noisy for it, and the owner decides what next (for example /app report-only, or more runs per job). Moving main's anchor to c9945eb and every number written are the owner's word.",
   "aa_rule_diagnose": "Written 2026-11-11 before any job of this test ran (the owner's word: \"run the speed check\"). Branch gate/aa-diagnose = rooms/diagnose at dff98d6 (the Diagnose film 3f0fcde + the gate change that judges every rebuilt room beside the anchor's own copy of that page) + this file; the anchor on this branch is dff98d6, so both sides build the same commit. 5 jobs, one after another, each on its own runner (the first by the push, four by hand), RUNS=5 per side as on main; each job gives, for /diagnose.html, d = candidate median - anchor median. A job whose log says the gate could not measure does not count and is run again. tolerance = the largest |d| of the 5, plus 1. If that largest |d| is over 5, no number is written: the side-by-side method is too noisy for this page, and the owner decides what next. Writing the number into main's tolerance is the owner's word; main's anchor stays c9945eb.",
+  "aa_rule_pairs": "Written 2026-11-11 (UTC) before any job of this test ran (the owner's taps: 18:04Z \"Compare in pairs\", ~18:37Z \"Pairs first, one test\"). Branch gate/aa-pairs = rooms/engine at cf808a0 (the Engine room, the Engine round's fixes, the paired gate, and the four modules drawn switched off on Layer 2's read) + this file; the anchor on this branch is cf808a0, so both sides build the same commit. Job 1 of 796db05 (run 43080906486) is cancelled by the push of this commit before it finished, and does not count. 5 jobs, one after another, never two at once (a second run on this branch cancels the first), each on its own runner (the first by the push, four by hand), RUNS=5 per side as on main. Each job gives, per page (home, app, diagnose, engine), d = the gate's own 'difference': the median of the five per-round differences, candidate - anchor (gate-judge.mjs pairedDifference). A job whose log says the gate could not measure does not count and is run again. Per page: tolerance = the largest |d| of the 5, plus 1. If a page's largest |d| is over 5, no number is written for that page, and the owner decides what next. Writing the numbers into main (with the paired rule, in one push) is the owner's word; main's anchor stays c9945eb.",
   "floors": {
     "accessibility": 95,
     "best-practices": 90,
@@ -147,6 +149,84 @@
         ]
       },
       "note": "5 jobs, one after another (the first by the push, four by hand), all counted: no log says the gate could not measure. By aa_rule_diagnose: diagnose 1 + 1 = 2, written on the owner's word (his tap, 2026-11-11 18:13Z). The page measured was dff98d6's; the page going to main is eb6d9e2's, the same film with its last act's timing changed. home's and /app's differences are recorded, not used: /app's +8 (run 43069225621, the runner's scores in two groups, about 78 and 90) is over its own 5, and the owner's call (his tap, 2026-11-11) is to judge every page by the median of its per-round differences, as its own round with its own A/A after Diagnose ships."
+    },
+    "aa_pairs": {
+      "commit": "8e0513c (gate/aa-pairs: rooms/engine's site at cf808a0 + aa_rule_pairs; both sides build the same site bytes; the anchor cf808a0 reachable on GitHub by the tag aa-pairs-anchor)",
+      "runs": [
+        43164997059,
+        43166620572,
+        43168331999,
+        43169793942,
+        43171174015
+      ],
+      "difference_candidate_minus_anchor": {
+        "home": [
+          1,
+          -2,
+          -2,
+          0,
+          0
+        ],
+        "app": [
+          -2,
+          0,
+          0,
+          1,
+          0
+        ],
+        "diagnose": [
+          0,
+          0,
+          1,
+          -2,
+          0
+        ],
+        "engine": [
+          0,
+          -1,
+          -1,
+          -2,
+          0
+        ]
+      },
+      "machine_medians_anchor": {
+        "home": [
+          81,
+          82,
+          95,
+          97,
+          95
+        ],
+        "app": [
+          89,
+          89,
+          92,
+          93,
+          92
+        ],
+        "diagnose": [
+          89,
+          88,
+          91,
+          92,
+          91
+        ],
+        "engine": [
+          91,
+          91,
+          93,
+          96,
+          93
+        ]
+      },
+      "did_not_count": [
+        43080906486,
+        43081535836,
+        43082385943,
+        43082509773,
+        43082635751
+      ],
+      "note": "The paired rule: d is the gate's own 'difference', the median of the five per-round differences. 5 jobs on 8e0513c, one after another, never overlapping, each on its own runner, all five started by hand on 2026-11-12, all counted: every log shows the difference for all four pages. Not 'the first by the push' as the rule planned: 43080906486 (796db05) was cancelled by the next push, and the four runs of 2026-11-11 on 8e0513c (43081535836 by the push, three by hand) could not build the anchor ('fatal: invalid reference: cf808a0', a commit not yet on GitHub), so none counted, by the rule's own sentence. The anchor's own medians ranged 81 to 97 on home while every page's paired difference stayed within 2. By aa_rule_pairs: 2 + 1 = 3 for home, app, diagnose and engine, written on the owner's word, 2026-11-12 ('Write + test Engine'). Main's anchor stays c9945eb."
     }
   }
 }
