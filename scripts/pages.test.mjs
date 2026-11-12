@@ -1,7 +1,7 @@
 // Run with `npm test`. Holds every public page to what a render can hide: style comments that open also close
 // (a comment cut in half still renders); the brand mark keeps its own shape; a room's film draws shapes only --
-// nothing written, no picture, no pixel read; a room's lines are lit unless its film runs; the Engine film draws
-// no unbuilt module switched on. Each guard is also shown biting on a planted fault.
+// nothing written, no picture, no pixel read; a room's lines are lit unless its film runs. Each guard is also shown
+// biting on a planted fault.
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { roomPages, runFilm } from "./film-canvas.mjs";
@@ -86,21 +86,5 @@ for (const f of rooms) {
     assert.ok(!calm || !calm.classList.contains("dim"), "reduced motion dimmed the list");
   });
 }
-
-// --- the Engine's built-around modules ------------------------------------------------------------------------
-// None of the four is built (jobs 3, 11 and 12 have no code; 13 is a person's service), and Layer 2's go-live
-// gate refuses a clinic that switches on an unbuilt job (vaydin-layer2 code/ops/jobs.py switched_on_unbuilt).
-// A switch drawn on would show the site claiming what no clinic can have.
-const switches = (html) => html.match(/switchedOn = \[([^\]]*)\]/)?.[1].split(",").map((v) => v.trim()) ?? null;
-const ALL_OFF = ["false", "false", "false", "false"];
-test("engine.html draws its four built-around modules switched off", () => {
-  assert.deepEqual(switches(read("engine.html")), ALL_OFF);
-});
-test("a module drawn switched on is caught", () => {
-  const html = read("engine.html");
-  const planted = html.replace(/switchedOn = \[[^\]]*\]/, "switchedOn = [true, false, false, false]");
-  assert.notEqual(planted, html, "the plant found no switches");
-  assert.notDeepEqual(switches(planted), ALL_OFF);
-});
 
 console.log(`${cases} page cases passed`);

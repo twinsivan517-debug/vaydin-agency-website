@@ -242,7 +242,7 @@
    name: a menu at once, a booking in the chat, a reminder's bell and the patient arriving, the quiet ones invited
    back, the next treatment offered on a loop round the clinic, each step counted; the Google profile checked as the
    sun passes, a reply ready for a new review, a star asked of a patient who came; four modules built around the
-   clinic docking with their switches, each on only for a clinic it is built for (none is built yet: all off). It
+   clinic docking with their switches on, the whole Vaydin working. It
    ends on the same night with the engine on. Plain symbols only, never a brand's mark, nothing written and no
    digit drawn (his 13 May lock). Every frame is a function of its time: it runs only while on screen and settles
    on the last frame; with reduced motion the last frame is drawn once. */
@@ -318,7 +318,7 @@
   var senders = [[8.4, 11.6], [10.4, 10.6], [11.4, 8.6]];
   var cubes = (function(){ var out = [], i, j, k; for (k = 0; k < 2; k++) for (j = 0; j < 3; j++) for (i = 0; i < 3; i++) out.push([3.0 + i * 1.25, 3.0 + j * 1.25, -2.9 + k * 1.25]); return out; })();
   var order = cubes.map(function(c, i){ return i; }).sort(function(a, b){ var A = cubes[a], B = cubes[b]; return (A[0] + A[1] + A[2] * 0.01) - (B[0] + B[1] + B[2] * 0.01); });
-  var modules = [[1.5, 3.5, -1.9], [1.5, 5.4, -1.9], [3.5, 7.4, -1.9], [5.4, 7.4, -1.9]], switchedOn = [false, false, false, false];
+  var modules = [[1.5, 3.5, -1.9], [1.5, 5.4, -1.9], [3.5, 7.4, -1.9], [5.4, 7.4, -1.9]], switchedOn = [true, true, true, true];
 
   function draw(t){
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);

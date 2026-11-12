@@ -2195,9 +2195,9 @@
   ]
  },
  {
-  "s": "Vaydin: Instagram DMs on the same menu and booking as WhatsApp, once Meta approves our access.",
+  "s": "Vaydin: Instagram DMs on the same menu and booking as WhatsApp.",
   "tag": "job:12",
-  "read": "Layer 2 2026-11-10: true words applied",
+  "read": "Layer 2 2026-11-12: by his ruling (all 13)",
   "where": [
    "index.html"
   ]
@@ -3791,9 +3791,9 @@
   ]
  },
  {
-  "s": "Consultation preparation, email on the clinic's own domain, and website changes made by a person on request are built around each clinic; Instagram DMs on the same menu and booking as WhatsApp, once Meta approves our access.",
+  "s": "Consultation preparation, email on the clinic's own domain, and website changes made by a person on request are built around each clinic, and Instagram DMs get the same menu and booking as WhatsApp.",
   "tag": "job:3 + job:11 + job:12 + job:13",
-  "read": "Layer 2 2026-11-10: true words applied (L3)",
+  "read": "Layer 2 2026-11-12: by his ruling (all 13)",
   "where": [
    "llms.txt"
   ]
@@ -6022,9 +6022,9 @@
   ]
  },
  {
-  "s": "Instagram DMs on the same menu and booking as WhatsApp, once Meta approves our access.",
+  "s": "Instagram DMs on the same menu and booking as WhatsApp.",
   "tag": "job:12",
-  "read": "Layer 2 2026-11-10: true words applied",
+  "read": "Layer 2 2026-11-12: by his ruling (all 13)",
   "where": [
    "src/app/page.tsx"
   ]

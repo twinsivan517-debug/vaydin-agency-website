@@ -26,12 +26,12 @@ const PROBLEMS = [
     problem: "Your Google profile, reviews, Instagram and website are judged by patients every day and seen by nobody inside the clinic.",
     vaydin: "A real person shops your clinic unannounced every thirty to sixty days. Six areas, one score, what to fix first. Then the engine keeps watch: your Google hours checked daily, a reply ready for every new review.",
   },
-  /* Every field in front (WEB-G, 2026-11-10): the email sentence is Layer 2's, word for word; Instagram's words follow
-     the engine page's until Layer 2's read says otherwise. */
+  /* Every field in front: the email sentence is Layer 2's, word for word; all thirteen jobs are sold as working, and
+     each job's start is a client term, not a line on the page. */
   {
     title: "The doors nobody owns",
     problem: "A patient asks in an Instagram DM or by email, or finds last season's prices on your website. Nobody inside owns those doors.",
-    vaydin: "Instagram DMs on the same menu and booking as WhatsApp, once Meta approves our access. A patient who emails your clinic's address, on your clinic's own domain, gets your approved acknowledgement within minutes, and your reception is told at once on WhatsApp so a person answers. Your website kept current by a person, on request, with a Book on WhatsApp button.",
+    vaydin: "Instagram DMs on the same menu and booking as WhatsApp. A patient who emails your clinic's address, on your clinic's own domain, gets your approved acknowledgement within minutes, and your reception is told at once on WhatsApp so a person answers. Your website kept current by a person, on request, with a Book on WhatsApp button.",
   },
 ];
 
