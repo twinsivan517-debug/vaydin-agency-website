@@ -19,7 +19,12 @@ red("a call left inside a block comment", diff("scripts/x.mjs", [`${OPEN} kept f
 red("an assignment with no semicolon", diff("scripts/x.mjs", [`${SL} el.style.color = 'red'`]), CODE);
 red("a compound assignment", diff("scripts/x.mjs", [`${SL} total += 1;`]), CODE);
 red("a call with no semicolon", diff("scripts/x.mjs", [`${SL} render(page)`]), CODE);
-red("a return with no semicolon", diff("scripts/x.mjs", [`${SL} return words`]), CODE);
+red("a return with no semicolon", diff("scripts/x.mjs", [`${SL} return rows.length`]), CODE);
+red("a call with its own note after it", diff("scripts/x.mjs", [`${SL} doThing(a, b) ${SL} old way`]), CODE);
+red("a CSS rule commented out", diff("src/x.css", [`${OPEN} .hero { color: red; } ${CLOSE}`]), CODE);
+red("a CSS declaration commented out", diff("public/x.html", [`  ${OPEN} display: none; ${CLOSE}`]), CODE);
+red("a Python loop on one line", diff("lab/x.py", [`${H} for item in items: send(item)`]), CODE);
+red("Python code parked in a docstring", diff("lab/x.py", ['    """', "    old_total = compute()", '    """']), CODE);
 red("a component commented out in JSX", diff("src/app/x.tsx", [`{${OPEN} <Corner page={p} /> ${CLOSE}}`]), CODE);
 red("a tag in capitals", diff("public/x.html", [`${HTML_OPEN} <BR> ${HTML_CLOSE}`]), CODE);
 red("a tag inside a comment over three lines", diff("public/x.html", [HTML_OPEN, '<div class="hero">', HTML_CLOSE]), CODE);
@@ -46,6 +51,9 @@ dated("a month and year with a comma", "November, 2026");
 dated("a date joined by a non-breaking hyphen", "2026‑11‑12");
 dated("a date joined by an en dash", "2026–11–12");
 dated("a date with no separators", "20261112");
+dated("a date with its time", "2026-11-12T10:15Z on his word");
+dated("a day, month name and year joined by dashes", "12-Nov-2026");
+red("a date in a Python docstring", diff("lab/x.py", ['    """Changed 12 Nov 2026 on the owner\'s word."""']), DATE);
 
 red("a new file named as an old copy", diff("scripts/gate-judge_old.mjs", ["export const x = 1;"], true), COPY);
 red("a new file with a backup word before its type", diff("src/x.bak.js", ["export const a = 1;"], true), COPY);
@@ -63,6 +71,9 @@ red("a variable named as the fixed one", diff("src/x.ts", ["const render_" + "fi
 red("a variable named as work in progress", diff("src/x.ts", ["const page_" + "wip = 1;"]), COPY);
 red("a new file named as a copy of another", diff("scripts/Copy of gate.mjs", ["export const x = 1;"], true), COPY);
 red("a new file with a duplicate's number", diff("scripts/gate (1).mjs", ["export const x = 1;"], true), COPY);
+red("a copy's word with a number after it", diff("src/x.ts", ["const engine" + "Copy2 = 1;", "const score_" + "old2 = 1;"]), COPY);
+red("a new file named the way macOS names a copy", diff("scripts/gate-judge co" + "py.mjs", ["export const x = 1;"], true), COPY);
+red("a new file named as the previous one", diff("src/page.pr" + "ev.tsx", ["export const x = 1;"], true), COPY);
 red("a class named as an old copy", diff("src/x.css", [".hero-" + "old { color: red; }"]), COPY);
 red("an id named as a backup", diff("public/x.html", ['<div id="grow-' + 'backup"></div>']), COPY);
 
@@ -73,6 +84,11 @@ green("a flag about a new thing", diff("src/x.ts", ["let isNew = false;"]));
 green("a film's comment", diff("public/x.html", [`  ${OPEN} a message on its way: a bright head and a trail over an arc ${CLOSE}`]));
 green("a date in a data file", diff("lab/ledger/ledger.json", ['  "read": "core 2026-11-12: OK"']));
 green("prose that starts like code", diff("scripts/x.mjs", [`${SL} return early when the list is empty`, `${SL} if the anchor moves, the owner says so`]));
+green("a return that is prose", diff("scripts/x.mjs", [`${SL} return early`]));
+green("a Python return that is prose", diff("lab/x.py", [`x = 1  ${H} return early`]));
+green("a tag named inside a sentence", diff("public/x.html", [`${HTML_OPEN} <main> holds one room per page ${HTML_CLOSE}`]));
+green("a docstring that says what a function does", diff("lab/x.py", ['    """Reads the voice list and writes the cues."""']));
+green("a stylesheet comment that says why", diff("src/x.css", [`${OPEN} the dock waits for the last module ${CLOSE}`]));
 green("prose with an equals sign", diff("scripts/x.mjs", [`${SL} width = height * 2 keeps the ratio`, `${SL} import the voices first, then the cues`]));
 green("prose words that begin like a month", diff("scripts/x.mjs", [`run(); ${SL} Maybe 2 lines wrap on a phone`, `run(); ${SL} Mark 2 of the film is the dock`, `run(); ${SL} Decide 3 things before the dock`]));
 green("a glob inside a line comment, then real code", diff("scripts/x.mjs", [`${SL} a gate/*${"*"} branch only reports.`, "  return { fails, log };"]));

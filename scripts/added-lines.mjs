@@ -3,9 +3,10 @@
 // and a date inside a new comment (the story lives in the commit message). Only added lines are read, so an older
 // file is cleaned when it is next touched for a real reason. The pre-commit hook runs it on the staged diff; `node
 // scripts/added-lines.mjs <base>` runs it on base..HEAD. HONEST LIMIT: it matches shapes, never meaning. Not seen: a
-// copy named with a bare digit (x2.js), a date with neither a year nor a month's name, "may" in lower case, and
-// commented-out code that also reads as prose (two plain words in a row). A commit made with --no-verify skips it;
-// the main house's range read is the second net.
+// copy named with a bare digit (x2.js) or "prev" in a name inside code; a date with neither a year nor a month's
+// name (11-12), or "may" in lower case; commented-out code that also reads as prose (two plain words in a row, as
+// "return words" or a tag holding a sentence over two lines); a date or code in a string that is data rather than a
+// docstring. A commit made with --no-verify skips it; the main house's range read is the second net.
 import { execFileSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 
@@ -13,38 +14,50 @@ const CODE = /\.(mjs|cjs|js|jsx|ts|tsx|css|html|py)$/;
 const MONTH = "(?:[Jj]an(?:uary)?|[Ff]eb(?:ruary)?|[Mm]ar(?:ch)?|[Aa]pr(?:il)?|May|[Jj]une?|[Jj]uly?|[Aa]ug(?:ust)?" +
   "|[Ss]ep(?:t(?:ember)?)?|[Oo]ct(?:ober)?|[Nn]ov(?:ember)?|[Dd]ec(?:ember)?|JAN|FEB|MAR|APR|MAY|JUNE?|JULY?|AUG|SEPT?|OCT|NOV|DEC)(?:\\.|\\b)";
 const DAY = "\\d{1,2}(?:st|nd|rd|th)?\\b";
-const SEP = "[-‐-―/.]";
-const DATE = new RegExp([`\\b(?:19|20)\\d\\d${SEP}\\d{1,2}${SEP}\\d{1,2}\\b`, `\\b\\d{1,2}${SEP}\\d{1,2}${SEP}(?:19|20)\\d\\d\\b`,
-  "\\b(?:19|20)\\d\\d(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\\d|3[01])\\b",
-  `\\b${DAY}\\s+(?:of\\s+)?${MONTH}`, `\\b${MONTH}\\s*${DAY}`, `\\b${MONTH},?\\s*(?:19|20)\\d\\d\\b`].join("|"));
+const DASH = "\\-\\u2010-\\u2015", SEP = `[${DASH}/.]`, NUM_END = "(?!\\d)";
+const DATE = new RegExp([`\\b(?:19|20)\\d\\d${SEP}\\d{1,2}${SEP}\\d{1,2}${NUM_END}`, `\\b\\d{1,2}${SEP}\\d{1,2}${SEP}(?:19|20)\\d\\d${NUM_END}`,
+  `\\b(?:19|20)\\d\\d(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\\d|3[01])${NUM_END}`, `\\b${DAY}[\\s${DASH}/.]+(?:of\\s+)?${MONTH}`,
+  `\\b${MONTH}[\\s${DASH}/]*${DAY}`, `\\b${MONTH}[,\\s${DASH}/.]*(?:19|20)\\d\\d${NUM_END}`].join("|"));
 const CODE_SHAPES = [/^\s*(const|let|var)\s+[\w$]+\s*=/, /^\s*(async\s+)?function\s*[\w$]*\s*\(/, /^\s*return.*;\s*$/,
   /^\s*(import|export)\s.*(from|=|\{)/, /^\s*export\s+default\b/, /^\s*await\s+[\w$.]+\(/, /^\s*class\s+\w+\s*(\{|extends)/,
   /^\s*(if|for|while)\s*\(.*\)\s*(\{|\S.*;)?\s*$/, /^\s*[\w.$[\]]+\(.*\)\s*;\s*$/, /^\s*[\w.$[\]]+\s*=\s*[^=].*;\s*$/,
-  /^\s*([\w$.[\]]+(\+\+|--)|(\+\+|--)[\w$.[\]]+)\s*;?\s*$/, /^\s*<\/?[A-Za-z][\w.:-]*(\s[^>]*)?\/?>/];
-const PY_SHAPES = [/^\s*def\s+\w+\s*\(/, /^\s*class\s+\w+\s*(\(.*\))?\s*:\s*$/, /^\s*for\s+[\w, ]+\s+in\s+\S.*:\s*$/,
-  /^\s*with\s+.+\s+as\s+\w+\s*:\s*$/, /^\s*(from\s+[\w.]+\s+)?import\s+[\w.*]+(\s+as\s+\w+)?(\s*,\s*[\w.]+(\s+as\s+\w+)?)*\s*$/];
-/* A call, an assignment or a return with no semicolon is code only when it does not also read as prose. */
+  /^\s*([\w$.[\]]+(\+\+|--)|(\+\+|--)[\w$.[\]]+)\s*;?\s*$/];
+const PY_SHAPES = [/^\s*def\s+\w+\s*\(/, /^\s*class\s+\w+\s*(\(.*\))?\s*:\s*$/, /^\s*with\s+.+\s+as\s+\w+\s*:\s*$/,
+  /^\s*for\s+[\w, ]+\s+in\s+([\w.[\]]+|[\w.]+\(.*\))\s*:\s*([\w.]+\(.*\)|[\w.[\]]+\s*=.*)?\s*$/,
+  /^\s*(from\s+[\w.]+\s+)?import\s+[\w.*]+(\s+as\s+\w+)?(\s*,\s*[\w.]+(\s+as\s+\w+)?)*\s*$/];
+/* A CSS rule, or one declaration ending in a semicolon, in a stylesheet or a page. */
+const CSS_SHAPES = [/^\s*[^\s{}][^{}]*\{\s*([-\w]+\s*:[^;{}]*;?\s*)*\}?\s*$/, /^\s*-?[a-z][a-z-]*\s*:\s*[^;]+;\s*$/];
+/* A call, an assignment, a return, a tag or a declaration without its semicolon is code only when it does not also
+   read as prose; a tag that the comment ends on is code either way. */
 const CALL = /^\s*[\w$]+(\.[\w$]+)*\(.*\)\s*;?\s*$/;
 const ASSIGN = /^\s*[\w$]+(\.[\w$]+|\[[^\]]*\])*\s*([-+*%&|^/]|\*\*|\?\?|&&|\|\||<<|>>>?)?=(?![=>])\s*\S/;
 const RETURN = /^\s*return\b\s*(.*?);?\s*$/;
+const TAG = /^\s*<\/?[A-Za-z][\w.:-]*(\s[^>]*)?\/?>/;
+const DECLARATION = /^\s*-?[a-z][a-z-]*\s*:\s*[^;]+$/;
+const EXPRESSION = /[()[\]{}.+\-*/<>=!?:&|"'`\d_]|[a-z][A-Z]|^\w$|^(true|false|null|undefined|this|None|True|False|self)$/;
 const prose = (s) => /[A-Za-z]{2,}\s+[A-Za-z]{2,}/.test(s.replace(/(["'`])(?:\\.|(?!\1).)*\1/g, '""'));
-export const looksCode = (text, py) => {
+export const looksCode = (comment, file) => {
+  const py = file.endsWith(".py"), text = comment.replace(py ? /\s#.*$/ : /\s\/\/.*$/, "");
   if (CODE_SHAPES.some((r) => r.test(text)) || (py && PY_SHAPES.some((r) => r.test(text)))) return true;
+  if (/\.(css|html)$/.test(file) && CSS_SHAPES.some((r) => r.test(text))) return true;
+  if (TAG.test(text)) return />\s*$/.test(text) || !prose(text.replace(/<[^>]*>/g, " "));
+  if (/\.(css|html)$/.test(file) && DECLARATION.test(text)) return !prose(text);
   const ret = RETURN.exec(text);
-  if (ret) return ret[1].trim() !== "" && !prose(ret[1]);
+  if (ret) { const e = ret[1].trim(); return EXPRESSION.test(e) && !prose(e); }
   return (CALL.test(text) || ASSIGN.test(text)) && !prose(text);
 };
 
-const SECOND = [/[._-](old|new|backup|bak|copy|orig|tmp|legacy|final|fixed|wip)$/i, /(^|[_-])(legacy|Legacy|LEGACY)([_-]|[A-Z]|$)/,
-  /^(copy|backup|Copy|Backup)([\s_-]|[A-Z]|$)/, /[a-z0-9](Old|New|Backup|Bak|Copy|Orig|Tmp|Legacy|Final|Fixed|Wip)$/, /[._-]v\d+$/i,
-  /[a-z]V\d+$/, /\s-\s(Copy|copy)( \(\d+\))?$/, /\s\(\d+\)$/];
+const SECOND = [/[._-](old|new|backup|bak|copy|orig|tmp|legacy|final|fixed|wip)\d*$/i, /(^|[_-])(legacy|Legacy|LEGACY)([_-]|[A-Z]|$)/,
+  /^(copy|backup|Copy|Backup)([\s_-]|[A-Z]|$)/, /[a-z0-9](Old|New|Backup|Bak|Copy|Orig|Tmp|Legacy|Final|Fixed|Wip)\d*$/, /[._-]v\d+$/i,
+  /[a-z]V\d+$/, /\s-\s(Copy|copy)( \(\d+\))?$/, /\s\(\d+\)$/, /\s(copy|Copy)(\s\d+)?$/];
 const FLAG = /^(is|has|was|can|should|show|use)[A-Z_-]/;
 export const namedAsSecond = (name) => !FLAG.test(name) && SECOND.some((r) => r.test(name));
-/* A class or id is held to fewer words: on a page "copy" is its text, "v4" a version shown, "new" a state. */
-const tokenAsSecond = (t) => /[._-](old|backup|bak|orig|legacy)$/i.test(t);
+/* A class or id is held to fewer words: on a page "copy" is its text, "v4" a version shown, "new" a state. A file
+   name is held to one more: "prev" (page.prev.tsx), which as a name in code means the previous item. */
+const tokenAsSecond = (t) => /[._-](old|backup|bak|orig|legacy)\d*$/i.test(t);
 const fileAsSecond = (path) => {
-  const name = path.split("/").pop();
-  return /(\.(bak|old|orig|tmp|swp)|~)$/i.test(name) || (CODE.test(name) && namedAsSecond(name.replace(/\.[^.]+$/, "")));
+  const name = path.split("/").pop(), base = name.replace(/\.[^.]+$/, "");
+  return /(\.(bak|old|orig|tmp|swp)|~)$/i.test(name) || (CODE.test(name) && (namedAsSecond(base) || /[._-]prev\d*$/i.test(base)));
 };
 const DECLARED = /\b(?:function|const|let|var|class|def)\s+([A-Za-z_$][\w$]*)/g;
 const ATTR = /\b(?:class|className|id)\s*=\s*["'`{]+([^"'`}]*)/g;
@@ -63,7 +76,18 @@ export const comments = (line, file, open) => {
     if (end < 0) return { out: [rest.replace(/^\s*\*?/, "")], open };
     out.push(rest.slice(0, end).replace(/^\s*\*?/, "")); rest = rest.slice(end + open.length);
   }
-  if (file.endsWith(".py")) { const h = blank(rest).indexOf("#"); if (h >= 0) out.push(rest.slice(h + 1)); return { out, open: false }; }
+  if (file.endsWith(".py")) {
+    /* A string that opens a statement is a docstring: Python's other comment, where a story or parked code can hide. */
+    const doc = /^\s*[rRuU]?("""|''')/.exec(rest);
+    if (doc) {
+      const end = rest.indexOf(doc[1], doc[0].length);
+      if (end < 0) return { out: [rest.slice(doc[0].length)], open: doc[1] };
+      out.push(rest.slice(doc[0].length, end)); rest = rest.slice(end + 3);
+    }
+    const h = blank(rest).indexOf("#");
+    if (h >= 0) out.push(rest.slice(h + 1));
+    return { out, open: false };
+  }
   for (;;) {
     const b = blank(rest);
     const s = file.endsWith(".css") ? -1 : b.search(/(^|[^:\\])\/\/(?!\/)/);
@@ -100,7 +124,7 @@ export const scan = (diff) => {
     const c = comments(line, file, open); open = c.open;
     for (const text of c.out) {
       if (DATE.test(text)) fails.push(`${file}: a date in a new comment: "${text.trim().slice(0, 80)}"`);
-      if (looksCode(text, file.endsWith(".py"))) fails.push(`${file}: code commented out instead of removed: "${text.trim().slice(0, 80)}"`);
+      if (looksCode(text, file)) fails.push(`${file}: code commented out instead of removed: "${text.trim().slice(0, 80)}"`);
     }
     for (const m of line.matchAll(DECLARED)) if (namedAsSecond(m[1])) fails.push(`${file}: "${m[1]}" is named as a second copy`);
     const tokens = [];
