@@ -76,6 +76,20 @@ export const ROOMS: Record<string, Line[]> = {
     "If AI search can't read your site, Website concierge opens what your access lets us reach: a person lets AI search crawlers in where your site builder allows it, tells you the one switch if your host blocks them, and sets out your clinic's own address, hours and phone for machines to read. No promise of a place in AI answers.",
     "You grant access; you keep the keys. No passwords, nothing installed, and the engine never touches your medical system or your money.",
   ].map((text, i) => ({ id: `fx-${String(i + 1).padStart(2, "0")}`, text })),
+  /* Grow: its ten lines as read by core, Layer 2 and the main house and approved by the owner, shown beside the film,
+     never recorded (his pick: show only, as Fix). */
+  grow: [
+    "Grow is step three. It opens only once your Engine runs and its bookings are proven, because fuel poured into a leaking machine just makes a more expensive leak.",
+    "Then we add the fuel: paid patient demand, and an Instagram your patients actually look at.",
+    "Paid campaigns put your clinic in front of the right patients, and every message they bring lands in the engine that already answers and books.",
+    "Your ad spend is paid direct and never marked up.",
+    "Grow reports it as booked patients and what each one cost. Not clicks, not likes.",
+    "In this market, a clinic's Instagram is the clinic.",
+    "So we make content for yours to a brief, every month: reels, statics and stories.",
+    "No AI-made patients, and no AI-made before-and-afters.",
+    "Every inquiry it sends to your WhatsApp gets your menu at once, at midnight too, and books in the chat.",
+    "Diagnose finds where patients are lost. The Engine answers and books them. Grow sends you more of them.",
+  ].map((text, i) => ({ id: `gr-${String(i + 1).padStart(2, "0")}`, text })),
 };
 
 /* In the corner there are no chapter chips to point at: a greeting is met

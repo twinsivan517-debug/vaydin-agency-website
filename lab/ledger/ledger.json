@@ -1239,7 +1239,8 @@
   "read": "",
   "where": [
    "engine.html",
-   "fix.html"
+   "fix.html",
+   "grow.html"
   ]
  },
  {
@@ -1476,7 +1477,8 @@
   "tag": "none",
   "read": "",
   "where": [
-   "fix.html"
+   "fix.html",
+   "grow.html"
   ]
  },
  {
@@ -1484,7 +1486,8 @@
   "tag": "none",
   "read": "",
   "where": [
-   "fix.html"
+   "fix.html",
+   "grow.html"
   ]
  },
  {
@@ -1492,7 +1495,8 @@
   "tag": "none",
   "read": "",
   "where": [
-   "fix.html"
+   "fix.html",
+   "grow.html"
   ]
  },
  {
@@ -1500,7 +1504,8 @@
   "tag": "none",
   "read": "",
   "where": [
-   "fix.html"
+   "fix.html",
+   "grow.html"
   ]
  },
  {
@@ -1521,46 +1526,6 @@
   ]
  },
  {
-  "s": "treatment story published in your voice",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "grow.html (script)"
-  ]
- },
- {
-  "s": "inquiry from your profile to your WhatsApp, answered by the engine",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\" + job:1",
-  "read": "main house 2026-11-10: true words applied (8) | Layer 2 2026-11-10: OK (A4)",
-  "where": [
-   "grow.html (script)"
-  ]
- },
- {
-  "s": "that inquiry: consult booked Friday",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "grow.html (script)"
-  ]
- },
- {
-  "s": "profile visits climbing this week",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "grow.html (script)"
-  ]
- },
- {
-  "s": "growth digest: inquiries → bookings, counted",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "grow.html (script)"
-  ]
- },
- {
   "s": "Aesthetic clinic advertising in Dubai · Grow · Vaydin",
   "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
   "read": "main house 2026-11-10: OK",
@@ -1570,23 +1535,7 @@
   ]
  },
  {
-  "s": "Patients walking in through a clinic's glass doors at sunset",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "grow.html (meta)"
-  ]
- },
- {
-  "s": "A woman filming Instagram content on her phone with a ring light inside an aesthetic clinic",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "grow.html (meta)"
-  ]
- },
- {
-  "s": "Reach growing, sample",
+  "s": "Grow, drawn in gold line: an ad and the clinic's Instagram send messages to its WhatsApp, where patients book",
   "tag": "none",
   "read": "",
   "where": [
@@ -1620,99 +1569,66 @@
   ]
  },
  {
-  "s": "We do it in the only order that works: fix the machine, then pour in the fuel, and count every dirham of ad spend against booked patients.",
+  "s": "Grow is step three.",
   "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: true words applied (ruling 1)",
+  "read": "main house 2026-11-12: OK (gr-01) | core 2026-11-12: OK (gr-01)",
   "where": [
-   "grow.html"
+   "grow.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "GROW 01 PATIENT DEMAND · PAID ACQUISITION ILLUSTRATION",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
+  "s": "It opens only once your Engine runs and its bookings are proven, because fuel poured into a leaking machine just makes a more expensive leak.",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"NEVER before RE conversion is proven\"",
+  "read": "main house 2026-11-12: OK (gr-01) | core 2026-11-12: OK (gr-01)",
   "where": [
-   "grow.html"
+   "grow.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "Demand that lands in a machine built to convert it.",
+  "s": "Then we add the fuel: paid patient demand, and an Instagram your patients actually look at.",
   "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
+  "read": "main house 2026-11-12: OK (gr-02) | core 2026-11-12: OK (gr-02)",
   "where": [
-   "grow.html"
+   "grow.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "Paid campaigns that put your clinic in front of the right patients, and every inquiry they produce lands in the engine that already answers and books.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
+  "s": "Paid campaigns put your clinic in front of the right patients, and every message they bring lands in the engine that already answers and books.",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\" + job:1 + job:2",
+  "read": "Layer 2 2026-11-12: true words applied (gr-03) | core 2026-11-12: OK (gr-03) | main house 2026-11-12: OK (gr-03)",
   "where": [
-   "grow.html"
+   "grow.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "Your ad spend is paid direct and never marked up; the results are counted from campaign to booked patient.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
+  "s": "Your ad spend is paid direct and never marked up.",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"spend direct, never marked up\"",
+  "read": "main house 2026-11-12: OK (gr-04) | core 2026-11-12: OK (gr-04)",
   "where": [
-   "grow.html"
+   "grow.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "Grow opens after your engine.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: true words applied (ruling 2)",
+  "s": "Grow reports it as booked patients and what each one cost.",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"reported as cost per BOOKED patient\"",
+  "read": "main house 2026-11-12: OK (gr-05) | Layer 2 2026-11-12: true words applied (gr-05) | core 2026-11-12: OK (gr-05)",
   "where": [
-   "grow.html"
+   "grow.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "Start with the diagnostic →",
-  "tag": "none",
-  "read": "",
+  "s": "Not clicks, not likes.",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"reported as cost per BOOKED patient\"",
+  "read": "main house 2026-11-12: OK (gr-05)",
   "where": [
-   "grow.html"
-  ]
- },
- {
-  "s": "COUNTED FROM CAMPAIGN TO BOOKED PATIENT",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: true words applied (ruling 3)",
-  "where": [
-   "grow.html"
-  ]
- },
- {
-  "s": "No vanity metrics.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "grow.html"
-  ]
- },
- {
-  "s": "Not clicks: reported as booked patients and what each one cost.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "grow.html"
-  ]
- },
- {
-  "s": "GROW 02 INSTAGRAM PRESENCE · CONTENT TO A BRIEF ILLUSTRATION",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: by his ruling (A2)",
-  "where": [
-   "grow.html"
-  ]
- },
- {
-  "s": "Presence where your patients actually look.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "grow.html"
+   "grow.html",
+   "pages.ts"
   ]
  },
  {
@@ -1720,119 +1636,62 @@
   "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
   "read": "main house 2026-11-10: OK",
   "where": [
-   "grow.html"
+   "grow.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "Content made for your Instagram to a brief, at a steady cadence: reels, statics and stories.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: true words applied (30)",
+  "s": "So we make content for yours to a brief, every month: reels, statics and stories.",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"flat kits\"",
+  "read": "main house 2026-11-12: OK (gr-07) | core 2026-11-12: OK (gr-07)",
   "where": [
-   "grow.html"
+   "grow.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "Every inquiry it sends to your WhatsApp gets your menu at once, at midnight too, and books in the chat with a few taps.",
+  "s": "No AI-made patients, and no AI-made before-and-afters.",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"AI content never shows AI patients or before/afters (DHA)\"",
+  "read": "main house 2026-11-12: OK (gr-08) | core 2026-11-12: OK (gr-08)",
+  "where": [
+   "grow.html",
+   "pages.ts"
+  ]
+ },
+ {
+  "s": "Every inquiry it sends to your WhatsApp gets your menu at once, at midnight too, and books in the chat.",
   "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\" + job:1 + job:2",
-  "read": "Layer 2 2026-11-10: true words applied | main house 2026-11-10: true words applied (X1, X2)",
+  "read": "Layer 2 2026-11-12: OK (gr-09) | core 2026-11-12: OK (gr-09) | main house 2026-11-12: OK (gr-09)",
   "where": [
-   "grow.html"
+   "grow.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "As reach grows, every inquiry it sends lands in the engine that already books.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\" + job:2",
-  "read": "main house 2026-11-10: true words applied (31) | Layer 2 2026-11-10: OK (A6)",
+  "s": "Diagnose finds where patients are lost.",
+  "tag": "task:CORE-F4",
+  "read": "core 2026-11-12: OK (gr-10)",
   "where": [
-   "grow.html"
+   "grow.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "THE CHANNEL AT WORK SAMPLE",
+  "s": "The Engine answers and books them.",
+  "tag": "job:1 + job:2",
+  "read": "Layer 2 2026-11-12: OK (gr-10) | core 2026-11-12: OK (gr-10)",
+  "where": [
+   "grow.html",
+   "pages.ts"
+  ]
+ },
+ {
+  "s": "Grow sends you more of them.",
   "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
+  "read": "main house 2026-11-12: OK (gr-10)",
   "where": [
-   "grow.html"
-  ]
- },
- {
-  "s": "Fuel poured into a broken engine just makes a more expensive leak.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "grow.html"
-  ]
- },
- {
-  "s": "That's why Grow is Step 03, not Step 01.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "grow.html"
-  ]
- },
- {
-  "s": "The diagnostic finds where patients are lost; the engine fixes how they're answered and booked; only then does it make sense to send more of them your way.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "grow.html"
-  ]
- },
- {
-  "s": "Grow opens only on a running Engine whose bookings are proven, never on its own.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "grow.html"
-  ]
- },
- {
-  "s": "When they arrive, from a campaign at noon or a WhatsApp message at midnight, the machine that catches them is already running.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "grow.html"
-  ]
- },
- {
-  "s": "STEP 01 DIAGNOSE: find where patients are lost",
-  "tag": "none",
-  "read": "core 2026-11-10: no claim (63)",
-  "where": [
-   "grow.html"
-  ]
- },
- {
-  "s": "STEP 02 FIX & RUN: the engine answers, books, revives",
-  "tag": "job:1 + job:2 + job:5",
-  "read": "Layer 2 2026-11-10: OK (34)",
-  "where": [
-   "grow.html"
-  ]
- },
- {
-  "s": "STEP 03 GROW: demand + presence, once the engine's bookings are proven",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "grow.html"
-  ]
- },
- {
-  "s": "Your clinic, fixed and running, in front of the patients who were always looking for it.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "grow.html"
-  ]
- },
- {
-  "s": "That's growth that compounds.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "grow.html"
+   "grow.html",
+   "pages.ts"
   ]
  },
  {

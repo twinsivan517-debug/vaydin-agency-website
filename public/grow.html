@@ -26,12 +26,11 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
   :root{
-    --bg:#040706; --bg-card:#090f0c; --bg-elevated:#0d1611; --border:#152219;
+    --bg:#040706; --bg-card:#090f0c; --border:#152219;
     --tx:#edf3ef; --tx-muted:#9db0a6; --tx-faint:#6f8378;
     --gold:#c9a44a; --gold-light:#e8d48b; --gold-deep:#8a6d1b; --accent:#2f9f77; --accent-light:#6fd6a8;
     --ok:#4ade80; --warn:#fbbf24; --critical:#f87171;
-    --violet:#a78bfa; --violet-deep:#7c5fd1; --ig:#E1306C;
-    --volt:#34e3f0;
+    --volt:#34e3f0; --volt-deep:#19a7b8;
     --display:'Marcellus', Georgia, serif;
     --serif:'Cormorant Garamond', Georgia, serif;
     --sans:'DM Sans', system-ui, sans-serif;
@@ -42,15 +41,15 @@
   html{scroll-behavior:smooth}
   body{margin:0;color:var(--tx);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
     background:
-      radial-gradient(1100px 750px at 84% 8%, rgba(88,60,160,0.20), transparent 62%),
-      radial-gradient(950px 700px at 6% 88%, rgba(120,40,90,0.14), transparent 60%),
+      radial-gradient(1100px 750px at 88% 8%, rgba(110,70,18,0.16), transparent 62%),
+      radial-gradient(950px 700px at 6% 90%, rgba(201,164,74,0.08), transparent 60%),
       var(--bg);
     background-attachment:fixed}
   a{color:var(--accent);text-decoration:none}
   a:hover{color:var(--accent-light)}
   img{max-width:100%;display:block}
+  nav, header, main, .band, footer{position:relative;z-index:1}
 
-  /* ---------- nav (canonical bar) ---------- */
   nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:34px;
       padding:13px 40px;background:rgba(9,15,12,0.93);backdrop-filter:blur(12px);
       border-bottom:1px solid rgba(47,159,119,0.30)}
@@ -72,128 +71,33 @@
   .nav-contact a:hover{color:#f5f1e8}
   .nav-cta{background:var(--accent);color:#040706 !important;font-weight:700;padding:11px 24px;font-size:13px;letter-spacing:0.02em;transition:background .3s var(--ease)}
   .nav-cta:hover{background:var(--accent-light)}
+  .nav-here{color:#f5f1e8}
   .nav-burger{display:none;width:40px;height:40px;align-items:center;justify-content:center;cursor:pointer;background:none;border:0;
     color:var(--accent-light);box-shadow:inset 0 0 0 1px rgba(47,159,119,0.45);margin-left:6px;padding:0}
   .nav-burger svg{width:18px;height:14px;display:block}
 
-  /* ---------- hero ---------- */
-  .hero{position:relative;min-height:66vh;display:flex;align-items:center;overflow:hidden}
-  .hero-inner{position:relative;z-index:2;width:100%;max-width:1240px;margin:0 auto;padding:150px 48px 60px;
-    display:grid;grid-template-columns:1.05fr 0.95fr;gap:56px;align-items:center}
-  .gduo{position:relative;height:400px}
-  .gduo img{position:absolute;width:80%;box-shadow:0 30px 70px rgba(0,0,0,0.55), 0 0 0 1px var(--border);
-    transition:transform .8s var(--ease)}
-  .gduo .g1{top:0;left:0;transform:rotate(-3.5deg)}
-  .gduo .g2{bottom:0;right:0;transform:rotate(2.5deg);box-shadow:0 34px 80px rgba(0,0,0,0.62), 0 0 0 1px rgba(225,48,108,0.35)}
-  .gduo:hover .g1{transform:rotate(-1.5deg) translateY(-4px)}
-  .gduo:hover .g2{transform:rotate(1deg) translateY(4px)}
-  .gduo .gtag{position:absolute;z-index:3;font-family:var(--mono);font-size:8.5px;letter-spacing:0.18em;padding:6px 12px;background:rgba(9,15,12,0.88)}
-  .gduo .t1{top:14px;left:14px;color:var(--violet);box-shadow:inset 0 0 0 1px rgba(167,139,250,0.5)}
-  .gduo .t2{bottom:14px;right:14px;color:var(--ig);box-shadow:inset 0 0 0 1px rgba(225,48,108,0.5)}
-  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:0.26em;color:var(--violet);margin-bottom:16px}
-  h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,4vw,56px);line-height:1.12;margin:0 0 22px;max-width:800px;text-wrap:balance}
-  .vio-text{background:linear-gradient(96deg,#e8d48b 0%,#d9c3ba 30%,#c9b0e8 62%,#a78bfa 100%);
-    -webkit-background-clip:text;background-clip:text;color:transparent}
-  .hero-sub{font-size:16.5px;color:var(--tx-muted);max-width:600px;margin:0}
-  .hero-sub b{color:var(--tx);font-weight:600}
+  .grad-text{background:linear-gradient(100deg, #f7f2e7 0%, #f7f2e7 28%, #f5d978 46%, #c9a44a 60%, #e8d48b 72%, #f7f2e7 100%);
+    background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:sheen 8s ease-in-out infinite}
+  @keyframes sheen{0%,100%{background-position:0% 0}50%{background-position:100% 0}}
 
-  /* ---------- shared ---------- */
-  section{max-width:1240px;margin:0 auto;padding:96px 48px 0;position:relative}
-  .reveal{opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease), transform 1s var(--ease)}
-  .reveal.in{opacity:1;transform:none}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:0.26em;color:var(--gold);margin-bottom:14px}
+  h1{font-family:var(--display);font-weight:400;font-size:clamp(36px,4.6vw,60px);line-height:1.1;margin:0 0 18px;max-width:820px;text-wrap:balance}
+  .goldtx{color:var(--gold-light)}
 
-  /* ---------- frames (home v2 anatomy) ---------- */
-  .lframes{display:flex;flex-direction:column;gap:60px}
-  .lframe{position:relative;background:rgba(9,15,12,0.78);backdrop-filter:blur(6px);
-    box-shadow:0 34px 80px rgba(0,0,0,0.5), 0 0 0 1px var(--border);
-    opacity:0;transform:translateY(34px);transition:opacity 1s var(--ease), transform 1s var(--ease)}
-  .lframe.in{opacity:1;transform:none}
-  .lframe .bk{position:absolute;width:20px;height:20px;border:1.5px solid var(--lc);opacity:0.8;z-index:3}
-  .lframe .bk.tl{top:-1px;left:-1px;border-right:0;border-bottom:0}
-  .lframe .bk.tr{top:-1px;right:-1px;border-left:0;border-bottom:0}
-  .lframe .bk.bl{bottom:-1px;left:-1px;border-right:0;border-top:0}
-  .lframe .bk.br{bottom:-1px;right:-1px;border-left:0;border-top:0}
-  .lthunder{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.5}
-  .fhead,.fbody{position:relative;z-index:1}
-  .fhead{display:flex;align-items:center;gap:16px;padding:13px 24px;border-bottom:1px solid var(--border);font-family:var(--mono)}
-  .fhead .fh-step{font-size:10px;letter-spacing:0.24em;color:var(--lc);border:1px solid var(--lc);padding:5px 10px}
-  .fhead .fh-name{font-size:10px;letter-spacing:0.22em;color:var(--tx-muted)}
-  .fhead .fh-live{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:8.5px;letter-spacing:0.18em;color:var(--tx-faint)}
-  .fhead .dotp{width:6px;height:6px;border-radius:50%;background:var(--lc);animation:pulse 2.2s infinite}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  .fbody{display:grid;grid-template-columns:1.02fr 1fr}
-  .lframe:nth-child(even) .fbody .lcopy{order:2}
-  .lframe:nth-child(even) .fbody .linstr{order:1;border-left:0;border-right:1px solid var(--border)}
-  .lcopy{padding:36px 40px 34px;display:flex;flex-direction:column;justify-content:center;gap:20px}
-  .hpanel{border-left:3px solid var(--lc);background:rgba(255,255,255,0.02);padding:14px 20px}
-  .hpanel h3{font-family:var(--display);font-weight:400;font-size:clamp(23px,2.2vw,29px);margin:0;color:var(--tx)}
-  .lp{color:var(--tx-muted);font-size:14.5px;max-width:470px;margin:0}
-  .lp b{color:var(--tx);font-weight:600}
-  .enter-field{display:inline-flex;align-items:center;gap:12px;border:1px solid var(--lc);padding:14px 22px;
-    font-size:14px;color:var(--tx);transition:background .4s, transform .4s var(--ease);align-self:flex-start}
-  .enter-field:hover{background:rgba(255,255,255,0.045);transform:translateX(4px);color:var(--tx)}
-  .enter-field .arr{color:var(--lc);transition:transform .4s var(--ease)}
-  .enter-field:hover .arr{transform:translateX(4px)}
-  .linstr{position:relative;display:flex;flex-direction:column;justify-content:center;gap:14px;
-    border-left:1px solid var(--border);padding:26px;overflow:hidden}
-  .linstr .iglow{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%, var(--lg), transparent 72%);pointer-events:none}
-  .ipanel{position:relative;box-shadow:0 0 0 1px rgba(255,255,255,0.08);background:rgba(9,15,12,0.55)}
-  .pnl-h{display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.07);
-    font-family:var(--mono);font-size:8.5px;letter-spacing:0.2em;color:var(--pc)}
-  .pnl-h .pnl-tag{margin-left:auto;color:var(--tx-faint);letter-spacing:0.12em}
+  h2{font-family:var(--display);font-weight:400;font-size:clamp(28px,3.3vw,44px);line-height:1.15;margin:0 0 12px;max-width:760px;text-wrap:balance}
 
-  /* demand funnel */
-  .funnel{display:flex;flex-direction:column;gap:9px;padding:16px}
-  .fstage{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:9.5px;letter-spacing:0.12em;color:var(--tx-muted)}
-  .fstage .fl2{width:86px;flex-shrink:0;color:var(--tx-faint)}
-  .fstage .fbar{height:9px;background:linear-gradient(90deg, rgba(167,139,250,0.9), rgba(167,139,250,0.25));width:0;transition:width 1.3s var(--ease)}
-  .fstage .fv{color:var(--violet)}
-  .fnote{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;color:var(--tx-faint);padding:0 16px 14px}
-  .fnote b{color:var(--ok);font-weight:500}
 
-  /* instagram cadence */
-  #igspark2{display:block;margin:12px 16px 2px}
-  .cadence{display:flex;flex-direction:column;gap:7px;padding:10px 16px 14px;min-height:66px}
-  .cad{display:flex;align-items:baseline;gap:10px;font-family:var(--mono);font-size:9.5px;letter-spacing:0.08em;color:var(--tx-muted);
-    opacity:0;transform:translateY(7px);transition:opacity .45s var(--ease), transform .45s var(--ease)}
-  .cad.on{opacity:1;transform:none}
-  .cad .cc{font-size:8px;letter-spacing:0.14em;padding:2px 7px;box-shadow:inset 0 0 0 1px var(--cc2);color:var(--cc2);flex-shrink:0}
-  .cad .ctm{margin-left:auto;color:var(--tx-faint);font-size:8.5px}
-
-  /* the order */
-  .order-wrap{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-top:20px}
-  .order-copy .kill{font-family:var(--serif);font-style:italic;font-size:clamp(24px,2.4vw,32px);line-height:1.45;color:var(--tx);margin:0 0 24px;max-width:520px}
-  .order-copy .kill em{color:var(--violet)}
-  .order-copy p{color:var(--tx-muted);font-size:15px;max-width:480px;margin:0 0 18px}
-  .order-copy p b{color:var(--tx);font-weight:600}
-  .chain{display:flex;flex-direction:column;gap:0;font-family:var(--mono)}
-  .chainrow{display:flex;align-items:center;gap:16px;padding:18px 22px;box-shadow:0 0 0 1px var(--border);background:rgba(9,15,12,0.6)}
-  .chainrow + .chainrow{margin-top:-1px}
-  .chainrow .cn{font-size:10px;letter-spacing:0.22em;width:70px;flex-shrink:0}
-  .chainrow .ct{font-size:11px;letter-spacing:0.1em;color:var(--tx-muted)}
-  .chainrow.c1 .cn{color:var(--critical)} .chainrow.c2 .cn{color:var(--gold-light)} .chainrow.c3 .cn{color:var(--violet)}
-  .chainrow.dim{opacity:0.85}
-
-  /* finale */
-  .finale{margin:120px auto 0;border-top:1px solid var(--border);padding:100px 48px 40px;text-align:center;
-    background:linear-gradient(180deg, transparent 0%, rgba(13,22,17,0.75) 100%)}
-  .fin-line{font-family:var(--serif);font-size:clamp(23px,2.5vw,34px);line-height:1.5;color:var(--tx);max-width:800px;margin:0 auto 40px}
-  .fin-line em{color:var(--violet)}
-  .fin-contacts{display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
-  .fchip{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:0.08em;
-    padding:14px 24px;color:var(--tx-muted);box-shadow:inset 0 0 0 1px var(--fc);transition:color .3s, background .3s, transform .3s var(--ease)}
-  .fchip:hover{color:var(--tx);background:rgba(255,255,255,0.04);transform:translateY(-2px)}
+  .band{margin:120px auto 0;background:linear-gradient(180deg, var(--bg) 0%, var(--bg-card) 50%, var(--bg) 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:88px 48px;text-align:center}
+  .band h2{margin:0 auto 14px;max-width:none}
+  .band p{color:var(--tx-muted);max-width:520px;margin:0 auto 34px}
+  .btn{display:inline-block;background:var(--accent);color:var(--bg);font-weight:700;font-size:15px;padding:16px 32px;transition:transform .4s var(--ease), background .3s}
+  .btn:hover{background:var(--accent-light);color:var(--bg);transform:translateY(-2px)}
 
   footer{max-width:1240px;margin:0 auto;padding:56px 48px 48px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--tx-faint);letter-spacing:0.05em}
 
-  @media (prefers-reduced-motion: reduce){
-    *{animation:none !important;transition:none !important}
-    .reveal,.lframe,.cad{opacity:1 !important;transform:none !important}
-  }
-  @media (max-width: 1060px){
-    .order-wrap{grid-template-columns:1fr;gap:40px}
-  }
-  @media (max-width: 900px){
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important;transition:none !important} }
+  @media (max-width: 960px){
     nav{padding:14px 22px}
     .nav-contact{display:none}
     .nav-burger{display:flex}
@@ -208,14 +112,7 @@
     .nav-links a{padding:13px 2px;font-size:17px;border-bottom:1px solid rgba(255,255,255,0.05)}
     .nav-links a:last-child{border-bottom:0}
     .nav-links a::after{bottom:8px;right:auto;width:28px}
-    section{padding:80px 22px 0}
-    .hero-inner{padding:130px 22px 48px;grid-template-columns:1fr}
-    .gduo{height:300px;margin-top:10px}
-    .fbody{grid-template-columns:1fr}
-    .lframe:nth-child(even) .fbody .lcopy{order:0}
-    .lframe:nth-child(even) .fbody .linstr{order:1;border-right:0}
-    .linstr{border-left:0;border-top:1px solid var(--border)}
-    .finale{padding:80px 22px 40px}
+    .band{padding:64px 22px}
   }
   @media (max-width: 380px){
     .wordmark{display:none}
@@ -224,6 +121,26 @@
 
   .inlink{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
   h1 .h1-line{display:block;text-transform:uppercase;line-height:1.5;-webkit-text-fill-color:currentColor;text-wrap:wrap}
+  /* The Grow room, art deco (style #19): a square film in gold line on black, beside the room's ten lines. */
+  .gr-hero{max-width:1240px;margin:0 auto;padding:108px 48px 0;text-align:center}
+  .gr-hero h1{margin:0 auto;max-width:820px}
+  .gr-lede{max-width:640px;margin:12px auto 0;color:var(--tx-muted);font-size:15.5px}
+  .gr-stage{max-width:1240px;margin:0 auto;padding:30px 48px 0;display:grid;grid-template-columns:1.1fr 0.9fr;gap:44px;align-items:start}
+  .gr-film{position:relative;width:100%;max-width:560px;aspect-ratio:1/1;margin:0 auto;border-radius:14px;border:1px solid rgba(232,212,139,0.24);background:#0b0906;overflow:hidden}
+  .gr-film canvas{position:absolute;inset:0;width:100%;height:100%}
+  .gr-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+  .gr-oc{position:relative;padding-left:22px;font-size:15px;line-height:1.5;color:var(--tx);transition:opacity .7s var(--ease)}
+  .gr-list.dim .gr-oc{opacity:0.36}
+  .gr-oc::before{content:"";position:absolute;left:2px;top:0.5em;width:9px;height:9px;border:1.5px solid #e8d48b;transform:rotate(45deg) scale(0.86);transition:background .5s,box-shadow .5s}
+  .gr-list.dim .gr-oc.on{opacity:1}
+  .gr-oc.on::before{background:#e8d48b;box-shadow:0 0 10px rgba(232,212,139,0.7)}
+  .gr-note{max-width:1240px;margin:26px auto 0;padding:0 48px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.14em;color:var(--tx-faint)}
+  @media (prefers-reduced-motion: reduce){ .gr-oc{opacity:1} }
+  @media (max-width: 900px){
+    .gr-hero{padding:96px 22px 0}
+    .gr-stage{grid-template-columns:1fr;gap:18px;padding:18px 22px 0}
+    .gr-note{padding:0 22px}
+  }
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Vaydin Agency", "item": "https://vaydin.agency/"}, {"@type": "ListItem", "position": 2, "name": "Grow", "item": "https://vaydin.agency/grow.html"}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Service", "name": "Aesthetic clinic advertising in Dubai", "serviceType": "Clinic advertising", "description": "Aesthetic clinic advertising in Dubai, once your engine runs and its bookings are proven: paid patient demand and Instagram presence, feeding that machine.", "url": "https://vaydin.agency/grow.html", "provider": {"@type": "Organization", "@id": "https://vaydin.agency/#organization", "name": "Vaydin", "url": "https://vaydin.agency/"}, "areaServed": [{"@type": "City", "name": "Dubai"}, {"@type": "Country", "name": "United Arab Emirates"}, {"@type": "Place", "name": "GCC"}]}</script>
@@ -254,88 +171,35 @@
 </nav>
 <script>(function(){var b=document.querySelector(".nav-burger"),l=document.querySelector(".nav-links");if(b&&l){b.addEventListener("click",function(){var o=l.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false");});l.addEventListener("click",function(e){if(e.target.tagName==="A"){l.classList.remove("open");b.setAttribute("aria-expanded","false");}});}})();</script>
 
-<header class="hero">
-  <div class="hero-inner">
-    <div>
-    <h1 class="vio-text"><span class="eyebrow h1-line">Step 03 · Aesthetic clinic advertising in Dubai</span> Everything fixed?<br>Time to spread.</h1>
-    <p class="hero-sub">Most clinics buy marketing first and wonder where the money went. We do it in the only order that works: <b>fix the machine, then pour in the fuel</b>, and count every dirham of ad spend against booked patients.</p>
-    </div>
-    <div class="gduo">
-      <img class="g1" src="assets/img/patients-walking-into-clinic.webp" alt="Patients walking in through a clinic's glass doors at sunset" loading="eager">
-      <span class="gtag t1" aria-hidden="true">PATIENT DEMAND</span>
-      <img class="g2" src="assets/img/clinic-instagram-filming.webp" alt="A woman filming Instagram content on her phone with a ring light inside an aesthetic clinic" loading="eager">
-      <span class="gtag t2" aria-hidden="true">INSTAGRAM PRESENCE</span>
-    </div>
-  </div>
+<header class="gr-hero">
+  <h1 class="vio-text"><span class="eyebrow h1-line">Step 03 · Aesthetic clinic advertising in Dubai</span> Everything fixed?<br>Time to spread.</h1>
+  <p class="gr-lede">Most clinics buy marketing first and wonder where the money went.</p>
 </header>
 
-<section>
-  <div class="lframes">
-
-    <div class="lframe" style="--lc:#a78bfa;--lg:rgba(167,139,250,0.09)">
-      <canvas class="lthunder" id="gth-1" width="920" height="430" aria-hidden="true"></canvas>
-      <span class="bk tl"></span><span class="bk tr"></span><span class="bk bl"></span><span class="bk br"></span>
-      <div class="fhead"><span class="fh-step">GROW 01</span><span class="fh-name">PATIENT DEMAND · PAID ACQUISITION</span><span class="fh-live"><span class="dotp"></span>ILLUSTRATION</span></div>
-      <div class="fbody">
-        <div class="lcopy">
-          <div class="hpanel"><h3>Demand that lands in a machine built to convert it.</h3></div>
-          <p class="lp">Paid campaigns that put your clinic in front of the right patients, and every inquiry they produce lands in <b>the engine that already answers and books</b>. Your ad spend is paid direct and never marked up; the results are counted from campaign to booked patient.</p>
-          <a class="enter-field" href="diagnose.html">Grow opens after your engine. Start with the diagnostic <span class="arr">→</span></a>
-        </div>
-        <div class="linstr"><div class="iglow"></div>
-          <div class="ipanel" style="--pc:#a78bfa">
-            <div class="pnl-h">COUNTED FROM CAMPAIGN TO BOOKED PATIENT</div>
-            <p class="fnote" style="font-size:13px;letter-spacing:0.04em;line-height:1.6;padding:16px 16px 18px;margin:0"><b>No vanity metrics.</b> Not clicks: reported as booked patients and what each one cost.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="lframe" style="--lc:#E1306C;--lg:rgba(225,48,108,0.08)">
-      <canvas class="lthunder" id="gth-2" width="920" height="430" aria-hidden="true"></canvas>
-      <span class="bk tl"></span><span class="bk tr"></span><span class="bk bl"></span><span class="bk br"></span>
-      <div class="fhead"><span class="fh-step">GROW 02</span><span class="fh-name">INSTAGRAM PRESENCE · CONTENT TO A BRIEF</span><span class="fh-live"><span class="dotp"></span>ILLUSTRATION</span></div>
-      <div class="fbody">
-        <div class="lcopy">
-          <div class="hpanel"><h3>Presence where your patients actually look.</h3></div>
-          <p class="lp">In this market, a clinic's Instagram <b>is</b> the clinic. Content made for your Instagram to a brief, at a steady cadence: reels, statics and stories. <b>Every inquiry it sends to your WhatsApp gets your menu at once</b>, at midnight too, and books in the chat with a few taps.</p>
-          <p class="lp">As reach grows, every inquiry it sends lands in <b>the engine that already books</b>.</p>
-          <a class="enter-field" href="diagnose.html">Grow opens after your engine. Start with the diagnostic <span class="arr">→</span></a>
-        </div>
-        <div class="linstr"><div class="iglow"></div>
-          <div class="ipanel" style="--pc:#E1306C">
-            <div class="pnl-h">THE CHANNEL AT WORK<span class="pnl-tag">SAMPLE</span></div>
-            <canvas id="igspark2" width="360" height="96" aria-label="Reach growing, sample"></canvas>
-            <div class="cadence" id="cadence"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+<main>
+  <div class="gr-stage" id="grstage" aria-label="Grow, drawn in gold line: an ad and the clinic's Instagram send messages to its WhatsApp, where patients book">
+    <div class="gr-film" id="grfilm"><canvas id="grcanvas" aria-hidden="true"></canvas></div>
+    <ol class="gr-list" data-room="grow">
+      <li class="gr-oc" data-line>Grow is step three. It opens only once your Engine runs and its bookings are proven, because fuel poured into a leaking machine just makes a more expensive leak.</li>
+      <li class="gr-oc" data-line>Then we add the fuel: paid patient demand, and an Instagram your patients actually look at.</li>
+      <li class="gr-oc" data-line>Paid campaigns put your clinic in front of the right patients, and every message they bring lands in the engine that already answers and books.</li>
+      <li class="gr-oc" data-line>Your ad spend is paid direct and never marked up.</li>
+      <li class="gr-oc" data-line>Grow reports it as booked patients and what each one cost. Not clicks, not likes.</li>
+      <li class="gr-oc" data-line>In this market, a clinic's Instagram is the clinic.</li>
+      <li class="gr-oc" data-line>So we make content for yours to a brief, every month: reels, statics and stories.</li>
+      <li class="gr-oc" data-line>No AI-made patients, and no AI-made before-and-afters.</li>
+      <li class="gr-oc" data-line>Every inquiry it sends to your WhatsApp gets your menu at once, at midnight too, and books in the chat.</li>
+      <li class="gr-oc" data-line>Diagnose finds where patients are lost. The Engine answers and books them. Grow sends you more of them.</li>
+    </ol>
   </div>
-</section>
+  <p class="gr-note">ILLUSTRATIVE SCENES</p>
+</main>
 
-<section id="order">
-  <div class="order-wrap">
-    <div class="order-copy reveal">
-      <p class="kill">Fuel poured into a broken engine<br>just makes a <em>more expensive leak</em>.</p>
-      <p>That's why Grow is Step 03, not Step 01. <a class="inlink" href="diagnose.html">The diagnostic</a> finds where patients are lost; <a class="inlink" href="fix.html">the engine</a> fixes how they're answered and booked; <b>only then</b> does it make sense to send more of them your way. Grow opens only on a running Engine whose bookings are proven, never on its own.</p>
-      <p>When they arrive, from a campaign at noon or a WhatsApp message at midnight, <b>the machine that catches them is already running.</b></p>
-    </div>
-    <div class="chain reveal">
-      <div class="chainrow c1 dim"><span class="cn">STEP 01</span><span class="ct">DIAGNOSE: find where patients are lost</span></div>
-      <div class="chainrow c2 dim"><span class="cn">STEP 02</span><span class="ct">FIX &amp; RUN: the engine answers, books, revives</span></div>
-      <div class="chainrow c3"><span class="cn">STEP 03</span><span class="ct">GROW: demand + presence, once the engine's bookings are proven</span></div>
-    </div>
-  </div>
-</section>
-
-<div class="finale">
-  <p class="fin-line">Your clinic, fixed and running, in front of the patients<br>who were always looking for it. <em>That's growth that compounds.</em></p>
-  <div class="fin-contacts">
-    <a class="fchip" style="--fc:#a78bfa" href="pricing.html">Ask for your plan</a>
-    <a class="fchip" style="--fc:#25D366" href="https://wa.me/971505553148">WhatsApp · +971 50 555 3148</a>
-  </div>
+<div class="band">
+  <div class="eyebrow" style="text-align:center">THE NEXT STEP</div>
+  <h2 class="grad-text">Your plan, built for your clinic.</h2>
+  <p>Start with <a class="inlink" href="diagnose.html">the measurement</a>, add <a class="inlink" href="engine.html">the engine</a> when the numbers convince you. Ask us, and a person sends your plan on WhatsApp.</p>
+  <a class="btn" href="pricing.html">Ask for your plan →</a>
 </div>
 
 <footer>
@@ -345,160 +209,203 @@
 </footer>
 
 <script>
+/* The Grow film, art deco (style #19): gold line on black, drawn as real things, beside the room's ten lines, each
+   lighting as its part plays. The clinic's WhatsApp phone and its calendar: fuel poured in drips out of a crack, the
+   crack seals, chats get the menu and three bookings land. An ad card and the clinic's Instagram appear above. The ad
+   shows to a crowd; some tap, their messages fly to the phone, get the menu and book. Coins go from the clinic's wallet
+   straight to the ad. A report card: a heart and a pointer crossed out, each booked patient with what it cost. The
+   Instagram becomes the clinic's own; posts drop into its grid on a beat; a made-up before-and-after is crossed out and
+   falls away. At midnight, messages from Instagram meet the menu and book. A magnifier where the leak was, the phone
+   in teal, the ad and the Instagram in violet. Shapes only: nothing written, no digit drawn. Every frame is a function
+   of its time: it runs while the room is on screen, resumes where it paused and settles on its last frame; with reduced
+   motion the last frame is drawn once. */
 (function(){
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var stage = document.getElementById('grstage'), slot = document.getElementById('grfilm');
+  var cv = document.getElementById('grcanvas'), ctx = cv.getContext('2d');
+  var list = document.querySelector('.gr-list'), items = [].slice.call(document.querySelectorAll('.gr-list li[data-line]'));
+  var BG = '#0b0906', GOLD = '#e8d48b', DIM = '#6b5f45', GREEN = '#25D366', VIOLET = '#a78bfa', RED = '#f87171', TEAL = '#34e3f0', INK = '#f3ead2';
+  var BEATS = [0.6, 4.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0, 32.0, 36.0], END = 40.6;
+  var S = 0, dpr = 1, t0 = 0, raf = 0, visible = false, done = false, shown = 0, TAU = Math.PI * 2;
+  var clamp = function(x){ return x < 0 ? 0 : x > 1 ? 1 : x; };
+  var E = function(x){ x = clamp(x); return 1 - Math.pow(1 - x, 3); };
+  var EIO = function(x){ x = clamp(x); return x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2; };
+  var ph = function(t, a, d){ return clamp((t - a) / d); };
+  var bump = function(t, a, d){ var u = (t - a) / d; return u <= 0 || u >= 1 ? 0 : Math.sin(u * Math.PI); };
+  var lerp = function(a, b, u){ return a + (b - a) * u; };
+  function P(u){ return u * S; }
+  function stroke(c, a, lw){ ctx.globalAlpha = clamp(a); ctx.strokeStyle = c; ctx.lineWidth = lw || 1.2; }
+  function fillc(c, a){ ctx.globalAlpha = clamp(a); ctx.fillStyle = c; }
+  function seg(x0, y0, x1, y1, c, a, lw, p){ p = p === undefined ? 1 : clamp(p); if (p <= 0 || a <= 0.01) return;
+    stroke(c, a, lw); ctx.beginPath(); ctx.moveTo(P(x0), P(y0)); ctx.lineTo(P(x0 + (x1 - x0) * p), P(y0 + (y1 - y0) * p)); ctx.stroke(); }
+  /* A dotted line as short strokes, drawn out to p. */
+  function dashed(x0, y0, x1, y1, c, a, lw, p){ p = p === undefined ? 1 : clamp(p); if (p <= 0 || a <= 0.01) return;
+    var d = Math.hypot(x1 - x0, y1 - y0), n = Math.floor(d * p / 0.015); stroke(c, a, lw); ctx.beginPath();
+    for (var k = 0; k <= n; k++){ var u0 = k * 0.015 / d, u1 = Math.min(p, (k * 0.015 + 0.006) / d); if (u1 <= u0) break;
+      ctx.moveTo(P(lerp(x0, x1, u0)), P(lerp(y0, y1, u0))); ctx.lineTo(P(lerp(x0, x1, u1)), P(lerp(y0, y1, u1))); } ctx.stroke(); }
+  function ring(x, y, r, c, a, lw, p){ p = p === undefined ? 1 : clamp(p); if (p <= 0 || a <= 0.01) return;
+    stroke(c, a, lw); ctx.beginPath(); ctx.arc(P(x), P(y), P(r), -Math.PI / 2, -Math.PI / 2 + TAU * p); ctx.stroke(); }
+  function dot(x, y, r, c, a){ if (a <= 0.01 || r <= 0) return; fillc(c, a); ctx.beginPath(); ctx.arc(P(x), P(y), P(r), 0, TAU); ctx.fill(); }
+  function square(x0, y0, w, h, c, a, lw){ if (a <= 0.01) return; stroke(c, a, lw); ctx.beginPath(); ctx.rect(P(x0), P(y0), P(w), P(h)); ctx.stroke(); }
+  /* A rounded box's outline traced from its top edge round to p: straight sides and quarter arcs. */
+  function outline(x0, y0, x1, y1, r, p){ var parts = [['l', x0 + r, y0, x1 - r, y0], ['a', x1 - r, y0 + r, -0.5, 0], ['l', x1, y0 + r, x1, y1 - r],
+      ['a', x1 - r, y1 - r, 0, 0.5], ['l', x1 - r, y1, x0 + r, y1], ['a', x0 + r, y1 - r, 0.5, 1], ['l', x0, y1 - r, x0, y0 + r], ['a', x0 + r, y0 + r, 1, 1.5]];
+    var len = function(q){ return q[0] === 'l' ? Math.hypot(q[3] - q[1], q[4] - q[2]) : r * Math.PI / 2; };
+    var left = parts.reduce(function(s, q){ return s + len(q); }, 0) * clamp(p);
+    ctx.beginPath(); ctx.moveTo(P(x0 + r), P(y0));
+    for (var i = 0; i < parts.length && left > 0; i++){ var q = parts[i], l = len(q), f = Math.min(1, left / l); left -= l;
+      if (q[0] === 'l') ctx.lineTo(P(lerp(q[1], q[3], f)), P(lerp(q[2], q[4], f)));
+      else ctx.arc(P(q[1]), P(q[2]), P(r), q[3] * Math.PI, (q[3] + (q[4] - q[3]) * f) * Math.PI); }
+    if (p >= 1) ctx.closePath(); }
+  function box(x0, y0, x1, y1, r, c, a, lw, p, fillA){ if (a <= 0.01) return; p = p === undefined ? 1 : clamp(p); if (p <= 0) return;
+    outline(x0, y0, x1, y1, r, p); if (fillA && p >= 1){ fillc(c, a * fillA); ctx.fill(); } stroke(c, a, lw); ctx.stroke(); }
+  function person(x, y, s, c, a, lw){ ring(x, y, 0.011 * s, c, a, lw || 1.2); stroke(c, a, lw || 1.2); ctx.beginPath();
+    ctx.arc(P(x), P(y + 0.034 * s), P(0.02 * s), Math.PI * 1.1, Math.PI * 1.9); ctx.stroke(); }
+  function check(x, y, s, c, a, p){ p = clamp(p === undefined ? 1 : p); if (p <= 0) return; var q1 = clamp(p * 2), q2 = clamp(p * 2 - 1);
+    seg(x - 0.012 * s, y, x - 0.004 * s, y + 0.009 * s, c, a, 1.8, q1); if (q2 > 0) seg(x - 0.004 * s, y + 0.009 * s, x + 0.013 * s, y - 0.01 * s, c, a, 1.8, q2); }
+  function coin(x, y, r, a){ if (a <= 0.01) return; fillc(BG, a); ctx.beginPath(); ctx.arc(P(x), P(y), P(r), 0, TAU); ctx.fill();
+    ring(x, y, r, GOLD, a, 1.3); ring(x, y, r * 0.62, GOLD, a * 0.7, 0.8); }
+  function heart(x, y, s, c, a){ if (a <= 0.01) return; stroke(c, a, 1.3); ctx.beginPath(); ctx.moveTo(P(x), P(y + 0.012 * s));
+    ctx.bezierCurveTo(P(x - 0.022 * s), P(y - 0.004 * s), P(x - 0.01 * s), P(y - 0.018 * s), P(x), P(y - 0.006 * s));
+    ctx.bezierCurveTo(P(x + 0.01 * s), P(y - 0.018 * s), P(x + 0.022 * s), P(y - 0.004 * s), P(x), P(y + 0.012 * s)); ctx.stroke(); }
+  function pointer(x, y, s, c, a){ if (a <= 0.01) return; stroke(c, a, 1.3); ctx.beginPath(); ctx.moveTo(P(x - 0.008 * s), P(y - 0.014 * s));
+    ctx.lineTo(P(x - 0.008 * s), P(y + 0.01 * s)); ctx.lineTo(P(x - 0.002 * s), P(y + 0.004 * s)); ctx.lineTo(P(x + 0.008 * s), P(y + 0.004 * s)); ctx.closePath(); ctx.stroke(); }
+  function cross(x0, y0, x1, y1, c, a, p, lw){ seg(x0, y0, x1, y1, c, a, lw || 2, p); seg(x1, y0, x0, y1, c, a, lw || 2, p); }
+  function play(x, y, s, c, a){ if (a <= 0.01) return; fillc(c, a); ctx.beginPath(); ctx.moveTo(P(x - 0.006 * s), P(y - 0.009 * s));
+    ctx.lineTo(P(x + 0.009 * s), P(y)); ctx.lineTo(P(x - 0.006 * s), P(y + 0.009 * s)); ctx.closePath(); ctx.fill(); }
+  function photo(x, y, s, c, a){ if (a <= 0.01) return; stroke(c, a, 1.1); ctx.beginPath(); ctx.moveTo(P(x - 0.014 * s), P(y + 0.009 * s));
+    ctx.lineTo(P(x - 0.004 * s), P(y - 0.003 * s)); ctx.lineTo(P(x + 0.003 * s), P(y + 0.004 * s)); ctx.lineTo(P(x + 0.008 * s), P(y - 0.001 * s));
+    ctx.lineTo(P(x + 0.014 * s), P(y + 0.009 * s)); ctx.stroke(); dot(x + 0.007 * s, y - 0.009 * s, 0.003 * s, c, a); }
+  function sparkle(x, y, s, c, a){ if (a <= 0.01) return; fillc(c, a); ctx.beginPath();
+    for (var k = 0; k < 8; k++){ var r = (k % 2 ? 0.004 : 0.013) * s, an = k * Math.PI / 4 - Math.PI / 2; ctx.lineTo(P(x + Math.cos(an) * r), P(y + Math.sin(an) * r)); }
+    ctx.closePath(); ctx.fill(); }
 
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
-    });
-  }, {threshold: 0.12});
-  document.querySelectorAll('.reveal, .lframe').forEach(function(el){ io.observe(el); });
+  /* Where things live, in parts of the film's side. */
+  var PH = [0.41, 0.50, 0.59, 0.88], IN = [0.455, 0.6, 0.535, 0.636], MENU = [0.475, 0.65, 0.57, 0.735];
+  var CAL = [0.65, 0.60, 0.89, 0.83], cell = function(k){ return [0.68 + (k % 4) * 0.055, 0.668 + Math.floor(k / 4) * 0.053]; };
+  var AD = [0.07, 0.07, 0.36, 0.33], IG = [0.64, 0.07, 0.93, 0.41], WAL = [0.10, 0.66, 0.27, 0.78], REP = [0.06, 0.50, 0.35, 0.90];
+  var CROWD = [0.08, 0.14, 0.20, 0.26, 0.32], CROWD_Y = 0.405;
+  var igCell = function(k){ return [0.685 + (k % 3) * 0.08, 0.205 + Math.floor(k / 3) * 0.068]; };
+  /* Every message: [arrives, from ('chat' | 'ad' | 'dm'), departs, the crowd member who tapped or -1, calendar cell]. */
+  var MSGS = [[2.5, 'chat', 2.5, -1, 0], [2.95, 'chat', 2.95, -1, 1], [3.4, 'chat', 3.4, -1, 2],
+    [9.7, 'ad', 9.0, 1, 3], [10.4, 'ad', 9.7, 3, 4], [11.1, 'ad', 10.4, 0, 5], [14.4, 'ad', 13.7, 2, 6], [15.0, 'ad', 14.3, 4, 7],
+    [33.3, 'dm', 32.4, -1, 8], [34.5, 'dm', 33.6, -1, 9], [39.0, 'ad', 38.3, -1, 10], [39.5, 'dm', 38.6, -1, 11]];
+  var COINS = [12.3, 12.9], AD_FOOT = [0.215, 0.33], WAL_TOP = [0.185, 0.66];
+  var POSTS = [[24.3, 0], [24.8, 1], [25.3, 2], [25.8, 0], [26.3, 1], [26.8, 2]];
 
-  /* every canvas loop runs ONLY while its canvas is on screen: start at 30% visible, pause the
-     moment it leaves, resume where it stopped when it comes back */
-  function watchVis(el, onFirst){
-    if(!el) return;
-    var started = !onFirst;
-    new IntersectionObserver(function(es){
-      es.forEach(function(e){
-        el.__vis = e.isIntersecting;
-        if(!e.isIntersecting) return;
-        if(!started && e.intersectionRatio >= 0.3){ started = true; onFirst(); }
-        else if(el.__resume){ var r = el.__resume; el.__resume = null; requestAnimationFrame(r); }
-      });
-    }, {threshold: [0, 0.3]}).observe(el);
-  }
-  function startWhenVisible(el, fn){ watchVis(el, fn); }
-  function tick(el, fr){ if(el.__vis !== false) requestAnimationFrame(fr); else el.__resume = fr; }
+  function phone(t){ var p = E(ph(t, 0.2, 1.0)), teal = bump(t, 37.2, 1.3);
+    box(PH[0], PH[1], PH[2], PH[3], 0.025, GOLD, 1, 1.5, p);
+    if (teal > 0) box(PH[0], PH[1], PH[2], PH[3], 0.025, TEAL, teal, 2.4, 1);
+    var h = E(ph(t, 1.0, 0.4)); if (h > 0){ fillc(GREEN, h * 0.85); ctx.fillRect(P(PH[0] + 0.012), P(PH[1] + 0.016), P(PH[2] - PH[0] - 0.024), P(0.022));
+      ring(PH[0] + 0.03, PH[1] + 0.027, 0.006, BG, h, 1.2); }
+    var crack = E(ph(t, 0.9, 0.3)) * (1 - E(ph(t, 2.0, 0.4)));
+    if (crack > 0){ stroke(GOLD, crack, 1.6); ctx.beginPath();
+      [[0.475, 0.88], [0.487, 0.862], [0.497, 0.876], [0.51, 0.857], [0.522, 0.88]].forEach(function(q, i){ if (i) ctx.lineTo(P(q[0]), P(q[1])); else ctx.moveTo(P(q[0]), P(q[1])); }); ctx.stroke(); }
+    var seal = bump(t, 2.0, 0.6); if (seal > 0) seg(0.47, PH[3], 0.53, PH[3], GOLD, seal, 3);
+    for (var k = 0; k < 6; k++){ var u = ph(t, 1.0 + k * 0.14, 0.75); if (u <= 0 || u >= 1) continue;
+      var y = lerp(0.36, 0.97, u * u); dot(0.5 + (k % 2 ? 0.006 : -0.006), y, 0.008, GOLD, y > PH[3] ? 1 - (y - PH[3]) / 0.09 : 1); }
+    var cur = null; MSGS.forEach(function(m){ if (t >= m[0]) cur = m; });
+    if (!cur) return; var u2 = t - cur[0], a = E(u2 / 0.15) * 0.98, inC = cur[1] === 'dm' ? VIOLET : INK;
+    box(IN[0], IN[1], IN[2], IN[3], 0.012, inC, a, 1.2, 1, 0.12);
+    seg(IN[0] + 0.012, (IN[1] + IN[3]) / 2, IN[2] - 0.014, (IN[1] + IN[3]) / 2, inC, a * 0.6, 1.2);
+    var mA = E((u2 - 0.15) / 0.2); box(MENU[0], MENU[1], MENU[2], MENU[3], 0.012, GREEN, mA, 1.3, 1, 0.12);
+    for (var j = 0; j < 3; j++) seg(MENU[0] + 0.014, MENU[1] + 0.02 + j * 0.022, MENU[2] - 0.02 - j * 0.008, MENU[1] + 0.02 + j * 0.022, GREEN, mA * (j === 1 ? 1 : 0.6), 1.4);
+    if (u2 > 0.25) box(MENU[0] + 0.006, MENU[1] + 0.031, MENU[2] - 0.006, MENU[1] + 0.053, 0.006, GREEN, E((u2 - 0.25) / 0.15) * 0.9, 1.4);
+    var bA = E((u2 - 0.4) / 0.2); if (bA > 0){ box(0.495, 0.75, 0.57, 0.79, 0.012, GREEN, bA, 1.3, 1, 0.25); check(0.533, 0.77, 0.9, GREEN, bA, 1); } }
 
-  /* funnel bars */
-  var fn = document.getElementById('funnel');
-  if(fn){
-    startWhenVisible(fn, function(){
-      var bars = fn.querySelectorAll('.fbar');
-      function set(scale){
-        bars.forEach(function(b){ b.style.width = (parseInt(b.getAttribute('data-w')) * scale) + '%'; });
-      }
-      if(reduced){ set(1); return; }
-      set(1);
-      var up = true;
-      setInterval(function(){ up = !up; set(up ? 1 : 0.72); }, 3800);
-    });
-  }
+  function calendar(t){ var p = E(ph(t, 0.4, 1.0)); box(CAL[0], CAL[1], CAL[2], CAL[3], 0.015, GOLD, 1, 1.4, p);
+    var h = E(ph(t, 1.1, 0.4)); if (h > 0){ fillc(GOLD, h * 0.28); ctx.fillRect(P(CAL[0] + 0.004), P(CAL[1] + 0.004), P(CAL[2] - CAL[0] - 0.008), P(0.03));
+      [0.7, 0.84].forEach(function(x){ seg(x, CAL[1] - 0.012, x, CAL[1] + 0.012, GOLD, h, 2); }); }
+    for (var k = 0; k < 12; k++){ var c = cell(k); square(c[0] - 0.022, c[1] - 0.021, 0.044, 0.042, DIM, E(ph(t, 1.2 + k * 0.03, 0.3)) * 0.7, 0.9); }
+    MSGS.forEach(function(m){ var u = t - m[0] - 0.5; if (u < 0) return; var c = cell(m[4]);
+      check(c[0], c[1], 1, GOLD, 1, u / 0.35); if (u < 0.6) dot(c[0], c[1], 0.022, GOLD, (1 - u / 0.6) * 0.25); }); }
 
-  /* instagram spark + cadence feed */
-  var ig = document.getElementById('igspark2');
-  if(ig && ig.getContext){
-    startWhenVisible(ig, function(){
-      var ctx = ig.getContext('2d'), W = 360, H = 96;
-      var base = [72, 69, 70, 63, 60, 54, 50, 44, 40, 33, 27, 20, 14];
-      var t = 0, prog = reduced ? 1 : 0;
-      (function fr(){
-        t += 0.02; if(prog < 1) prog = Math.min(1, prog + 0.008);
-        ctx.clearRect(0,0,W,H);
-        var count = Math.max(2, Math.floor(base.length * prog));
-        ctx.beginPath();
-        for(var i=0;i<count;i++){
-          var x = 14 + i*(W-28)/(base.length-1);
-          var y = 12 + base[i] * (H-24)/80 + Math.sin(t+i)*1.1;
-          i?ctx.lineTo(x,y):ctx.moveTo(x,y);
-        }
-        ctx.save(); ctx.shadowColor='#E1306C'; ctx.shadowBlur=8;
-        ctx.strokeStyle='#E1306C'; ctx.lineWidth=1.6; ctx.stroke(); ctx.restore();
-        if(count >= 2){
-          var lx = 14 + (count-1)*(W-28)/(base.length-1);
-          var ly = 12 + base[count-1]*(H-24)/80 + Math.sin(t+count-1)*1.1;
-          var pu = 1 + Math.sin(t*3)*0.4;
-          ctx.save(); ctx.shadowColor='#E1306C'; ctx.shadowBlur=10;
-          ctx.fillStyle='#E1306C'; ctx.beginPath(); ctx.arc(lx,ly,2.6*pu,0,7); ctx.fill(); ctx.restore();
-        }
-        if(!reduced) tick(ig, fr);
-      })();
-    });
-  }
-  var cad = document.getElementById('cadence');
-  if(cad){
-    var CFEED = [
-      ['#E1306C','POST','treatment story published in your voice','10:00'],
-      ['#25D366','WA','inquiry from your profile to your WhatsApp, answered by the engine','23:12'],
-      ['#e8d48b','CAL','that inquiry: consult booked Friday','23:19'],
-      ['#a78bfa','REACH','profile visits climbing this week','·'],
-      ['#4ade80','YOU','growth digest: inquiries → bookings, counted','18:00']
-    ];
-    startWhenVisible(cad, function(){
-      var idx = 0;
-      function render(){
-        cad.innerHTML = '';
-        for(var k=0;k<3;k++){
-          var e = CFEED[(idx+k) % CFEED.length];
-          var d = document.createElement('div');
-          d.className = 'cad';
-          d.innerHTML = '<span class="cc" style="--cc2:' + e[0] + '">' + e[1] + '</span><span>' + e[2] + '</span><span class="ctm">' + e[3] + '</span>';
-          cad.appendChild(d);
-        }
-        var els = cad.querySelectorAll('.cad');
-        els.forEach(function(el,i){ setTimeout(function(){ el.classList.add('on'); }, 60 + i*220); });
-        idx = (idx + 1) % CFEED.length;
-      }
-      render();
-      if(!reduced) setInterval(render, 4200);
-    });
-  }
+  function adCard(t){ var p = E(ph(t, 4.2, 1.0)), dimA = 1 - 0.4 * ph(t, 20, 1) * (1 - ph(t, 36, 1)), v = bump(t, 38.2, 1.4), lit = 0;
+    COINS.forEach(function(c){ lit = Math.max(lit, bump(t, c + 1.3, 0.6)); });
+    MSGS.forEach(function(m){ if (m[1] === 'ad') lit = Math.max(lit, bump(t, m[2] - 0.2, 0.6)); });
+    box(AD[0], AD[1], AD[2], AD[3], 0.018, GOLD, dimA, 1.4 + lit, p); if (v > 0) box(AD[0], AD[1], AD[2], AD[3], 0.018, VIOLET, v, 2.4, 1);
+    var q = E(ph(t, 5.0, 0.6)) * dimA; if (q <= 0) return;
+    box(AD[0] + 0.02, AD[1] + 0.02, AD[2] - 0.02, AD[1] + 0.17, 0.008, GOLD, q * 0.7, 1);
+    person((AD[0] + AD[2]) / 2, AD[1] + 0.075, 1.6, GOLD, q * 0.85, 1.3);
+    seg(AD[0] + 0.025, AD[1] + 0.195, AD[2] - 0.08, AD[1] + 0.195, GOLD, q * 0.45, 1.2);
+    outline(AD[0] + 0.025, AD[3] - 0.05, AD[2] - 0.025, AD[3] - 0.022, 0.01, 1); fillc(GREEN, q * 0.9); ctx.fill(); }
 
-  /* thunder veils (violet + pink) */
-  function thunder(id, color, rgb){
-    var cv = document.getElementById(id);
-    if(!cv || !cv.getContext) return;
-    startWhenVisible(cv, function(){
-      var ctx = cv.getContext('2d'), W = 920, H = 430;
-      var bolts = [], t = Math.random()*7;
-      var blobs = [
-        {x:0.22, y:0.3, r:170, sp:0.13},
-        {x:0.7, y:0.7, r:200, sp:0.09}
-      ];
-      function mkbolt(){
-        var x = 60 + Math.random()*(W-120), y = 20 + Math.random()*60;
-        var pts = [[x, y]];
-        var segs = 7 + Math.floor(Math.random()*5);
-        for(var i=0;i<segs;i++){
-          x += (Math.random()-0.5)*90; y += (H-80)/segs * (0.7+Math.random()*0.6);
-          pts.push([x, y]);
-        }
-        return {pts: pts, life: 1};
-      }
-      (function fr(){
-        t += 0.008;
-        ctx.clearRect(0,0,W,H);
-        blobs.forEach(function(b, i){
-          var bx = (b.x + Math.sin(t*b.sp*6 + i*2)*0.08) * W;
-          var by = (b.y + Math.cos(t*b.sp*5 + i)*0.07) * H;
-          var g = ctx.createRadialGradient(bx, by, 8, bx, by, b.r);
-          g.addColorStop(0, 'rgba(' + rgb + ',' + (0.10 + Math.sin(t*2+i)*0.03) + ')');
-          g.addColorStop(1, 'rgba(' + rgb + ',0)');
-          ctx.fillStyle = g;
-          ctx.beginPath(); ctx.arc(bx, by, b.r, 0, 7); ctx.fill();
-        });
-        if(Math.random() < 0.012 && bolts.length < 2) bolts.push(mkbolt());
-        bolts.forEach(function(b){
-          b.life -= 0.045;
-          var a = Math.max(b.life, 0);
-          ctx.save();
-          ctx.shadowColor = color; ctx.shadowBlur = 14;
-          ctx.strokeStyle = 'rgba(' + rgb + ',' + a*0.5 + ')';
-          ctx.lineWidth = 1.4;
-          ctx.beginPath(); ctx.moveTo(b.pts[0][0], b.pts[0][1]);
-          for(var i=1;i<b.pts.length;i++) ctx.lineTo(b.pts[i][0], b.pts[i][1]);
-          ctx.stroke();
-          ctx.restore();
-        });
-        for(var i=bolts.length-1;i>=0;i--){ if(bolts[i].life <= 0) bolts.splice(i,1); }
-        if(!reduced) tick(cv, fr);
-      })();
-    });
-  }
-  thunder('gth-1', '#a78bfa', '167,139,250');
-  thunder('gth-2', '#E1306C', '225,48,108');
+  function crowd(t){ var a = E(ph(t, 8.1, 0.5)) * (1 - ph(t, 19.6, 0.9)); if (a <= 0.01) return;
+    for (var r = 0; r < 5; r++) seg(AD_FOOT[0], AD_FOOT[1], CROWD[r], CROWD_Y - 0.02, GOLD, a * 0.3, 0.8, E(ph(t, 8.3 + r * 0.05, 0.5)));
+    CROWD.forEach(function(x, i){ var tap = 0; MSGS.forEach(function(m){ if (m[3] === i && t >= m[2]) tap = 1; });
+      person(x, CROWD_Y, 1, tap ? GREEN : GOLD, a * (tap ? 1 : 0.75), 1.3); }); }
+
+  function flights(t){ MSGS.forEach(function(m){ if (m[1] === 'chat') return; var u = (t - m[2]) / (m[0] - m[2]); if (u < 0 || u > 1) return;
+      var from = m[1] === 'dm' ? [0.765, 0.38] : m[3] >= 0 ? [CROWD[m[3]], CROWD_Y - 0.02] : AD_FOOT, to = [(IN[0] + IN[2]) / 2, (IN[1] + IN[3]) / 2], v = EIO(u);
+      var x = lerp(from[0], to[0], v), y = lerp(from[1], to[1], v) - Math.sin(v * Math.PI) * 0.06, c = m[1] === 'dm' && u < 0.8 ? VIOLET : GREEN;
+      box(x - 0.018, y - 0.012, x + 0.018, y + 0.012, 0.008, c, 1, 1.3, 1, 0.35); }); }
+
+  function links(t){ var p = E(ph(t, 6.3, 0.9)), v = bump(t, 38.2, 1.4); if (p <= 0) return;
+    dashed(AD[2] - 0.03, AD[3], PH[0] + 0.02, PH[1], GOLD, 0.4 + v * 0.5, 1, p); dashed(IG[0] + 0.03, IG[3], PH[2] - 0.02, PH[1], GOLD, 0.4 + v * 0.5, 1, p); }
+
+  function wallet(t){ var a = E(ph(t, 11.9, 0.5)) * (1 - ph(t, 16.0, 0.5)); if (a <= 0.01) return;
+    box(WAL[0], WAL[1], WAL[2], WAL[3], 0.015, GOLD, a, 1.5, 1); seg(WAL[0], WAL[1] + 0.035, WAL[2], WAL[1] + 0.035, GOLD, a * 0.6, 1);
+    box(WAL[2] - 0.045, WAL[1] + 0.05, WAL[2] + 0.004, WAL[1] + 0.085, 0.008, GOLD, a, 1.2, 1); dot(WAL[2] - 0.024, WAL[1] + 0.067, 0.005, GOLD, a);
+    dashed(WAL_TOP[0], WAL_TOP[1], AD_FOOT[0], AD_FOOT[1], GOLD, a * 0.6, 1, E(ph(t, 12.1, 0.5)));
+    COINS.forEach(function(c){ var u = (t - c) / 1.3; if (u < 0 || u > 1.1) return; var v = EIO(Math.min(1, u));
+      coin(lerp(WAL_TOP[0], AD_FOOT[0], v), lerp(WAL_TOP[1], AD_FOOT[1], v), 0.02, u <= 1 ? 1 : 1 - (u - 1) / 0.1); }); }
+
+  function report(t){ var p = E(ph(t, 16.2, 0.8)); if (p <= 0) return; box(REP[0], REP[1], REP[2], REP[3], 0.02, GOLD, 1, 1.5, p, 0.06);
+    var n = E(ph(t, 16.7, 0.4)), x = E(ph(t, 17.3, 0.5));
+    cross(REP[0] + 0.045, REP[1] + 0.022, REP[0] + 0.095, REP[1] + 0.068, RED, 0.85, x, 1.4); cross(REP[0] + 0.135, REP[1] + 0.022, REP[0] + 0.185, REP[1] + 0.068, RED, 0.85, x, 1.4);
+    heart(REP[0] + 0.07, REP[1] + 0.045, 1.25, INK, n * (1 - 0.35 * x)); pointer(REP[0] + 0.16, REP[1] + 0.045, 1.25, INK, n * (1 - 0.35 * x));
+    seg(REP[0] + 0.02, REP[1] + 0.09, REP[2] - 0.02, REP[1] + 0.09, GOLD, E(ph(t, 17.6, 0.4)) * 0.5, 1);
+    MSGS.filter(function(m){ return m[1] === 'ad' && m[0] < 20; }).forEach(function(m, k){ var a = E(ph(t, Math.max(17.9 + k * 0.35, m[0] + 0.6), 0.4)); if (a <= 0) return;
+      var cx = REP[0] + 0.06 + (k % 2) * 0.135, cy = REP[1] + 0.135 + Math.floor(k / 2) * 0.085; person(cx, cy, 1, GOLD, a, 1.3); coin(cx + 0.05, cy + 0.012, 0.016, a); }); }
+
+  function instagram(t){ var p = E(ph(t, 4.4, 1.0)), own = E(ph(t, 20.3, 0.9)), v = Math.max(bump(t, 20.3, 2.2) * 0.8, bump(t, 38.2, 1.4));
+    box(IG[0], IG[1], IG[2], IG[3], 0.018, GOLD, 1, 1.4 + own * 0.4, p); if (v > 0) box(IG[0], IG[1], IG[2], IG[3], 0.018, VIOLET, v, 2.4, 1);
+    var q = E(ph(t, 5.2, 0.6)); if (q <= 0) return; var ax = IG[0] + 0.045, ay = IG[1] + 0.045;
+    ring(ax, ay, 0.024, own > 0 ? VIOLET : GOLD, q, 1.6); ring(ax, ay, 0.018, GOLD, q * 0.5, 0.9);
+    if (own > 0){ stroke(GOLD, own, 1.4); ctx.beginPath(); ctx.moveTo(P(ax - 0.01), P(ay + 0.012)); ctx.lineTo(P(ax - 0.01), P(ay));
+      ctx.arc(P(ax), P(ay), P(0.01), Math.PI, TAU); ctx.lineTo(P(ax + 0.01), P(ay + 0.012)); ctx.stroke(); }
+    seg(IG[0] + 0.085, IG[1] + 0.035, IG[2] - 0.05, IG[1] + 0.035, GOLD, q * 0.6, 1.3); seg(IG[0] + 0.085, IG[1] + 0.055, IG[2] - 0.09, IG[1] + 0.055, GOLD, q * 0.35, 1.1);
+    for (var k = 0; k < 9; k++){ var c = igCell(k); square(c[0] - 0.036, c[1] - 0.03, 0.072, 0.06, DIM, E(ph(t, 5.4 + k * 0.05, 0.3)) * 0.8, 0.9); }
+    POSTS.forEach(function(pt, k){ var u = t - pt[0]; if (u < 0) return; var c = igCell(k), a = E(u / 0.2), y = c[1] - (1 - E(u / 0.35)) * 0.05;
+      if (u < 0.5) dot(c[0], c[1], 0.03, VIOLET, (1 - u / 0.5) * 0.25);
+      if (pt[1] === 0){ box(c[0] - 0.014, y - 0.022, c[0] + 0.014, y + 0.022, 0.005, VIOLET, a, 1.2, 1); play(c[0], y, 1, VIOLET, a); }
+      else if (pt[1] === 1){ box(c[0] - 0.02, y - 0.016, c[0] + 0.02, y + 0.016, 0.004, VIOLET, a, 1.2, 1); photo(c[0], y + 0.002, 1, VIOLET, a); }
+      else { ring(c[0], y, 0.018, VIOLET, a, 1.8); dot(c[0], y, 0.009, VIOLET, a * 0.6); } }); }
+
+  function fake(t){ var a = E(ph(t, 28.3, 0.6)), fall = ph(t, 30.4, 1.0); if (a <= 0.01 || fall >= 1) return;
+    var dx = 0.03 * E(ph(t, 28.8, 0.6)), dy = 0.12 * fall * fall, al = a * (1 - fall), x0 = 0.43 + dx, y0 = 0.13 + dy, x1 = 0.60 + dx, y1 = 0.27 + dy, mx = (x0 + x1) / 2;
+    box(x0, y0, x1, y1, 0.012, INK, al, 1.3, 1, 0.08); seg(mx, y0, mx, y1, INK, al * 0.7, 1);
+    [x0 + 0.042, mx + 0.042].forEach(function(cx, j){ person(cx, y0 + 0.045, 1.25 + j * 0.1, INK, al * 0.85, 1.2); });
+    sparkle(x1 - 0.015, y0 + 0.018, 1, GOLD, al); cross(x0 - 0.01, y0 - 0.01, x1 + 0.01, y1 + 0.01, RED, al, E(ph(t, 29.6, 0.5))); }
+
+  function night(t){ var m = E(ph(t, 32.0, 1.0)) * (1 - 0.5 * ph(t, 36.5, 1.5)); if (m <= 0) return;
+    dot(0.5, 0.12, 0.032, GOLD, m * 0.95); dot(0.515, 0.108, 0.029, BG, 1);
+    [[0.42, 0.07], [0.58, 0.09], [0.46, 0.2], [0.55, 0.23], [0.4, 0.15]].forEach(function(s, j){ dot(s[0], s[1], 0.0035, GOLD, m * (0.5 + 0.5 * Math.sin(t * 2.4 + j * 1.7))); }); }
+
+  function finale(t){ var r = bump(t, 36.3, 1.6); if (r <= 0) return; ring(0.5, 0.855, 0.032, RED, r, 2); seg(0.523, 0.878, 0.545, 0.9, RED, r, 2.6); }
+
+  function draw(t){
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.globalAlpha = 1; ctx.fillStyle = BG; ctx.fillRect(0, 0, S, S);
+    square(0.025, 0.025, 0.95, 0.95, GOLD, 0.3 * E(ph(t, 0, 0.8)), 1);
+    night(t); links(t); adCard(t); instagram(t); crowd(t); wallet(t); report(t); calendar(t); phone(t); fake(t); flights(t); finale(t);
+    ctx.globalAlpha = 1;
+    for (var i = 0; i < items.length; i++) items[i].classList.toggle('on', t >= BEATS[i]);
+    shown = t; return t >= END; }
+
+  function size(){ var r = slot.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1); S = r.width;
+    cv.width = Math.round(S * dpr); cv.height = Math.round(S * dpr); }
+  function frame(now){ if (!t0) t0 = now - shown * 1000; var settled = draw((now - t0) / 1000);
+    if (settled){ done = true; raf = 0; return; } raf = visible ? requestAnimationFrame(frame) : 0; }
+  size();
+  var rt = 0;
+  window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ size(); draw(done ? END : shown); }, 150); });
+  if (reduced){ draw(END); return; }
+  /* The lines are lit unless this film runs: dimmed only from here, and lit again by any error on the page. */
+  list.classList.add('dim'); window.addEventListener('error', function(){ list.classList.remove('dim'); });
+  draw(0);
+  /* It pauses only when the whole room, film and lines, has left the screen, so reading the lines never stops it. */
+  new IntersectionObserver(function(es){ es.forEach(function(e){ visible = e.isIntersecting;
+    if (visible && !done && !raf){ t0 = 0; raf = requestAnimationFrame(frame); } }); }, { threshold: 0 }).observe(stage);
 })();
 </script>
 <script src="/guide/corner.js" defer></script>
