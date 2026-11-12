@@ -1,0 +1,4 @@
+#!/bin/sh
+# Armed by `npm install` (the prepare script points git at this folder).
+# The lines this commit adds to code: no code commented out, no second copy, no date in a new comment.
+exec node scripts/added-lines.mjs --staged
