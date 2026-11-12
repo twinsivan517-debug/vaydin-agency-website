@@ -102,6 +102,20 @@ export const comments = (line, file, open) => {
   }
 };
 
+/* A path as a diff header prints it: git ends one holding a space with a tab, and quotes one holding odd bytes. */
+const ESC = { n: 10, t: 9, r: 13, a: 7, b: 8, f: 12, v: 11, '"': 34, "\\": 92 };
+const headerPath = (s) => {
+  const p = s.replace(/\t$/, "");
+  if (!p.startsWith('"')) return p;
+  const bytes = [];
+  for (let i = 1; i < p.length - 1; i++) {
+    if (p[i] !== "\\") { bytes.push(...Buffer.from(p[i])); continue; }
+    const n = p[++i];
+    if (/[0-7]/.test(n)) { bytes.push(parseInt(p.slice(i, i + 3), 8)); i += 2; } else bytes.push(ESC[n] ?? n.charCodeAt(0));
+  }
+  return Buffer.from(bytes).toString("utf8");
+};
+
 /* Every refusal in a unified diff with no context lines (git diff -U0). */
 export const scan = (diff) => {
   const fails = [];
@@ -109,12 +123,13 @@ export const scan = (diff) => {
   for (const raw of diff.split("\n")) {
     if (raw.startsWith("--- ")) { isNew = raw === "--- /dev/null"; continue; }
     if (raw.startsWith("rename to ") || raw.startsWith("copy to ")) {
-      const to = raw.slice(raw.indexOf(" to ") + 4);
+      const to = headerPath(raw.slice(raw.indexOf(" to ") + 4));
       if (fileAsSecond(to)) fails.push(`${to}: a file renamed or copied to a second copy's name`);
       continue;
     }
     if (raw.startsWith("+++ ")) {
-      file = raw.startsWith("+++ b/") ? raw.slice(6) : null; open = false;
+      const path = headerPath(raw.slice(4));
+      file = path.startsWith("b/") ? path.slice(2) : null; open = false;
       if (file && isNew && fileAsSecond(file)) fails.push(`${file}: a new file named as a second copy`);
       continue;
     }
@@ -135,9 +150,14 @@ export const scan = (diff) => {
   return fails;
 };
 
+/* The diff's format is pinned, so no git setting on any machine (prefixes, quoted paths, a binary or textconv
+   attribute, an external diff tool) can hide a file's lines or rename its paths while the check prints clean. */
+const PINNED = ["-c", "core.quotePath=false", "diff", "-U0", "--src-prefix=a/", "--dst-prefix=b/", "--no-color", "--no-ext-diff",
+  "--text", "--no-textconv"];
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const staged = process.argv[2] === undefined || process.argv[2] === "--staged";
-  const args = staged ? ["diff", "--cached", "-U0", "--no-color"] : ["diff", "-U0", "--no-color", `${process.argv[2]}..HEAD`];
+  const args = [...PINNED, ...(staged ? ["--cached"] : [`${process.argv[2]}..HEAD`])];
   const fails = scan(execFileSync("git", args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
   if (fails.length) {
     console.error(`[added-lines] REFUSED (${fails.length}): replace what is broken, delete what is unused, keep one copy, and put the story in the commit message:\n  ${fails.join("\n  ")}`);

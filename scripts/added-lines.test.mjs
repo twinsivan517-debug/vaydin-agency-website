@@ -2,6 +2,11 @@
 // (case, punctuation, ordinals, no semicolon, JSX, Python), and stays quiet on the comments and names good code is
 // made of, including prose that only looks like a shape. Plants are built from pieces, so this file passes its own check.
 import assert from "node:assert/strict";
+import { spawnSync, execFileSync } from "node:child_process";
+import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { scan } from "./added-lines.mjs";
 
 const SL = "/" + "/", OPEN = "/" + "*", CLOSE = "*" + "/", HTML_OPEN = "<" + "!--", HTML_CLOSE = "--" + ">", H = "#";
@@ -97,5 +102,32 @@ green("a block opener inside a JS string", diff("scripts/x.mjs", ['const h = { A
 green("a class that names the page's text", diff("public/x.html", ['<p class="order-' + 'copy reveal">']));
 green("an id that names a version shown", diff("lab/x.html", ['<div id="paul-' + 'v4">']));
 green("a legacy name kept in a file that already had it", diff("scripts/legacy-gate.mjs", ["const a = 1;"]));
+
+/* A path as git prints it in a header: a space ends the line with a tab, odd bytes are quoted. */
+const STORY = `run(); ${SL} moved here 12 Nov 2026`;
+red("a file whose name holds a space", `--- /dev/null\n+++ b/my page.js\t\n@@ -0,0 +1 @@\n+${STORY}\n`, DATE);
+red("a file whose name git quotes", `--- /dev/null\n+++ "b/caf\\303\\251.js"\n@@ -0,0 +1 @@\n+${STORY}\n`, DATE);
+
+/* The hook itself, in a fresh repository with one git setting that would hide a file's lines from a plain diff. */
+const SCRIPT = fileURLToPath(new URL("./added-lines.mjs", import.meta.url));
+const hook = (name, settings, files) => {
+  const dir = mkdtempSync(join(tmpdir(), "added-lines-"));
+  try {
+    const git = (...a) => execFileSync("git", a, { cwd: dir, stdio: "pipe" });
+    git("init", "-q");
+    for (const [k, v] of settings) git("config", k, v);
+    for (const [f, text] of Object.entries(files)) writeFileSync(join(dir, f), text);
+    git("add", "-A");
+    return spawnSync(process.execPath, [SCRIPT, "--staged"], { cwd: dir, encoding: "utf8" }).status;
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+};
+const refused = (name, settings, files) => { assert.equal(hook(name, settings, files), 1, `${name}: the hook let it through`); cases++; };
+refused("the hook, a name with a space", [], { "my page.js": STORY });
+refused("the hook, a name git would quote", [], { "café.js": STORY });
+refused("the hook, under diff.mnemonicPrefix", [["diff.mnemonicPrefix", "true"]], { "plain.js": STORY });
+refused("the hook, under diff.noprefix", [["diff.noprefix", "true"]], { "plain.js": STORY });
+refused("the hook, under diff.external", [["diff.external", "true"]], { "plain.js": STORY });
+refused("the hook, with the file marked binary", [], { ".gitattributes": "*.js binary\n", "plain.js": STORY });
+assert.equal(hook("the hook, a clean file", [], { "plain.js": "run();\n" }), 0, "the hook refused a clean file"); cases++;
 
 console.log(`${cases} added-lines cases passed`);
