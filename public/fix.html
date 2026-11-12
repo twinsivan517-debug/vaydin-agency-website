@@ -48,8 +48,7 @@
   a{color:var(--accent);text-decoration:none}
   a:hover{color:var(--accent-light)}
   img{max-width:100%;display:block}
-  #embers{position:fixed;inset:0;z-index:0;pointer-events:none}
-  nav, header, section, .band, footer{position:relative;z-index:1}
+  nav, header, main, .band, footer{position:relative;z-index:1}
 
   nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:34px;
       padding:13px 40px;background:rgba(9,15,12,0.93);backdrop-filter:blur(12px);
@@ -82,94 +81,12 @@
     animation:sheen 8s ease-in-out infinite}
   @keyframes sheen{0%,100%{background-position:0% 0}50%{background-position:100% 0}}
 
-  header{position:relative;min-height:72vh;display:flex;align-items:flex-end;overflow:hidden}
-  .hero-img{position:absolute;inset:0;background:url('assets/img/fix-hero.webp') center/cover no-repeat}
-  .hero-shade{position:absolute;inset:0;background:
-    linear-gradient(180deg, rgba(4,7,6,0.62) 0%, rgba(4,7,6,0.35) 40%, rgba(4,7,6,0.92) 85%, var(--bg) 100%)}
-  .hero-inner{position:relative;z-index:2;width:100%;max-width:1240px;margin:0 auto;padding:0 48px 72px}
   .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:0.26em;color:var(--gold);margin-bottom:14px}
   h1{font-family:var(--display);font-weight:400;font-size:clamp(36px,4.6vw,60px);line-height:1.1;margin:0 0 18px;max-width:820px;text-wrap:balance}
   .goldtx{color:var(--gold-light)}
-  .hero-sub{font-size:16.5px;color:var(--tx-muted);max-width:600px;margin:0 0 8px}
-  .swapline{display:inline-flex;gap:10px;align-items:baseline;font-size:13.5px;color:var(--tx-muted);margin-top:16px;
-    background:rgba(9,15,12,0.75);padding:12px 18px;border-left:2px solid var(--ok)}
-  .swapline b{color:var(--tx)}
 
-  section{max-width:1360px;margin:0 auto;padding:96px 48px 0}
   h2{font-family:var(--display);font-weight:400;font-size:clamp(28px,3.3vw,44px);line-height:1.15;margin:0 0 12px;max-width:760px;text-wrap:balance}
-  .section-sub{color:var(--tx-muted);max-width:640px;margin:0 0 40px;font-size:16px}
-  .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease), transform .9s var(--ease)}
-  .reveal.in{opacity:1;transform:none}
 
-  /* ================= HUD DECK ================= */
-  .deck{position:relative;height:800px;scroll-margin-top:90px}
-  .deckhud{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px;font-family:var(--mono)}
-  .deckhud .dn{font-size:11px;letter-spacing:0.22em;color:var(--volt)}
-  .deckhud .dc{font-size:11px;letter-spacing:0.18em;color:var(--tx-faint)}
-  .deckhud .dc b{color:var(--tx);font-weight:500}
-  .stage{position:relative;height:740px}
-  #engine,#estate,#custom{overflow-x:clip}
-  .dcard{position:absolute;top:0;left:50%;width:min(640px, 92%);height:740px;margin-left:max(-320px, -46%);
-    transition:transform .8s var(--ease), opacity .8s var(--ease), filter .8s var(--ease);
-    overflow:hidden;cursor:default}
-  .dcard .bgimg{position:absolute;inset:0;background-size:cover;background-position:center 32%;opacity:0.68;transform:scale(1.04);transition:opacity .8s}
-  .dcard .grad{position:absolute;inset:0;background:linear-gradient(180deg, rgba(4,7,6,0.20) 0%, rgba(4,7,6,0.30) 45%, rgba(4,7,6,0.90) 100%)}
-  .dcard::before{content:'';position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.10);pointer-events:none;z-index:4}
-  .dcard.center{transform:translateX(0) scale(1);opacity:1;z-index:3;box-shadow:0 50px 110px rgba(0,0,0,0.65)}
-  .dcard.left, .dcard.right{opacity:0.28;z-index:2;filter:blur(1.5px) brightness(0.65);cursor:pointer}
-  .dcard.left{transform:translateX(-92%) scale(0.84)}
-  .dcard.right{transform:translateX(92%) scale(0.84)}
-  .dcard.off{opacity:0;transform:scale(0.7);z-index:1;pointer-events:none}
-
-  .inner{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);width:88%;z-index:5;
-    background:rgba(4,7,6,0.72);backdrop-filter:blur(10px);padding:26px 32px 24px;
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,0.09)}
-  .inner .corner{position:absolute;width:16px;height:16px;pointer-events:none}
-  .inner .c-tl{top:-1px;left:-1px;border-top:2px solid var(--volt);border-left:2px solid var(--volt)}
-  .inner .c-tr{top:-1px;right:-1px;border-top:2px solid var(--volt);border-right:2px solid var(--volt)}
-  .inner .c-bl{bottom:-1px;left:-1px;border-bottom:2px solid var(--volt);border-left:2px solid var(--volt)}
-  .inner .c-br{bottom:-1px;right:-1px;border-bottom:2px solid var(--volt);border-right:2px solid var(--volt)}
-  .fno{font-family:var(--mono);font-size:10px;letter-spacing:0.24em;color:var(--volt);margin-bottom:8px}
-  .inner h3{font-family:var(--display);font-weight:400;font-size:26px;margin:0 0 8px;color:var(--tx)}
-  .inner p{color:var(--tx-muted);font-size:14px;margin:0 0 12px;max-width:640px}
-  .ba{display:flex;flex-direction:column;gap:6px}
-  .ba div{display:flex;gap:10px;align-items:baseline;font-size:12.5px}
-  .ba .m{font-weight:800;width:14px;flex-shrink:0}
-  .ba .no .m{color:var(--critical)} .ba .no span{color:var(--tx-faint)}
-  .ba .yes .m{color:var(--ok)} .ba .yes span{color:var(--tx-muted)}
-  .ba .yes span b{color:var(--tx)}
-
-  .darrow{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:52px;height:52px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;
-    background:rgba(4,7,6,0.75);backdrop-filter:blur(6px);box-shadow:inset 0 0 0 1.5px var(--volt-deep);
-    color:var(--volt);font-size:20px;transition:all .3s var(--ease)}
-  .darrow:hover{box-shadow:inset 0 0 0 1.5px var(--volt), 0 0 24px rgba(52,227,240,0.35);color:#fff}
-  .darrow.prev{left:4%}
-  .darrow.next{right:4%}
-
-  /* summary dashboard under each deck */
-  .sumboard{margin-top:44px;background:var(--bg-card);box-shadow:0 0 0 1px var(--border);padding:36px 42px}
-  .sumboard .sbh{font-family:var(--mono);font-size:10.5px;letter-spacing:0.24em;color:var(--gold);margin-bottom:22px}
-  .sumcols{display:grid;grid-template-columns:1fr 1fr;gap:0 48px}
-  .sumcols h5{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;margin:0 0 14px}
-  .sumcols .inc h5{color:var(--ok)} .sumcols .gone h5{color:var(--critical)}
-  .sumrow{display:flex;gap:12px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--border);font-size:13.5px;color:var(--tx-muted)}
-  .sumrow:last-child{border-bottom:none}
-  .sumrow .m{font-weight:800;font-size:14px;flex-shrink:0;width:16px}
-  .inc .sumrow .m{color:var(--ok)} .gone .sumrow .m{color:var(--critical)}
-  .sumrow b{color:var(--tx);font-weight:700}
-
-  /* trust table */
-  .trustwrap{max-width:1240px;margin:0 auto;padding:110px 48px 0}
-  .trust{background:var(--bg-card);box-shadow:0 0 0 1px var(--border);padding:48px 52px;display:grid;grid-template-columns:1fr 1fr;gap:52px}
-  .trust h3{font-family:var(--display);font-weight:400;font-size:24px;margin:0 0 18px}
-  .trust ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
-  .trust li{display:flex;gap:11px;align-items:baseline;font-size:13.5px;color:var(--tx-muted)}
-  .trust li .m{font-weight:800;flex-shrink:0}
-  .trust .ask li .m{color:var(--ok)}
-  .trust .never li .m{color:var(--critical)}
-  .trust li b{color:var(--tx)}
-  .trust .foot{grid-column:1 / -1;border-top:1px solid var(--border);padding-top:18px;font-size:13px;color:var(--tx-faint)}
 
   .band{margin:120px auto 0;background:linear-gradient(180deg, var(--bg) 0%, var(--bg-card) 50%, var(--bg) 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:88px 48px;text-align:center}
   .band h2{margin:0 auto 14px;max-width:none}
@@ -179,7 +96,7 @@
 
   footer{max-width:1240px;margin:0 auto;padding:56px 48px 48px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--tx-faint);letter-spacing:0.05em}
 
-  @media (prefers-reduced-motion: reduce){ *{animation:none !important;transition:none !important} .reveal{opacity:1;transform:none} }
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important;transition:none !important} }
   @media (max-width: 960px){
     nav{padding:14px 22px}
     .nav-contact{display:none}
@@ -195,19 +112,6 @@
     .nav-links a{padding:13px 2px;font-size:17px;border-bottom:1px solid rgba(255,255,255,0.05)}
     .nav-links a:last-child{border-bottom:0}
     .nav-links a::after{bottom:8px;right:auto;width:28px}
-    .hero-inner{padding:0 22px 52px}
-    section{padding:72px 20px 0}
-    .deck{height:760px}
-    .stage{height:700px;overflow-x:clip}
-    .dcard{height:700px}
-    .sumboard{padding:26px 22px}
-    .sumcols{grid-template-columns:1fr;gap:22px}
-    .dcard.left, .dcard.right{opacity:0}
-    .darrow.prev{left:6px} .darrow.next{right:6px}
-    .inner{width:92%;padding:20px 20px 18px;bottom:20px}
-    .inner h3{font-size:21px}
-    .trustwrap{padding:80px 20px 0}
-    .trust{grid-template-columns:1fr;padding:28px 24px;gap:28px}
     .band{padding:64px 22px}
   }
   @media (max-width: 380px){
@@ -217,12 +121,38 @@
 
   .inlink{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
   h1 .h1-line{display:block;text-transform:uppercase;line-height:1.5;-webkit-text-fill-color:currentColor;text-wrap:wrap}
+  /* The Fix room, blueprint (style #18): a square film of the machine drawn as a working schematic, beside the room's
+     ten lines, each lighting as its part plays; the thirteen jobs named under it. Gold on blueprint blue. */
+  .fx-hero{max-width:1240px;margin:0 auto;padding:108px 48px 0;text-align:center}
+  .fx-hero h1{margin:0 auto;max-width:820px}
+  .fx-lede{max-width:640px;margin:12px auto 0;color:var(--tx-muted);font-size:15.5px}
+  .fx-stage{position:relative;max-width:1240px;margin:0 auto;padding:30px 48px 0;display:grid;grid-template-columns:1.1fr 0.9fr;gap:44px;align-items:start}
+  .fx-stage canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+  .fx-film{position:relative;z-index:1;width:100%;max-width:560px;aspect-ratio:1/1;margin:0 auto;border-radius:14px;border:1px solid rgba(232,212,139,0.24);background:#0b2748}
+  .fx-list{position:relative;z-index:1;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+  .fx-oc{position:relative;padding-left:22px;font-size:15px;line-height:1.5;color:var(--tx);transition:opacity .7s var(--ease)}
+  .fx-list.dim .fx-oc{opacity:0.36}
+  .fx-oc::before{content:"";position:absolute;left:2px;top:0.5em;width:9px;height:9px;border:1.5px solid #e8d48b;transform:rotate(45deg) scale(0.86);transition:background .5s,box-shadow .5s}
+  .fx-list.dim .fx-oc.on{opacity:1}
+  .fx-oc.on::before{background:#e8d48b;box-shadow:0 0 10px rgba(232,212,139,0.7)}
+  .fx-jobs{max-width:1240px;margin:40px auto 0;padding:0 48px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+  .fx-jobs .gh{font-family:var(--mono);font-size:10.5px;letter-spacing:0.2em;color:#e8d48b;margin-bottom:10px}
+  .fx-jobs ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+  .fx-jobs li{position:relative;padding-left:14px;font-size:13.5px;color:var(--tx-muted)}
+  .fx-jobs li::before{content:"";position:absolute;left:0;top:0.62em;width:5px;height:5px;background:#6ea8ff;transform:rotate(45deg)}
+  .fx-note{max-width:1240px;margin:26px auto 0;padding:0 48px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.14em;color:var(--tx-faint)}
+  @media (prefers-reduced-motion: reduce){ .fx-oc{opacity:1} }
+  @media (max-width: 900px){
+    .fx-hero{padding:96px 22px 0}
+    .fx-stage{grid-template-columns:1fr;gap:18px;padding:18px 22px 0}
+    .fx-jobs{grid-template-columns:1fr;gap:22px;padding:0 22px}
+    .fx-note{padding:0 22px}
+  }
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Vaydin Agency", "item": "https://vaydin.agency/"}, {"@type": "ListItem", "position": 2, "name": "Fix: the Engine and the Estate", "item": "https://vaydin.agency/fix.html"}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Service", "name": "WhatsApp booking for aesthetic clinics in Dubai", "serviceType": "WhatsApp booking for clinics", "description": "WhatsApp booking for aesthetic clinics in Dubai: a first message gets your menu at once, visits booked and reminded, past patients you choose invited back.", "url": "https://vaydin.agency/fix.html", "provider": {"@type": "Organization", "@id": "https://vaydin.agency/#organization", "name": "Vaydin", "url": "https://vaydin.agency/"}, "areaServed": [{"@type": "City", "name": "Dubai"}, {"@type": "Country", "name": "United Arab Emirates"}, {"@type": "Place", "name": "GCC"}]}</script>
 </head>
 <body>
-<canvas id="embers"></canvas>
 
 <nav>
   <a class="brand" href="/">
@@ -248,300 +178,35 @@
 </nav>
 <script>(function(){var b=document.querySelector(".nav-burger"),l=document.querySelector(".nav-links");if(b&&l){b.addEventListener("click",function(){var o=l.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false");});l.addEventListener("click",function(e){if(e.target.tagName==="A"){l.classList.remove("open");b.setAttribute("aria-expanded","false");}});}})();</script>
 
-<header>
-  <div class="hero-img"></div>
-  <div class="hero-shade"></div>
-  <div class="hero-inner">
-    <h1 class="grad-text"><span class="eyebrow h1-line">Step 02 · WhatsApp booking for aesthetic clinics in Dubai</span> We stop reporting the leaks.<br>We start <span class="goldtx">running the machine</span>.</h1>
-    <p class="hero-sub">Thirteen things: nine in the engine, four built around your clinic. On your own WhatsApp number and your own Google profile, with nothing to install: your reception just taps ✓.</p>
-    <div class="swapline"><span style="color:var(--ok);font-weight:800">✓</span><span><b>Intelligence is included in the engine</b>, and what the engine does is counted on the same page.</span></div>
-  </div>
+<header class="fx-hero">
+  <h1 class="grad-text"><span class="eyebrow h1-line">Step 02 · WhatsApp booking for aesthetic clinics in Dubai</span> We stop reporting the leaks.<br>We start <span class="goldtx">running the machine</span>.</h1>
+  <p class="fx-lede">Thirteen things: nine in the engine, four built around your clinic. On your own WhatsApp number and your own Google profile, with nothing to install: your reception just taps ✓.</p>
 </header>
 
-<section id="engine">
-  <div class="reveal"><div class="eyebrow">THE ENGINE · SIX THINGS, FROM MESSAGE TO VISIT</div>
-  <h2 class="grad-text">From the first message to the visit.</h2>
-  <p class="section-sub">Swap through the six. Nothing to install at the clinic: the engine lives where your patients already are.</p></div>
-
-  <div class="deck reveal" id="engineDeck">
-    <div class="deckhud"><div class="dn">◈ THE ENGINE · ILLUSTRATION</div><div class="dc" id="engineCount"></div></div>
-    <div class="stage" id="engineStage">
-
-      <div class="dcard" id="intake" data-img="assets/img/field-intake.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ENGINE 01 / 06</div>
-          <h3>Every first message gets your menu</h3>
-          <p>A patient who starts a chat at 2am gets your clinic's menu at 2am: book, treatments, where you are, offers, a person, and a consultation if you offer one. Every answer is wording your clinic approved, and a price is only ever the one you set. Anything typed instead goes straight to your reception, and the patient is told a person will reply.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: the 2am message waits until morning, if it's ever seen</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: your menu <b>at once</b>, and anything else handed to your team</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard" id="booking" data-img="assets/img/field-booking.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ENGINE 02 / 06</div>
-          <h3>Booked inside the chat</h3>
-          <p>The patient taps a treatment, picks a time, and is booked and told in the same chat. Your reception is told at once, with one button if the time has to move. If you prefer, reception confirms every booking first.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: "let me check and get back to you", and nobody does</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: the time the patient picked <b>is the booking</b>, in the same chat</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard" id="showup" data-img="assets/img/field-showup.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ENGINE 03 / 06</div>
-          <h3>Reminders before each booked visit</h3>
-          <p>A confirmation when they book, then a reminder a day before and another two hours before, or at the times you choose. Each reminder carries two buttons: Confirm and Reschedule. Reschedule shows new times, and the old one is freed the moment a new one is picked. Nothing the clinic starts is sent at night.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: empty chair, blocked doctor hour, no warning</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: the patient who can't come <b>moves the visit in two taps</b></span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard" id="dormant" data-img="assets/img/field-dormant.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ENGINE 04 / 06</div>
-          <h3>The quiet list, invited back</h3>
-          <p>The patients who came once and drifted. You give us the list and mark the ones who agreed to hear from you. Only those are invited: once each, when the last visit is more than three months old or has no date, and no visit is already booked. Your wording, a button to book, a limited number a day, and never a patient who said stop.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: your most valuable list sits in a spreadsheet, going colder</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: the ones you marked hear from your clinic <b>once, politely</b></span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard" id="crosssell" data-img="assets/img/field-crosssell.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ENGINE 05 / 06</div>
-          <h3>The next treatment, offered after the visit</h3>
-          <p>When your reception marks a visit as attended, and you mapped a next treatment to the one they just had, the patient gets one note from your clinic with a button that starts booking it. Your protocols, your wording, never pushed.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: the patient leaves; the next visit is left to chance</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: the next step is <b>one tap away</b>, after a visit that happened</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard" id="kpi" data-img="assets/img/field-kpi.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ENGINE 06 / 06</div>
-          <h3>Each step counted</h3>
-          <p>Patients who wrote in, visits booked, who came and who did not: counted on your page, read fresh each time you open it. Counts and times, and no money figure of ours. And the next unannounced shop still meets your clinic the way a patient does, with the engine answering. What it finds there is our work, so it is shown as ours and never graded as yours.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: "how is the front desk doing?" Nobody truly knows</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: one page, <b>real counts</b>, checked from outside</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="darrow prev" data-deck="engine">‹</div>
-      <div class="darrow next" data-deck="engine">›</div>
-    </div>
+<main>
+  <div class="fx-stage" id="fxstage" aria-label="The machine, drawn as a blueprint: a patient's message runs through it">
+    <canvas id="fxcanvas" aria-hidden="true"></canvas>
+    <div class="fx-film" id="fxslot"></div>
+    <ol class="fx-list" data-room="fix">
+      <li class="fx-oc" data-line>The diagnostic shows you the leaks. Step two doesn't stop at the report: it runs the machine, inside the WhatsApp your patients already use.</li>
+      <li class="fx-oc" data-line>A patient who writes at 2am gets your clinic's menu at 2am. Anything typed beyond the menu goes straight to your reception.</li>
+      <li class="fx-oc" data-line>They tap a treatment, pick a time, and they're booked, in the same chat. Your reception is told, and can move it with one tap.</li>
+      <li class="fx-oc" data-line>Before each visit, a reminder a day ahead and two hours ahead, with Confirm and Reschedule.</li>
+      <li class="fx-oc" data-line>After a visit your reception marks as attended: one polite request for a Google review, and your own next treatment, offered once.</li>
+      <li class="fx-oc" data-line>Patients who came once and drifted get one invitation back, only the ones on your list who agreed to hear from you.</li>
+      <li class="fx-oc" data-line>Your Google profile is read every day: a change you didn't make, hours that don't match your bookings, or a listing Google has closed or suspended is flagged to you. Every new review gets one of your approved replies, posted when reception taps.</li>
+      <li class="fx-oc" data-line>Once the Engine runs, every step is counted on the page you already have: how many wrote, how many booked, how many came.</li>
+      <li class="fx-oc" data-line>If AI search can't read your site, Website concierge opens what your access lets us reach: a person lets AI search crawlers in where your site builder allows it, tells you the one switch if your host blocks them, and sets out your clinic's own address, hours and phone for machines to read. No promise of a place in AI answers.</li>
+      <li class="fx-oc" data-line>You grant access; you keep the keys. No passwords, nothing installed, and the engine never touches your medical system or your money.</li>
+    </ol>
   </div>
-
-  <div class="sumboard reveal">
-    <div class="sbh">◈ THE ENGINE · EVERYTHING INSIDE, AT A GLANCE</div>
-    <div class="sumcols">
-      <div class="inc">
-        <h5>✓ WHAT YOU GET</h5>
-        <div class="sumrow"><span class="m">✓</span><span><b>Answering, day and night</b>: a first message gets your menu at once</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Real bookings</b>: the time the patient picks is the booking</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Reminders &amp; reschedules</b>: a day before, two hours before, two buttons</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>The quiet list</b>: one polite invitation, to patients you marked as agreeing</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>The next treatment</b>: offered once, after a visit that happened</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Each step counted</b>: on your page, fresh each time you open it</span></div>
-      </div>
-      <div class="gone">
-        <h5>✗ WHAT IT REPLACES</h5>
-        <div class="sumrow"><span class="m">✗</span><span>The 2am hello that waited until morning</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>Phone tag to find a time</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>The visit nobody was reminded of</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>The past-patient list nobody ever writes to</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>The visit that ends without a word from the clinic</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>"How is the front desk doing?" answered by feel</span></div>
-      </div>
-    </div>
+  <div class="fx-jobs">
+    <div><div class="gh">THE ENGINE · 6 FIELDS</div><ul><li>Every first message gets your menu</li><li>Booked inside the chat</li><li>Reminders before each booked visit</li><li>The quiet list, invited back</li><li>The next treatment, offered after the visit</li><li>Each step counted</li></ul></div>
+    <div><div class="gh">THE ESTATE · 3 FIELDS</div><ul><li>Your Google profile, checked daily</li><li>Every new review, a reply ready</li><li>Every attended patient asked for a review</li></ul></div>
+    <div><div class="gh">BUILT AROUND YOUR CLINIC · 4 FIELDS</div><ul><li>Consultations, prepared</li><li>Instagram DMs, connected</li><li>Email, connected</li><li>Website concierge</li></ul></div>
   </div>
-</section>
-
-<section id="estate">
-  <div class="reveal"><div class="eyebrow">THE ESTATE · THREE THINGS FOR YOUR GOOGLE REPUTATION</div>
-  <h2 class="grad-text">Your Google front door, checked every day.</h2>
-  <p class="section-sub">Where a new patient judges you before they ever write: your Google profile and your reviews. Checked, answered and asked for.</p></div>
-
-  <div class="deck reveal" id="estateDeck">
-    <div class="deckhud"><div class="dn">◈ THE ESTATE · ILLUSTRATION</div><div class="dc" id="estateCount"></div></div>
-    <div class="stage" id="estateStage">
-
-      <div class="dcard" id="google" data-img="assets/img/estate-google.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ESTATE 01 / 03</div>
-          <h3>Your Google profile, checked daily</h3>
-          <p>Once a day the engine reads your Business Profile and checks four things: that the hours Google shows match the hours you gave us, that Google has not edited the profile on its own, that it does not show you as closed, and that the listing is in good standing. It changes nothing: you fix it in Google's own screen.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: wrong hours on the map result, found by a patient at a locked door</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: the engine <b>checks every day</b>, where today nobody does</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard" id="reviews" data-img="assets/img/estate-reviews.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ESTATE 02 / 03</div>
-          <h3>Every new review, a reply ready</h3>
-          <p>When a review lands, the engine picks the reply your clinic approved for that star rating and sends it to your reception on WhatsApp: Post reply, or Don't reply. One tap and it is on Google within minutes. The engine adds only your clinic's name and phone: never the reviewer's name, never a treatment.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: the angry review sits unanswered for days, read by everyone who searches you</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: a reply is <b>one tap away</b>, in wording you already approved</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard" id="review-growth" data-img="assets/img/estate-reviewgrowth.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">ESTATE 03 / 03</div>
-          <h3>Every attended patient asked for a review</h3>
-          <p>A couple of hours after a visit your reception marked as attended, the patient gets one polite request with your Google review link. At most once a year. Every attended patient is asked, not only the happy ones: that is Google's rule, and we keep it.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: only the angry ones bother; your average sinks unfairly</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: every patient who came <b>gets asked</b>, once a year at most</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="darrow prev" data-deck="estate">‹</div>
-      <div class="darrow next" data-deck="estate">›</div>
-    </div>
-  </div>
-
-  <div class="sumboard reveal">
-    <div class="sbh">◈ THE ESTATE · EVERYTHING INSIDE, AT A GLANCE</div>
-    <div class="sumcols">
-      <div class="inc">
-        <h5>✓ WHAT YOU GET</h5>
-        <div class="sumrow"><span class="m">✓</span><span><b>Google profile checked</b>: every day, against the hours you gave us</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Review replies ready</b>: your approved wording, one tap to post</span></div>
-        <div class="sumrow"><span class="m">✓</span><span><b>Review requests</b>: every attended patient asked, once a year at most</span></div>
-      </div>
-      <div class="gone">
-        <h5>✗ WHAT IT REPLACES</h5>
-        <div class="sumrow"><span class="m">✗</span><span>A profile nobody checks from one month to the next</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>The angry review sitting unanswered for weeks</span></div>
-        <div class="sumrow"><span class="m">✗</span><span>A rating that sinks because only the unhappy write</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="custom">
-  <div class="reveal"><div class="eyebrow">BUILT AROUND YOUR CLINIC · FOUR MORE</div>
-  <h2 class="grad-text">Four more, built around your clinic.</h2>
-  <p class="section-sub">The nine above are the engine. These four we build and connect for your clinic, around the way it already works.</p></div>
-
-  <div class="deck reveal" id="customDeck">
-    <div class="deckhud"><div class="dn">◈ YOUR CLINIC · ILLUSTRATION</div><div class="dc" id="customCount"></div></div>
-    <div class="stage" id="customStage">
-
-      <div class="dcard" id="consult" data-img="assets/img/field-consult.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">YOUR CLINIC 01 / 04</div>
-          <h3>Consultations, prepared</h3>
-          <p>Built with your clinic: before the visit, your patients get exactly what they need to walk in ready, when to come and what to bring. Written with your clinic, approved by your team, and anything clinical stays with your doctors.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: the patient arrives late or unprepared, and the slot starts behind</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: they arrive <b>ready</b>, on lines your own team wrote</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard" id="instagram" data-img="assets/img/estate-igdms.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">YOUR CLINIC 02 / 04</div>
-          <h3>Instagram DMs, connected</h3>
-          <p>A DM at midnight is a patient at noon. Instagram DMs get the same menu and the same booking as your WhatsApp, with the same hand-over to your team: built and connected for your clinic once Meta approves our access.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: DMs pile up unread under the notifications</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: the DM gets <b>the same menu and the same booking</b></span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard" id="email" data-img="assets/img/estate-email.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">YOUR CLINIC 03 / 04</div>
-          <h3>Email, connected</h3>
-          <p>A patient who emails your clinic's address, on your clinic's own domain, gets your approved acknowledgement within minutes, and your reception is told at once on WhatsApp so a person answers. An email inquiry is a patient too.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: the inbox is a graveyard checked "when someone has time"</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: every patient's email acknowledged <b>within minutes</b>, in your words, and reception told at once</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard" id="website" data-img="assets/img/estate-website.webp">
-        <div class="bgimg"></div><div class="grad"></div>
-        <div class="inner"><span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
-          <div class="fno">YOUR CLINIC 04 / 04</div>
-          <h3>Website concierge</h3>
-          <p>New treatment? Changed hours? A price update? One WhatsApp to us and a person makes the change, and a Book on WhatsApp button on your site opens a chat where the visitor's first message gets your menu. No chasing a web guy who built it two years ago and disappeared.</p>
-          <div class="ba">
-            <div class="no"><span class="m">✗</span><span>Without: the site says Ramadan hours in November</span></div>
-            <div class="yes"><span class="m">✓</span><span>With: one message keeps it current, and <b>every visitor is one tap from your WhatsApp</b></span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="darrow prev" data-deck="custom">‹</div>
-      <div class="darrow next" data-deck="custom">›</div>
-    </div>
-  </div>
-</section>
-
-<div class="trustwrap" id="access">
-  <div class="reveal"><div class="eyebrow">HOW WE CONNECT, AND WHAT WE NEVER TOUCH</div>
-  <h2 class="grad-text">You grant access. You keep the keys.</h2>
-  <p class="section-sub">No passwords, and no software installed at the clinic. Your WhatsApp number and your Google profile stay in your own accounts.</p></div>
-
-  <div class="trust reveal">
-    <div class="ask">
-      <h3>What we ask for</h3>
-      <ul>
-        <li><span class="m">✓</span><span><b>WhatsApp</b>: your number stays in your clinic's own Meta account; we connect to it on one call, through an official WhatsApp Business provider</span></li>
-        <li><span class="m">✓</span><span><b>Google</b>: you add us as a manager on your Business Profile, never as its owner</span></li>
-        <li><span class="m">✓</span><span><b>The quiet list</b>: only if you want the invitations: your past patients, with the ones who agreed marked</span></li>
-        <li><span class="m">✓</span><span><b>Website</b>: editor access, only if you want us to make the changes</span></li>
-      </ul>
-    </div>
-    <div class="never">
-      <h3>What we never touch</h3>
-      <ul>
-        <li><span class="m">✗</span><span><b>Your medical system</b>: the engine does not connect to it</span></li>
-        <li><span class="m">✗</span><span><b>Your passwords</b>: we never ask for one. Every connection is made from your own account, and your reception only taps inside WhatsApp</span></li>
-        <li><span class="m">✗</span><span><b>Clinical questions</b>: anything a patient types goes to your team; the engine answers only from the menu you approved</span></li>
-        <li><span class="m">✗</span><span><b>Your money</b>: the engine takes no payment; that stays between you and your patients</span></li>
-        <li><span class="m">✗</span><span><b>Your ad accounts' billing</b>: spend is paid direct, never marked up</span></li>
-      </ul>
-    </div>
-    <div class="foot">What the engine keeps: each patient who messages your WhatsApp, every message both ways, the bookings, a record of what it did, the quiet list you gave us, and, for each new Google review, its stars, your reply and the line your reception saw. Stored encrypted. When you leave, a person here deletes it once 30 days have passed, and the backups a week after that.</div>
-  </div>
-</div>
+  <p class="fx-note">ILLUSTRATIVE SCENES · YOUR OWN NUMBERS COME FROM YOUR DIAGNOSTIC</p>
+</main>
 
 <div class="band">
   <div class="eyebrow" style="text-align:center">THE NEXT STEP</div>
@@ -557,101 +222,225 @@
 </footer>
 
 <script>
+/* The Fix film, blueprint (style #18): the machine drawn as a working schematic on a blue grid, beside the ten
+   lines of the room, each lighting as its part plays. The report steps aside and keeps going in the corner; the phone of the patient
+   feeds a track of four stations (menu, booking, reminder, visit) with reception below. Then the visit is marked and a
+   review asked; the list of the clinic, where only the patients who agreed come back; the Google profile read as the
+   sun passes, a problem flagged, a reply posted when reception taps; the counts rising on the report; a person opening
+   the gate of the site to the AI crawlers and setting out the details of the clinic; the key kept by the clinic, its medical
+   system and its money sealed off. Shapes only: nothing written, no digit drawn. Every frame is a function of its
+   time: it runs only while on screen and settles on its last frame; with reduced motion the last frame is drawn once. */
 (function(){
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
-    });
-  }, {threshold: 0.10});
-  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  var stage = document.getElementById('fxstage'), cv = document.getElementById('fxcanvas'), ctx = cv.getContext('2d');
+  var slot = document.getElementById('fxslot'), items = [].slice.call(document.querySelectorAll('.fx-list li[data-line]'));
+  var PAPER = '#0b2748', GRID = '#6ea8ff', INK = '#e4efff', GOLD = '#e8d48b', GREEN = '#25D366', PINK = '#f9a8d4', RED = '#f87171', GREY = '#5f7896';
+  var BEATS = [1.0, 4.0, 8.0, 12.0, 16.6, 20.6, 24.6, 29.4, 31.6, 36.0], END = 39.0;
+  var W, H, dpr, F, s, ox, oy, t0 = 0, raf = 0, visible = false, done = false;
+  var clamp = function(x){ return x < 0 ? 0 : x > 1 ? 1 : x; };
+  var E = function(x){ x = clamp(x); return 1 - Math.pow(1 - x, 3); };
+  var EIO = function(x){ x = clamp(x); return x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2; };
+  var EB = function(x){ x = clamp(x); var c = 1.7, c3 = c + 1; return 1 + c3*Math.pow(x - 1, 3) + c*Math.pow(x - 1, 2); };
+  function rgba(h, a){ var n = parseInt(h.slice(1), 16); return 'rgba(' + (n>>16&255) + ',' + (n>>8&255) + ',' + (n&255) + ',' + a + ')'; }
+  function X(u){ return ox + u * s; }
+  function Y(v){ return oy + v * s; }
+  function pen(c, a, lw){ ctx.globalAlpha = Math.min(1, Math.max(0, a)); ctx.strokeStyle = c; ctx.lineWidth = lw || 1.4; }
+  function seg(x0, y0, x1, y1, c, a, lw, p){ if (a <= 0.01) return; p = p === undefined ? 1 : clamp(p); if (p <= 0) return;
+    pen(c, a, lw); ctx.beginPath(); ctx.moveTo(X(x0), Y(y0)); ctx.lineTo(X(x0 + (x1 - x0) * p), Y(y0 + (y1 - y0) * p)); ctx.stroke(); }
+  function dashed(x0, y0, x1, y1, c, a, p){ if (a <= 0.01) return; var L = Math.hypot(x1 - x0, y1 - y0), n = Math.floor(L / 0.3), k, q = clamp(p);
+    for (k = 0; k < n; k += 2){ var u0 = k / n, u1 = Math.min(1, (k + 1) / n); if (u0 > q) break; u1 = Math.min(u1, q);
+      seg(x0 + (x1 - x0) * u0, y0 + (y1 - y0) * u0, x0 + (x1 - x0) * u1, y0 + (y1 - y0) * u1, c, a, 1.2); } }
+  function ring(x, y, r, c, a, lw, p){ if (a <= 0.01) return; p = p === undefined ? 1 : clamp(p); if (p <= 0) return;
+    pen(c, a, lw); ctx.beginPath(); ctx.arc(X(x), Y(y), r * s, -Math.PI / 2, -Math.PI / 2 + 2 * Math.PI * p); ctx.stroke(); }
+  function disc(x, y, r, c, a){ if (a <= 0.01) return; ctx.globalAlpha = Math.min(1, a); ctx.fillStyle = c; ctx.beginPath(); ctx.arc(X(x), Y(y), r * s, 0, 2 * Math.PI); ctx.fill(); }
+  function glow(x, y, r, c, a){ if (a <= 0.01 || r <= 0) return; var g = ctx.createRadialGradient(X(x), Y(y), 0, X(x), Y(y), r * s); g.addColorStop(0, rgba(c, a)); g.addColorStop(1, rgba(c, 0)); ctx.globalAlpha = 1; ctx.fillStyle = g; ctx.fillRect(X(x) - r * s, Y(y) - r * s, 2 * r * s, 2 * r * s); }
+  function box(x, y, w, h, c, a, lw, rr, fill, fa){ if (a <= 0.01) return; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(X(x), Y(y), w * s, h * s, (rr || 0) * s); else ctx.rect(X(x), Y(y), w * s, h * s);
+    if (fill && fa > 0.01){ ctx.globalAlpha = Math.min(1, fa); ctx.fillStyle = fill; ctx.fill(); } pen(c, a, lw); ctx.stroke(); }
+  function at(path, e){ var L = 0, k, d = [];
+    for (k = 1; k < path.length; k++){ d.push(Math.hypot(path[k][0] - path[k-1][0], path[k][1] - path[k-1][1])); L += d[k-1]; }
+    var u = e * L; for (k = 0; k < d.length; k++){ if (u <= d[k] || k === d.length - 1){ var f = d[k] ? Math.min(1, u / d[k]) : 0; return [path[k][0] + (path[k+1][0] - path[k][0]) * f, path[k][1] + (path[k+1][1] - path[k][1]) * f]; } u -= d[k]; } }
+  function packet(path, p, c){ if (p <= 0 || p >= 1) return; var q = at(path, EIO(p));
+    glow(q[0], q[1], 0.55, c, 0.55); ctx.globalAlpha = 1; ctx.fillStyle = c; ctx.fillRect(X(q[0]) - 3, Y(q[1]) - 3, 6, 6); }
+  function tick(x, y, r, c, a){ if (a <= 0.01) return; pen(c, a, 2.2); ctx.beginPath(); ctx.moveTo(X(x - r * 0.7), Y(y)); ctx.lineTo(X(x - r * 0.2), Y(y + r * 0.5)); ctx.lineTo(X(x + r * 0.8), Y(y - r * 0.6)); ctx.stroke(); }
+  function bell(x, y, r, c, a, sw){ if (a <= 0.01) return; ctx.save(); ctx.translate(X(x), Y(y)); ctx.rotate(sw); pen(c, a, 1.8); var R = r * s; ctx.beginPath();
+    ctx.moveTo(-R * 0.8, R * 0.5); ctx.quadraticCurveTo(-R * 0.7, -R * 0.9, 0, -R * 0.9); ctx.quadraticCurveTo(R * 0.7, -R * 0.9, R * 0.8, R * 0.5); ctx.closePath(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, R * 0.7, R * 0.18, 0, 2 * Math.PI); ctx.stroke(); ctx.restore(); }
+  function loopArrow(x, y, r, c, a){ if (a <= 0.01) return; pen(c, a, 1.6); ctx.beginPath(); ctx.arc(X(x), Y(y), r * s, -Math.PI * 0.2, Math.PI * 1.45); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(X(x + r * 0.95), Y(y - r * 0.05)); ctx.lineTo(X(x + r * 0.85), Y(y - r * 0.75)); ctx.lineTo(X(x + r * 0.35), Y(y - r * 0.35)); ctx.stroke(); }
+  function star(x, y, r, c, a){ if (a <= 0.01) return; pen(c, a, 1.8); ctx.beginPath();
+    for (var j = 0; j <= 10; j++){ var an = -Math.PI / 2 + j * Math.PI / 5, rr = (j % 2 ? 0.42 : 1) * r * s; j ? ctx.lineTo(X(x) + Math.cos(an) * rr, Y(y) + Math.sin(an) * rr) : ctx.moveTo(X(x) + Math.cos(an) * rr, Y(y) + Math.sin(an) * rr); } ctx.stroke(); }
+  function heart(x, y, r, c, a, fa){ if (a <= 0.01) return; var R = r * s, cx = X(x), cy = Y(y); ctx.beginPath(); ctx.moveTo(cx, cy + R * 0.8);
+    ctx.bezierCurveTo(cx - R * 1.4, cy - R * 0.2, cx - R * 0.6, cy - R * 1.2, cx, cy - R * 0.4); ctx.bezierCurveTo(cx + R * 0.6, cy - R * 1.2, cx + R * 1.4, cy - R * 0.2, cx, cy + R * 0.8);
+    if (fa > 0.01){ ctx.globalAlpha = Math.min(1, fa); ctx.fillStyle = c; ctx.fill(); } pen(c, a, 1.6); ctx.stroke(); }
+  function speech(x, y, r, c, a){ if (a <= 0.01) return; pen(c, a, 1.6); ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(X(x - r), Y(y - r * 0.6), 2 * r * s, 1.2 * r * s, 0.35 * r * s); else ctx.rect(X(x - r), Y(y - r * 0.6), 2 * r * s, 1.2 * r * s);
+    ctx.moveTo(X(x - r * 0.4), Y(y + r * 0.6)); ctx.lineTo(X(x - r * 0.6), Y(y + r * 1.05)); ctx.lineTo(X(x - r * 0.05), Y(y + r * 0.6)); ctx.stroke(); }
+  function pin(x, y, r, c, a){ if (a <= 0.01) return; pen(c, a, 1.6); ctx.beginPath(); ctx.arc(X(x), Y(y - r * 0.35), r * 0.62 * s, Math.PI * 0.82, Math.PI * 2.18); ctx.lineTo(X(x), Y(y + r * 0.8)); ctx.closePath(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(X(x), Y(y - r * 0.35), r * 0.22 * s, 0, 2 * Math.PI); ctx.stroke(); }
+  function clock(x, y, r, c, a){ if (a <= 0.01) return; ring(x, y, r, c, a, 1.6); seg(x, y, x, y - r * 0.62, c, a, 1.6); seg(x, y, x + r * 0.45, y + r * 0.2, c, a, 1.6); }
+  function handset(x, y, r, c, a){ if (a <= 0.01) return; box(x - r * 0.45, y - r * 0.85, r * 0.9, r * 1.7, c, a, 1.6, r * 0.18); seg(x - r * 0.15, y + r * 0.55, x + r * 0.15, y + r * 0.55, c, a, 1.4); }
+  function flag(x, y, r, c, a){ if (a <= 0.01) return; seg(x, y + r, x, y - r, c, a, 1.8); pen(c, a, 1.6); ctx.beginPath(); ctx.moveTo(X(x), Y(y - r)); ctx.lineTo(X(x + r * 1.1), Y(y - r * 0.6)); ctx.lineTo(X(x), Y(y - r * 0.2)); ctx.stroke(); }
+  function key(x, y, r, c, a){ if (a <= 0.01) return; ring(x - r * 0.55, y, r * 0.42, c, a, 2); seg(x - r * 0.13, y, x + r * 0.95, y, c, a, 2); seg(x + r * 0.6, y, x + r * 0.6, y + r * 0.35, c, a, 2); seg(x + r * 0.9, y, x + r * 0.9, y + r * 0.28, c, a, 2); }
+  function coin(x, y, r, c, a){ if (a <= 0.01) return; ring(x, y, r, c, a, 1.6); ring(x, y, r * 0.62, c, a * 0.8, 1.2); }
+  function cross(x, y, r, c, a){ if (a <= 0.01) return; box(x - r, y - r, 2 * r, 2 * r, c, a, 1.6, r * 0.2); seg(x, y - r * 0.55, x, y + r * 0.55, c, a, 2.2); seg(x - r * 0.55, y, x + r * 0.55, y, c, a, 2.2); }
+  function person(x, y, r, c, a){ if (a <= 0.01) return; ring(x, y - r * 0.55, r * 0.3, c, a, 1.6); pen(c, a, 1.6); ctx.beginPath(); ctx.arc(X(x), Y(y + r * 0.35), r * 0.5 * s, Math.PI, 2 * Math.PI); ctx.stroke(); }
+  function station(k, t0l){ var lt = E((t0l) / 0.35); disc(ST[k], TY, SR - 0.05, GOLD, 0.16 * lt); ring(ST[k], TY, SR, GOLD, lt, 2.2); glow(ST[k], TY, 1.3, GOLD, 0.08 * lt); return lt; }
 
-  /* ---------- HUD decks ---------- */
-  var decks = {};
-  function initDeck(name, stageId, countId){
-    var stage = document.getElementById(stageId);
-    var cards = Array.prototype.slice.call(stage.querySelectorAll('.dcard'));
-    cards.forEach(function(c){
-      c.querySelector('.bgimg').style.backgroundImage = 'url(' + c.getAttribute('data-img') + ')';
-    });
-    var d = { idx: 0, cards: cards, count: document.getElementById(countId), name: name };
-    decks[name] = d;
-    cards.forEach(function(c, i){
-      c.addEventListener('click', function(){
-        if(c.classList.contains('left')){ step(name, -1); }
-        else if(c.classList.contains('right')){ step(name, 1); }
-      });
-    });
-    renderDeck(name);
+  function layout(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var r = stage.getBoundingClientRect(); W = r.width; H = r.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    var b = slot.getBoundingClientRect();
+    F = { x: b.left - r.left, y: b.top - r.top, w: b.width, h: b.height };
+    s = Math.min(F.w, F.h) / 12.4; ox = F.x + (F.w - 12 * s) / 2; oy = F.y + (F.h - 12 * s) / 2;
   }
-  function renderDeck(name){
-    var d = decks[name], n = d.cards.length;
-    d.cards.forEach(function(c, i){
-      c.classList.remove('center','left','right','off');
-      var rel = (i - d.idx + n) % n;
-      if(rel === 0) c.classList.add('center');
-      else if(rel === 1) c.classList.add('right');
-      else if(rel === n - 1) c.classList.add('left');
-      else c.classList.add('off');
-    });
-    var title = d.cards[d.idx].querySelector('h3').textContent;
-    d.count.innerHTML = '<b>' + ('0' + (d.idx + 1)).slice(-2) + '</b> / ' + ('0' + n).slice(-2) + ' · ' + title.toUpperCase();
-  }
-  function step(name, dir){
-    var d = decks[name];
-    d.idx = (d.idx + dir + d.cards.length) % d.cards.length;
-    renderDeck(name);
-  }
-  initDeck('engine', 'engineStage', 'engineCount');
-  initDeck('estate', 'estateStage', 'estateCount');
-  initDeck('custom', 'customStage', 'customCount');
-  document.querySelectorAll('.darrow').forEach(function(a){
-    a.addEventListener('click', function(){
-      step(a.getAttribute('data-deck'), a.classList.contains('next') ? 1 : -1);
-    });
-  });
+  /* the schematic: the phone at the left, a track of four stations, reception below; the Google card at the top, the
+     clinic's list at the bottom left, its site at the bottom right */
+  var TY = 6.0, ST = [4.6, 6.6, 8.6, 10.4], SR = 0.62, RX = 6.6, RY = 9.6, PH = [0.9, 3.7, 1.9, 4.6];
+  var GC = [5.3, 1.05, 3.2, 1.9], LS = [0.9, 8.9, 2.7, 2.4], WS = [8.5, 8.0, 2.75, 2.6];
+  var PHONE = [PH[0] + PH[2], TY], ARC = [[ST[3] - SR, TY - 0.2], [9.4, 4.95], [6.6, 4.75], [3.9, 4.95], [PH[0] + PH[2], TY - 0.6]];
 
-  /* deep links: #reviews etc. jump the right deck to the right card */
-  function jumpToHash(){
-    var h = location.hash.replace('#','');
-    if(!h) return;
-    Object.keys(decks).forEach(function(name){
-      var d = decks[name];
-      d.cards.forEach(function(c, i){
-        if(c.id === h){
-          d.idx = i; renderDeck(name);
-          setTimeout(function(){ c.closest('.deck').scrollIntoView({behavior:'smooth', block:'center'}); }, 60);
-        }
-      });
-    });
-  }
-  window.addEventListener('hashchange', jumpToHash);
-  jumpToHash();
+  function draw(t){
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    if (!(F.w > 40 && F.h > 40)) return t > END;
+    var k, j, g = E(t / 1.0);
+    ctx.save(); ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(F.x, F.y, F.w, F.h, 14); else ctx.rect(F.x, F.y, F.w, F.h); ctx.clip();
+    ctx.globalAlpha = 1; ctx.fillStyle = PAPER; ctx.fillRect(F.x, F.y, F.w, F.h);
+    /* the grid, then the sheet's border with its corner marks */
+    for (k = 0; k <= 24; k++){ var major = k % 4 === 0, ga = (major ? 0.17 : 0.07) * g; seg(k / 2, 0, k / 2, 12, GRID, ga, 1); seg(0, k / 2, 12, k / 2, GRID, ga, 1); }
+    box(0.4, 0.4, 11.2, 11.2, INK, 0.28 * g, 1);
+    for (k = 0; k < 4; k++){ var cx = k % 2 ? 11.6 : 0.4, cy = k < 2 ? 0.4 : 11.6, dx = k % 2 ? -1 : 1, dy = k < 2 ? 1 : -1; seg(cx, cy, cx + dx * 0.7, cy, INK, 0.6 * g, 1.6); seg(cx, cy, cx, cy + dy * 0.7, INK, 0.6 * g, 1.6); }
 
-  /* embers */
-  var ec = document.getElementById('embers');
-  if(ec && ec.getContext && !reduced){
-    var ectx = ec.getContext('2d');
-    var EW, EH, parts = [];
-    function esize(){ EW = ec.width = window.innerWidth; EH = ec.height = window.innerHeight; }
-    esize(); window.addEventListener('resize', esize);
-    for(var i=0;i<38;i++){
-      parts.push({x:Math.random(), y:Math.random(), r:0.6+Math.random()*1.7,
-                  s:0.00012+Math.random()*0.00035, tw:Math.random()*7, red:Math.random()<0.25});
-    }
-    (function eframe(){
-      ectx.clearRect(0,0,EW,EH);
-      for(var i=0;i<parts.length;i++){
-        var p = parts[i];
-        p.y -= p.s; p.tw += 0.02;
-        if(p.y < -0.02){ p.y = 1.02; p.x = Math.random(); }
-        var a = 0.10 + Math.abs(Math.sin(p.tw)) * 0.26;
-        ectx.fillStyle = p.red ? 'rgba(248,113,113,'+a*0.8+')' : 'rgba(232,212,139,'+a+')';
-        ectx.beginPath(); ectx.arc(p.x*EW, p.y*EH, p.r, 0, 7); ectx.fill();
-      }
-      requestAnimationFrame(eframe);
-    })();
+    /* 1 · the report draws, then steps aside to the corner, where it keeps going, as the machine is drawn */
+    var rep = E((t - 0.5) / 0.6), mv = EIO((t - 1.9) / 1.0), rx = 4.4 + (9.45 - 4.4) * mv, ry = 3.4 + (0.95 - 3.4) * mv, rs = 1 - 0.5 * mv;
+    if (rep > 0.01){ box(rx, ry, 3.2 * rs, 4.0 * rs, INK, 0.9 * rep, 1.4, 0.12, PAPER, 0.9 * rep);
+      ring(rx + 1.6 * rs, ry + 1.25 * rs, 0.62 * rs, GOLD, rep, 2, 0.72 * rep);
+      for (k = 0; k < 4; k++) seg(rx + 0.45 * rs, ry + (2.35 + k * 0.38) * rs, rx + (0.45 + (k % 2 ? 1.6 : 2.3)) * rs, ry + (2.35 + k * 0.38) * rs, INK, 0.55 * rep * (1 - E((t - 29.4) / 0.5)), 1.2); }
+    var trk = E((t - 2.2) / 1.2);
+    seg(3.0, TY - 0.3, 11.2, TY - 0.3, INK, 0.85, 1.4, trk); seg(3.0, TY + 0.3, 11.2, TY + 0.3, INK, 0.85, 1.4, trk);
+    for (k = 0; k <= 16; k++){ var tx = 3.0 + k * 0.5; if (tx <= 3.0 + 8.2 * trk) seg(tx, TY + 0.45, tx, TY + (k % 2 ? 0.6 : 0.75), GRID, 0.55, 1); }
+    for (k = 0; k < ST.length; k++){ var sp = (t - 2.6 - k * 0.22) / 0.5; ring(ST[k], TY, SR, INK, 0.95, 1.6, sp);
+      if (sp > 1){ seg(ST[k] - SR - 0.25, TY, ST[k] - SR + 0.12, TY, INK, 0.6, 1); seg(ST[k] + SR - 0.12, TY, ST[k] + SR + 0.25, TY, INK, 0.6, 1); seg(ST[k], TY - SR - 0.25, ST[k], TY - SR + 0.12, INK, 0.6, 1); } }
+    var phd = E((t - 2.0) / 0.8);
+    box(PH[0], PH[1], PH[2], PH[3], INK, 0.95 * phd, 1.6, 0.28); seg(PH[0] + 0.7, PH[1] + 0.25, PH[0] + 1.2, PH[1] + 0.25, INK, 0.7 * phd, 1.4);
+    box(PH[0] + 0.15, PH[1] + 0.5, PH[2] - 0.3, PH[3] - 0.95, GRID, 0.45 * phd, 1);
+    seg(PH[0] + PH[2], TY, 3.0, TY, INK, 0.85 * phd, 1.4);
+    var rcp = E((t - 3.0) / 0.6);
+    box(RX - 0.9, RY, 1.8, 0.55, INK, 0.9 * rcp, 1.5, 0.08); ring(RX, RY - 0.55, 0.26, INK, 0.9 * rcp, 1.5);
+    pen(INK, 0.9 * rcp, 1.5); ctx.beginPath(); ctx.arc(X(RX), Y(RY + 0.02), 0.42 * s, Math.PI, 2 * Math.PI); if (rcp > 0.01) ctx.stroke();
+    dashed(ST[0], TY + SR, ST[0], RY + 0.27, INK, 0.5, (t - 3.2) / 0.5); dashed(ST[0], RY + 0.27, RX - 0.9, RY + 0.27, INK, 0.5, (t - 3.5) / 0.4);
+    dashed(ST[1], TY + SR, ST[1], RY - 1.0, INK, 0.5, (t - 3.4) / 0.5);
+
+    /* 2 · 2am: a message arrives; the menu answers at once; anything typed goes down to reception */
+    var nt = E((t - 4.0) / 0.5); disc(1.85, 2.2, 0.48, INK, 0.9 * nt); disc(2.08, 2.04, 0.42, PAPER, nt);
+    var m1 = E((t - 4.3) / 0.3); if (t < 5.0) box(PH[0] + 0.35, PH[1] + 1.0, 1.0, 0.45, GREEN, m1, 1.6, 0.18);
+    packet([PHONE, [ST[0] - SR, TY]], (t - 4.7) / 0.6, GREEN);
+    var lit0 = station(0, t - 5.3); glow(ST[0], TY, 1.3, GOLD, 0.28 * lit0 * (1 - E((t - 6.2) / 1.2)));
+    for (k = 0; k < 3; k++){ var mf = EB((t - 5.3 - k * 0.08) / 0.45); if (mf > 0.02){ var mx = ST[0] - 0.75 + k * 0.5, my = TY - SR - 0.35 - mf * (0.55 + (k === 1 ? 0.3 : 0)); box(mx, my, 0.42, 0.42, GOLD, Math.min(1, mf), 1.6, 0.08, GOLD, 0.18 * Math.min(1, mf)); } }
+    packet([[ST[0] - SR, TY], PHONE], (t - 5.45) / 0.5, GOLD);
+    var sc = E((t - 5.95) / 0.3); for (k = 0; k < 3; k++) box(PH[0] + 0.35, PH[1] + 0.95 + k * 0.55, 1.2, 0.38, GOLD, sc, 1.4, 0.1, GOLD, 0.12 * sc);
+    var ty = E((t - 6.4) / 0.25); if (t < 7.2) box(PH[0] + 0.35, PH[1] + 2.75, 0.8, 0.38, INK, ty, 1.4, 0.14);
+    packet([PHONE, [ST[0], TY], [ST[0], RY + 0.27], [RX - 0.9, RY + 0.27]], (t - 6.6) / 1.1, INK);
+    var rg = E((t - 7.7) / 0.3) * (1 - E((t - 8.6) / 0.8)); glow(RX, RY - 0.1, 1.2, INK, 0.35 * rg);
+
+    /* 3 · a tap, a time, booked in the same chat; reception is told, and moves it with one tap */
+    var tp = E((t - 8.0) / 0.2) * (1 - E((t - 8.5) / 0.3)); box(PH[0] + 0.35, PH[1] + 0.95, 1.2, 0.38, GOLD, tp, 2, 0.1, GOLD, 0.6 * tp);
+    packet([PHONE, [ST[1] - SR, TY]], (t - 8.2) / 0.8, GREEN);
+    station(1, t - 9.0);
+    var cg = E((t - 8.95) / 0.35);
+    if (cg > 0.01){ for (j = 0; j < 2; j++) for (k = 0; k < 3; k++) box(ST[1] - 0.42 + k * 0.28, TY - 0.24 + j * 0.28, 0.24, 0.24, GOLD, 0.8 * cg, 1, 0.03);
+      var mvc = EIO((t - 10.7) / 0.5), ccx = ST[1] - 0.42 + (1 + mvc) * 0.28, ccy = TY - 0.24 + mvc * 0.28, cf = E((t - 9.2) / 0.3);
+      box(ccx, ccy, 0.24, 0.24, GOLD, cf, 1.2, 0.03, GOLD, 0.95 * cf); }
+    packet([[ST[1], TY + SR], [ST[1], RY - 1.0]], (t - 9.6) / 0.5, GOLD);
+    var rt2 = E((t - 10.1) / 0.3) * (1 - E((t - 11.6) / 0.8)); glow(RX, RY - 0.1, 1.2, GOLD, 0.35 * rt2);
+    var tap = t - 10.45; if (tap > 0 && tap < 0.7) ring(RX + 0.55, RY + 0.25, 0.12 + tap * 0.5, GOLD, 1 - tap / 0.7, 1.6);
+
+    /* 4 · two reminders, a day ahead and two hours ahead; Confirm and Reschedule on the phone */
+    var lit2 = station(2, t - 12.0);
+    var swing = 0; for (k = 0; k < 2; k++){ var b0 = t - (12.4 + k * 1.2); if (b0 > 0 && b0 < 1.0) swing = Math.sin(b0 * 22) * 0.35 * (1 - b0);
+      if (b0 > 0 && b0 < 1.0) for (j = 0; j < 2; j++){ var rr = (b0 * 1.6 + j * 0.5) % 1; ring(ST[2], TY - 0.05, 0.5 + rr * 0.6, GOLD, 0.6 * (1 - rr), 1.2); }
+      packet([[ST[2] - SR, TY], PHONE], (t - 12.5 - k * 1.2) / 0.7, GREEN); }
+    bell(ST[2], TY - 0.05, 0.36, GOLD, lit2, swing);
+    var bt = E((t - 14.4) / 0.35) * (1 - E((t - 16.9) / 0.4)), cfm = E((t - 15.2) / 0.25);
+    box(PH[0] + 0.25, PH[1] + 3.0, 0.65, 0.5, GREEN, bt, 1.5, 0.12, GOLD, 0.7 * cfm * bt); tick(PH[0] + 0.575, PH[1] + 3.27, 0.2, cfm > 0.5 ? PAPER : GREEN, bt);
+    box(PH[0] + 1.0, PH[1] + 3.0, 0.65, 0.5, INK, bt, 1.5, 0.12); loopArrow(PH[0] + 1.325, PH[1] + 3.25, 0.15, INK, bt);
+    packet([PHONE, [ST[2] - SR, TY]], (t - 15.3) / 0.6, GOLD);
+    tick(ST[2] + 0.38, TY - 0.42, 0.18, GREEN, E((t - 15.9) / 0.3));
+
+    /* 5 · the visit, marked attended by reception: one review asked, and the next treatment of the clinic offered once */
+    packet([PHONE, [ST[3] - SR, TY]], (t - 16.6) / 0.9, GREEN);
+    var lit3 = station(3, t - 17.5);
+    box(ST[3] - 0.22, TY - 0.36, 0.44, 0.72, GOLD, lit3, 1.6, 0.04); disc(ST[3] + 0.12, TY + 0.02, 0.04, GOLD, lit3);
+    var mk = t - 17.9; if (mk > 0 && mk < 0.7) ring(RX + 0.55, RY + 0.25, 0.12 + mk * 0.5, GOLD, 1 - mk / 0.7, 1.6);
+    tick(ST[3] + 0.42, TY - 0.45, 0.18, GREEN, E((t - 18.2) / 0.3));
+    var rv = t - 18.6; if (rv > 0 && rv < 2.2){ var sy = TY - SR - 0.3 - rv * 1.1; star(ST[3], sy, 0.3, GOLD, Math.sin(Math.PI * rv / 2.2)); }
+    packet(ARC, (t - 19.0) / 1.3, GOLD);
+    var off = E((t - 20.2) / 0.3) * (1 - E((t - 22.0) / 0.5)); box(PH[0] + 0.35, PH[1] + 2.75, 1.2, 0.38, GOLD, off, 1.4, 0.1, GOLD, 0.15 * off); loopArrow(PH[0] + 0.62, PH[1] + 2.94, 0.11, GOLD, off);
+
+    /* 6 · the list of the clinic: only the patients who agreed light up and come back; the rest are never sent anything */
+    var ls = E((t - 20.6) / 0.5);
+    box(LS[0], LS[1], LS[2], LS[3], INK, 0.9 * ls, 1.4, 0.1, PAPER, 0.85 * ls);
+    for (k = 0; k < 4; k++){ var ly = LS[1] + 0.5 + k * 0.5, yes = k === 0 || k === 2, cx2 = LS[0] + LS[2] - 0.38;
+      seg(LS[0] + 0.75, ly, LS[0] + (k % 2 ? 1.7 : 1.95), ly, INK, 0.5 * ls, 1.2); box(cx2 - 0.14, ly - 0.14, 0.28, 0.28, INK, 0.7 * ls, 1.1, 0.04);
+      if (yes) tick(cx2, ly - 0.02, 0.14, GREEN, E((t - 21.1 - k * 0.15) / 0.25));
+      var hp = yes ? clamp((t - 21.8 - k * 0.2) / 1.3) : 0, he = EIO(hp), hx0 = LS[0] + 0.4, hy0 = ly, hx1 = ST[1], hy1 = TY + SR + 0.15;
+      var hx = hx0 + (hx1 - hx0) * he, hy = hy0 + (hy1 - hy0) * he - Math.sin(Math.PI * he) * 1.2;
+      if (ls > 0.01){ if (yes && hp > 0 && hp < 1){ heart(hx, hy, 0.17, PINK, 1, 0.5); glow(hx, hy, 0.5, PINK, 0.4); }
+        else if (!yes || hp <= 0) heart(hx0, hy0, 0.17, yes && t > 21.3 ? PINK : GREY, (yes ? 0.9 : 0.55) * ls, 0); } }
+    var bk = E((t - 23.2) / 0.3) * (1 - E((t - 24.6) / 0.6)); glow(ST[1], TY, 1.2, PINK, 0.3 * bk);
+
+    /* 7 · the Google profile, read as the sun passes: a change the clinic did not make is flagged; a review gets its reply, posted when reception taps */
+    var gc = E((t - 24.6) / 0.5);
+    box(GC[0], GC[1], GC[2], GC[3], INK, 0.9 * gc, 1.4, 0.14, PAPER, 0.85 * gc); pin(GC[0] + 0.5, GC[1] + 0.75, 0.4, INK, gc);
+    for (k = 0; k < 3; k++) seg(GC[0] + 1.05, GC[1] + 0.45 + k * 0.32, GC[0] + (k === 1 ? 2.2 : 2.7), GC[1] + 0.45 + k * 0.32, INK, 0.5 * gc, 1.2);
+    var sun = clamp((t - 25.0) / 1.6); if (sun > 0 && sun < 1){ var sa = Math.PI * (1 - sun), sx = GC[0] + GC[2] / 2 + Math.cos(sa) * 2.1, syy = GC[1] - 0.12 - Math.sin(sa) * 0.4; disc(sx, syy, 0.16, GOLD, Math.sin(Math.PI * sun)); glow(sx, syy, 0.6, GOLD, 0.4 * Math.sin(Math.PI * sun));
+      var scx = GC[0] + 0.1 + (GC[2] - 0.2) * sun; seg(scx, GC[1] + 0.1, scx, GC[1] + GC[3] - 0.1, GOLD, 0.6, 1.2); }
+    var fl = E((t - 26.6) / 0.3); flag(GC[0] + GC[2] - 0.35, GC[1] + 0.5, 0.28, RED, fl);
+    packet([[GC[0], GC[1] + GC[3] * 0.6], [PH[0] + PH[2] * 0.5, PH[1]]], (t - 26.9) / 0.8, RED);
+    var rs2 = t - 27.7, sd = E(rs2 / 0.4); if (rs2 > 0){ star(GC[0] + 1.15, GC[1] + GC[3] - 0.38, 0.2, GOLD, sd); }
+    var rp = EIO((t - 28.6) / 0.6), bx = RX + 0.9 + (GC[0] + 2.1 - RX - 0.9) * rp, by = RY - 0.7 + (GC[1] + GC[3] - 0.36 - RY + 0.7) * rp;
+    speech(bx, by, 0.24, GREEN, E((t - 27.9) / 0.3));
+    var tp2 = t - 28.2; if (tp2 > 0 && tp2 < 0.7) ring(RX + 0.55, RY + 0.25, 0.12 + tp2 * 0.5, GOLD, 1 - tp2 / 0.7, 1.6);
+
+    /* 8 · counted on the page the clinic already has: how many wrote, how many booked, how many came */
+    for (k = 0; k < 3; k++){ var bh = [0.82, 0.62, 0.48][k] * E((t - 29.6 - k * 0.2) / 0.7), bx0 = rx + (0.5 + k * 0.42) * rs * 1.6;
+      if (bh > 0.01) box(bx0, ry + 3.6 * rs - bh, 0.26, bh, GOLD, 1, 1.2, 0.03, GOLD, 0.55); }
+
+    /* 9 · AI search: a person opens the gate of the site where the access allows; the crawlers come in; the address, hours and phone of the clinic are set out */
+    var ws = E((t - 31.6) / 0.5);
+    box(WS[0], WS[1], WS[2], WS[3], INK, 0.9 * ws, 1.4, 0.12, PAPER, 0.85 * ws); seg(WS[0], WS[1] + 0.42, WS[0] + WS[2], WS[1] + 0.42, INK, 0.6 * ws, 1.2);
+    for (k = 0; k < 3; k++) ring(WS[0] + 0.25 + k * 0.22, WS[1] + 0.21, 0.06, INK, 0.7 * ws, 1);
+    var op = EIO((t - 32.9) / 0.6), gx = WS[0], gy0 = WS[1] + 0.85, gl = 1.3;
+    if (op > 0.01 && ws > 0.5){ ctx.globalAlpha = 1; ctx.fillStyle = PAPER; ctx.fillRect(X(gx) - 2.5, Y(gy0 + gl * (1 - op)), 5, gl * op * s); }
+    seg(gx, gy0, gx, gy0 + gl * (1 - op), GOLD, ws, 2.6); disc(gx, gy0, 0.07, GOLD, ws);
+    person(gx - 0.45, WS[1] + 0.25, 0.42, INK, E((t - 32.3) / 0.4) * (1 - E((t - 35.0) / 0.6)));
+    for (k = 0; k < 3; k++){ var cp = clamp((t - 33.5 - k * 0.25) / 0.9), wx = 7.9 - k * 0.3, wy = WS[1] + 0.9 + k * 0.25, ix = WS[0] + 0.7 + k * 0.55, iy = WS[1] + 1.25;
+      if (t > 31.9 && cp < 1){ var cxk = wx + (ix - wx) * EIO(cp), cyk = wy + (iy - wy) * EIO(cp); disc(cxk, cyk, 0.07, INK, 0.9 * ws); glow(cxk, cyk, 0.3, INK, 0.35 * ws); } }
+    var fx = E((t - 34.6) / 0.4); pin(WS[0] + 0.6, WS[1] + 1.9, 0.3, GOLD, fx); clock(WS[0] + 1.37, WS[1] + 1.88, 0.22, GOLD, fx); handset(WS[0] + 2.1, WS[1] + 1.88, 0.26, GOLD, fx);
+    box(WS[0] + 0.2, WS[1] + 1.45, WS[2] - 0.4, 0.88, GOLD, 0.5 * fx, 1, 0.08);
+
+    /* 10 · the clinic keeps the keys; its medical system and its money are sealed off from the machine */
+    var ky = E((t - 36.0) / 0.4); key(RX + 1.15, RY + 0.95, 0.42, GOLD, ky); glow(RX + 1.15, RY + 0.95, 0.7, GOLD, 0.3 * ky);
+    var sl = (t - 36.6) / 0.7; cross(LS[0] + LS[2] + 0.85, 10.75, 0.24, INK, E(sl)); ring(LS[0] + LS[2] + 0.85, 10.75, 0.48, GOLD, E(sl), 1.4, sl);
+    var sl2 = (t - 36.9) / 0.7; coin(RX - 1.05, 10.75, 0.2, INK, E(sl2)); ring(RX - 1.05, 10.75, 0.42, GOLD, E(sl2), 1.4, sl2);
+    ctx.restore();
+    /* each line lights as its part plays */
+    var on = 0; for (k = 0; k < BEATS.length; k++) if (t >= BEATS[k]) on = k + 1;
+    ctx.globalAlpha = 1;
+    for (k = 0; k < items.length; k++) items[k].classList.toggle('on', k < on);
+    return t > END;
   }
+  function frame(now){ if (!t0) t0 = now; var settled = draw((now - t0) / 1000); if (settled){ done = true; raf = 0; return; } raf = visible ? requestAnimationFrame(frame) : 0; }
+  function settle(){ draw(99); done = true; }
+  layout();
+  if (reduced){ settle(); }
+  else {
+    var list = document.querySelector('.fx-list');
+    /* The lines are lit unless this film runs: dimmed only from here, and lit again by any error on the page. */
+    list.classList.add('dim'); window.addEventListener('error', function(){ list.classList.remove('dim'); });
+    new IntersectionObserver(function(es){ es.forEach(function(e){ visible = e.isIntersecting && e.intersectionRatio >= 0.2; if (visible && !done && !raf){ if (t0) t0 = 0; raf = requestAnimationFrame(frame); } }); }, { threshold: [0, 0.2] }).observe(stage);
+  }
+  var rt = 0;
+  window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ layout(); if (done) settle(); }, 150); });
 })();
 </script>
 <script src="/guide/corner.js" defer></script>

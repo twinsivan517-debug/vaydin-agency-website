@@ -1078,7 +1078,8 @@
   "tag": "task:L2-JOBS",
   "read": "Layer 2 2026-11-10: OK (A13)",
   "where": [
-   "engine.html"
+   "engine.html",
+   "fix.html"
   ]
  },
  {
@@ -1146,7 +1147,8 @@
   "tag": "task:L2-JOBS",
   "read": "Layer 2 2026-11-10: OK (A14)",
   "where": [
-   "engine.html"
+   "engine.html",
+   "fix.html"
   ]
  },
  {
@@ -1184,7 +1186,8 @@
   "tag": "task:L2-JOBS",
   "read": "Layer 2 2026-11-10: OK (A15)",
   "where": [
-   "engine.html"
+   "engine.html",
+   "fix.html"
   ]
  },
  {
@@ -1202,7 +1205,8 @@
   "tag": "none",
   "read": "",
   "where": [
-   "engine.html"
+   "engine.html",
+   "fix.html"
   ]
  },
  {
@@ -1281,6 +1285,14 @@
   ]
  },
  {
+  "s": "The machine, drawn as a blueprint: a patient's message runs through it",
+  "tag": "none",
+  "read": "",
+  "where": [
+   "fix.html (label)"
+  ]
+ },
+ {
   "s": "Step 02 · WhatsApp booking for aesthetic clinics in Dubai We stop reporting the leaks.",
   "tag": "none",
   "read": "Layer 2 2026-11-10: no claim (116)",
@@ -1315,997 +1327,148 @@
   ]
  },
  {
-  "s": "✓ Intelligence is included in the engine, and what the engine does is counted on the same page.",
-  "tag": "task:CORE-4 + job:6",
-  "read": "core 2026-11-10: true words applied | Layer 2 2026-11-10: true words applied",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "THE ENGINE · SIX THINGS, FROM MESSAGE TO VISIT",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "From the first message to the visit.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Swap through the six.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Nothing to install at the clinic: the engine lives where your patients already are.",
-  "tag": "job:1",
-  "read": "Layer 2 2026-11-10: OK (12)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "◈ THE ENGINE · ILLUSTRATION",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "A patient who starts a chat at 2am gets your clinic's menu at 2am: book, treatments, where you are, offers, a person, and a consultation if you offer one.",
-  "tag": "job:1",
-  "read": "Layer 2 2026-11-10: OK (13)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Every answer is wording your clinic approved, and a price is only ever the one you set.",
-  "tag": "job:1",
-  "read": "Layer 2 2026-11-10: OK (3)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Anything typed instead goes straight to your reception, and the patient is told a person will reply.",
-  "tag": "job:1",
-  "read": "Layer 2 2026-11-10: OK (14)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Without: the 2am message waits until morning, if it's ever seen",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (15)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ With: your menu at once, and anything else handed to your team",
-  "tag": "job:1",
-  "read": "Layer 2 2026-11-10: OK (16)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "The patient taps a treatment, picks a time, and is booked and told in the same chat.",
-  "tag": "job:2",
-  "read": "Layer 2 2026-11-10: OK (103)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Your reception is told at once, with one button if the time has to move.",
-  "tag": "job:2",
-  "read": "Layer 2 2026-11-10: OK (104)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "If you prefer, reception confirms every booking first.",
-  "tag": "job:2",
-  "read": "Layer 2 2026-11-10: OK (105)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Without: \"let me check and get back to you\", and nobody does",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (117)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ With: the time the patient picked is the booking, in the same chat",
-  "tag": "job:2",
-  "read": "Layer 2 2026-11-10: OK (118)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "A confirmation when they book, then a reminder a day before and another two hours before, or at the times you choose.",
-  "tag": "job:4",
-  "read": "Layer 2 2026-11-10: OK (148)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Each reminder carries two buttons: Confirm and Reschedule.",
-  "tag": "job:4",
-  "read": "Layer 2 2026-11-10: OK (137)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Reschedule shows new times, and the old one is freed the moment a new one is picked.",
-  "tag": "job:4",
-  "read": "Layer 2 2026-11-10: OK (149)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Nothing the clinic starts is sent at night.",
-  "tag": "job:4",
-  "read": "Layer 2 2026-11-10: OK (150)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Without: empty chair, blocked doctor hour, no warning",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (151)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ With: the patient who can't come moves the visit in two taps",
-  "tag": "job:4",
-  "read": "Layer 2 2026-11-10: OK (152)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "The patients who came once and drifted.",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (171)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "You give us the list and mark the ones who agreed to hear from you.",
-  "tag": "job:5",
-  "read": "Layer 2 2026-11-10: OK (172)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Only those are invited: once each, when the last visit is more than three months old or has no date, and no visit is already booked.",
-  "tag": "job:5",
-  "read": "Layer 2 2026-11-10: OK (161)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Your wording, a button to book, a limited number a day, and never a patient who said stop.",
-  "tag": "job:5",
-  "read": "Layer 2 2026-11-10: OK (173)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Without: your most valuable list sits in a spreadsheet, going colder",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (174)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ With: the ones you marked hear from your clinic once, politely",
-  "tag": "job:5",
-  "read": "Layer 2 2026-11-10: OK (175)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "When your reception marks a visit as attended, and you mapped a next treatment to the one they just had, the patient gets one note from your clinic with a button that starts booking it.",
-  "tag": "job:7",
-  "read": "Layer 2 2026-11-10: OK (197)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Your protocols, your wording, never pushed.",
-  "tag": "job:7",
-  "read": "Layer 2 2026-11-10: OK (206)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Without: the patient leaves; the next visit is left to chance",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (207)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ With: the next step is one tap away, after a visit that happened",
-  "tag": "job:7",
-  "read": "Layer 2 2026-11-10: OK (208)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Patients who wrote in, visits booked, who came and who did not: counted on your page, read fresh each time you open it.",
-  "tag": "job:6",
-  "read": "Layer 2 2026-11-10: OK (189)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Counts and times, and no money figure of ours.",
-  "tag": "job:6",
-  "read": "Layer 2 2026-11-10: OK (190)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "And the next unannounced shop still meets your clinic the way a patient does, with the engine answering.",
-  "tag": "task:CORE-4",
-  "read": "core 2026-11-10: true words applied",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "What it finds there is our work, so it is shown as ours and never graded as yours.",
-  "tag": "task:CORE-4",
-  "read": "core 2026-11-10: true words applied",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Without: \"how is the front desk doing?\" Nobody truly knows",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (191)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ With: one page, real counts, checked from outside",
-  "tag": "task:CORE-F0 + job:6",
-  "read": "core 2026-11-10 revised: OK (1) | Layer 2 2026-11-10: its half OK (193)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "◈ THE ENGINE · EVERYTHING INSIDE, AT A GLANCE",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ WHAT YOU GET",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ Answering, day and night: a first message gets your menu at once",
-  "tag": "job:1",
-  "read": "Layer 2 2026-11-10: OK (17)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ Real bookings: the time the patient picks is the booking",
-  "tag": "job:2",
-  "read": "Layer 2 2026-11-10: OK (119)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ Reminders & reschedules: a day before, two hours before, two buttons",
-  "tag": "job:4",
-  "read": "Layer 2 2026-11-10: OK (153)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ The quiet list: one polite invitation, to patients you marked as agreeing",
-  "tag": "job:5",
-  "read": "Layer 2 2026-11-10: OK (176)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ The next treatment: offered once, after a visit that happened",
-  "tag": "job:7",
-  "read": "Layer 2 2026-11-10: OK (209)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ Each step counted: on your page, fresh each time you open it",
-  "tag": "task:CORE-4 + job:6",
-  "read": "core 2026-11-10: true words applied | Layer 2 2026-11-10: true words applied",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ WHAT IT REPLACES",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ The 2am hello that waited until morning",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (18)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Phone tag to find a time",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (120)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ The visit nobody was reminded of",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (154)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ The past-patient list nobody ever writes to",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (177)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ The visit that ends without a word from the clinic",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (210)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ \"How is the front desk doing?\" answered by feel",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (192)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "THE ESTATE · THREE THINGS FOR YOUR GOOGLE REPUTATION",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Your Google front door, checked every day.",
-  "tag": "job:8",
-  "read": "Layer 2 2026-11-10: OK (222)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Where a new patient judges you before they ever write: your Google profile and your reviews.",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (229)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Checked, answered and asked for.",
-  "tag": "job:8 + job:9 + job:10",
-  "read": "Layer 2 2026-11-10: OK (231)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "◈ THE ESTATE · ILLUSTRATION",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Once a day the engine reads your Business Profile and checks four things: that the hours Google shows match the hours you gave us, that Google has not edited the profile on its own, that it does not show you as closed, and that the listing is in good standing.",
-  "tag": "job:8",
-  "read": "Layer 2 2026-11-10: OK (223)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "It changes nothing: you fix it in Google's own screen.",
-  "tag": "job:8",
-  "read": "Layer 2 2026-11-10: OK (214)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Without: wrong hours on the map result, found by a patient at a locked door",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (224)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ With: the engine checks every day, where today nobody does",
-  "tag": "job:8",
-  "read": "Layer 2 2026-11-10: OK (225)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "When a review lands, the engine picks the reply your clinic approved for that star rating and sends it to your reception on WhatsApp: Post reply, or Don't reply.",
-  "tag": "job:9",
-  "read": "Layer 2 2026-11-10: OK (243)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "One tap and it is on Google within minutes.",
-  "tag": "job:9",
-  "read": "Layer 2 2026-11-10: OK (234)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "The engine adds only your clinic's name and phone: never the reviewer's name, never a treatment.",
-  "tag": "job:9",
-  "read": "Layer 2 2026-11-10: OK (235)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Without: the angry review sits unanswered for days, read by everyone who searches you",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (244)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ With: a reply is one tap away, in wording you already approved",
-  "tag": "job:9",
-  "read": "Layer 2 2026-11-10: OK (245)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "A couple of hours after a visit your reception marked as attended, the patient gets one polite request with your Google review link.",
-  "tag": "job:10",
-  "read": "Layer 2 2026-11-10: OK (45)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "At most once a year.",
-  "tag": "job:10",
-  "read": "Layer 2 2026-11-10: OK (54)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Every attended patient is asked, not only the happy ones: that is Google's rule, and we keep it.",
-  "tag": "job:10",
-  "read": "Layer 2 2026-11-10: OK (55)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Without: only the angry ones bother; your average sinks unfairly",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (56)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ With: every patient who came gets asked, once a year at most",
-  "tag": "job:10",
-  "read": "Layer 2 2026-11-10: OK (57)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "◈ THE ESTATE · EVERYTHING INSIDE, AT A GLANCE",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ Google profile checked: every day, against the hours you gave us",
-  "tag": "job:8",
-  "read": "Layer 2 2026-11-10: OK (226)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ Review replies ready: your approved wording, one tap to post",
-  "tag": "job:9",
-  "read": "Layer 2 2026-11-10: OK (246)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ Review requests: every attended patient asked, once a year at most",
-  "tag": "job:10",
-  "read": "Layer 2 2026-11-10: OK (58)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ A profile nobody checks from one month to the next",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (227)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ The angry review sitting unanswered for weeks",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (247)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ A rating that sinks because only the unhappy write",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (59)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "BUILT AROUND YOUR CLINIC · FOUR MORE",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Four more, built around your clinic.",
-  "tag": "task:L2-JOBS",
-  "read": "Layer 2 2026-11-10: by his ruling (268)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "The nine above are the engine.",
-  "tag": "task:L2-JOBS",
-  "read": "Layer 2 2026-11-10: OK (269)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "These four we build and connect for your clinic, around the way it already works.",
-  "tag": "task:L2-R5-3 + task:L2-R5-11 + task:L2-R5-12 + task:L2-R5-13",
-  "read": "Layer 2 2026-11-10: by his ruling (280)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "◈ YOUR CLINIC · ILLUSTRATION",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "YOUR CLINIC 01 / 04",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Built with your clinic: before the visit, your patients get exactly what they need to walk in ready, when to come and what to bring.",
-  "tag": "job:3",
-  "read": "Layer 2 2026-11-10: true words applied | Layer 2 2026-11-10: true words applied (B2)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Written with your clinic, approved by your team, and anything clinical stays with your doctors.",
-  "tag": "job:3",
-  "read": "Layer 2 2026-11-10: by his ruling (B6)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Without: the patient arrives late or unprepared, and the slot starts behind",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (B7)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ With: they arrive ready, on lines your own team wrote",
-  "tag": "job:3",
-  "read": "Layer 2 2026-11-10: by his ruling (133)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "YOUR CLINIC 02 / 04",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "A DM at midnight is a patient at noon.",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (81)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Instagram DMs get the same menu and the same booking as your WhatsApp, with the same hand-over to your team: built and connected for your clinic once Meta approves our access.",
-  "tag": "job:12",
-  "read": "Layer 2 2026-11-10: true words applied",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Without: DMs pile up unread under the notifications",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (83)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ With: the DM gets the same menu and the same booking",
-  "tag": "job:12",
-  "read": "Layer 2 2026-11-10: by his ruling (84)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "YOUR CLINIC 03 / 04",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "A patient who emails your clinic's address, on your clinic's own domain, gets your approved acknowledgement within minutes, and your reception is told at once on WhatsApp so a person answers.",
-  "tag": "job:11",
-  "read": "Layer 2 2026-11-10: true words applied",
+  "s": "The diagnostic shows you the leaks.",
+  "tag": "task:CORE-F4",
+  "read": "core 2026-11-12: OK (fx-01)",
   "where": [
    "fix.html",
-   "index.html",
-   "src/app/page.tsx"
+   "pages.ts"
   ]
  },
  {
-  "s": "An email inquiry is a patient too.",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (68)",
+  "s": "Step two doesn't stop at the report: it runs the machine, inside the WhatsApp your patients already use.",
+  "tag": "task:CORE-F0 + task:L2-JOBS",
+  "read": "core 2026-11-12: OK (fx-01) | Layer 2 2026-11-12: OK (fx-01)",
   "where": [
-   "fix.html"
+   "fix.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "✗ Without: the inbox is a graveyard checked \"when someone has time\"",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (69)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ With: every patient's email acknowledged within minutes, in your words, and reception told at once",
-  "tag": "job:11",
-  "read": "Layer 2 2026-11-10: by his ruling (B8) | Layer 2 2026-11-10: true words applied (B8)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "YOUR CLINIC 04 / 04",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "A price update?",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (94)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "One WhatsApp to us and a person makes the change, and a Book on WhatsApp button on your site opens a chat where the visitor's first message gets your menu.",
-  "tag": "job:13",
-  "read": "Layer 2 2026-11-10: true words applied",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "No chasing a web guy who built it two years ago and disappeared.",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (96)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Without: the site says Ramadan hours in November",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (97)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ With: one message keeps it current, and every visitor is one tap from your WhatsApp",
-  "tag": "job:13",
-  "read": "Layer 2 2026-11-10: true words applied",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "HOW WE CONNECT, AND WHAT WE NEVER TOUCH",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "You grant access.",
-  "tag": "none",
-  "read": "Layer 2 2026-11-10: no claim (37)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "You keep the keys.",
-  "tag": "job:1 + job:8",
-  "read": "Layer 2 2026-11-10: OK (38)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "No passwords, and no software installed at the clinic.",
-  "tag": "job:1 + job:8",
-  "read": "Layer 2 2026-11-10: OK (39)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Your WhatsApp number and your Google profile stay in your own accounts.",
-  "tag": "job:1 + job:8",
-  "read": "Layer 2 2026-11-10: OK (40)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "What we ask for",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✓ WhatsApp: your number stays in your clinic's own Meta account; we connect to it on one call, through an official WhatsApp Business provider",
+  "s": "A patient who writes at 2am gets your clinic's menu at 2am.",
   "tag": "job:1",
-  "read": "Layer 2 2026-11-10: OK (19)",
+  "read": "Layer 2 2026-11-12: OK (fx-02)",
   "where": [
-   "fix.html"
+   "fix.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "✓ Google: you add us as a manager on your Business Profile, never as its owner",
-  "tag": "job:8",
-  "read": "Layer 2 2026-11-10: OK (228)",
+  "s": "Anything typed beyond the menu goes straight to your reception.",
+  "tag": "job:1",
+  "read": "Layer 2 2026-11-12: OK (fx-02)",
   "where": [
-   "fix.html"
+   "fix.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "✓ The quiet list: only if you want the invitations: your past patients, with the ones who agreed marked",
+  "s": "They tap a treatment, pick a time, and they're booked, in the same chat.",
+  "tag": "job:2",
+  "read": "Layer 2 2026-11-12: true words applied (fx-03)",
+  "where": [
+   "fix.html",
+   "pages.ts"
+  ]
+ },
+ {
+  "s": "Your reception is told, and can move it with one tap.",
+  "tag": "job:2",
+  "read": "Layer 2 2026-11-12: true words applied (fx-03)",
+  "where": [
+   "fix.html",
+   "pages.ts"
+  ]
+ },
+ {
+  "s": "Before each visit, a reminder a day ahead and two hours ahead, with Confirm and Reschedule.",
+  "tag": "job:4",
+  "read": "Layer 2 2026-11-12: by his ruling (fx-04)",
+  "where": [
+   "fix.html",
+   "pages.ts"
+  ]
+ },
+ {
+  "s": "After a visit your reception marks as attended: one polite request for a Google review, and your own next treatment, offered once.",
+  "tag": "job:10 + job:7",
+  "read": "Layer 2 2026-11-12: by his ruling (fx-05)",
+  "where": [
+   "fix.html",
+   "pages.ts"
+  ]
+ },
+ {
+  "s": "Patients who came once and drifted get one invitation back, only the ones on your list who agreed to hear from you.",
   "tag": "job:5",
-  "read": "Layer 2 2026-11-10: OK (178)",
+  "read": "Layer 2 2026-11-12: by his ruling (fx-06)",
   "where": [
-   "fix.html"
+   "fix.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "✓ Website: editor access, only if you want us to make the changes",
+  "s": "Your Google profile is read every day: a change you didn't make, hours that don't match your bookings, or a listing Google has closed or suspended is flagged to you.",
+  "tag": "job:8",
+  "read": "Layer 2 2026-11-12: true words applied (fx-07)",
+  "where": [
+   "fix.html",
+   "pages.ts"
+  ]
+ },
+ {
+  "s": "Every new review gets one of your approved replies, posted when reception taps.",
+  "tag": "job:9",
+  "read": "Layer 2 2026-11-12: OK (fx-07)",
+  "where": [
+   "fix.html",
+   "pages.ts"
+  ]
+ },
+ {
+  "s": "Once the Engine runs, every step is counted on the page you already have: how many wrote, how many booked, how many came.",
+  "tag": "task:CORE-3 + job:6",
+  "read": "core 2026-11-12: OK (fx-08) | Layer 2 2026-11-12: OK (fx-08)",
+  "where": [
+   "fix.html",
+   "pages.ts"
+  ]
+ },
+ {
+  "s": "If AI search can't read your site, Website concierge opens what your access lets us reach: a person lets AI search crawlers in where your site builder allows it, tells you the one switch if your host blocks them, and sets out your clinic's own address, hours and phone for machines to read.",
   "tag": "job:13",
-  "read": "Layer 2 2026-11-10: OK (99)",
+  "read": "Layer 2 2026-11-12: true words applied (fx-09)",
   "where": [
-   "fix.html"
+   "fix.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "What we never touch",
+  "s": "No promise of a place in AI answers.",
   "tag": "none",
-  "read": "",
+  "read": "Layer 2 2026-11-12: no claim (fx-09)",
   "where": [
-   "fix.html"
+   "fix.html",
+   "pages.ts"
   ]
  },
  {
-  "s": "✗ Your medical system: the engine does not connect to it",
+  "s": "You grant access; you keep the keys.",
+  "tag": "job:1 + job:8",
+  "read": "Layer 2 2026-11-10: OK (42)",
+  "where": [
+   "fix.html",
+   "pages.ts",
+   "voice:p-fix"
+  ]
+ },
+ {
+  "s": "No passwords, nothing installed, and the engine never touches your medical system or your money.",
   "tag": "task:L2-EX",
-  "read": "Layer 2 2026-11-10: true words applied",
+  "read": "Layer 2 2026-11-12: OK (fx-10) | core 2026-11-12: OK (fx-10)",
   "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Your passwords: we never ask for one.",
-  "tag": "task:L2-EX",
-  "read": "Layer 2 2026-11-10: OK (253)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "Every connection is made from your own account, and your reception only taps inside WhatsApp",
-  "tag": "job:1",
-  "read": "Layer 2 2026-11-10: OK (20)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Clinical questions: anything a patient types goes to your team; the engine answers only from the menu you approved",
-  "tag": "job:1",
-  "read": "Layer 2 2026-11-10: OK (21)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Your money: the engine takes no payment; that stays between you and your patients",
-  "tag": "task:L2-EX",
-  "read": "Layer 2 2026-11-10: OK (254)",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "✗ Your ad accounts' billing: spend is paid direct, never marked up",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:85 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "What the engine keeps: each patient who messages your WhatsApp, every message both ways, the bookings, a record of what it did, the quiet list you gave us, and, for each new Google review, its stars, your reply and the line your reception saw.",
-  "tag": "task:L2-EX",
-  "read": "Layer 2 2026-11-10: true words applied",
-  "where": [
-   "fix.html"
-  ]
- },
- {
-  "s": "When you leave, a person here deletes it once 30 days have passed, and the backups a week after that.",
-  "tag": "task:L2-EX",
-  "read": "Layer 2 2026-11-10: OK (256)",
-  "where": [
-   "fix.html"
+   "fix.html",
+   "pages.ts"
   ]
  },
  {
@@ -3037,6 +2200,15 @@
   "read": "Layer 2 2026-11-10: true words applied",
   "where": [
    "index.html"
+  ]
+ },
+ {
+  "s": "A patient who emails your clinic's address, on your clinic's own domain, gets your approved acknowledgement within minutes, and your reception is told at once on WhatsApp so a person answers.",
+  "tag": "job:11",
+  "read": "Layer 2 2026-11-10: true words applied",
+  "where": [
+   "index.html",
+   "src/app/page.tsx"
   ]
  },
  {
@@ -6536,15 +5708,6 @@
   "s": "We stop reporting the leaks and run the machine: WhatsApp inquiries answered and booked, visits reminded, quiet patients invited back, your Google profile checked and a reply ready for every new review, with four more built around your clinic.",
   "tag": "task:L2-JOBS",
   "read": "Layer 2 2026-11-10: true words applied",
-  "where": [
-   "pages.ts",
-   "voice:p-fix"
-  ]
- },
- {
-  "s": "You grant access; you keep the keys.",
-  "tag": "job:1 + job:8",
-  "read": "Layer 2 2026-11-10: OK (42)",
   "where": [
    "pages.ts",
    "voice:p-fix"

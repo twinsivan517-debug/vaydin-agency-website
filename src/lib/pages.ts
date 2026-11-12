@@ -62,6 +62,20 @@ export const ROOMS: Record<string, Line[]> = {
     "Your Google profile, checked daily", "Every new review, a reply ready", "Every attended patient asked for a review",
     "Consultations, prepared", "Instagram DMs, connected", "Email, connected", "Website concierge",
   ].map((text, i) => ({ id: `en-${String(i).padStart(2, "0")}`, text })),
+  /* Fix: its ten lines as read by core and Layer 2 and approved by the owner, shown beside the film, never recorded
+     (his pick: show only until a page plays the rooms' lines). */
+  fix: [
+    "The diagnostic shows you the leaks. Step two doesn't stop at the report: it runs the machine, inside the WhatsApp your patients already use.",
+    "A patient who writes at 2am gets your clinic's menu at 2am. Anything typed beyond the menu goes straight to your reception.",
+    "They tap a treatment, pick a time, and they're booked, in the same chat. Your reception is told, and can move it with one tap.",
+    "Before each visit, a reminder a day ahead and two hours ahead, with Confirm and Reschedule.",
+    "After a visit your reception marks as attended: one polite request for a Google review, and your own next treatment, offered once.",
+    "Patients who came once and drifted get one invitation back, only the ones on your list who agreed to hear from you.",
+    "Your Google profile is read every day: a change you didn't make, hours that don't match your bookings, or a listing Google has closed or suspended is flagged to you. Every new review gets one of your approved replies, posted when reception taps.",
+    "Once the Engine runs, every step is counted on the page you already have: how many wrote, how many booked, how many came.",
+    "If AI search can't read your site, Website concierge opens what your access lets us reach: a person lets AI search crawlers in where your site builder allows it, tells you the one switch if your host blocks them, and sets out your clinic's own address, hours and phone for machines to read. No promise of a place in AI answers.",
+    "You grant access; you keep the keys. No passwords, nothing installed, and the engine never touches your medical system or your money.",
+  ].map((text, i) => ({ id: `fx-${String(i + 1).padStart(2, "0")}`, text })),
 };
 
 /* In the corner there are no chapter chips to point at: a greeting is met
