@@ -350,4 +350,32 @@ test("the runner gate keeps each run's failing audits and prints them per page",
   assert.match(src, /failing audits: \$\{auditTally\(/);
 });
 
+// --- each tolerance is its own A/A's number ------------------------------------------------------------
+// A page's tolerance comes from the A/A record tolerance_from names, by the rule written before its jobs: the largest
+// |d| of five jobs, plus 1, and no number when that is over 5. A number loosened by hand stays green nowhere else.
+const toleranceFaults = (floors) => {
+  if (typeof floors.tolerance !== "object" || floors.tolerance === null) return ["tolerance is not a number per page"];
+  const faults = [], from = floors.tolerance_from ?? {};
+  for (const [page, tol] of Object.entries(floors.tolerance)) {
+    const d = floors.history?.[from[page]]?.difference_candidate_minus_anchor?.[page];
+    if (!Array.isArray(d)) { faults.push(`${page}: no A/A record named in tolerance_from`); continue; }
+    if (d.length !== 5) { faults.push(`${page}: ${from[page]} holds ${d.length} jobs, not 5`); continue; }
+    const big = Math.max(...d.map(Math.abs));
+    if (big > 5) faults.push(`${page}: ${from[page]}'s largest |d| is ${big}, over 5, so no number may be written`);
+    else if (tol !== big + 1) faults.push(`${page}: tolerance ${tol}, but ${from[page]} gives ${big} + 1 = ${big + 1}`);
+  }
+  return faults;
+};
+const FLOORS_FILE = JSON.parse(readFileSync(resolve(".github/ship-floors.json"), "utf8"));
+test("every page's tolerance is its own A/A's largest |d| + 1", () => assert.deepEqual(toleranceFaults(FLOORS_FILE), []));
+test("a tolerance loosened by hand, a page with no A/A record, or a record short of five jobs is caught", () => {
+  const plant = (fn) => { const f = structuredClone(FLOORS_FILE); fn(f); return toleranceFaults(f).join("; "); };
+  assert.match(plant((f) => { f.tolerance.grow = 5; }), /grow: tolerance 5, but aa_grow gives 0 \+ 1 = 1/);
+  assert.match(plant((f) => { delete f.tolerance_from.fix; }), /fix: no A\/A record/);
+  assert.match(plant((f) => { f.tolerance.pricing = 2; }), /pricing: no A\/A record/);
+  assert.match(plant((f) => { f.history.aa_fix.difference_candidate_minus_anchor.fix.pop(); }), /fix: aa_fix holds 4 jobs/);
+  assert.match(plant((f) => { f.history.aa_grow.difference_candidate_minus_anchor.grow = [0, 6, 0, 0, 0]; }), /over 5/);
+  assert.match(plant((f) => { f.tolerance = 3; }), /not a number per page/);
+});
+
 console.log(`${cases} gate cases passed`);
