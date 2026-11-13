@@ -3,7 +3,9 @@
 // nothing written, no picture, no pixel read; a room's lines are lit unless its film runs. Each guard is also shown
 // biting on a planted fault.
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
+import vm from "node:vm";
 import { roomPages, runFilm } from "./film-canvas.mjs";
 
 let cases = 0;
@@ -108,11 +110,57 @@ test("a page with no counter, two, or one inside its footer is caught", () => {
   assert.ok(counterFault(html.replace(COUNTER, COUNTER + COUNTER)));
   assert.ok(counterFault(html.replace(COUNTER, "").replace("</footer>", `${COUNTER}</footer>`)));
 });
-test("the counter counts only on vaydin.agency, and honours do-not-track", () => {
+// count.js run against a stand-in page: what it adds, and what each tap is called. The numbers he reads are only
+// as true as the tap names, and the tracker's address is what the privacy page's reader is told.
+const runCounter = (js) => {
+  class Element { constructor(href) { this.href = href; } closest() { return this.href === null ? null : { getAttribute: () => this.href }; } }
+  const added = [], counted = [], listeners = [];
+  const document = {
+    createElement: (name) => { const el = { name, src: "", attrs: {} }; el.setAttribute = (k, v) => { el.attrs[k] = v; }; return el; },
+    body: { appendChild: (el) => added.push(el) },
+    addEventListener: (type, fn, capture) => listeners.push({ type, fn, capture }),
+  };
+  vm.runInNewContext(js, { document, window: { umami: { track: (name) => counted.push(name) } }, Element });
+  const tap = (href) => listeners.filter((l) => l.type === "click").forEach((l) => l.fn({ target: new Element(href) }));
+  for (const href of ["https://wa.me/971505553148?text=Hi", "tel:+971505553148", "mailto:hello@vaydin.agency", "/privacy/", null]) tap(href);
+  return { added, counted, listeners };
+};
+const TRACKER = { name: "script", src: "/umami.js", attrs: { "data-website-id": "ed751a4e-5b3d-4fb7-8bc9-b004b95fbeda",
+  "data-domains": "vaydin.agency", "data-do-not-track": "true" } };
+const counterRunFault = (js) => {
+  const r = runCounter(js);
+  if (r.added.length !== 1) return `${r.added.length} trackers added`;
+  const { setAttribute, ...el } = r.added[0];
+  try { assert.deepEqual(el, TRACKER); } catch { return `the tracker added is ${JSON.stringify(el)}`; }
+  if (!r.listeners.some((l) => l.type === "click" && l.capture === true)) return "no click listener on the capture phase";
+  try { assert.deepEqual(r.counted, ["whatsapp", "phone", "email"]); } catch { return `taps counted as ${JSON.stringify(r.counted)}`; }
+  return null;
+};
+test("count.js, run: one tracker, our own /umami.js, only on vaydin.agency, honouring do-not-track; each tap named for what it opens, any other link not counted", () => {
+  assert.equal(counterRunFault(read("count.js")), null);
+});
+test("a tracker from another host, a tap misnamed, or no tracker added is caught", () => {
   const js = read("count.js");
-  assert.match(js, /"data-domains", "vaydin\.agency"\)/);
-  assert.match(js, /"data-do-not-track", "true"\)/);
-  assert.match(js, /"data-website-id", "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"\)/);
+  for (const [plant, change] of [["another host", (s) => s.replace('"/umami.js"', '"https://example.com/t.js"')],
+    ["wa.me named phone", (s) => s.replace('"whatsapp"]', '"phone"]')],
+    ["no tracker added", (s) => s.replace("document.body.appendChild(tracker);", "")],
+    ["a second domain", (s) => s.replace('"vaydin.agency"', '"vaydin.agency,example.com"')],
+    ["do-not-track off", (s) => s.replace('"data-do-not-track", "true"', '"data-do-not-track", "false"')]]) {
+    const planted = change(js);
+    assert.notEqual(planted, js, `the plant "${plant}" changed nothing`);
+    assert.ok(counterRunFault(planted), plant);
+  }
+});
+// umami.js is Umami's tracker copied whole: every byte after its header comment must hash to what was read.
+const UMAMI_SHA256 = "c11c9d29ac15ee26ef07059add176fd7db95acbf8e8bdb1a79796b0ffdb58f18";
+const trackerBody = (bytes) => bytes.subarray(bytes.indexOf("*/\n") + 3);
+test("umami.js after its header is the tracker that was read, byte for byte", () => {
+  assert.equal(createHash("sha256").update(trackerBody(readFileSync("public/umami.js"))).digest("hex"), UMAMI_SHA256);
+});
+test("a tracker changed by one byte is caught", () => {
+  const bytes = Buffer.from(readFileSync("public/umami.js"));
+  bytes[bytes.length - 2] ^= 1;
+  assert.notEqual(createHash("sha256").update(trackerBody(bytes)).digest("hex"), UMAMI_SHA256);
 });
 
 console.log(`${cases} page cases passed`);

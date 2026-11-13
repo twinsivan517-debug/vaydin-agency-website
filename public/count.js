@@ -1,11 +1,13 @@
 /* The visitor count (Umami Cloud): each visit, and each tap on WhatsApp, phone or email, with the page it came
-   from. No cookies, nothing written to the visitor's browser, and none sent when the browser asks not to be
-   tracked. Umami sends only from vaydin.agency, so a preview, a phone on the laptop's network and the speed gate's
-   runner load it and count nothing. Each page loads this file once, at the end of its body, never in a head or a
-   footer; layout.tsx never loads it, or the corner's frame would count every room twice. */
+   from. The tracker is umami.js beside this file, Umami's own script pinned by its hash, so what it does is what was
+   read: no cookie, nothing written to the visitor's browser, one opt-out flag read, and nothing sent when the browser
+   asks not to be tracked. It sends only to gateway.umami.is, and only from vaydin.agency, so a preview, a phone on
+   the laptop's network and the speed gate's runner load it and count nothing. Each page loads this file once, at the
+   end of its body, never in a head or a footer; layout.tsx never loads it, or the corner's frame would count every
+   room twice. */
 (function () {
   var tracker = document.createElement("script");
-  tracker.src = "https://cloud.umami.is/script.js";
+  tracker.src = "/umami.js";
   tracker.setAttribute("data-website-id", "ed751a4e-5b3d-4fb7-8bc9-b004b95fbeda");
   tracker.setAttribute("data-domains", "vaydin.agency");
   tracker.setAttribute("data-do-not-track", "true");

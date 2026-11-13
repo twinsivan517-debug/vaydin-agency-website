@@ -17,7 +17,9 @@ standalone `.html` files in `public/`.
 - `public/` — the standalone pages, `assets/` (their pictures and the ambient video),
   `img/mark.png` (the logo, also sampled into his Vaydin mark), the icons, CNAME, and
   `count.js`, the visitor count (Umami Cloud): visits and taps on WhatsApp, phone and email, only on
-  vaydin.agency, loaded once at the end of every page's body, never by `layout.tsx`.
+  vaydin.agency, loaded once at the end of every page's body, never by `layout.tsx`. It loads `umami.js`,
+  Umami's tracker copied whole under its MIT notice and pinned by hash in `pages.test.mjs` (`-text` in
+  `.gitattributes`, so no checkout changes a byte); a newer tracker is read before it replaces this one.
 - `.github/workflows/pages.yml` — builds `main` and publishes it to GitHub Pages; only its
   deploy job may publish.
 - `src/components/Stage.tsx` — the hero: his cloud and the card, him, the five door
