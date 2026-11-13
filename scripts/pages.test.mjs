@@ -88,7 +88,38 @@ for (const f of rooms) {
     const calm = runFilm(html, { width: 1240, reduced: true }).bySelector.get(`.${list}`);
     assert.ok(!calm || !calm.classList.contains("dim"), "reduced motion dimmed the list");
   });
+  test(`${f}: at the film's end, and with reduced motion, every line of its list is lit`, () => {
+    for (const reduced of [false, true]) assert.equal(unlitLines(html, { reduced }), null, `${f}${reduced ? " reduced" : ""}`);
+  });
 }
+// The lines the film leaves unlit when it settles, or null when every one is lit. The film's own selector for its
+// lines is read from its script; the stand-ins it was handed are counted against the list's items in the markup.
+export function unlitLines(html, { reduced = false } = {}) {
+  const list = html.match(/<ol class="([\w-]+)" data-room=/)[1];
+  const block = html.slice(html.indexOf(`class="${list}"`)).split("</ol>")[0];
+  const item = block.match(/<li class="([\w-]+)/)[1];
+  const sel = [...filmScript(html).matchAll(/querySelectorAll\('([^']+)'\)/g)].map((m) => m[1]).find((s) => s.includes(list) || s.includes(`.${item}`));
+  if (!sel) return "the film never asks for its lines";
+  /* The list's own items that the film's selector names: a bare or valued attribute, or one class among several. */
+  const last = sel.trim().split(/\s+/).pop(), attr = last.match(/\[([\w-]+)\]/), cls = last.match(/\.([\w-]+)/);
+  const lis = block.match(/<li\b[^>]*>/g) || [];
+  const n = lis.filter((t) => (attr ? new RegExp(`\\s${attr[1]}(?=[\\s=>/])`).test(t) : new RegExp(`class="(?:[^"]*\\s)?${cls[1]}(?:\\s[^"]*)?"`).test(t))).length;
+  if (!n) return "the list holds no line the film's selector names";
+  const els = runFilm(html, { width: 1240, reduced }).byAll.get(sel) || [];
+  if (els.length !== n) return `the film was handed ${els.length} of ${n} lines`;
+  const dark = els.map((e, i) => (e.classList.contains("on") ? 0 : i + 1)).filter(Boolean);
+  return dark.length ? `lines left unlit: ${dark.join(", ")}` : null;
+}
+test("a film that never lights a line, or has a beat too few, is caught", () => {
+  const f = rooms.find((r) => read(r).includes("items[i].classList.toggle('on', t >= BEATS[i])"));
+  assert.ok(f, "no room lights its lines in the expected shape");
+  const html = read(f);
+  const off = html.replace("items[i].classList.toggle('on', t >= BEATS[i])", "items[i].classList.toggle('on', false)");
+  const short = html.replace(/BEATS = \[([^\]]*), [\d.]+\]/, "BEATS = [$1]");
+  assert.notEqual(off, html); assert.notEqual(short, html);
+  assert.match(unlitLines(off) ?? "", /unlit/);
+  assert.match(unlitLines(short) ?? "", /unlit/);
+});
 
 // --- the films' labels -------------------------------------------------------------------------------------
 // The owner's lock on the films: the canvas writes nothing; a drawing's name stands beside it as page text, a few words,

@@ -8,10 +8,11 @@ export const roomPages = (files, read) => files.filter((f) => f.endsWith(".html"
 export const filmScript = (html) => [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]).find((s) => s.includes("getContext("));
 
 // How many elements a selector would find, read from the page's own markup: the last part's [attribute] or class.
-const countFor = (html, sel) => {
+// An attribute counts with or without a value (a room's lines carry a bare data-line), never inside a script's selector.
+export const countFor = (html, sel) => {
   const last = sel.trim().split(/\s+/).pop();
   const attr = last.match(/\[([\w-]+)\]/);
-  if (attr) return (html.match(new RegExp(` ${attr[1]}="`, "g")) || []).length;
+  if (attr) return (html.match(new RegExp(`\\s${attr[1]}(?=[\\s=>/])`, "g")) || []).length;
   const cls = last.match(/\.([\w-]+)/);
   if (!cls) return 0;
   return [...html.matchAll(/class="([^"]*)"/g)].filter((m) => m[1].split(/\s+/).includes(cls[1])).length;
@@ -43,7 +44,7 @@ export function runFilm(html, { width = 1240, reduced = false, seconds = 120 } =
     getAttribute: () => null, setAttribute() {}, addEventListener() {},
     getBoundingClientRect: () => (/stage/.test(id) ? stageRect : rect),
     getContext: () => ctx, querySelector: () => element("child") });
-  const byId = new Map(), bySelector = new Map(), listeners = [];
+  const byId = new Map(), bySelector = new Map(), byAll = new Map(), listeners = [];
   let io = null, raf = null;
   const sandbox = {
     window: { matchMedia: () => ({ matches: reduced }), devicePixelRatio: 1,
@@ -51,7 +52,7 @@ export function runFilm(html, { width = 1240, reduced = false, seconds = 120 } =
     document: {
       getElementById: (id) => byId.get(id) || byId.set(id, element(id)).get(id),
       querySelector: (sel) => bySelector.get(sel) || bySelector.set(sel, element(sel)).get(sel),
-      querySelectorAll: (sel) => Array.from({ length: countFor(html, sel) }, (_, i) => element(`${sel}#${i}`)),
+      querySelectorAll: (sel) => byAll.get(sel) || byAll.set(sel, Array.from({ length: countFor(html, sel) }, (_, i) => element(`${sel}#${i}`))).get(sel),
     },
     IntersectionObserver: function (cb) { io = cb; this.observe = () => {}; this.disconnect = () => {}; },
     requestAnimationFrame: (cb) => { raf = cb; return 1; }, cancelAnimationFrame: () => { raf = null; },
@@ -61,5 +62,5 @@ export function runFilm(html, { width = 1240, reduced = false, seconds = 120 } =
   let frames = 0;
   if (io) io([{ isIntersecting: true, intersectionRatio: 1 }]);
   for (let t = 0; raf && t <= seconds; t += 1 / 30) { const cb = raf; raf = null; cb(1000 + t * 1000); frames++; }
-  return { methods: Object.fromEntries(calls), frames, settled: raf === null, listeners, bySelector };
+  return { methods: Object.fromEntries(calls), frames, settled: raf === null, listeners, bySelector, byAll };
 }

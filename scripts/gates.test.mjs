@@ -372,7 +372,8 @@ test("a tolerance loosened by hand, a page with no A/A record, or a record short
   const plant = (fn) => { const f = structuredClone(FLOORS_FILE); fn(f); return toleranceFaults(f).join("; "); };
   assert.match(plant((f) => { f.tolerance.grow = 5; }), /grow: tolerance 5, but aa_grow gives 0 \+ 1 = 1/);
   assert.match(plant((f) => { delete f.tolerance_from.fix; }), /fix: no A\/A record/);
-  assert.match(plant((f) => { f.tolerance.pricing = 2; }), /pricing: no A\/A record/);
+  assert.match(plant((f) => { f.tolerance.newroom = 2; }), /newroom: no A\/A record/);
+  assert.match(plant((f) => { f.tolerance.pricing = 3; }), /pricing: tolerance 3, but aa_pricing gives 1 \+ 1 = 2/);
   assert.match(plant((f) => { f.history.aa_fix.difference_candidate_minus_anchor.fix.pop(); }), /fix: aa_fix holds 4 jobs/);
   assert.match(plant((f) => { f.history.aa_grow.difference_candidate_minus_anchor.grow = [0, 6, 0, 0, 0]; }), /over 5/);
   assert.match(plant((f) => { f.tolerance = 3; }), /not a number per page/);
