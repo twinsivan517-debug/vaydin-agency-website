@@ -87,4 +87,32 @@ for (const f of rooms) {
   });
 }
 
+// --- the visitor count -------------------------------------------------------------------------------------
+// Once per page, after its footer: a head or a footer is never touched, and a page that loads it twice counts
+// every visit twice. layout.tsx never loads it: the corner's frame is built from it and would count each room again.
+const COUNTER = '<script src="/count.js" defer></script>';
+const HOME_COUNTER = '<script src="/count.js" defer />';
+export const counterFault = (html, tag = COUNTER) => {
+  const n = html.split(tag).length - 1;
+  if (n !== 1) return `the counter is loaded ${n} times`;
+  return html.indexOf(tag) < html.lastIndexOf("</footer>") ? "the counter sits before the footer ends" : null;
+};
+test("every page loads the visitor count once, after its footer; layout.tsx never does", () => {
+  for (const f of pages) assert.equal(counterFault(read(f)), null, f);
+  assert.equal(counterFault(readFileSync("src/app/page.tsx", "utf8"), HOME_COUNTER), null, "src/app/page.tsx");
+  assert.ok(!readFileSync("src/app/layout.tsx", "utf8").includes("count.js"), "layout.tsx loads the counter");
+});
+test("a page with no counter, two, or one inside its footer is caught", () => {
+  const html = read(pages[0]);
+  assert.ok(counterFault(html.replace(COUNTER, "")));
+  assert.ok(counterFault(html.replace(COUNTER, COUNTER + COUNTER)));
+  assert.ok(counterFault(html.replace(COUNTER, "").replace("</footer>", `${COUNTER}</footer>`)));
+});
+test("the counter counts only on vaydin.agency, and honours do-not-track", () => {
+  const js = read("count.js");
+  assert.match(js, /"data-domains", "vaydin\.agency"\)/);
+  assert.match(js, /"data-do-not-track", "true"\)/);
+  assert.match(js, /"data-website-id", "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"\)/);
+});
+
 console.log(`${cases} page cases passed`);

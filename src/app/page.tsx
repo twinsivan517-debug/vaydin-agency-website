@@ -108,6 +108,7 @@ export default function Home() {
           <p className="mt-1">Vaydin Agency · VAYDIN PARTNERS INVESTMENTS - FZCO · DSO-IFZA, IFZA Properties, Dubai Silicon Oasis, Dubai, UAE · Licensed under IFZA</p>
         </footer>
       </main>
+      <script src="/count.js" defer />
     </>
   );
 }

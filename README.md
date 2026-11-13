@@ -15,7 +15,9 @@ standalone `.html` files in `public/`.
   `src/lib/site.ts` with `site.json` — the site's name, address, description and contacts;
   `public/llms.txt` — Vaydin in plain words for AI assistants.
 - `public/` — the standalone pages, `assets/` (their pictures and the ambient video),
-  `img/mark.png` (the logo, also sampled into his Vaydin mark), the icons, CNAME.
+  `img/mark.png` (the logo, also sampled into his Vaydin mark), the icons, CNAME, and
+  `count.js`, the visitor count (Umami Cloud): visits and taps on WhatsApp, phone and email, only on
+  vaydin.agency, loaded once at the end of every page's body, never by `layout.tsx`.
 - `.github/workflows/pages.yml` — builds `main` and publishes it to GitHub Pages; only its
   deploy job may publish.
 - `src/components/Stage.tsx` — the hero: his cloud and the card, him, the five door
