@@ -128,6 +128,10 @@
   .gr-stage{max-width:1240px;margin:0 auto;padding:30px 48px 0;display:grid;grid-template-columns:1.1fr 0.9fr;gap:44px;align-items:start}
   .gr-film{position:relative;width:100%;max-width:560px;aspect-ratio:1/1;margin:0 auto;border-radius:14px;border:1px solid rgba(232,212,139,0.24);background:#0b0906;overflow:hidden}
   .gr-film canvas{position:absolute;inset:0;width:100%;height:100%}
+  .gr-tags{position:absolute;inset:0;pointer-events:none;container-type:inline-size}
+  .gr-tag{position:absolute;transform:translate(-50%,-50%);font-family:var(--mono);font-size:clamp(9px,2.3cqw,12px);line-height:1.3;letter-spacing:0.1em;text-transform:uppercase;text-align:center;white-space:nowrap;color:var(--gold-light);text-shadow:0 0 3px #0b0906,0 0 9px #0b0906;opacity:0;transition:opacity .6s var(--ease)}
+  .gr-tag.on{opacity:0.9}
+  .gr-tag.fit{white-space:normal;width:max-content;max-width:25cqw}
   .gr-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
   .gr-oc{position:relative;padding-left:22px;font-size:15px;line-height:1.5;color:var(--tx);transition:opacity .7s var(--ease)}
   .gr-list.dim .gr-oc{opacity:0.36}
@@ -178,7 +182,18 @@
 
 <main>
   <div class="gr-stage" id="grstage" aria-label="Grow, drawn in gold line: an ad and the clinic's Instagram send messages to its WhatsApp, where patients book">
-    <div class="gr-film" id="grfilm"><canvas id="grcanvas" aria-hidden="true"></canvas></div>
+    <div class="gr-film" id="grfilm"><canvas id="grcanvas" aria-hidden="true"></canvas>
+      <div class="gr-tags" aria-hidden="true">
+        <div class="gr-tag" data-in="4.6" style="left:21.5%;top:4.8%">Paid campaign</div>
+        <div class="gr-tag" data-in="4.8" style="left:78.5%;top:4.8%">Your Instagram</div>
+        <div class="gr-tag" data-in="1.0" style="left:50%;top:93.5%">Your WhatsApp</div>
+        <div class="gr-tag" data-in="3.0" style="left:77%;top:86.5%">Booked</div>
+        <div class="gr-tag" data-in="8.4" data-out="19.6" style="left:20%;top:45.5%">The right patients</div>
+        <div class="gr-tag" data-in="12.2" data-out="16.0" style="left:18.5%;top:81.5%">Paid direct</div>
+        <div class="gr-tag" data-in="17.4" style="left:21%;top:93.5%">Patients,<br>not likes</div>
+        <div class="gr-tag" data-in="28.6" data-out="30.4" style="left:51.5%;top:31.5%">No AI-made<br>patients</div>
+        <div class="gr-tag fit" data-in="32.4" style="left:50%;top:27%">At midnight too</div>
+      </div></div>
     <ol class="gr-list" data-room="grow">
       <li class="gr-oc" data-line>Grow is step three. It opens only once your Engine runs and its bookings are proven, because fuel poured into a leaking machine just makes a more expensive leak.</li>
       <li class="gr-oc" data-line>Then we add the fuel: paid patient demand, and an Instagram your patients actually look at.</li>
@@ -216,7 +231,8 @@
    straight to the ad. A report card: a heart and a pointer crossed out, each booked patient with what it cost. The
    Instagram becomes the clinic's own; posts drop into its grid on a beat; a made-up before-and-after is crossed out and
    falls away. At midnight, messages from Instagram meet the menu and book. A magnifier where the leak was, the phone
-   in teal, the ad and the Instagram in violet. Shapes only: nothing written, no digit drawn. Every frame is a function
+   in teal, the ad and the Instagram in violet. The canvas draws shapes only, no word and no digit; each drawing's name
+   stands beside it as page text (.gr-tag), lit while that drawing is on screen, never a digit. Every frame is a function
    of its time: it runs while the room is on screen, resumes where it paused and settles on its last frame; with reduced
    motion the last frame is drawn once. */
 (function(){
@@ -224,6 +240,9 @@
   var stage = document.getElementById('grstage'), slot = document.getElementById('grfilm');
   var cv = document.getElementById('grcanvas'), ctx = cv.getContext('2d');
   var list = document.querySelector('.gr-list'), items = [].slice.call(document.querySelectorAll('.gr-list li[data-line]'));
+  var tags = [].slice.call(document.querySelectorAll('.gr-tag'));
+  var TIN = tags.map(function(e){ return +e.getAttribute('data-in'); });
+  var TOUT = tags.map(function(e){ var o = e.getAttribute('data-out'); return o === null ? Infinity : +o; });
   var BG = '#0b0906', GOLD = '#e8d48b', DIM = '#6b5f45', GREEN = '#25D366', VIOLET = '#a78bfa', RED = '#f87171', TEAL = '#34e3f0', INK = '#f3ead2';
   var BEATS = [0.6, 4.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0, 32.0, 36.0], END = 40.6;
   var S = 0, dpr = 1, t0 = 0, raf = 0, visible = false, done = false, shown = 0, TAU = Math.PI * 2;
@@ -390,6 +409,7 @@
     night(t); links(t); adCard(t); instagram(t); crowd(t); wallet(t); report(t); calendar(t); phone(t); fake(t); flights(t); finale(t);
     ctx.globalAlpha = 1;
     for (var i = 0; i < items.length; i++) items[i].classList.toggle('on', t >= BEATS[i]);
+    for (var j = 0; j < tags.length; j++) tags[j].classList.toggle('on', t >= TIN[j] && t < TOUT[j]);
     shown = t; return t >= END; }
 
   function size(){ var r = slot.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1); S = r.width;

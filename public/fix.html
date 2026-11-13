@@ -128,6 +128,9 @@
   .fx-lede{max-width:640px;margin:12px auto 0;color:var(--tx-muted);font-size:15.5px}
   .fx-stage{position:relative;max-width:1240px;margin:0 auto;padding:30px 48px 0;display:grid;grid-template-columns:1.1fr 0.9fr;gap:44px;align-items:start}
   .fx-stage canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+  .fx-tags{position:absolute;left:0;top:0;width:0;height:0;z-index:3;pointer-events:none;container-type:inline-size}
+  .fx-tag{position:absolute;transform:translate(-50%,-50%);font-family:var(--mono);font-size:clamp(9px,2.3cqw,12px);line-height:1.3;letter-spacing:0.1em;text-transform:uppercase;text-align:center;white-space:nowrap;color:#e4efff;text-shadow:0 0 3px #0b2748,0 0 9px #0b2748;opacity:0;transition:opacity .6s ease}
+  .fx-tag.on{opacity:0.88}
   .fx-film{position:relative;z-index:1;width:100%;max-width:560px;aspect-ratio:1/1;margin:0 auto;border-radius:14px;border:1px solid rgba(232,212,139,0.24);background:#0b2748}
   .fx-list{position:relative;z-index:1;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
   .fx-oc{position:relative;padding-left:22px;font-size:15px;line-height:1.5;color:var(--tx);transition:opacity .7s var(--ease)}
@@ -187,6 +190,19 @@
   <div class="fx-stage" id="fxstage" aria-label="The machine, drawn as a blueprint: a patient's message runs through it">
     <canvas id="fxcanvas" aria-hidden="true"></canvas>
     <div class="fx-film" id="fxslot"></div>
+    <div class="fx-tags" id="fxtags" aria-hidden="true">
+      <div class="fx-tag" data-in="2.0" style="left:16.53%;top:28.23%">Their WhatsApp</div>
+      <div class="fx-tag" data-in="4.0" style="left:28.63%;top:19.35%">At night</div>
+      <div class="fx-tag" data-in="5.3" style="left:43.15%;top:59.27%">Menu</div>
+      <div class="fx-tag" data-in="9.0" style="left:54.84%;top:41.94%">Booked</div>
+      <div class="fx-tag" data-in="12.0" style="left:70.97%;top:59.27%">Reminder</div>
+      <div class="fx-tag" data-in="17.5" style="left:85.48%;top:41.94%">Visit</div>
+      <div class="fx-tag" data-in="3.0" style="left:54.84%;top:69.76%">Your reception</div>
+      <div class="fx-tag" data-in="20.6" style="left:19.76%;top:97.18%">Invited back</div>
+      <div class="fx-tag" data-in="24.6" style="left:57.26%;top:28.23%">Google profile</div>
+      <div class="fx-tag" data-in="31.6" style="left:81.25%;top:91.6%">Your website</div>
+      <div class="fx-tag" data-in="36.0" style="left:55.65%;top:97.18%">You keep the keys</div>
+    </div>
     <ol class="fx-list" data-room="fix">
       <li class="fx-oc" data-line>The diagnostic shows you the leaks. Step two doesn't stop at the report: it runs the machine, inside the WhatsApp your patients already use.</li>
       <li class="fx-oc" data-line>A patient who writes at 2am gets your clinic's menu at 2am. Anything typed beyond the menu goes straight to your reception.</li>
@@ -228,12 +244,16 @@
    review asked; the list of the clinic, where only the patients who agreed come back; the Google profile read as the
    sun passes, a problem flagged, a reply posted when reception taps; the counts rising on the report; a person opening
    the gate of the site to the AI crawlers and setting out the details of the clinic; the key kept by the clinic, its medical
-   system and its money sealed off. Shapes only: nothing written, no digit drawn. Every frame is a function of its
+   system and its money sealed off. The canvas draws shapes only, no word and no digit; each drawing's name stands
+   beside it as page text (.fx-tag, placed over the film by layout()), never a digit. Every frame is a function of its
    time: it runs only while on screen and settles on its last frame; with reduced motion the last frame is drawn once. */
 (function(){
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var stage = document.getElementById('fxstage'), cv = document.getElementById('fxcanvas'), ctx = cv.getContext('2d');
   var slot = document.getElementById('fxslot'), items = [].slice.call(document.querySelectorAll('.fx-list li[data-line]'));
+  var tagbox = document.getElementById('fxtags'), tags = [].slice.call(document.querySelectorAll('.fx-tag'));
+  var TIN = tags.map(function(e){ return +e.getAttribute('data-in'); });
+  var TOUT = tags.map(function(e){ var o = e.getAttribute('data-out'); return o === null ? Infinity : +o; });
   var PAPER = '#0b2748', GRID = '#6ea8ff', INK = '#e4efff', GOLD = '#e8d48b', GREEN = '#25D366', PINK = '#f9a8d4', RED = '#f87171', GREY = '#5f7896';
   var BEATS = [1.0, 4.0, 8.0, 12.0, 16.6, 20.6, 24.6, 29.4, 31.6, 36.0], END = 39.0;
   var W, H, dpr, F, s, ox, oy, t0 = 0, raf = 0, visible = false, done = false;
@@ -292,6 +312,7 @@
     var b = slot.getBoundingClientRect();
     F = { x: b.left - r.left, y: b.top - r.top, w: b.width, h: b.height };
     s = Math.min(F.w, F.h) / 12.4; ox = F.x + (F.w - 12 * s) / 2; oy = F.y + (F.h - 12 * s) / 2;
+    tagbox.style.left = F.x + 'px'; tagbox.style.top = F.y + 'px'; tagbox.style.width = F.w + 'px'; tagbox.style.height = F.h + 'px';
   }
   /* the schematic: the phone at the left, a track of four stations, reception below; the Google card at the top, the
      clinic's list at the bottom left, its site at the bottom right */
@@ -427,6 +448,7 @@
     var on = 0; for (k = 0; k < BEATS.length; k++) if (t >= BEATS[k]) on = k + 1;
     ctx.globalAlpha = 1;
     for (k = 0; k < items.length; k++) items[k].classList.toggle('on', k < on);
+    for (k = 0; k < tags.length; k++) tags[k].classList.toggle('on', t >= TIN[k] && t < TOUT[k]);
     return t > END;
   }
   function frame(now){ if (!t0) t0 = now; var settled = draw((now - t0) / 1000); if (settled){ done = true; raf = 0; return; } raf = visible ? requestAnimationFrame(frame) : 0; }

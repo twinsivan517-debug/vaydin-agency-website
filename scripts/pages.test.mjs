@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import vm from "node:vm";
-import { roomPages, runFilm } from "./film-canvas.mjs";
+import { filmScript, roomPages, runFilm } from "./film-canvas.mjs";
 
 let cases = 0;
 const test = (name, fn) => { try { fn(); cases++; } catch (e) { console.error(`FAILED: ${name}`); throw e; } };
@@ -88,6 +88,44 @@ for (const f of rooms) {
     assert.ok(!calm || !calm.classList.contains("dim"), "reduced motion dimmed the list");
   });
 }
+
+// --- the films' labels -------------------------------------------------------------------------------------
+// The owner's lock on the films: the canvas writes nothing; a drawing's name stands beside it as page text, a few words,
+// never a digit. Each label lights on the film's own clock, inside a layer screen readers skip (the room's list says it all).
+const labels = (html) => [...html.matchAll(/<div class="([\w-]+)-tag(?: fit)?" ([^>]*)>([\s\S]*?)<\/div>/g)].map((m) => ({
+  room: m[1], attrs: m[2], text: m[3].replace(/<br>/g, " ").replace(/\s+/g, " ").trim() }));
+export const labelFault = ({ attrs, text }) => {
+  if (/\d/.test(text)) return `a digit in "${text}"`;
+  if (text.split(" ").length > 4) return `more than four words: "${text}"`;
+  const din = attrs.match(/data-in="([\d.]+)"/), dout = attrs.match(/data-out="([\d.]+)"/);
+  if (!din) return `no data-in on "${text}"`;
+  if (dout && +dout[1] <= +din[1]) return `"${text}" leaves before it comes`;
+  if (!/style="left:[\d.]+%;top:[\d.]+%"/.test(attrs)) return `"${text}" not placed in percent of its film`;
+  return null;
+};
+const filmFault = (html, room) => {
+  if (!new RegExp(`<div class="${room}-tags"[^>]*aria-hidden="true"`).test(html)) return `no ${room}-tags layer hidden from screen readers`;
+  if (!/tags\[\w+\]\.classList\.toggle\('on', t >= TIN\[\w+\] && t < TOUT\[\w+\]\)/.test(filmScript(html))) return "the film never lights its labels";
+  return null;
+};
+const labelled = rooms.filter((f) => labels(read(f)).length);
+test("every room's film carries its labels", () => assert.deepEqual(labelled, rooms));
+for (const f of labelled) {
+  test(`${f}: every label a few words, never a digit, on the film's clock, lit by the film`, () => {
+    const html = read(f), ls = labels(html);
+    for (const l of ls) assert.equal(labelFault(l), null, f);
+    assert.equal(filmFault(html, ls[0].room), null, f);
+  });
+}
+test("a label with a digit, five words, an end before its start, or a film that never lights them is caught", () => {
+  const ok = { attrs: 'data-in="4.6" style="left:21.5%;top:4.8%"', text: "Paid campaign" };
+  assert.equal(labelFault(ok), null);
+  assert.match(labelFault({ ...ok, text: "Open at 2am" }), /a digit/);
+  assert.match(labelFault({ ...ok, text: "One two three four five" }), /more than four/);
+  assert.match(labelFault({ ...ok, attrs: 'data-in="9" data-out="8" style="left:1%;top:1%"' }), /leaves before/);
+  const html = read(labelled[0]), room = labels(html)[0].room;
+  assert.match(filmFault(html.replace(/tags\[(\w+)\]\.classList\.toggle\('on', t >= TIN/, "tags[$1].classList.toggle('off', t >= TIN"), room), /never lights/);
+});
 
 // --- the visitor count -------------------------------------------------------------------------------------
 // Once per page, after its footer: a head or a footer is never touched, and a page that loads it twice counts

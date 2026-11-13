@@ -754,6 +754,90 @@
   ]
  },
  {
+  "s": "A real person",
+  "tag": "task:CORE-F4",
+  "read": "core 2026-11-13: OK (D1)",
+  "where": [
+   "diagnose.html",
+   "diagnose.html (film label)"
+  ]
+ },
+ {
+  "s": "Your clinic",
+  "tag": "none",
+  "read": "core 2026-11-13: OK (D2)",
+  "where": [
+   "diagnose.html (film label)"
+  ]
+ },
+ {
+  "s": "Next door",
+  "tag": "none",
+  "read": "core 2026-11-13: OK (D3)",
+  "where": [
+   "diagnose.html (film label)"
+  ]
+ },
+ {
+  "s": "Clinics around you",
+  "tag": "task:CORE-F5",
+  "read": "core 2026-11-13: OK (D4)",
+  "where": [
+   "diagnose.html",
+   "diagnose.html (film label)"
+  ]
+ },
+ {
+  "s": "One score",
+  "tag": "task:CORE-F0",
+  "read": "core 2026-11-13: OK (D5)",
+  "where": [
+   "diagnose.html (film label)"
+  ]
+ },
+ {
+  "s": "Your website",
+  "tag": "none",
+  "read": "Layer 2 2026-11-13: OK (F10, a service beside the engine) | core 2026-11-13: OK (F10, D6)",
+  "where": [
+   "diagnose.html (film label)",
+   "fix.html (film label)"
+  ]
+ },
+ {
+  "s": "AI search",
+  "tag": "task:CORE-F7",
+  "read": "core 2026-11-13: OK (D7)",
+  "where": [
+   "diagnose.html (film label)"
+  ]
+ },
+ {
+  "s": "Your private link",
+  "tag": "task:CORE-F0",
+  "read": "core 2026-11-13: OK (D8)",
+  "where": [
+   "diagnose.html",
+   "diagnose.html (film label)"
+  ]
+ },
+ {
+  "s": "Thirteen jobs",
+  "tag": "task:L2-JOBS",
+  "read": "Layer 2 2026-11-13: OK (D9) | core 2026-11-13: OK (D9)",
+  "where": [
+   "diagnose.html (film label)"
+  ]
+ },
+ {
+  "s": "Answered first",
+  "tag": "none",
+  "read": "core 2026-11-13: OK (D10, its reword)",
+  "where": [
+   "diagnose.html (film label)"
+  ]
+ },
+ {
   "s": "Step 01 · Clinic mystery shopping in Dubai We measure your clinic the way a patient meets it.",
   "tag": "task:CORE-F4",
   "read": "core 2026-11-10: OK (107)",
@@ -1018,6 +1102,72 @@
   "read": "web-studio 2026-11-11: no claim (the drawing's label)",
   "where": [
    "engine.html (label)"
+  ]
+ },
+ {
+  "s": "Engine off",
+  "tag": "none",
+  "read": "Layer 2 2026-11-13: OK (E1) | core 2026-11-13: OK (E1)",
+  "where": [
+   "engine.html (film label)"
+  ]
+ },
+ {
+  "s": "Engine on",
+  "tag": "none",
+  "read": "Layer 2 2026-11-13: OK (E2) | core 2026-11-13: OK (E2)",
+  "where": [
+   "engine.html (film label)"
+  ]
+ },
+ {
+  "s": "WhatsApp",
+  "tag": "none",
+  "read": "Layer 2 2026-11-13: OK (E3) | core 2026-11-13: OK (E3)",
+  "where": [
+   "engine.html (film label)"
+  ]
+ },
+ {
+  "s": "Google",
+  "tag": "none",
+  "read": "Layer 2 2026-11-13: OK (E4) | core 2026-11-13: OK (E4)",
+  "where": [
+   "engine.html (film label)"
+  ]
+ },
+ {
+  "s": "Booked",
+  "tag": "job:2",
+  "read": "Layer 2 2026-11-13: OK (E5, F4) | core 2026-11-13: OK (G4, E5, F4)",
+  "where": [
+   "engine.html (film label)",
+   "fix.html (film label)",
+   "grow.html (film label)"
+  ]
+ },
+ {
+  "s": "Reminders",
+  "tag": "job:4",
+  "read": "Layer 2 2026-11-13: OK (E6) | core 2026-11-13: OK (E6)",
+  "where": [
+   "engine.html (film label)"
+  ]
+ },
+ {
+  "s": "Counted",
+  "tag": "job:6",
+  "read": "Layer 2 2026-11-13: OK (E7) | core 2026-11-13: OK (E7)",
+  "where": [
+   "engine.html (film label)"
+  ]
+ },
+ {
+  "s": "Reply ready",
+  "tag": "job:9",
+  "read": "Layer 2 2026-11-13: OK (E8) | core 2026-11-13: OK (E8)",
+  "where": [
+   "engine.html (film label)"
   ]
  },
  {
@@ -1294,6 +1444,79 @@
   ]
  },
  {
+  "s": "Their WhatsApp",
+  "tag": "none",
+  "read": "Layer 2 2026-11-13: OK (F1) | core 2026-11-13: OK (F1)",
+  "where": [
+   "fix.html (film label)"
+  ]
+ },
+ {
+  "s": "At night",
+  "tag": "job:1",
+  "read": "Layer 2 2026-11-13: OK (F2) | core 2026-11-13: OK (F2)",
+  "where": [
+   "fix.html (film label)"
+  ]
+ },
+ {
+  "s": "Menu",
+  "tag": "job:1",
+  "read": "Layer 2 2026-11-13: OK (F3) | core 2026-11-13: OK (F3)",
+  "where": [
+   "fix.html (film label)"
+  ]
+ },
+ {
+  "s": "Reminder",
+  "tag": "job:4",
+  "read": "Layer 2 2026-11-13: OK (F5) | core 2026-11-13: OK (F5)",
+  "where": [
+   "fix.html (film label)"
+  ]
+ },
+ {
+  "s": "Visit",
+  "tag": "none",
+  "read": "Layer 2 2026-11-13: OK (F6) | core 2026-11-13: OK (F6)",
+  "where": [
+   "fix.html (film label)"
+  ]
+ },
+ {
+  "s": "Your reception",
+  "tag": "none",
+  "read": "Layer 2 2026-11-13: OK (F7) | core 2026-11-13: OK (F7)",
+  "where": [
+   "fix.html (film label)"
+  ]
+ },
+ {
+  "s": "Invited back",
+  "tag": "job:5",
+  "read": "Layer 2 2026-11-13: OK (F8, its condition stays in its line) | core 2026-11-13: OK (F8)",
+  "where": [
+   "fix.html (film label)"
+  ]
+ },
+ {
+  "s": "Google profile",
+  "tag": "job:8",
+  "read": "Layer 2 2026-11-13: OK (F9) | core 2026-11-13: OK (F9)",
+  "where": [
+   "fix.html (film label)"
+  ]
+ },
+ {
+  "s": "You keep the keys",
+  "tag": "job:1 + job:8",
+  "read": "Layer 2 2026-11-13: OK (F11) | core 2026-11-13: OK (F11)",
+  "where": [
+   "fix.html",
+   "fix.html (film label)"
+  ]
+ },
+ {
   "s": "Step 02 · WhatsApp booking for aesthetic clinics in Dubai We stop reporting the leaks.",
   "tag": "none",
   "read": "Layer 2 2026-11-10: no claim (116)",
@@ -1540,6 +1763,74 @@
   "read": "",
   "where": [
    "grow.html (label)"
+  ]
+ },
+ {
+  "s": "Paid campaign",
+  "tag": "none",
+  "read": "core 2026-11-13: OK (G1)",
+  "where": [
+   "grow.html (film label)"
+  ]
+ },
+ {
+  "s": "Your Instagram",
+  "tag": "none",
+  "read": "core 2026-11-13: OK (G2)",
+  "where": [
+   "grow.html (film label)"
+  ]
+ },
+ {
+  "s": "Your WhatsApp",
+  "tag": "none",
+  "read": "core 2026-11-13: OK (G3)",
+  "where": [
+   "grow.html (film label)"
+  ]
+ },
+ {
+  "s": "The right patients",
+  "tag": "none",
+  "read": "core 2026-11-13: OK (G5)",
+  "where": [
+   "grow.html",
+   "grow.html (film label)"
+  ]
+ },
+ {
+  "s": "Paid direct",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"spend direct, never marked up\"",
+  "read": "main house 2026-11-13: OK (G6) | core 2026-11-13: OK (G6)",
+  "where": [
+   "grow.html (film label)"
+  ]
+ },
+ {
+  "s": "Patients, not likes",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"reported as cost per BOOKED patient\"",
+  "read": "main house 2026-11-13: OK (G7) | core 2026-11-13: OK (G7)",
+  "where": [
+   "grow.html",
+   "grow.html (film label)"
+  ]
+ },
+ {
+  "s": "No AI-made patients",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"AI content never shows AI patients or before/afters (DHA)\"",
+  "read": "main house 2026-11-13: OK (G8) | core 2026-11-13: OK (G8, its reword)",
+  "where": [
+   "grow.html",
+   "grow.html (film label)"
+  ]
+ },
+ {
+  "s": "At midnight too",
+  "tag": "job:1",
+  "read": "Layer 2 2026-11-13: OK (G9) | core 2026-11-13: OK (G9)",
+  "where": [
+   "grow.html",
+   "grow.html (film label)"
   ]
  },
  {

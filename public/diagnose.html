@@ -145,6 +145,9 @@
   .dg-stage{position:relative;max-width:1240px;margin:0 auto;padding:34px 48px 0;display:grid;grid-template-columns:1.05fr 0.95fr;gap:40px;align-items:start}
   .dg-stage canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
   .dg-screen{position:relative;z-index:1;height:440px}
+  .dg-tags{position:absolute;left:0;top:0;width:0;height:0;z-index:2;pointer-events:none;container-type:inline-size}
+  .dg-tag{position:absolute;transform:translate(-50%,-50%);font-family:var(--mono);font-size:clamp(9px,2.1cqw,12px);line-height:1.3;letter-spacing:0.1em;text-transform:uppercase;text-align:center;white-space:nowrap;color:#e8d48b;text-shadow:0 0 3px #000,0 0 9px #000,0 0 14px #000;opacity:0;transition:opacity .6s ease}
+  .dg-tag.on{opacity:0.9}
   .dg-list{position:relative;z-index:1;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px}
   .dg-oc{display:grid;grid-template-columns:46px 1fr;gap:14px;align-items:start;transition:opacity .8s var(--ease)}
   .dg-list.dim .dg-oc{opacity:0.38}
@@ -201,6 +204,19 @@
   <div class="dg-stage" id="dgstage" aria-label="The diagnostic, drawn, one part at a time">
     <canvas id="dgcanvas" aria-hidden="true"></canvas>
     <div class="dg-screen" id="dgslot"></div>
+    <div class="dg-tags" id="dgtags" aria-hidden="true">
+      <div class="dg-tag" data-in="0.6" data-out="11.6" style="left:15.5%;top:93%">A real person</div>
+      <div class="dg-tag" data-in="0.6" data-out="11.6" style="left:50%;top:93%">Your clinic</div>
+      <div class="dg-tag" data-in="0.6" data-out="11.6" style="left:80%;top:93%">Next door</div>
+      <div class="dg-tag" data-in="12.0" data-out="17.4" style="left:50%;top:9%">Clinics around you</div>
+      <div class="dg-tag" data-in="18.4" data-out="21.9" style="left:50%;top:50%">One score</div>
+      <div class="dg-tag" data-in="22.6" data-out="26.8" style="left:60%;top:25%">Your website</div>
+      <div class="dg-tag" data-in="22.8" data-out="26.0" style="left:88%;top:64%">AI search</div>
+      <div class="dg-tag" data-in="29.8" data-out="32.4" style="left:24%;top:80%">Your private link</div>
+      <div class="dg-tag" data-in="30.4" data-out="32.4" style="left:70%;top:74%">Thirteen jobs</div>
+      <div class="dg-tag" data-in="32.6" style="left:50%;top:93%">Your clinic</div>
+      <div class="dg-tag" data-in="34.3" style="left:66%;top:42%">Answered first</div>
+    </div>
     <ol class="dg-list" data-room="diagnose">
       <li class="dg-oc"><div class="dg-slot"></div><div><h2>Every thirty to sixty days, unannounced, a real person messages your clinic on WhatsApp, like any new patient.</h2><p>We ask what patients ask: the treatment, the price, when they can come. And we record what your clinic said, and when.</p></div></li>
       <li class="dg-oc"><div class="dg-slot"></div><div><h2>A patient messaging tonight books whoever answers first, and best.</h2></div></li>
@@ -237,13 +253,18 @@
    stars, its reviews and its camera; the reads run into one ring of six parts, one short and red until a spark
    fills it; three seekers find your site shut, a key turns, they read it as a clinic; the ring lands on a phone that
    keeps watching; the red parts fill thirteen slots in a turning machine; night again, a new message, your clinic
-   answers at once and the person walks in. Plain symbols only, never a brand's mark, nothing written and no digit
-   drawn (his 13 May lock). Every frame is a function of its time, so it can be drawn at any second: it runs only
+   answers at once and the person walks in. Plain symbols only, never a brand's mark; the canvas writes no word and
+   draws no digit (his lock), and each drawing's name stands beside it as page text (.dg-tag, placed over the film by
+   layout()), never a digit and never a product screen. Every frame is a function of its time, so it can be drawn at
+   any second: it runs only
    while on screen and settles on the last frame; with reduced motion the last frame is drawn once. */
 (function(){
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var stage = document.getElementById('dgstage'), cv = document.getElementById('dgcanvas'), ctx = cv.getContext('2d');
   var slot = document.getElementById('dgslot'), items = [].slice.call(document.querySelectorAll('.dg-oc'));
+  var tagbox = document.getElementById('dgtags'), tags = [].slice.call(document.querySelectorAll('.dg-tag'));
+  var TIN = tags.map(function(e){ return +e.getAttribute('data-in'); });
+  var TOUT = tags.map(function(e){ var o = e.getAttribute('data-out'); return o === null ? Infinity : +o; });
   var GOLD = '#e8d48b', RED = '#f87171', GREEN = '#4ade80', CYAN = '#34e3f0', VIOLET = '#a78bfa', SUN = '#f5d978', FAINT = '#6f8378', WHITE = '#f3ead9';
   var BEATS = [1.0, 6.0, 11.5, 17.5, 22.0, 26.5, 30.0], END = 37.4;  /* when each line lights; the film's length */
   var SLOT_COLORS = [GOLD, SUN, CYAN, GREEN, CYAN, GOLD, GREEN], SLOT_SYMS = ['chat', 'clock', 'lens', 'ring', 'key', 'phone', 'tick'];
@@ -398,6 +419,7 @@
     var s = slot.getBoundingClientRect();
     F = { x: s.left - r.left + 2, y: s.top - r.top + 2, w: s.width - 4, h: s.height - 4 };
     U = F.h;
+    tagbox.style.left = F.x + 'px'; tagbox.style.top = F.y + 'px'; tagbox.style.width = F.w + 'px'; tagbox.style.height = F.h + 'px';
     var R = rnd(7), k;
     /* stars in the night sky, the skyline, the ground */
     sky = []; for (k = 0; k < 64; k++) sky.push([F.x + R() * F.w, F.y + R() * F.h * 0.55, R() * 6, 0.6 + R() * 1.2]);
@@ -627,6 +649,7 @@
     }
     ctx.globalAlpha = 1;
     for (var n = 0; n < items.length; n++) items[n].classList.toggle('on', n < lit);
+    for (var ti = 0; ti < tags.length; ti++) tags[ti].classList.toggle('on', t >= TIN[ti] && t < TOUT[ti]);
     return t > END;
   }
   function frame(now){
