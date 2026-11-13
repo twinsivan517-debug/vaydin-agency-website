@@ -54,9 +54,11 @@ for (const [s, code] of [["3 leaks found, worst first", false], ["fixed inset-x-
   n++;
 }
 const LABELS = '<div class="gr-tags" aria-hidden="true"><div class="gr-tag" data-in="1" style="left:1%;top:1%">Booked</div>'
-  + '<div class="gr-tag fit" data-in="2" style="left:1%;top:1%">Patients,<br>not likes</div></div><div class="nav">Menu</div>';
-if (JSON.stringify(filmLabels(LABELS)) !== JSON.stringify(["Booked", "Patients, not likes"]))
-  throw new Error(`a film's labels are held whole, one word included, other short text not: got ${JSON.stringify(filmLabels(LABELS))}`);
+  + '<div class="gr-tag fit" data-in="2" style="left:1%;top:1%">Patients,<br>not likes</div>'
+  + '<div class="gr-tag wide" data-in="5" style="left:1%;top:1%">Open 24/7</div>'
+  + '<span class="gr-tag" data-in="5" style="left:1%;top:1%">Guaranteed results</span></div><div class="nav">Menu</div>';
+if (JSON.stringify(filmLabels(LABELS)) !== JSON.stringify(["Booked", "Patients, not likes", "Open 24/7", "Guaranteed results"]))
+  throw new Error(`a film's labels are held whole, in any element or beside any class, other short text not: got ${JSON.stringify(filmLabels(LABELS))}`);
 n++;
 if (!/for \(const s of filmLabels\(h\)\) add\(s, `\$\{page\} \(film label\)`\);/.test(readFileSync(new URL("./ledger.mjs", import.meta.url), "utf8")))
   throw new Error("gather() no longer adds the films' labels");

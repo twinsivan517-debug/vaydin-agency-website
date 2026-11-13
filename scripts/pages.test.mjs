@@ -6,6 +6,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import vm from "node:vm";
+import { filmLabelElements } from "./film-labels.mjs";
 import { filmScript, roomPages, runFilm } from "./film-canvas.mjs";
 
 let cases = 0;
@@ -92,8 +93,8 @@ for (const f of rooms) {
 // --- the films' labels -------------------------------------------------------------------------------------
 // The owner's lock on the films: the canvas writes nothing; a drawing's name stands beside it as page text, a few words,
 // never a digit. Each label lights on the film's own clock, inside a layer screen readers skip (the room's list says it all).
-const labels = (html) => [...html.matchAll(/<div class="([\w-]+)-tag(?: fit)?" ([^>]*)>([\s\S]*?)<\/div>/g)].map((m) => ({
-  room: m[1], attrs: m[2], text: m[3].replace(/<br>/g, " ").replace(/\s+/g, " ").trim() }));
+// Which elements are labels is film-labels.mjs's one definition, the one the ledger reads too: any element a film lights.
+const labels = filmLabelElements;
 export const labelFault = ({ attrs, text }) => {
   if (/\d/.test(text)) return `a digit in "${text}"`;
   if (text.split(" ").length > 4) return `more than four words: "${text}"`;
@@ -125,6 +126,16 @@ test("a label with a digit, five words, an end before its start, or a film that 
   assert.match(labelFault({ ...ok, attrs: 'data-in="9" data-out="8" style="left:1%;top:1%"' }), /leaves before/);
   const html = read(labelled[0]), room = labels(html)[0].room;
   assert.match(filmFault(html.replace(/tags\[(\w+)\]\.classList\.toggle\('on', t >= TIN/, "tags[$1].classList.toggle('off', t >= TIN"), room), /never lights/);
+});
+test("a label beside another class, or written as another element, is still seen and judged (the main house's L4, L5)", () => {
+  const html = read("grow.html"), n = labels(html).length, at = '<div class="gr-tag" data-in="3.0"';
+  const l4 = html.replace(at, `<div class="gr-tag wide" data-in="5.0" style="left:50%;top:50%">Open 24/7</div>${at}`);
+  const l5 = html.replace(at, `<span class="gr-tag" data-in="5.0" style="left:50%;top:50%">Guaranteed results</span>${at}`);
+  assert.notEqual(l4, html, "the L4 plant found no label to sit beside");
+  assert.equal(labels(l4).length, n + 1);
+  assert.match(labels(l4).map(labelFault).filter(Boolean).join("; "), /a digit in "Open 24\/7"/);
+  assert.equal(labels(l5).length, n + 1);
+  assert.ok(labels(l5).some((l) => l.el === "span" && l.text === "Guaranteed results"), "the span label went unseen");
 });
 
 // --- the visitor count -------------------------------------------------------------------------------------

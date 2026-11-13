@@ -25,6 +25,7 @@ import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "
 import { join, relative } from "node:path";
 import { pathToFileURL } from "node:url";
 import { collect } from "../lab/particle-guide/voice/lines.mjs";
+import { filmLabelElements } from "./film-labels.mjs";
 
 const LEDGER = "lab/ledger/ledger.json";
 const TAG = /^(task:[A-Z0-9-]+|job:(1[0-3]|[1-9])|lock:[\w.\/-]+:\d+(-\d+)?( "[^"+]{3,80}")?|none)$/;
@@ -59,9 +60,9 @@ function walkFiles(dir, test, out = []) {
 }
 
 /* A film's labels name its drawings in a word or two, under the three words a sentence needs here, and some are claims
-   ("Paid direct"): each one is held whole, so no label's words can change unread. */
-export const filmLabels = (h) => [...h.matchAll(/<div class="[\w-]+-tag(?: fit)?"[^>]*>([\s\S]*?)<\/div>/g)]
-  .map((m) => clean(m[1].replace(/<br\s*\/?>/g, " "))).filter(Boolean);
+   ("Paid direct"): each one is held whole, so no label's words can change unread. Which elements are labels is
+   film-labels.mjs's one definition, the same one the page test judges, whatever element or classes carry them. */
+export const filmLabels = (h) => filmLabelElements(h).map((e) => clean(e.inner.replace(/<br\s*\/?>/gi, " "))).filter(Boolean);
 
 export async function gather(site = ".") {
   const found = new Map();
