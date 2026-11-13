@@ -1,8 +1,8 @@
 // The ledger's check, on planted rows: each rule turns red on its hit and stays green on its miss.
-import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { check, codeLike } from "./ledger.mjs";
+import { check, codeLike, filmLabels } from "./ledger.mjs";
 
 const root = mkdtempSync(join(tmpdir(), "ledger-"));
 mkdirSync(join(root, "house"));
@@ -53,4 +53,12 @@ for (const [s, code] of [["3 leaks found, worst first", false], ["fixed inset-x-
   if (codeLike(s) !== code) throw new Error(`codeLike("${s}") should be ${code}`);
   n++;
 }
+const LABELS = '<div class="gr-tags" aria-hidden="true"><div class="gr-tag" data-in="1" style="left:1%;top:1%">Booked</div>'
+  + '<div class="gr-tag fit" data-in="2" style="left:1%;top:1%">Patients,<br>not likes</div></div><div class="nav">Menu</div>';
+if (JSON.stringify(filmLabels(LABELS)) !== JSON.stringify(["Booked", "Patients, not likes"]))
+  throw new Error(`a film's labels are held whole, one word included, other short text not: got ${JSON.stringify(filmLabels(LABELS))}`);
+n++;
+if (!/for \(const s of filmLabels\(h\)\) add\(s, `\$\{page\} \(film label\)`\);/.test(readFileSync(new URL("./ledger.mjs", import.meta.url), "utf8")))
+  throw new Error("gather() no longer adds the films' labels");
+n++;
 console.log(`${n} ledger cases passed`);

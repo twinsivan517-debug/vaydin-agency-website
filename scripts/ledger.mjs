@@ -58,6 +58,11 @@ function walkFiles(dir, test, out = []) {
   return out;
 }
 
+/* A film's labels name its drawings in a word or two, under the three words a sentence needs here, and some are claims
+   ("Paid direct"): each one is held whole, so no label's words can change unread. */
+export const filmLabels = (h) => [...h.matchAll(/<div class="[\w-]+-tag(?: fit)?"[^>]*>([\s\S]*?)<\/div>/g)]
+  .map((m) => clean(m[1].replace(/<br\s*\/?>/g, " "))).filter(Boolean);
+
 export async function gather(site = ".") {
   const found = new Map();
   const add = (s, where) => { if (!found.has(s)) found.set(s, new Set()); found.get(s).add(where); };
@@ -83,6 +88,7 @@ export async function gather(site = ".") {
     for (const m of h.matchAll(/aria-label="([^"]*)"/g)) addBlock(m[1], `${page} (label)`);
     const t = h.match(/<title>([\s\S]*?)<\/title>/);
     if (t) addBlock(t[1], `${page} (title)`);
+    for (const s of filmLabels(h)) add(s, `${page} (film label)`);
     /* Inline tags become a space (a tile's spans would glue "machine.Step 03Grow"), blocks a line. */
     const body = h.replace(/<(script|style|head)\b[\s\S]*?<\/\1>/g, " ")
       .replace(/<\/?(b|i|em|strong|a|span|small|sup|sub|code|mark|u|abbr|br)\b[^>]*>/gi, " ").replace(/<[^>]+>/g, "\n");
