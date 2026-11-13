@@ -127,6 +127,16 @@ test("a label with a digit, five words, an end before its start, or a film that 
   const html = read(labelled[0]), room = labels(html)[0].room;
   assert.match(filmFault(html.replace(/tags\[(\w+)\]\.classList\.toggle\('on', t >= TIN/, "tags[$1].classList.toggle('off', t >= TIN"), room), /never lights/);
 });
+test("a label whose class is written in single quotes or none is still seen and judged (the main house's L7, L8)", () => {
+  const html = read("grow.html"), n = labels(html).length, at = '<div class="gr-tag" data-in="3.0"';
+  const l7 = html.replace(at, `<div class='gr-tag' data-in="5.0" style="left:50%;top:50%">Open 24/7</div>${at}`);
+  const l8 = html.replace(at, `<div class=gr-tag data-in="5.0" style="left:50%;top:50%">Guaranteed results</div>${at}`);
+  assert.equal(labels(l7).length, n + 1);
+  assert.match(labels(l7).map(labelFault).filter(Boolean).join("; "), /a digit in "Open 24\/7"/);
+  assert.equal(labels(l8).length, n + 1);
+  assert.ok(labels(l8).some((l) => l.text === "Guaranteed results"), "the unquoted label went unseen");
+  assert.equal(labels('<div class="gr-tags"><p data-class="gr-tag">x</p></div>').length, 0, "a data-class is not a class");
+});
 test("a label beside another class, or written as another element, is still seen and judged (the main house's L4, L5)", () => {
   const html = read("grow.html"), n = labels(html).length, at = '<div class="gr-tag" data-in="3.0"';
   const l4 = html.replace(at, `<div class="gr-tag wide" data-in="5.0" style="left:50%;top:50%">Open 24/7</div>${at}`);
