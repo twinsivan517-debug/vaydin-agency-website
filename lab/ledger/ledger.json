@@ -767,7 +767,8 @@
   "tag": "none",
   "read": "core 2026-11-13: OK (D2)",
   "where": [
-   "diagnose.html (film label)"
+   "diagnose.html (film label)",
+   "pricing.html (film label)"
   ]
  },
  {
@@ -1143,7 +1144,8 @@
   "where": [
    "engine.html (film label)",
    "fix.html (film label)",
-   "grow.html (film label)"
+   "grow.html (film label)",
+   "pricing.html (film label)"
   ]
  },
  {
@@ -2430,6 +2432,114 @@
   ]
  },
  {
+  "s": "Vaydin",
+  "tag": "none",
+  "read": "core 2026-11-13: OK (beat 1) | main house 2026-11-13: OK (beat 1) | Layer 2 2026-11-13: no claim (beat 1)",
+  "where": [
+   "pricing.html (film label)"
+  ]
+ },
+ {
+  "s": "Where patients are lost",
+  "tag": "task:CORE-F0",
+  "read": "core 2026-11-13: OK (beat 2) | main house 2026-11-13: OK (beat 2)",
+  "where": [
+   "pricing.html",
+   "pricing.html (film label)"
+  ]
+ },
+ {
+  "s": "Growth",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
+  "read": "main house 2026-11-13: OK (beat 4) | core 2026-11-13: OK (beat 4)",
+  "where": [
+   "pricing.html (film label)"
+  ]
+ },
+ {
+  "s": "Agency retainer",
+  "tag": "none",
+  "read": "core 2026-11-13: OK (beat 5) | main house 2026-11-13: OK (beat 5) | Layer 2 2026-11-13: no claim (beat 5)",
+  "where": [
+   "pricing.html (film label)"
+  ]
+ },
+ {
+  "s": "Tools",
+  "tag": "none",
+  "read": "core 2026-11-13: OK (beat 5) | main house 2026-11-13: OK (beat 5) | Layer 2 2026-11-13: no claim (beat 5)",
+  "where": [
+   "pricing.html (film label)"
+  ]
+ },
+ {
+  "s": "Hours chasing messages",
+  "tag": "none",
+  "read": "main house 2026-11-13: OK (beat 5, its reword)",
+  "where": [
+   "pricing.html",
+   "pricing.html (film label)"
+  ]
+ },
+ {
+  "s": "Unanswered",
+  "tag": "none",
+  "read": "core 2026-11-13: OK (beat 6) | main house 2026-11-13: OK (beat 6)",
+  "where": [
+   "pricing.html (film label)"
+  ]
+ },
+ {
+  "s": "One engine",
+  "tag": "none",
+  "read": "Layer 2 2026-11-13: OK (beat 7) | core 2026-11-13: OK (beat 7) | main house 2026-11-13: OK (beat 7)",
+  "where": [
+   "pricing.html (film label)"
+  ]
+ },
+ {
+  "s": "Counted, live",
+  "tag": "job:6 + task:CORE-4",
+  "read": "Layer 2 2026-11-13: OK (beat 7) | core 2026-11-13: OK (beat 7)",
+  "where": [
+   "pricing.html (film label)"
+  ]
+ },
+ {
+  "s": "Signed",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:73 \"Data first. Proposal second. Contract third.\"",
+  "read": "main house 2026-11-13: OK (beat 8) | core 2026-11-13: OK (beat 8)",
+  "where": [
+   "pricing.html (film label)"
+  ]
+ },
+ {
+  "s": "Diagnostic, month to month",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:43 \"Intelligence: month to month, 30 days' written notice\"",
+  "read": "main house 2026-11-13: OK (beat 8) | core 2026-11-13: OK (beat 8, its reword)",
+  "where": [
+   "pricing.html",
+   "pricing.html (film label)"
+  ]
+ },
+ {
+  "s": "Measured",
+  "tag": "none",
+  "read": "core 2026-11-13: OK (beat 9) | Layer 2 2026-11-13: OK (beat 9) | main house 2026-11-13: OK (beat 9)",
+  "where": [
+   "pricing.html (film label)"
+  ]
+ },
+ {
+  "s": "A person answers",
+  "tag": "none",
+  "read": "main house 2026-11-13: OK (beat 10) | Layer 2 2026-11-13: OK (beat 10) | core 2026-11-13: OK (beat 10)",
+  "where": [
+   "pricing.html",
+   "pricing.html (film label)"
+  ]
+ },
+ {
   "s": "Every plan is built for your clinic.",
   "tag": "none",
   "read": "",
@@ -2441,106 +2551,110 @@
   ]
  },
  {
-  "s": "Every plan starts with the measurement.",
-  "tag": "none",
-  "read": "",
+  "s": "Every plan is built for your clinic, and every plan starts with the measurement.",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:73 \"Data first. Proposal second. Contract third.\"",
+  "read": "main house 2026-11-13: OK (pl-01) | core 2026-11-13: OK (pl-01)",
   "where": [
+   "pages.ts",
    "pricing.html"
   ]
  },
  {
-  "s": "Add the engine when you want it fixed and run for you.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "Tell us about your clinic and a person sends your plan on WhatsApp, no forms.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "01 The diagnostic.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "An unannounced shop, the way a patient meets your clinic.",
+  "s": "First, the diagnostic: an unannounced shop, the way a patient meets your clinic.",
   "tag": "task:CORE-F4",
-  "read": "core 2026-11-10: OK (125)",
+  "read": "core 2026-11-13: OK (pl-02) | main house 2026-11-13: OK (pl-02)",
   "where": [
+   "pages.ts",
    "pricing.html"
   ]
  },
  {
-  "s": "Every plan starts here.",
+  "s": "It tells you the truth.",
   "tag": "none",
-  "read": "",
+  "read": "core 2026-11-13: OK (pl-02) | main house 2026-11-13: OK (pl-02)",
   "where": [
+   "pages.ts",
    "pricing.html"
   ]
  },
  {
-  "s": "02 The engine.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "WhatsApp inquiries answered and booked, visits reminded, quiet patients invited back, on your own number.",
+  "s": "Then the engine changes it, on your own number: every WhatsApp inquiry gets your menu at once, bookings are made in the chat, visits reminded, quiet patients invited back.",
   "tag": "job:1 + job:2 + job:4 + job:5",
-  "read": "Layer 2 2026-11-10: OK (32)",
+  "read": "Layer 2 2026-11-13: OK (pl-03) | core 2026-11-13: OK (pl-03) | main house 2026-11-13: OK (pl-03)",
   "where": [
+   "pages.ts",
    "pricing.html"
   ]
  },
  {
-  "s": "Paid demand and presence, only once the engine runs and its bookings are proven.",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
-  "read": "main house 2026-11-10: OK",
+  "s": "Growth comes last: paid demand and presence, only once the engine runs and its bookings are proven.",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"NEVER before RE conversion is proven\"",
+  "read": "main house 2026-11-13: OK (pl-04) | core 2026-11-13: OK (pl-04) | Layer 2 2026-11-13: OK (pl-04)",
   "where": [
+   "pages.ts",
    "pricing.html"
   ]
  },
  {
-  "s": "The diagnostic runs month to month",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:43 \"3-month minimum. Intelligence: month to month, 30 days' written notice\"",
-  "read": "main house 2026-11-10: by his ruling (ruling 3)",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "Every number measured, never promised",
+  "s": "A typical clinic already pays for the fragments: an agency retainer, tools nobody opens, reception hours spent chasing messages.",
   "tag": "none",
-  "read": "core 2026-11-10: no claim (66)",
+  "read": "core 2026-11-13: no claim (pl-05) | main house 2026-11-13: OK (pl-05) | Layer 2 2026-11-13: no claim (pl-05)",
   "where": [
+   "pages.ts",
    "pricing.html"
   ]
  },
  {
-  "s": "Your medical records stay in your own system",
+  "s": "And still the message at two in the morning goes unanswered, and new reviews wait on a busy reception.",
+  "tag": "none",
+  "read": "core 2026-11-13: no claim (pl-06) | main house 2026-11-13: OK (pl-06) | Layer 2 2026-11-13: no claim (pl-06)",
+  "where": [
+   "pages.ts",
+   "pricing.html"
+  ]
+ },
+ {
+  "s": "The full plan replaces them with one engine, operated for you, and growth on top once its bookings are proven.",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:84 \"only on an active Engine, NEVER standalone\"",
+  "read": "main house 2026-11-13: OK (pl-07) | core 2026-11-13: OK (pl-07) | Layer 2 2026-11-13: OK (pl-07)",
+  "where": [
+   "pages.ts",
+   "pricing.html"
+  ]
+ },
+ {
+  "s": "Your Google profile checked daily, a reply ready for every new review, each step counted, live, on your own page.",
+  "tag": "job:6 + job:8 + job:9 + task:CORE-4",
+  "read": "Layer 2 2026-11-13: OK (pl-07) | core 2026-11-13: OK (pl-07) | main house 2026-11-13: OK (pl-07)",
+  "where": [
+   "pages.ts",
+   "pricing.html"
+  ]
+ },
+ {
+  "s": "The diagnostic runs month to month, and stops with thirty days' written notice.",
+  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:43 \"Intelligence: month to month, 30 days' written notice\"",
+  "read": "main house 2026-11-13: OK (pl-08) | core 2026-11-13: OK (pl-08)",
+  "where": [
+   "pages.ts",
+   "pricing.html"
+  ]
+ },
+ {
+  "s": "Every number is measured, never promised, and your medical records stay in your own system.",
   "tag": "task:L2-EX",
-  "read": "Layer 2 2026-11-10: true words applied",
+  "read": "Layer 2 2026-11-13: OK (pl-09) | core 2026-11-13: OK (pl-09) | main house 2026-11-13: OK (pl-09)",
   "where": [
+   "pages.ts",
    "pricing.html"
   ]
  },
  {
-  "s": "Cancel with 30 days' written notice",
-  "tag": "lock:clinic-growth-bot/CLAUDE_BUSINESS.md:43 \"3-month minimum. Intelligence: month to month, 30 days' written notice\"",
-  "read": "main house 2026-11-10: question to him | main house 2026-11-10: by his ruling",
+  "s": "Tell us about your clinic on WhatsApp: a person answers and sends your plan.",
+  "tag": "none",
+  "read": "main house 2026-11-13: OK (pl-10) | core 2026-11-13: OK (pl-10) | Layer 2 2026-11-13: no claim (pl-10)",
   "where": [
+   "pages.ts",
    "pricing.html"
   ]
  },
@@ -2564,206 +2678,6 @@
   "s": "Or write to hello@vaydin.agency",
   "tag": "none",
   "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "WHY THE ENGINE, NOT JUST THE MEASUREMENT",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "See what actually changes.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "The diagnostic alone tells you the truth.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "The engine makes the truth change.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "A sample comparison: your own numbers replace these on the diagnostic.",
-  "tag": "none",
-  "read": "core 2026-11-10: no claim (67)",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "THE TRUTH, MONTHLY",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "✓ Every leak found and scored, month after month",
-  "tag": "task:CORE-F0",
-  "read": "core 2026-11-10 revised: OK (68)",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "✓ You see exactly where patients are lost",
-  "tag": "none",
-  "read": "core 2026-11-10: no claim (69)",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "✗ The 2am WhatsApp still goes unanswered",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "✗ Reviews still wait on a busy reception",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "✗ Fixing it all stays your job",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "THE TRUTH, AND THE MACHINE THAT MOVES IT",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "✓ The leaks on WhatsApp closed and operated; your Google profile checked daily and every new review given a reply to post",
-  "tag": "job:1 + job:8 + job:9",
-  "read": "Layer 2 2026-11-10: true words applied",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "✓ Every WhatsApp inquiry answered at once, day and night",
-  "tag": "job:1",
-  "read": "Layer 2 2026-11-10: OK (22)",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "✓ A reply ready for every new review, one tap to post",
-  "tag": "job:9",
-  "read": "Layer 2 2026-11-10: true words applied",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "✓ Counted on your page, and the outside reads keep running",
-  "tag": "task:CORE-4 + job:6",
-  "read": "core 2026-11-10: true words applied | Layer 2 2026-11-10: true words applied",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "✓ One vendor: your team just taps ✓",
-  "tag": "job:2 + job:9",
-  "read": "Layer 2 2026-11-10: OK (121)",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "The honest math of the full plan.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "A typical clinic already pays for the fragments: an agency retainer, tools nobody opens, reception hours spent chasing messages, and the invisible cost of patients lost while everyone is busy.",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "The full plan replaces the fragments with one operated engine, and the same outside reads that found your leaks keep running, dated, on the same page.",
-  "tag": "task:CORE-4",
-  "read": "core 2026-11-10: true words applied",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "Agency retainer (posts, no bookings counted) STILL LEAKING",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "Tools & subscriptions nobody operates STILL LEAKING",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "Reception answering after hours: never STILL LEAKING",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "Reviews & Google left to chance STILL LEAKING",
-  "tag": "none",
-  "read": "",
-  "where": [
-   "pricing.html"
-  ]
- },
- {
-  "s": "One engine, operated and measured COUNTED, LIVE",
-  "tag": "job:6",
-  "read": "Layer 2 2026-11-10: true words applied",
   "where": [
    "pricing.html"
   ]

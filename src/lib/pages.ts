@@ -90,6 +90,20 @@ export const ROOMS: Record<string, Line[]> = {
     "Every inquiry it sends to your WhatsApp gets your menu at once, at midnight too, and books in the chat.",
     "Diagnose finds where patients are lost. The Engine answers and books them. Grow sends you more of them.",
   ].map((text, i) => ({ id: `gr-${String(i + 1).padStart(2, "0")}`, text })),
+  /* Your plan: its ten lines as read by core, Layer 2 and the main house and approved by the owner, shown beside the
+     film, never recorded (as Fix and Grow). Keyed by its page, pricing.html, which the speed gate measures by name. */
+  pricing: [
+    "Every plan is built for your clinic, and every plan starts with the measurement.",
+    "First, the diagnostic: an unannounced shop, the way a patient meets your clinic. It tells you the truth.",
+    "Then the engine changes it, on your own number: every WhatsApp inquiry gets your menu at once, bookings are made in the chat, visits reminded, quiet patients invited back.",
+    "Growth comes last: paid demand and presence, only once the engine runs and its bookings are proven.",
+    "A typical clinic already pays for the fragments: an agency retainer, tools nobody opens, reception hours spent chasing messages.",
+    "And still the message at two in the morning goes unanswered, and new reviews wait on a busy reception.",
+    "The full plan replaces them with one engine, operated for you, and growth on top once its bookings are proven. Your Google profile checked daily, a reply ready for every new review, each step counted, live, on your own page.",
+    "The diagnostic runs month to month, and stops with thirty days' written notice.",
+    "Every number is measured, never promised, and your medical records stay in your own system.",
+    "Tell us about your clinic on WhatsApp: a person answers and sends your plan. No forms.",
+  ].map((text, i) => ({ id: `pl-${String(i + 1).padStart(2, "0")}`, text })),
 };
 
 /* In the corner there are no chapter chips to point at: a greeting is met

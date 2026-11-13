@@ -26,11 +26,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
   :root{
-    --bg:#040706; --panel:rgba(9,15,12,0.72); --card:#090f0c;
+    --bg:#040706; --card:#090f0c; --border:#152219;
     --tx:#edf3ef; --tx-muted:#9db0a6; --tx-faint:#6f8378;
     --gold:#c9a44a; --gold-light:#e8d48b; --accent:#2f9f77; --accent-light:#6fd6a8;
-    --ok:#34d97b; --warn:#fbbf24; --critical:#f87171;
-    --volt:#2fd8ea; --volt-bright:#5ee8f7; --volt-deep:#178fa0; --volt-soft:rgba(47,216,234,0.10);
+    --volt:#2fd8ea;
     --display:'Marcellus', Georgia, serif;
     --serif:'Cormorant Garamond', Georgia, serif;
     --sans:'DM Sans', system-ui, sans-serif;
@@ -46,11 +45,7 @@
       var(--bg)}
   a{color:var(--volt);text-decoration:none}
   a:hover{color:var(--tx)}
-  #bgvid{position:fixed;inset:0;width:100vw;height:100vh;object-fit:cover;z-index:0;opacity:0.9;pointer-events:none;
-    filter:brightness(2.1) saturate(1.3) contrast(1.05)}
-  .bgshade{position:fixed;inset:0;z-index:0;pointer-events:none;
-    background:linear-gradient(180deg, rgba(9,15,12,0.55) 0%, rgba(9,15,12,0.42) 40%, rgba(9,15,12,0.78) 100%)}
-  nav, main, footer, .mobilebar, section{position:relative;z-index:2}
+  nav, header, main, .band, footer, .mobilebar{position:relative;z-index:2}
 
   nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:34px;
       padding:13px 40px;background:rgba(9,15,12,0.93);backdrop-filter:blur(12px);
@@ -73,60 +68,22 @@
     color:var(--accent-light);box-shadow:inset 0 0 0 1px rgba(47,159,119,0.45);margin-left:6px;padding:0}
   .nav-burger svg{width:18px;height:14px;display:block}
 
-  main{max-width:1160px;margin:0 auto;padding:122px 44px 40px}
   .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:0.26em;color:var(--volt);margin-bottom:14px}
   h1{font-family:var(--display);font-weight:400;font-size:clamp(32px,3.8vw,50px);line-height:1.12;margin:0 0 12px;color:var(--tx)}
-  .sub{color:var(--tx-muted);max-width:560px;margin:0 0 36px;font-size:16px}
 
-  /* ---------- the ask ---------- */
-  .plancard{background:var(--panel);backdrop-filter:blur(14px);border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,0.5);
-    max-width:560px;overflow:hidden}
-  .steps{display:flex;flex-direction:column;gap:12px;padding:26px 28px 20px}
-  .steps a{display:flex;gap:14px;align-items:baseline;color:var(--tx-muted);font-size:14.5px}
-  .steps a b{color:var(--tx);font-weight:700}
-  .steps a:hover b{color:var(--accent-light)}
-  .steps .n{flex-shrink:0;font-family:var(--mono);font-size:10.5px;letter-spacing:0.16em;color:var(--accent)}
-  .assure{display:flex;flex-direction:column;gap:8px;border-top:1px solid rgba(255,255,255,0.07);padding:18px 28px}
-  .assure div{display:flex;gap:9px;align-items:baseline;font-size:12.5px;color:var(--tx-muted)}
-  .assure svg{flex-shrink:0}
-  .askcta{padding:18px 28px 24px;display:flex;flex-direction:column;gap:10px}
+  .band{margin:96px auto 0;background:linear-gradient(180deg, var(--bg) 0%, var(--card) 50%, var(--bg) 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:72px 44px;text-align:center}
+  .pl-ask{max-width:460px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
   .btn{display:block;text-align:center;background:var(--accent);color:#040706 !important;font-weight:800;font-size:15px;padding:16px 20px;
     border-radius:9px;letter-spacing:0.02em;transition:background .3s, transform .3s var(--ease);cursor:pointer;border:none;width:100%}
   .btn:hover{background:var(--accent-light);transform:translateY(-2px)}
   .btn-sub{font-size:12px;color:var(--tx-faint);text-align:center}
   .btn-sub a{color:var(--accent-light)}
 
-  /* ---------- better together ---------- */
-  section{max-width:1240px;margin:0 auto;padding:90px 44px 0}
-  h3.secline{font-family:var(--display);font-weight:400;font-size:clamp(26px,3vw,40px);margin:0 0 12px;color:var(--tx)}
-  .section-sub{color:var(--tx-muted);max-width:600px;margin:0 0 44px;font-size:15.5px}
-  .versus{display:grid;grid-template-columns:1fr 1fr;gap:26px}
-  .vcol{background:var(--panel);backdrop-filter:blur(10px);border-radius:14px;padding:34px 36px}
-  .vcol h4{font-family:var(--sans);font-weight:800;font-size:21px;margin:0 0 4px;color:var(--tx)}
-  .vcol .vt{font-family:var(--mono);font-size:10.5px;letter-spacing:0.18em;margin-bottom:20px}
-  .vcol.alone .vt{color:var(--tx-faint)} .vcol.together .vt{color:var(--volt)}
-  .vcol.together{border:1.5px solid rgba(47,216,234,0.35);box-shadow:0 0 30px rgba(47,216,234,0.10)}
-  .vrow{display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13.5px;color:var(--tx-muted)}
-  .vrow:last-child{border-bottom:none}
-  .vrow .mark{flex-shrink:0;font-weight:800;font-size:13px;width:16px}
-  .vrow .mark.no{color:var(--critical)} .vrow .mark.yes{color:var(--ok)}
-  .vrow b{color:var(--tx);font-weight:700}
-
-  .math{margin-top:26px;background:var(--panel);backdrop-filter:blur(10px);border-radius:14px;padding:40px 44px;
-    display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
-  .math h4{font-family:var(--sans);font-weight:800;font-size:22px;margin:0 0 10px;color:var(--tx)}
-  .math p{font-size:14px;color:var(--tx-muted);margin:0 0 12px;max-width:460px}
-  .fragrow{display:flex;justify-content:space-between;gap:14px;font-size:13px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
-  .fragrow .f{color:var(--tx-muted)} .fragrow .c{font-family:var(--mono);font-size:11px;color:var(--critical);font-weight:500}
-  .fragrow.sum .f{color:var(--tx);font-weight:700} .fragrow.sum .c{color:var(--ok)}
-  .fragrow:last-child{border-bottom:none}
-
-  footer{max-width:1240px;margin:0 auto;padding:80px 44px 44px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--tx-faint);letter-spacing:0.05em;position:relative;z-index:2}
+  footer{max-width:1240px;margin:0 auto;padding:56px 44px 44px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--tx-faint);letter-spacing:0.05em}
   .mobilebar{display:none}
 
-  @media (prefers-reduced-motion: reduce){ *{animation:none !important;transition:none !important} #bgvid{display:none} }
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important;transition:none !important} }
   @media (max-width: 1020px){
-    main{padding:112px 20px 30px}
     nav{padding:14px 22px}
     .nav-contact{display:none}
     .nav-burger{display:flex}
@@ -140,9 +97,7 @@
     .nav-links a{padding:13px 2px;font-size:17px;border-bottom:1px solid rgba(255,255,255,0.05)}
     .nav-links a:last-child{border-bottom:0}
     .nav-links a::after{bottom:8px;right:auto;width:28px}
-    .versus{grid-template-columns:1fr}
-    .math{grid-template-columns:1fr;padding:28px 24px}
-    section{padding:70px 20px 0}
+    .band{padding:56px 22px}
     footer{padding-bottom:110px}
     .mobilebar{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:60;background:rgba(9,15,12,0.96);
       backdrop-filter:blur(8px);border-top:1px solid rgba(255,255,255,0.08);padding:12px 18px}
@@ -153,12 +108,33 @@
   }
 
   .inlink{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+  /* The Your plan room: a square film of the deal told with real things, in Grow's gold line on black, beside the
+     room's ten lines. */
+  .pl-hero{max-width:1240px;margin:0 auto;padding:112px 48px 0;text-align:center}
+  .pl-hero h1{margin:0 auto;max-width:820px}
+  .pl-stage{max-width:1240px;margin:0 auto;padding:30px 48px 0;display:grid;grid-template-columns:1.1fr 0.9fr;gap:44px;align-items:start}
+  .pl-film{position:relative;width:100%;max-width:560px;aspect-ratio:1/1;margin:0 auto;border-radius:14px;border:1px solid rgba(232,212,139,0.24);background:#0b0906;overflow:hidden}
+  .pl-film canvas{position:absolute;inset:0;width:100%;height:100%}
+  .pl-tags{position:absolute;inset:0;pointer-events:none;container-type:inline-size}
+  .pl-tag{position:absolute;transform:translate(-50%,-50%);font-family:var(--mono);font-size:clamp(9px,2.3cqw,12px);line-height:1.3;letter-spacing:0.1em;text-transform:uppercase;text-align:center;white-space:nowrap;color:var(--gold-light);text-shadow:0 0 3px #0b0906,0 0 9px #0b0906;opacity:0;transition:opacity .6s var(--ease)}
+  .pl-tag.on{opacity:0.92}
+  .pl-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+  .pl-oc{position:relative;padding-left:22px;font-size:15px;line-height:1.5;color:var(--tx);transition:opacity .7s var(--ease)}
+  .pl-list.dim .pl-oc{opacity:0.36}
+  .pl-oc::before{content:"";position:absolute;left:2px;top:0.5em;width:9px;height:9px;border:1.5px solid #e8d48b;transform:rotate(45deg) scale(0.86);transition:background .5s,box-shadow .5s}
+  .pl-list.dim .pl-oc.on{opacity:1}
+  .pl-oc.on::before{background:#e8d48b;box-shadow:0 0 10px rgba(232,212,139,0.7)}
+  .pl-note{max-width:1240px;margin:26px auto 0;padding:0 48px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.14em;color:var(--tx-faint)}
+  @media (prefers-reduced-motion: reduce){ .pl-oc{opacity:1} }
+  @media (max-width: 900px){
+    .pl-hero{padding:100px 22px 0}
+    .pl-stage{grid-template-columns:1fr;gap:18px;padding:18px 22px 0}
+    .pl-note{padding:0 22px}
+  }
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Vaydin Agency", "item": "https://vaydin.agency/"}, {"@type": "ListItem", "position": 2, "name": "Your plan", "item": "https://vaydin.agency/pricing.html"}]}</script>
 </head>
 <body>
-<video id="bgvid" autoplay muted loop playsinline><source src="assets/video/ambient.mp4" type="video/mp4"></video>
-<div class="bgshade"></div>
 
 <nav>
   <a class="brand" href="/">
@@ -183,70 +159,53 @@
 </nav>
 <script>(function(){var b=document.querySelector(".nav-burger"),l=document.querySelector(".nav-links");if(b&&l){b.addEventListener("click",function(){var o=l.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false");});l.addEventListener("click",function(e){if(e.target.tagName==="A"){l.classList.remove("open");b.setAttribute("aria-expanded","false");}});}})();</script>
 
-<main>
+<header class="pl-hero">
   <div class="eyebrow">YOUR PLAN</div>
   <h1>Every plan is built for your clinic.</h1>
-  <p class="sub">Every plan starts with the measurement. Add the engine when you want it fixed and run for you. Tell us about your clinic and a person sends your plan on WhatsApp, no forms.</p>
+</header>
 
-  <div class="plancard">
-    <div class="steps">
-      <a href="diagnose.html"><span class="n">01</span><span><b>The diagnostic.</b> An unannounced shop, the way a patient meets your clinic. Every plan starts here.</span></a>
-      <a href="fix.html"><span class="n">02</span><span><b>The engine.</b> WhatsApp inquiries answered and booked, visits reminded, quiet patients invited back, on your own number.</span></a>
-      <a href="grow.html"><span class="n">03</span><span><b>Growth.</b> Paid demand and presence, only once the engine runs and its bookings are proven.</span></a>
-    </div>
-    <div class="assure">
-      <div><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg>The diagnostic runs month to month</div>
-      <div><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg>Every number measured, never promised</div>
-      <div><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg>Your medical records stay in your own system</div>
-      <div><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5 L6.5 12.5 L13.5 4" stroke="#34d97b" stroke-width="2"/></svg>Cancel with 30 days' written notice</div>
-    </div>
-    <div class="askcta">
-      <a class="btn" href="https://wa.me/971505553148?text=Hi%20Vaydin%2C%20I%27d%20like%20a%20plan%20for%20my%20clinic.">Ask for your plan on WhatsApp</a>
-      <div class="btn-sub">A person answers. Or write to <a href="mailto:hello@vaydin.agency">hello@vaydin.agency</a></div>
-    </div>
+<main>
+  <div class="pl-stage" id="plstage">
+    <div class="pl-film" id="plfilm"><canvas id="plcanvas" aria-hidden="true"></canvas>
+      <div class="pl-tags" aria-hidden="true">
+        <div class="pl-tag" data-in="1.2" data-out="8.0" style="left:50%;top:24%">Your clinic</div>
+        <div class="pl-tag" data-in="1.8" data-out="16.0" style="left:76%;top:90%">Vaydin</div>
+        <div class="pl-tag" data-in="6.9" data-out="12.4" style="left:50%;top:89%">Where patients<br>are lost</div>
+        <div class="pl-tag" data-in="9.6" data-out="16.2" style="left:70%;top:39.5%">Booked</div>
+        <div class="pl-tag" data-in="12.6" data-out="16.2" style="left:88%;top:57.5%">Growth</div>
+        <div class="pl-tag" data-in="16.9" data-out="24.8" style="left:80%;top:65%">Agency retainer</div>
+        <div class="pl-tag" data-in="17.5" data-out="24.8" style="left:80%;top:77.2%">Tools</div>
+        <div class="pl-tag" data-in="18.1" data-out="24.8" style="left:80%;top:90.5%">Hours chasing<br>messages</div>
+        <div class="pl-tag" data-in="21.2" data-out="24.9" style="left:38%;top:24%">Unanswered</div>
+        <div class="pl-tag" data-in="25.8" style="left:22%;top:47.5%">One engine</div>
+        <div class="pl-tag" data-in="26.2" style="left:70%;top:39.5%">Counted, live</div>
+        <div class="pl-tag" data-in="29.8" data-out="32.4" style="left:45.5%;top:89%">Signed</div>
+        <div class="pl-tag" data-in="30.6" style="left:56.5%;top:61%">Diagnostic,<br>month to month</div>
+        <div class="pl-tag" data-in="33.0" style="left:33.5%;top:53%">Measured</div>
+        <div class="pl-tag" data-in="37.8" style="left:76%;top:90%">A person answers</div>
+      </div></div>
+    <ol class="pl-list" data-room="pricing">
+      <li class="pl-oc" data-line>Every plan is built for your clinic, and every plan starts with the measurement.</li>
+      <li class="pl-oc" data-line>First, the diagnostic: an unannounced shop, the way a patient meets your clinic. It tells you the truth.</li>
+      <li class="pl-oc" data-line>Then the engine changes it, on your own number: every WhatsApp inquiry gets your menu at once, bookings are made in the chat, visits reminded, quiet patients invited back.</li>
+      <li class="pl-oc" data-line>Growth comes last: paid demand and presence, only once the engine runs and its bookings are proven.</li>
+      <li class="pl-oc" data-line>A typical clinic already pays for the fragments: an agency retainer, tools nobody opens, reception hours spent chasing messages.</li>
+      <li class="pl-oc" data-line>And still the message at two in the morning goes unanswered, and new reviews wait on a busy reception.</li>
+      <li class="pl-oc" data-line>The full plan replaces them with one engine, operated for you, and growth on top once its bookings are proven. Your Google profile checked daily, a reply ready for every new review, each step counted, live, on your own page.</li>
+      <li class="pl-oc" data-line>The diagnostic runs month to month, and stops with thirty days' written notice.</li>
+      <li class="pl-oc" data-line>Every number is measured, never promised, and your medical records stay in your own system.</li>
+      <li class="pl-oc" data-line>Tell us about your clinic on WhatsApp: a person answers and sends your plan. No forms.</li>
+    </ol>
   </div>
+  <p class="pl-note">ILLUSTRATIVE SCENES</p>
 </main>
 
-<section>
-  <div class="eyebrow">WHY THE ENGINE, NOT JUST THE MEASUREMENT</div>
-  <h3 class="secline">Better together. See what actually changes.</h3>
-  <p class="section-sub">The diagnostic alone tells you the truth. The engine makes the truth change. A sample comparison: your own numbers replace these on the diagnostic.</p>
-  <div class="versus">
-    <div class="vcol alone">
-      <h4>Intelligence alone</h4>
-      <div class="vt">THE TRUTH, MONTHLY</div>
-      <div class="vrow"><span class="mark yes">✓</span><span>Every leak <b>found and scored</b>, month after month</span></div>
-      <div class="vrow"><span class="mark yes">✓</span><span>You see exactly where patients are lost</span></div>
-      <div class="vrow"><span class="mark no">✗</span><span>The 2am WhatsApp still goes <b>unanswered</b></span></div>
-      <div class="vrow"><span class="mark no">✗</span><span>Reviews still wait on a busy reception</span></div>
-      <div class="vrow"><span class="mark no">✗</span><span>Fixing it all stays <b>your job</b></span></div>
-    </div>
-    <div class="vcol together">
-      <h4>Intelligence + Engine</h4>
-      <div class="vt">THE TRUTH, AND THE MACHINE THAT MOVES IT</div>
-      <div class="vrow"><span class="mark yes">✓</span><span>The leaks on WhatsApp <b>closed and operated</b>; your Google profile checked daily and every new review given a reply to post</span></div>
-      <div class="vrow"><span class="mark yes">✓</span><span>Every WhatsApp inquiry answered <b>at once, day and night</b></span></div>
-      <div class="vrow"><span class="mark yes">✓</span><span>A reply ready for every new review, <b>one tap</b> to post</span></div>
-      <div class="vrow"><span class="mark yes">✓</span><span><b>Counted on your page</b>, and the outside reads keep running</span></div>
-      <div class="vrow"><span class="mark yes">✓</span><span>One vendor: <b>your team just taps ✓</b></span></div>
-    </div>
+<div class="band">
+  <div class="pl-ask">
+    <a class="btn" href="https://wa.me/971505553148?text=Hi%20Vaydin%2C%20I%27d%20like%20a%20plan%20for%20my%20clinic.">Ask for your plan on WhatsApp</a>
+    <div class="btn-sub">A person answers. Or write to <a href="mailto:hello@vaydin.agency">hello@vaydin.agency</a></div>
   </div>
-
-  <div class="math">
-    <div>
-      <h4>The honest math of the full plan.</h4>
-      <p>A typical clinic already pays for the fragments: an agency retainer, tools nobody opens, reception hours spent chasing messages, and the invisible cost of patients lost while everyone is busy.</p>
-      <p>The full plan replaces the fragments with one operated engine, and the same outside reads that found your leaks <b style="color:var(--tx)">keep running, dated, on the same page</b>.</p>
-    </div>
-    <div>
-      <div class="fragrow"><span class="f">Agency retainer (posts, no bookings counted)</span><span class="c">STILL LEAKING</span></div>
-      <div class="fragrow"><span class="f">Tools &amp; subscriptions nobody operates</span><span class="c">STILL LEAKING</span></div>
-      <div class="fragrow"><span class="f">Reception answering after hours: never</span><span class="c">STILL LEAKING</span></div>
-      <div class="fragrow"><span class="f">Reviews &amp; Google left to chance</span><span class="c">STILL LEAKING</span></div>
-      <div class="fragrow sum"><span class="f">One engine, operated and measured</span><span class="c">COUNTED, LIVE</span></div>
-    </div>
-  </div>
-</section>
+</div>
 
 <footer>
   <div>Vaydin Agency · VAYDIN PARTNERS INVESTMENTS - FZCO · DSO-IFZA, IFZA Properties, Dubai Silicon Oasis, Dubai, UAE · Licensed under IFZA</div>
@@ -257,6 +216,251 @@
 <div class="mobilebar">
   <a class="btn" href="https://wa.me/971505553148?text=Hi%20Vaydin%2C%20I%27d%20like%20a%20plan%20for%20my%20clinic.">Ask for your plan on WhatsApp</a>
 </div>
+<script>
+/* The Your plan film: the deal, drawn as real things in gold line on black, beside the room's ten lines, each lighting
+   as its part plays. Above, the clinic, coins dripping through cracks in its floor; below, its owner and a Vaydin person,
+   a WhatsApp chat between them. A phone like any patient's messages the clinic, a magnifier finds the cracks, and at a
+   meeting a plain sheet shows them in red. The clinic's own WhatsApp gets the engine: messages meet the menu, bookings
+   land in the calendar, and the cracks under phone and calendar seal, two now and the last later. A megaphone waits
+   outside. Then the scene of today: the owner's wallet pays an agency poster, a tools box and a clock, the cracks drip
+   again, night falls and one message blinks with nobody to answer, a new review waiting. The three are crossed out, the
+   coins go to one engine instead, the night message is answered and booked, the review gets a reply ready, and only
+   then the megaphone lights on the roof. The plan is signed; beside it a separate diagnostic sheet turns its month page.
+   Bars rise on the owner's phone (plain blocks, no axis, no number), a locked cabinet keeps the records in the clinic,
+   the Vaydin person answers the owner's chat, the owner smiles, and the one patient from the night walks in. Coins carry
+   no digit and never pile up. The canvas draws shapes only, no word and no digit; each drawing's name stands beside it
+   as page text (.pl-tag), lit while that drawing is on screen, never a digit. Every frame is a function of its time: it
+   runs while the room is on screen, resumes where it paused and settles on its last frame; with reduced motion the last
+   frame is drawn once. */
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var stage = document.getElementById('plstage'), slot = document.getElementById('plfilm');
+  var cv = document.getElementById('plcanvas'), ctx = cv.getContext('2d');
+  var list = document.querySelector('.pl-list'), items = [].slice.call(document.querySelectorAll('.pl-list li[data-line]'));
+  var tags = [].slice.call(document.querySelectorAll('.pl-tag'));
+  var TIN = tags.map(function(e){ return +e.getAttribute('data-in'); });
+  var TOUT = tags.map(function(e){ var o = e.getAttribute('data-out'); return o === null ? Infinity : +o; });
+  var BG = '#0b0906', GOLD = '#e8d48b', DIM = '#6b5f45', GREEN = '#25D366', RED = '#f87171', INK = '#f3ead2', NIGHT = '#0b1430';
+  var BEATS = [0.6, 4.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0, 32.0, 36.0], END = 40.6;
+  var S = 0, dpr = 1, t0 = 0, raf = 0, visible = false, done = false, shown = 0, TAU = Math.PI * 2;
+  var clamp = function(x){ return x < 0 ? 0 : x > 1 ? 1 : x; };
+  var E = function(x){ x = clamp(x); return 1 - Math.pow(1 - x, 3); };
+  var EIO = function(x){ x = clamp(x); return x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2; };
+  var ph = function(t, a, d){ return clamp((t - a) / d); };
+  var bump = function(t, a, d){ var u = (t - a) / d; return u <= 0 || u >= 1 ? 0 : Math.sin(u * Math.PI); };
+  var lerp = function(a, b, u){ return a + (b - a) * u; };
+  function P(u){ return u * S; }
+  function stroke(c, a, lw){ ctx.globalAlpha = clamp(a); ctx.strokeStyle = c; ctx.lineWidth = lw || 1.2; }
+  function fillc(c, a){ ctx.globalAlpha = clamp(a); ctx.fillStyle = c; }
+  function seg(x0, y0, x1, y1, c, a, lw, p){ p = p === undefined ? 1 : clamp(p); if (p <= 0 || a <= 0.01) return;
+    stroke(c, a, lw); ctx.beginPath(); ctx.moveTo(P(x0), P(y0)); ctx.lineTo(P(x0 + (x1 - x0) * p), P(y0 + (y1 - y0) * p)); ctx.stroke(); }
+  function ring(x, y, r, c, a, lw, p){ p = p === undefined ? 1 : clamp(p); if (p <= 0 || a <= 0.01) return;
+    stroke(c, a, lw); ctx.beginPath(); ctx.arc(P(x), P(y), P(r), -Math.PI / 2, -Math.PI / 2 + TAU * p); ctx.stroke(); }
+  function dot(x, y, r, c, a){ if (a <= 0.01 || r <= 0) return; fillc(c, a); ctx.beginPath(); ctx.arc(P(x), P(y), P(r), 0, TAU); ctx.fill(); }
+  /* A rounded box's outline traced from its top edge round to p: straight sides and quarter arcs. */
+  function outline(x0, y0, x1, y1, r, p){ var parts = [['l', x0 + r, y0, x1 - r, y0], ['a', x1 - r, y0 + r, -0.5, 0], ['l', x1, y0 + r, x1, y1 - r],
+      ['a', x1 - r, y1 - r, 0, 0.5], ['l', x1 - r, y1, x0 + r, y1], ['a', x0 + r, y1 - r, 0.5, 1], ['l', x0, y1 - r, x0, y0 + r], ['a', x0 + r, y0 + r, 1, 1.5]];
+    var len = function(q){ return q[0] === 'l' ? Math.hypot(q[3] - q[1], q[4] - q[2]) : r * Math.PI / 2; };
+    var left = parts.reduce(function(s, q){ return s + len(q); }, 0) * clamp(p);
+    ctx.beginPath(); ctx.moveTo(P(x0 + r), P(y0));
+    for (var i = 0; i < parts.length && left > 0; i++){ var q = parts[i], l = len(q), f = Math.min(1, left / l); left -= l;
+      if (q[0] === 'l') ctx.lineTo(P(lerp(q[1], q[3], f)), P(lerp(q[2], q[4], f)));
+      else ctx.arc(P(q[1]), P(q[2]), P(r), q[3] * Math.PI, (q[3] + (q[4] - q[3]) * f) * Math.PI); }
+    if (p >= 1) ctx.closePath(); }
+  function box(x0, y0, x1, y1, r, c, a, lw, p, fillA){ if (a <= 0.01) return; p = p === undefined ? 1 : clamp(p); if (p <= 0) return;
+    outline(x0, y0, x1, y1, r, p); if (fillA && p >= 1){ fillc(c, a * fillA); ctx.fill(); } stroke(c, a, lw); ctx.stroke(); }
+  function person(x, y, s, c, a, lw){ ring(x, y, 0.011 * s, c, a, lw || 1.2); stroke(c, a, lw || 1.2); ctx.beginPath();
+    ctx.arc(P(x), P(y + 0.034 * s), P(0.02 * s), Math.PI * 1.1, Math.PI * 1.9); ctx.stroke(); }
+  /* A face inside a person's head: worried (mouth turned down) easing into a smile as `smile` goes from 0 to 1. */
+  function face(x, y, s, c, a, smile){ if (a <= 0.01) return; dot(x - 0.0035 * s, y - 0.002 * s, 0.0011 * s, c, a); dot(x + 0.0035 * s, y - 0.002 * s, 0.0011 * s, c, a);
+    if (smile < 1){ stroke(c, a * (1 - smile), 1.2); ctx.beginPath(); ctx.arc(P(x), P(y + 0.0085 * s), P(0.0038 * s), Math.PI * 1.2, Math.PI * 1.8); ctx.stroke(); }
+    if (smile > 0){ stroke(c, a * smile, 1.3); ctx.beginPath(); ctx.arc(P(x), P(y + 0.0015 * s), P(0.0045 * s), Math.PI * 0.2, Math.PI * 0.8); ctx.stroke(); } }
+  function check(x, y, s, c, a, p){ p = clamp(p === undefined ? 1 : p); if (p <= 0) return; var q1 = clamp(p * 2), q2 = clamp(p * 2 - 1);
+    seg(x - 0.012 * s, y, x - 0.004 * s, y + 0.009 * s, c, a, 1.8, q1); if (q2 > 0) seg(x - 0.004 * s, y + 0.009 * s, x + 0.013 * s, y - 0.01 * s, c, a, 1.8, q2); }
+  function coin(x, y, r, a){ if (a <= 0.01) return; fillc(BG, a); ctx.beginPath(); ctx.arc(P(x), P(y), P(r), 0, TAU); ctx.fill();
+    ring(x, y, r, GOLD, a, 1.3); ring(x, y, r * 0.62, GOLD, a * 0.7, 0.8); }
+  function cross(x0, y0, x1, y1, c, a, p, lw){ seg(x0, y0, x1, y1, c, a, lw || 2, p); seg(x1, y0, x0, y1, c, a, lw || 2, p); }
+  function heart(x, y, s, c, a){ if (a <= 0.01) return; fillc(c, a); ctx.beginPath(); ctx.moveTo(P(x), P(y + 0.012 * s));
+    ctx.bezierCurveTo(P(x - 0.022 * s), P(y - 0.004 * s), P(x - 0.01 * s), P(y - 0.018 * s), P(x), P(y - 0.006 * s));
+    ctx.bezierCurveTo(P(x + 0.01 * s), P(y - 0.018 * s), P(x + 0.022 * s), P(y - 0.004 * s), P(x), P(y + 0.012 * s)); ctx.fill(); }
+  function star(x, y, r, c, a, filled){ if (a <= 0.01) return; ctx.beginPath();
+    for (var k = 0; k < 10; k++){ var rr = k % 2 ? r * 0.45 : r, an = -Math.PI / 2 + k * Math.PI / 5; ctx.lineTo(P(x + Math.cos(an) * rr), P(y + Math.sin(an) * rr)); }
+    ctx.closePath(); if (filled){ fillc(c, a); ctx.fill(); } else { stroke(c, a, 1.2); ctx.stroke(); } }
+  /* A chat bubble with two lines of talk, centred on (x, y). */
+  function bubble(x, y, c, a, fillA){ if (a <= 0.01) return; box(x - 0.03, y - 0.017, x + 0.03, y + 0.017, 0.008, c, a, 1.3, 1, fillA || 0.15);
+    seg(x - 0.018, y - 0.005, x + 0.016, y - 0.005, c, a * 0.8, 1.2); seg(x - 0.018, y + 0.006, x + 0.006, y + 0.006, c, a * 0.8, 1.2); }
+  function megaphone(x, y, s, a, lit){ if (a <= 0.01) return; stroke(GOLD, a, 1.4); ctx.beginPath();
+    ctx.moveTo(P(x - 0.018 * s), P(y - 0.01 * s)); ctx.lineTo(P(x + 0.02 * s), P(y - 0.024 * s)); ctx.lineTo(P(x + 0.02 * s), P(y + 0.024 * s));
+    ctx.lineTo(P(x - 0.018 * s), P(y + 0.01 * s)); ctx.closePath(); ctx.stroke();
+    box(x - 0.03 * s, y - 0.009 * s, x - 0.018 * s, y + 0.009 * s, 0.003, GOLD, a, 1.2, 1);
+    if (lit > 0) [0.014, 0.024].forEach(function(r){ stroke(GOLD, lit, 1.4); ctx.beginPath(); ctx.arc(P(x + 0.024 * s), P(y), P(r * s), -0.35 * Math.PI, 0.35 * Math.PI); ctx.stroke(); }); }
+
+  /* Where things live, in parts of the film's side. */
+  var CLN = [0.06, 0.08, 0.94, 0.44], FL = 0.44, DOOR = [0.46, 0.31, 0.54, 0.44];
+  var PH = [0.15, 0.13, 0.29, 0.40], IN = [0.163, 0.177, 0.245, 0.207], MENU = [0.19, 0.218, 0.28, 0.276], CHIP = [0.205, 0.288, 0.275, 0.318];
+  var CAL = [0.58, 0.14, 0.82, 0.36], cell = function(k){ return [0.61 + (k % 4) * 0.06, 0.228 + Math.floor(k / 4) * 0.075]; };
+  var CAB = [0.34, 0.20, 0.42, 0.40], PIN = [0.885, 0.135], STAR = [0.885, 0.215], REPLY = [0.862, 0.252, 0.908, 0.292];
+  var OWN = [0.24, 0.655], VAY = [0.76, 0.655], PS = 2.2, WAL = [0.30, 0.745, 0.36, 0.785], OPH = [0.30, 0.56, 0.37, 0.70];
+  var REPORT = [0.44, 0.695, 0.56, 0.785], PLAN = [0.40, 0.695, 0.51, 0.785], DIAG = [0.53, 0.705, 0.60, 0.785];
+  var SHOP = [0.86, 0.465, 0.93, 0.585], MEGA = [0.895, 0.525], ROOF = [0.80, 0.05];
+  var POSTER = [0.745, 0.53, 0.855, 0.625], TOOLS = [0.75, 0.675, 0.85, 0.745], CLOCK = [0.80, 0.835, 0.035];
+  var FRAGS = [[(POSTER[0] + POSTER[2]) / 2, (POSTER[1] + POSTER[3]) / 2], [(TOOLS[0] + TOOLS[2]) / 2, (TOOLS[1] + TOOLS[3]) / 2], [CLOCK[0], CLOCK[1]]];
+  /* Each crack in the floor: its place, and when the engine seals it the first time and again after the scene of today.
+     Two lie under the phone and seal in the engine's beat; the third, under the calendar, seals only after the night. */
+  var CRK = [[0.19, 9.6, 24.7], [0.26, 10.4, 24.9], [0.70, 26.0, 26.0]];
+  var found = function(i){ return 4.8 + 1.6 * (CRK[i][0] - 0.08) / 0.72; };
+  var open = function(i, t){ return (t >= 0.8 && t < CRK[i][1]) || (t >= 16.6 && t < CRK[i][2]); };
+  /* Every message the engine answers: [arrives, its cell in the calendar]. The last is the one left unanswered at night. */
+  var MSGS = [[8.9, 0], [9.7, 1], [10.5, 2], [24.9, 3]];
+  var FCOINS = []; for (var k = 0; k < 12; k++) FCOINS.push([16.9 + k * 0.6, k % 3]);
+  var ECOINS = [25.4, 26.2, 27.0];
+
+  function engineA(t){ return clamp(E(ph(t, 8.2, 0.6)) - E(ph(t, 16.2, 0.6)) + E(ph(t, 24.2, 0.6))); }
+  function vaydinA(t){ return clamp(E(ph(t, 0.9, 0.6)) - E(ph(t, 16.0, 0.6)) + E(ph(t, 28.0, 0.6))); }
+
+  function clinic(t){ var p = E(ph(t, 0.2, 1.2)); box(CLN[0], CLN[1], CLN[2], CLN[3], 0.02, GOLD, 1, 1.5, p);
+    var d = E(ph(t, 0.9, 0.5)); box(DOOR[0], DOOR[1], DOOR[2], FL, 0.006, GOLD, d, 1.3, 1); dot(DOOR[2] - 0.012, (DOOR[1] + FL) / 2, 0.004, GOLD, d);
+    var g = E(ph(t, 1.0, 0.5)); if (g <= 0) return; dot(0.5, CLN[1], 0.026, BG, 1); ring(0.5, CLN[1], 0.026, GOLD, g, 1.5);
+    seg(0.5, CLN[1] - 0.014, 0.5, CLN[1] + 0.014, GREEN, g, 2.4); seg(0.486, CLN[1], 0.514, CLN[1], GREEN, g, 2.4); }
+
+  function cracks(t){ CRK.forEach(function(c, i){ var x = c[0], f = found(i), lit = E(ph(t, f, 0.3)), op = open(i, t);
+    var sealA = Math.max(bump(t, c[1], 0.8), bump(t, c[2], 0.8)), crack = (t >= 0.8 && op) ? E(ph(t, 0.8, 0.4)) : 0;
+    if (crack > 0){ var col = lit > 0 ? RED : GOLD; stroke(col, crack * (0.55 + 0.45 * lit), 1.6); ctx.beginPath();
+      [[x - 0.02, FL], [x - 0.01, FL - 0.016], [x, FL - 0.004], [x + 0.01, FL - 0.018], [x + 0.02, FL]].forEach(function(q, j){ if (j) ctx.lineTo(P(q[0]), P(q[1])); else ctx.moveTo(P(q[0]), P(q[1])); }); ctx.stroke(); }
+    if (sealA > 0) seg(x - 0.026, FL, x + 0.026, FL, GOLD, sealA, 3.2);
+    var pulse = bump(t, f, 0.9); if (pulse > 0) ring(x, FL - 0.01, 0.02 + pulse * 0.02, RED, pulse * 0.8, 1.6);
+    for (var k = 0; k < 3; k++){ var u = ((t - 0.8 + k * 0.3 + i * 0.17) % 0.9 + 0.9) % 0.9 / 0.9, spawn = t - u * 0.9;
+      if (!open(i, spawn) || spawn < 0.8) continue; coin(x, lerp(FL + 0.012, 0.565, u), 0.011, 1 - u); } }); }
+
+  function phone(t){ var p = E(ph(t, 8.2, 0.8)); if (p <= 0) return; box(PH[0], PH[1], PH[2], PH[3], 0.02, GOLD, 1, 1.5, p);
+    var h = E(ph(t, 8.8, 0.3)); if (h > 0){ fillc(GREEN, h * 0.85); ctx.fillRect(P(PH[0] + 0.012), P(PH[1] + 0.014), P(PH[2] - PH[0] - 0.024), P(0.02)); }
+    var ea = engineA(t), cur = null; MSGS.forEach(function(m){ if (t >= m[0]) cur = m; });
+    var night = t >= 21.0 && t < MSGS[3][0];
+    if (night){ var b = 0.4 + 0.6 * Math.abs(Math.sin((t - 21.0) * 3.0)); box(IN[0], IN[1], IN[2], IN[3], 0.01, INK, b, 1.2, 1, 0.12);
+      seg(IN[0] + 0.012, (IN[1] + IN[3]) / 2, IN[2] - 0.014, (IN[1] + IN[3]) / 2, INK, b * 0.6, 1.2); return; }
+    if (!cur || ea <= 0.01) return; var u = t - cur[0], a = E(u / 0.15) * ea;
+    box(IN[0], IN[1], IN[2], IN[3], 0.01, INK, a, 1.2, 1, 0.12); seg(IN[0] + 0.012, (IN[1] + IN[3]) / 2, IN[2] - 0.014, (IN[1] + IN[3]) / 2, INK, a * 0.6, 1.2);
+    var mA = E((u - 0.15) / 0.2) * ea; box(MENU[0], MENU[1], MENU[2], MENU[3], 0.01, GREEN, mA, 1.3, 1, 0.12);
+    for (var j = 0; j < 3; j++) seg(MENU[0] + 0.012, MENU[1] + 0.017 + j * 0.019, MENU[2] - 0.016 - j * 0.007, MENU[1] + 0.017 + j * 0.019, GREEN, mA * (j === 1 ? 1 : 0.6), 1.3);
+    var bA = E((u - 0.4) / 0.2) * ea; if (bA > 0){ box(CHIP[0], CHIP[1], CHIP[2], CHIP[3], 0.01, GREEN, bA, 1.3, 1, 0.25); check((CHIP[0] + CHIP[2]) / 2, (CHIP[1] + CHIP[3]) / 2, 0.8, GREEN, bA, 1); } }
+
+  function calendar(t){ var ea = engineA(t), p = E(ph(t, 8.4, 0.9)); if (p <= 0 || ea <= 0.01) return;
+    box(CAL[0], CAL[1], CAL[2], CAL[3], 0.015, GOLD, ea, 1.4, p);
+    fillc(GOLD, ea * 0.28); ctx.fillRect(P(CAL[0] + 0.004), P(CAL[1] + 0.004), P(CAL[2] - CAL[0] - 0.008), P(0.03));
+    for (var k = 0; k < 8; k++){ var c = cell(k); box(c[0] - 0.021, c[1] - 0.02, c[0] + 0.021, c[1] + 0.02, 0.004, DIM, ea * E(ph(t, 8.9 + k * 0.04, 0.3)) * 0.8, 0.9, 1); }
+    MSGS.forEach(function(m){ var u = t - m[0] - 0.5; if (u < 0) return; var c = cell(m[1]); check(c[0], c[1], 0.9, GOLD, ea, u / 0.35); }); }
+
+  function review(t){ var a = E(ph(t, 21.2, 0.5)); if (a <= 0) return; var w = t < 25.4 ? 0.4 + 0.6 * Math.abs(Math.sin((t - 21.2) * 2.6)) : 1;
+    dot(PIN[0], PIN[1] - 0.006, 0.012, GOLD, a * 0.9); dot(PIN[0], PIN[1] - 0.006, 0.0045, BG, a);
+    stroke(GOLD, a * 0.9, 1.3); ctx.beginPath(); ctx.moveTo(P(PIN[0] - 0.011), P(PIN[1] - 0.001)); ctx.lineTo(P(PIN[0]), P(PIN[1] + 0.018)); ctx.lineTo(P(PIN[0] + 0.011), P(PIN[1] - 0.001)); ctx.stroke();
+    check(PIN[0] + 0.022, PIN[1] - 0.012, 0.7, GREEN, 1, ph(t, 26.4, 0.4));
+    star(STAR[0], STAR[1], 0.02, GOLD, a, true);
+    var full = E(ph(t, 25.6, 0.4)); box(REPLY[0], REPLY[1], REPLY[2], REPLY[3], 0.008, full > 0 ? GREEN : INK, a * w, 1.2, 1, full * 0.2);
+    if (full > 0){ seg(REPLY[0] + 0.009, REPLY[1] + 0.014, REPLY[2] - 0.009, REPLY[1] + 0.014, GREEN, full, 1.2); seg(REPLY[0] + 0.009, REPLY[1] + 0.026, REPLY[2] - 0.02, REPLY[1] + 0.026, GREEN, full, 1.2); } }
+
+  function cabinet(t){ var p = E(ph(t, 33.4, 0.8)); if (p <= 0) return; box(CAB[0], CAB[1], CAB[2], CAB[3], 0.008, GOLD, 1, 1.4, p, 0.06);
+    var d = E(ph(t, 33.9, 0.4)); [0.267, 0.334].forEach(function(y){ seg(CAB[0], y, CAB[2], y, GOLD, d * 0.8, 1.1); });
+    [0.233, 0.300, 0.367].forEach(function(y){ seg(0.372, y, 0.388, y, GOLD, d, 1.6); });
+    var l = E(ph(t, 34.3, 0.4)); if (l <= 0) return; stroke(GOLD, l, 1.4); ctx.beginPath(); ctx.arc(P(0.404), P(0.372), P(0.006), Math.PI, TAU); ctx.stroke();
+    box(0.396, 0.372, 0.412, 0.39, 0.003, GOLD, l, 1.3, 1, 0.6); }
+
+  function shopper(t){ var a = E(ph(t, 4.0, 0.4)) * (1 - E(ph(t, 7.0, 0.5))); if (a <= 0.01) return; box(SHOP[0], SHOP[1], SHOP[2], SHOP[3], 0.012, INK, a, 1.3, 1);
+    seg(SHOP[0] + 0.02, SHOP[3] - 0.01, SHOP[2] - 0.02, SHOP[3] - 0.01, INK, a * 0.6, 1.2);
+    var u = ph(t, 4.4, 0.7); if (u > 0 && u < 1){ var v = EIO(u); bubble(lerp((SHOP[0] + SHOP[2]) / 2, 0.5, v), lerp(SHOP[1] + 0.03, 0.38, v) - Math.sin(v * Math.PI) * 0.04, INK, 1); } }
+
+  function magnifier(t){ var a = bump(t, 4.6, 2.0); if (a <= 0.01) return; var x = lerp(0.08, 0.80, ph(t, 4.8, 1.6)), y = 0.405;
+    ring(x, y, 0.026, GOLD, a, 2); seg(x + 0.018, y + 0.018, x + 0.04, y + 0.04, GOLD, a, 3); }
+
+  /* A crescent: a gold disc with a second disc cut away by a clip, so no dark patch shows on the night's tint. */
+  function moon(t){ var m = E(ph(t, 20.2, 0.8)) - E(ph(t, 24.4, 0.8)); if (m <= 0.01) return; ctx.save(); ctx.beginPath();
+    ctx.rect(0, 0, S, S); ctx.arc(P(0.511), P(0.516), P(0.022), 0, TAU, true); ctx.clip(); dot(0.5, 0.525, 0.026, GOLD, m * 0.95); ctx.restore(); }
+
+  function grow(t){ var a = E(ph(t, 12.4, 0.6)); if (a <= 0) return; var land = EIO(ph(t, 26.4, 1.0));
+    megaphone(lerp(MEGA[0], ROOF[0], land), lerp(MEGA[1], ROOF[1], land), lerp(1.1, 0.9, land), a * lerp(0.45, 1, land), E(ph(t, 27.4, 0.5))); }
+
+  function meeting(t){ var tb = E(ph(t, 6.2, 0.6)); seg(0.35, 0.80, 0.65, 0.80, GOLD, tb, 2, tb); seg(0.38, 0.80, 0.38, 0.87, GOLD, tb, 1.4, tb); seg(0.62, 0.80, 0.62, 0.87, GOLD, tb, 1.4, tb);
+    var r = E(ph(t, 6.6, 0.5)) * (1 - E(ph(t, 12.0, 0.8))); if (r > 0.01){ var dx = (1 - EIO(ph(t, 6.6, 0.7))) * 0.1;
+      box(REPORT[0] + dx, REPORT[1], REPORT[2] + dx, REPORT[3], 0.006, INK, r, 1.2, 1, 0.08);
+      [0.715, 0.735].forEach(function(y){ seg(REPORT[0] + dx + 0.015, y, REPORT[2] + dx - 0.03, y, DIM, r, 1.1); });
+      [[0.468, 0.762], [0.5, 0.762], [0.535, 0.762]].forEach(function(q, i){ dot(q[0] + dx, q[1], 0.007, RED, r * E(ph(t, 7.0 + i * 0.2, 0.3))); }); }
+    var pa = E(ph(t, 28.6, 0.5)); if (pa > 0.01){ box(PLAN[0], PLAN[1], PLAN[2], PLAN[3], 0.006, GOLD, pa, 1.3, 1, 0.08);
+      [0.713, 0.729, 0.745].forEach(function(y, i){ seg(PLAN[0] + 0.013, y, PLAN[2] - 0.013 - i * 0.012, y, GOLD, pa * 0.55, 1.1); });
+      seg(PLAN[0] + 0.013, 0.774, PLAN[2] - 0.013, 0.774, GOLD, pa * 0.5, 1);
+      var sg = ph(t, 29.2, 1.0); if (sg > 0){ stroke(INK, 1, 1.5); ctx.beginPath(); var n = Math.floor(24 * sg);
+        for (var k = 0; k <= n; k++){ var u = k / 24, x = lerp(PLAN[0] + 0.016, PLAN[2] - 0.018, u), y = 0.768 + Math.sin(u * 13) * 0.005 - u * 0.004;
+          if (k) ctx.lineTo(P(x), P(y)); else ctx.moveTo(P(x), P(y)); } ctx.stroke();
+        if (sg < 1){ var px = lerp(PLAN[0] + 0.016, PLAN[2] - 0.018, sg); seg(px, 0.766, px + 0.016, 0.742, GOLD, 1, 2.2); } } }
+    var da = E(ph(t, 30.0, 0.5)); if (da > 0.01){ box(DIAG[0], DIAG[1], DIAG[2], DIAG[3], 0.006, GOLD, da, 1.3, 1, 0.08);
+      fillc(GOLD, da * 0.35); ctx.fillRect(P(DIAG[0] + 0.004), P(DIAG[1] + 0.004), P(DIAG[2] - DIAG[0] - 0.008), P(0.012));
+      ring(0.56, 0.752, 0.011, GOLD, da, 1.4); seg(0.568, 0.76, 0.578, 0.77, GOLD, da, 2);
+      [30.6, 31.4].forEach(function(f){ var u = ph(t, f, 0.6); if (u <= 0 || u >= 1) return; var h = (DIAG[3] - DIAG[1] - 0.02) * Math.abs(Math.cos(Math.PI * u));
+        box(DIAG[0] + 0.003, DIAG[1] + 0.018, DIAG[2] - 0.003, DIAG[1] + 0.018 + Math.max(0.002, h), 0.003, INK, da, 1.2, 1, 0.5); }); } }
+
+  function ownerPhone(t){ var a = E(ph(t, 32.2, 0.5)); if (a <= 0) return; box(OPH[0], OPH[1], OPH[2], OPH[3], 0.01, GOLD, a, 1.4, 1, 0.05);
+    [[0.316, 0.04, GOLD, 32.6], [0.335, 0.07, GREEN, 32.9], [0.354, 0.055, GOLD, 33.2]].forEach(function(b){ var h = b[1] * EIO(ph(t, b[3], 0.8)); if (h <= 0.002) return;
+      fillc(b[2], a * 0.9); ctx.fillRect(P(b[0] - 0.006), P(0.685 - h), P(0.012), P(h)); }); }
+
+  function wallet(t){ var a = E(ph(t, 16.2, 0.5)); if (a <= 0) return; box(WAL[0], WAL[1], WAL[2], WAL[3], 0.008, GOLD, a, 1.4, 1, 0.08);
+    seg(WAL[0], WAL[1] + 0.012, WAL[2], WAL[1] + 0.012, GOLD, a * 0.6, 1); dot(WAL[2] - 0.012, (WAL[1] + WAL[3]) / 2 + 0.005, 0.004, GOLD, a); }
+
+  function fragments(t){ var a = E(ph(t, 16.4, 0.6)) * (1 - E(ph(t, 24.9, 0.6))); if (a <= 0.01) return; var x = E(ph(t, 24.3, 0.5));
+    box(POSTER[0], POSTER[1], POSTER[2], POSTER[3], 0.008, GOLD, a, 1.3, E(ph(t, 16.4, 0.6)), 0.05);
+    person(0.775, 0.565, 1, GOLD, a * 0.8, 1.1); [0.585, 0.603].forEach(function(y, i){ seg(0.795, y, 0.84 - i * 0.012, y, GOLD, a * 0.6, 1.1); });
+    box(TOOLS[0], TOOLS[1], TOOLS[2], TOOLS[3], 0.008, GOLD, a * E(ph(t, 17.0, 0.6)), 1.3, 1, 0.05);
+    seg(0.78, 0.73, 0.815, 0.695, GOLD, a * E(ph(t, 17.0, 0.6)), 2.2); ring(0.82, 0.69, 0.009, GOLD, a * E(ph(t, 17.0, 0.6)), 1.6);
+    var ca = a * E(ph(t, 17.6, 0.6)); ring(CLOCK[0], CLOCK[1], CLOCK[2], GOLD, ca, 1.4); dot(CLOCK[0], CLOCK[1], 0.004, GOLD, ca);
+    seg(CLOCK[0], CLOCK[1], CLOCK[0] + Math.cos(t * 0.9) * 0.016, CLOCK[1] + Math.sin(t * 0.9) * 0.016, GOLD, ca, 1.8);
+    seg(CLOCK[0], CLOCK[1], CLOCK[0] + Math.cos(t * 4.5) * 0.026, CLOCK[1] + Math.sin(t * 4.5) * 0.026, GOLD, ca, 1.2);
+    if (x > 0){ cross(POSTER[0] - 0.006, POSTER[1] - 0.006, POSTER[2] + 0.006, POSTER[3] + 0.006, RED, a, x);
+      cross(TOOLS[0] - 0.006, TOOLS[1] - 0.006, TOOLS[2] + 0.006, TOOLS[3] + 0.006, RED, a, x);
+      cross(CLOCK[0] - 0.042, CLOCK[1] - 0.042, CLOCK[0] + 0.042, CLOCK[1] + 0.042, RED, a, x); } }
+
+  function flights(t){ var from = [(WAL[0] + WAL[2]) / 2, WAL[1]];
+    FCOINS.forEach(function(c){ var u = (t - c[0]) / 0.6; if (u < 0 || u > 1 || t >= 24.6) return; var v = EIO(u), to = FRAGS[c[1]];
+      coin(lerp(from[0], to[0], v), lerp(from[1], to[1], v) - Math.sin(v * Math.PI) * 0.05, 0.012, 1); });
+    ECOINS.forEach(function(c){ var u = (t - c) / 0.8; if (u < 0 || u > 1) return; var v = EIO(u);
+      coin(lerp(from[0], (PH[0] + PH[2]) / 2, v), lerp(from[1], PH[3], v) - Math.sin(v * Math.PI) * 0.04, 0.012, 1 - Math.max(0, (u - 0.85) / 0.15)); }); }
+
+  function people(t){ var oa = E(ph(t, 0.6, 0.6)), va = vaydinA(t), smile = E(ph(t, 37.6, 0.6));
+    person(OWN[0], OWN[1], PS, GOLD, oa, 1.6); face(OWN[0], OWN[1], PS, GOLD, oa, smile);
+    person(VAY[0], VAY[1], PS, GOLD, va, 1.6); face(VAY[0], VAY[1], PS, GOLD, va, 1);
+    fillc(GOLD, va); ctx.beginPath(); ctx.moveTo(P(VAY[0]), P(VAY[1] + 0.045)); ctx.lineTo(P(VAY[0] + 0.008), P(VAY[1] + 0.053));
+    ctx.lineTo(P(VAY[0]), P(VAY[1] + 0.061)); ctx.lineTo(P(VAY[0] - 0.008), P(VAY[1] + 0.053)); ctx.closePath(); ctx.fill();
+    var l = [OWN[0] + 0.06, 0.535], r = [VAY[0] - 0.06, 0.535];
+    [[2.4, l, r, INK], [3.3, r, l, GREEN], [36.8, r, l, GREEN]].forEach(function(b){ var u = ph(t, b[0], 0.8); if (u <= 0 || u >= 1) return; var v = EIO(u);
+      bubble(lerp(b[1][0], b[2][0], v), b[1][1] - Math.sin(v * Math.PI) * 0.03, b[3], 1); });
+    heart(OWN[0] + 0.05, OWN[1] - 0.05, 1, RED, E(ph(t, 38.6, 0.5)) * 0.9); }
+
+  function patient(t){ var u = ph(t, 38.0, 1.8); if (u <= 0) return; var v = EIO(u), x = lerp(0.95, 0.5, v), y = lerp(0.50, 0.385, clamp((v - 0.7) / 0.3)), a = 1 - E(ph(t, 39.8, 0.6)) * 0.75;
+    person(x, y, 1, GREEN, a, 1.4); }
+
+  function draw(t){
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.globalAlpha = 1; ctx.fillStyle = BG; ctx.fillRect(0, 0, S, S);
+    var n = E(ph(t, 20.2, 0.8)) - E(ph(t, 24.4, 0.8)); if (n > 0.01){ fillc(NIGHT, n * 0.6); ctx.fillRect(0, 0, S, S); }
+    stroke(GOLD, 0.3 * E(ph(t, 0, 0.8)), 1); ctx.beginPath(); ctx.rect(P(0.025), P(0.025), P(0.95), P(0.95)); ctx.stroke();
+    clinic(t); cracks(t); cabinet(t); phone(t); calendar(t); review(t); grow(t); shopper(t); magnifier(t); moon(t);
+    meeting(t); ownerPhone(t); wallet(t); fragments(t); people(t); flights(t); patient(t);
+    ctx.globalAlpha = 1;
+    for (var i = 0; i < items.length; i++) items[i].classList.toggle('on', t >= BEATS[i]);
+    for (var j = 0; j < tags.length; j++) tags[j].classList.toggle('on', t >= TIN[j] && t < TOUT[j]);
+    shown = t; return t >= END; }
+
+  function size(){ var r = slot.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1); S = r.width;
+    cv.width = Math.round(S * dpr); cv.height = Math.round(S * dpr); }
+  function frame(now){ if (!t0) t0 = now - shown * 1000; var settled = draw((now - t0) / 1000);
+    if (settled){ done = true; raf = 0; return; } raf = visible ? requestAnimationFrame(frame) : 0; }
+  size();
+  var rt = 0;
+  window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ size(); draw(done ? END : shown); }, 150); });
+  if (reduced){ draw(END); return; }
+  /* The lines are lit unless this film runs: dimmed only from here, and lit again by any error on the page. */
+  list.classList.add('dim'); window.addEventListener('error', function(){ list.classList.remove('dim'); });
+  draw(0);
+  /* It pauses only when the whole room, film and lines, has left the screen, so reading the lines never stops it. */
+  new IntersectionObserver(function(es){ es.forEach(function(e){ visible = e.isIntersecting;
+    if (visible && !done && !raf){ t0 = 0; raf = requestAnimationFrame(frame); } }); }, { threshold: 0 }).observe(stage);
+})();
+</script>
 <script src="/guide/corner.js" defer></script>
 <script src="/count.js" defer></script>
 </body>
