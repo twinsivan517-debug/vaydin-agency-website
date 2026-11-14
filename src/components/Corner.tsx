@@ -56,11 +56,10 @@ export function Corner() {
     window.parent.postMessage({ vaydinTalking: busy }, location.origin);
   }, [busy]);
 
-  /* The frame is only as tall as the panel's content, so the page under its
-     empty part stays tappable. The content's height is rounded up, with a pixel
-     to spare: rounded down, a fraction of a pixel overflowed, a computer's
-     scrollbar appeared and narrowed the text, it wrapped a line more, the frame
-     grew, the scrollbar went, and the frame shrank again, many times a second. */
+  /* What the frame shows is only as tall as the panel's content (public/guide/
+     corner.js clips it there), so the page under its empty part stays tappable.
+     The content's height is rounded up, with a pixel to spare, so the clip never
+     cuts into the panel's top edge. */
   useEffect(() => {
     const box = panel.current;
     const content = inner.current;

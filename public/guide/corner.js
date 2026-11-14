@@ -1,8 +1,12 @@
 /* Him, small, in the bottom-left corner of this page: a frame added once the
-   page has loaded, so the page is never slower for him. The frame is his size
-   until he is opened, then as tall as his panel needs; the frame says which.
-   A bar or panel the page fixes along its bottom, on his side and showing,
-   lifts him above it. His side of it is src/components/Corner.tsx. */
+   page has loaded, so the page is never slower for him. The frame's box runs
+   from under the bar across the top down to his corner and never changes while
+   the screen stays the same; a clip shows only him until he is opened, then as
+   much as his panel needs; the frame says which. A box that grew would move its
+   top edge, and a move with no tap before it is a layout shift, which costs the
+   page its speed score when he opens by himself; a clip moves nothing. A bar or
+   panel the page fixes along its bottom, on his side and showing, lifts him
+   above it. His side of it is src/components/Corner.tsx. */
 (function () {
   var page = location.pathname.replace(/^.*\//, "").replace(/\.html$/, "");
   var CLOSED = [112, 222];
@@ -44,14 +48,15 @@
     var fits = innerHeight - 76 - lift >= CLOSED[1];
     if (!fits) lift = 0;
     frame.style.visibility = fits || talking || want !== null ? "visible" : "hidden";
-    frame.style.bottom = Math.max(4, lift) + "px";
-    if (want === null) {
-      frame.style.width = CLOSED[0] + "px";
-      frame.style.height = CLOSED[1] + "px";
-    } else {
-      frame.style.width = WIDE;
-      frame.style.height = Math.max(CLOSED[1], Math.min(want, innerHeight - 76 - lift)) + "px";
-    }
+    var bottom = Math.max(4, lift);
+    var tall = Math.max(CLOSED[1], innerHeight - 76 - bottom);
+    frame.style.bottom = bottom + "px";
+    frame.style.width = WIDE;
+    frame.style.height = tall + "px";
+    /* Outside the clip the page is drawn and tapped as if he were not there. */
+    frame.style.clipPath = want === null
+      ? "inset(" + (tall - CLOSED[1]) + "px calc(100% - " + CLOSED[0] + "px) 0 0)"
+      : "inset(" + (tall - Math.max(CLOSED[1], Math.min(want, tall))) + "px 0 0 0)";
   }
 
   var queued = false;
