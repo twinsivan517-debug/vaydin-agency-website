@@ -165,6 +165,24 @@ test("a walk started again, mid-walk or after his end, takes every film back to 
     assert.equal(walkFault(read(f), [start, ...Array.from({ length: n }, (_, i) => line(i)), end, start, line(0)]), null, `${f}, again after his end`);
   }
 });
+test("his start and his first line arriving with no frame between them still play every film's first scene from second 0", () => {
+  /* A browser may deliver both before its next frame: the owner's own case, a film that ran alone for a while or to
+     its end, then "Yes, guide me". The film must run from its first second to his first hold, not appear at the hold. */
+  const start = { vaydinGuide: "start" }, end = { vaydinGuide: "end" }, line = (i) => ({ vaydinLine: i });
+  for (const f of rooms) {
+    const html = read(f), walk = walkOf(html), n = walk.length;
+    const first = walk.find((s) => s > walk[0]) - 0.05, frames = Math.floor(first * 30) - 2;
+    for (const [how, said] of [
+      ["after the film ran alone to its end", [[start, line(0)]]],
+      ["after his end", [start, ...Array.from({ length: n }, (_, i) => line(i)), end, [start, line(0)]]],
+      ["mid-walk", [start, line(0), line(1), line(2), [start, line(0)]]],
+    ]) {
+      assert.equal(walkFault(html, said), null, `${f}, ${how}`);
+      const ran = runFilm(html, { corner: CORNER, messages: said }).steps.at(-1).frames;
+      assert.ok(ran >= frames, `${f}, ${how}: the film ran ${ran} frames to his first hold, ${frames} wanted (from second 0)`);
+    }
+  }
+});
 test("a resize while he holds a line, or after his end, redraws every film where it stands", () => {
   const start = { vaydinGuide: "start" }, end = { vaydinGuide: "end" }, line = (i) => ({ vaydinLine: i }), resize = { resize: true };
   for (const f of rooms) {

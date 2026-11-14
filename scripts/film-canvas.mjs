@@ -72,6 +72,7 @@ export function runFilm(html, { width = 1240, reduced = false, seconds = 120, co
   if (corner) {
     const walk = html.match(/data-walk="([^"]*)"/)?.[1] ?? null;
     const origin = "https://vaydin.agency", his = {}, heard = [];
+    let together = false;
     const stage = { getAttribute: (k) => (k === "data-walk" ? walk : null), getBoundingClientRect: () => ({ top: 300 }) };
     const page = {
       location: { pathname: "/room.html", origin },
@@ -82,21 +83,27 @@ export function runFilm(html, { width = 1240, reduced = false, seconds = 120, co
       getComputedStyle: () => ({}), innerHeight: 844, innerWidth: 390, scrollY: 0, scrollTo() {},
       requestAnimationFrame() {}, setTimeout: (fn) => fn(),
       CustomEvent: class { constructor(type, init) { this.type = type; this.detail = init?.detail; } },
-      dispatchEvent: (e) => { for (const l of listeners) if (l.type === e.type) l.fn(e); play(); return true; },
+      dispatchEvent: (e) => { for (const l of listeners) if (l.type === e.type) l.fn(e); if (!together) play(); return true; },
     };
     vm.runInNewContext(corner, page, { timeout: 10_000 });
     const lit = () => Object.fromEntries([...byAll].map(([sel, els]) => [sel, els.filter((e) => e.classList.contains("on")).length]));
     const lines = walk === null ? 0 : walk.split(",").length;
     const said = messages ?? [{ vaydinGuide: "start" }, ...Array.from({ length: lines }, (_, i) => ({ vaydinLine: i })), { vaydinGuide: "end" }];
     /* A { resize: true } message is the page resized instead of his word: the film's resize handlers and the timers
-       they set run, and the step records whether the film drew. */
+       they set run. A message that is a list is handed over whole, no frame between its parts, as a browser may
+       deliver two before its next frame; the step is the last part's. Each step records whether the film drew and
+       how many frames it ran. */
     for (const data of said) {
-      const drawn = calls.get("fillRect") || 0;
+      const drawn = calls.get("fillRect") || 0, ran = frames;
       if (data.resize) {
         for (const l of listeners) if (l.type === "resize") l.fn();
         timers.splice(0).forEach((fn) => fn());
-      } else for (const h of heard) if (h.type === "message") h.fn({ origin, source: his, data });
-      steps.push({ ...data, running: raf !== null, lit: lit(), drew: (calls.get("fillRect") || 0) > drawn });
+      } else {
+        together = Array.isArray(data);
+        for (const part of [data].flat()) for (const h of heard) if (h.type === "message") h.fn({ origin, source: his, data: part });
+        if (together) { together = false; play(); }
+      }
+      steps.push({ ...[data].flat().at(-1), running: raf !== null, lit: lit(), drew: (calls.get("fillRect") || 0) > drawn, frames: frames - ran });
     }
   }
   return { methods: Object.fromEntries(calls), frames, settled, listeners, bySelector, byAll, steps };
