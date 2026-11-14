@@ -15,7 +15,7 @@ import { DOORS, type Door } from "@/lib/doors";
 import { SUMMARIES } from "@/lib/pages";
 import type { GuideHandle } from "@/components/Figure";
 import { MORE, UNKNOWN, answer, answerLine, type Answer } from "@/lib/answers";
-import { afterTalk, followUp, match, type Reply } from "@/lib/match";
+import { reply, type Reply } from "@/lib/match";
 import { OPENER_AUDIO, POKES, QUESTIONS, THROW_AT, WAITING, chapter, talkTime, type ChapterId, type Line } from "@/lib/pitch";
 import { START, mode, pokeable, reduce, replyLines, speaking } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
@@ -277,11 +277,9 @@ export function Stage() {
     dispatch({ type: "tap", chapter: id });
   }
 
-  /* What a typed line means here: a reply to his last question, to "Did you mean", or a question. */
+  /* What a typed line means here: read as the corner reads it (match.ts reply). */
   function heard(text: string): Reply | "more" {
-    return (
-      afterTalk(text, state.cloud.id) ?? followUp(text, state.shown.kind === "choose" ? state.shown.ids.map(answer) : []) ?? match(text)
-    );
+    return reply(text, state.cloud.id, state.shown.kind === "choose" ? state.shown.ids.map(answer) : []);
   }
 
   function ask(text: string) {

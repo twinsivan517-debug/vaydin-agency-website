@@ -180,13 +180,9 @@ const NO = new Set("n no nope nah neither none wrong".split(" "));
 const PLACE: Record<string, number> = { first: 0, "1st": 0, "1": 0, second: 1, "2nd": 1, "2": 1, third: 2, "3rd": 2, "3": 2, last: -1 };
 const AND = new Set("please pls that this these those them one it is the i mean meant did do number thanks thank you of thing tell me more about go".split(" "));
 
-/* A reply that is only a yes or only a no, to any question he asked. "No need (to tell me)",
-   "not now" and "not needed" are a no: "need" alone is one of the need answer's keywords. */
+/* A reply that is only a yes or only a no, to any question he asked. */
 export function yesNo(input: string): "yes" | "no" | null {
-  const words = normalise(input)
-    .replace(/\bwhy not\b/, "yes")
-    .replace(/\b(?:no need(?: to)?|not now|not needed)\b/g, "no")
-    .split(" ");
+  const words = normalise(input).replace(/\bwhy not\b/, "yes").split(" ");
   if (words.length > 6) return null;
   const said = words.filter((w) => !AND.has(w));
   if (said.length > 0 && said.every((w) => YES.has(w))) return "yes";
@@ -216,9 +212,33 @@ export function followUp(input: string, offered: Answer[]): Reply | "more" | nul
 /* Lines of his that end on a question to the visitor ("Is there anything
    else I can help with?"): a yes opens the list, a no is goodbye. */
 const ASKING = new Set(["x-hello", "x-thanks", "x-howareyou", "x-kind", "x-personal", "x-rude"]);
+const BYE: Reply = { kind: "talk", talk: "bye" };
 
 export function afterTalk(input: string, lastLine: string): Reply | "more" | null {
   if (!ASKING.has(lastLine)) return null;
   const said = yesNo(input);
-  return said === "yes" ? "more" : said === "no" ? { kind: "talk", talk: "bye" } : null;
+  return said === "yes" ? "more" : said === "no" ? BYE : null;
+}
+
+/* A line that turns him down and asks nothing: a no, "no need (at all)", "I don't need it", "not now", "maybe
+   later", "I'm good". Never a question: a "?" or a question's first word ("is it not needed") keeps it one, and a
+   line that also names something ("I don't need the engine, just the diagnostic") is read for what it names.
+   "Need" alone is one of the need answer's keywords, so without this "no need" was answered as that question. */
+const DECLINE = /\b(?:no need|not needed|(?:do not|don't|dont|does not|doesn't) need|not (?:right )?now|not interested|not really|maybe later|i'?m (?:good|fine|ok|okay)|it'?s (?:ok|okay|fine)|all good|nothing)\b/g;
+const ASIDE = new Set("i it its it's that this there there's is really at all anymore any more for to do me you tell explain show say about thanks thank please ok okay just right now so actually else".split(" "));
+const ASKS_FIRST = new Set("what how why when where who whom whose which is are am was were do does did can could will would should shall may might has have".split(" "));
+
+export function declines(input: string): boolean {
+  if (input.includes("?")) return false;
+  const said = normalise(input);
+  if (ASKS_FIRST.has(said.split(" ")[0])) return false;
+  const phrase = new RegExp(DECLINE.source).test(said);
+  if (!phrase && yesNo(input) !== "no") return false;
+  return said.replace(DECLINE, " ").split(" ").every((w) => !w || ASIDE.has(w) || NO.has(w));
+}
+
+/* What a typed line means after his last line, on the home stage and in the corner alike: a reply to his question,
+   a pick from "Did you mean", a decline (his goodbye), or a question. */
+export function reply(input: string, lastLine: string, offered: Answer[]): Reply | "more" {
+  return afterTalk(input, lastLine) ?? followUp(input, offered) ?? (declines(input) ? BYE : null) ?? match(input);
 }
