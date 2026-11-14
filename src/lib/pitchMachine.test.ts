@@ -569,4 +569,12 @@ check("a no is remembered for the visit: on the next pages he glows in his corne
   assert.match(corner, /if \(turnsDown\(reply\)\) rememberNo\(\(\) => sessionStorage\);\s*dispatch\(\{ type: "ask", reply \}\);/);
 });
 
+check("a yes folds his panel on every page he offers himself on: he walks a room, or tells a page, from the corner", () => {
+  const corner = readFileSync(new URL("../components/Corner.tsx", import.meta.url), "utf8");
+  const body = (name: string) => corner.match(new RegExp(`function ${name}\\([^)]*\\) \\{[\\s\\S]*?\\n  \\}`))?.[0] ?? "";
+  assert.match(body("summarise"), /if \(room\) return walk\(room\);/);
+  assert.match(body("summarise"), /hide\(\);\s*dispatch\(\{ type: "say", lines: \[summary\] \}\);/);
+  assert.match(body("walk"), /hide\(\);[\s\S]*dispatch\(\{ type: "say", lines \}\);/);
+});
+
 console.log(`${cases} cases passed`);

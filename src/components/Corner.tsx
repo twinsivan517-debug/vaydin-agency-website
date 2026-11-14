@@ -177,6 +177,8 @@ export function Corner() {
     if (!summary) return more();
     unlock();
     setOffering(false);
+    /* As on a walk: a yes folds his panel and he tells the page from the corner, his Stop in reach. */
+    hide();
     dispatch({ type: "say", lines: [summary] });
   }
 
