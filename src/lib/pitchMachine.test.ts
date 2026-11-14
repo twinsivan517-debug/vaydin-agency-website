@@ -565,7 +565,7 @@ check("a no is remembered for the visit: on the next pages he glows in his corne
   assert.equal(saidNo(() => { throw new Error("SecurityError"); }), false);
   /* The corner asks before it opens, and keeps a no when it hears one. */
   const corner = readFileSync(new URL("../components/Corner.tsx", import.meta.url), "utf8");
-  assert.match(corner, /if \(saidNo\(\(\) => sessionStorage\)\) return setCalling\(true\);\s*setOpen\(true\);/);
+  assert.match(corner, /if \(saidNo\(\(\) => sessionStorage\)\) return setCalling\(true\);\s*\}, 1000\);/);
   assert.match(corner, /if \(turnsDown\(reply\)\) rememberNo\(\(\) => sessionStorage\);\s*dispatch\(\{ type: "ask", reply \}\);/);
 });
 
