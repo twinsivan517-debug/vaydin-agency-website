@@ -126,19 +126,29 @@ test("a film that never lights a line, or has a beat too few, is caught", () => 
 });
 
 // --- his walk ------------------------------------------------------------------------------------------------
-// When he walks a room from the corner, public/guide/corner.js tells the film the second each of his lines starts at
-// (the stage's data-walk) and to hold before his next later line. The film must stop there, its lines lit exactly as
-// far as its beats have come, and play out to every line lit when he ends.
+// When he walks a room, public/guide/corner.js itself is run and handed his messages as the corner posts them; what it
+// tells the film is played. What he should see is written here from the stage's seconds and the film's beats alone,
+// never from corner.js: at his start, the film back at its beginning; after each line, every beat before his next
+// later line lit and the film stopped; at his end, every line.
+const CORNER = read("guide/corner.js");
 const walkOf = (html) => html.match(/data-walk="([^"]+)"/)?.[1].split(",").map(Number);
 const beatsOf = (html) => filmScript(html).match(/var BEATS = \[([^\]]*)\]/)[1].split(",").map(Number);
-export function walkFault(html) {
+const wanted = (walk, beats, said) => {
+  if (said.vaydinGuide === "start") return beats.filter((b) => b <= 0).length;
+  if (said.vaydinGuide === "end") return beats.length;
+  const next = walk.slice(said.vaydinLine + 1).find((s) => s > walk[said.vaydinLine]);
+  return next === undefined ? beats.length : beats.filter((b) => b < next).length;
+};
+export function walkFault(html, messages = null) {
   const walk = walkOf(html);
   if (!walk) return "no data-walk on the stage";
   const { sel } = lineSelector(html), beats = beatsOf(html);
-  const { steps } = runFilm(html, { walk });
-  for (const [i, s] of steps.entries()) {
-    const at = s.end ? "at his end" : `at line ${i + 1}`;
-    const want = s.end ? beats.length : beats.filter((b) => b <= s.hold).length;
+  let want = null;
+  for (const s of runFilm(html, { corner: CORNER, messages }).steps) {
+    /* A resize redraws the film where it stands: the same lines lit as before it. */
+    const at = s.resize ? "after a resize" : s.vaydinGuide ? `at his ${s.vaydinGuide}` : `at line ${s.vaydinLine + 1}`;
+    if (!s.resize) want = wanted(walk, beats, s);
+    else if (!s.drew) return `${at} the film was not redrawn`;
     if (s.running) return `${at} the film did not stop`;
     if (s.lit[sel] !== want) return `${at} ${s.lit[sel]} lines lit, ${want} wanted`;
   }
@@ -147,10 +157,26 @@ export function walkFault(html) {
 test("every room film follows his walk: it holds at each line, lit as far as its beats, and plays out at his end", () => {
   for (const f of rooms) assert.equal(walkFault(read(f)), null, f);
 });
+test("a walk started again, mid-walk or after his end, takes every film back to its beginning", () => {
+  const start = { vaydinGuide: "start" }, end = { vaydinGuide: "end" }, line = (i) => ({ vaydinLine: i });
+  for (const f of rooms) {
+    const n = walkOf(read(f)).length;
+    assert.equal(walkFault(read(f), [start, line(0), line(1), line(2), start, line(0), line(1)]), null, `${f}, again mid-walk`);
+    assert.equal(walkFault(read(f), [start, ...Array.from({ length: n }, (_, i) => line(i)), end, start, line(0)]), null, `${f}, again after his end`);
+  }
+});
+test("a resize while he holds a line, or after his end, redraws every film where it stands", () => {
+  const start = { vaydinGuide: "start" }, end = { vaydinGuide: "end" }, line = (i) => ({ vaydinLine: i }), resize = { resize: true };
+  for (const f of rooms) {
+    const n = walkOf(read(f)).length;
+    assert.equal(walkFault(read(f), [start, line(0), line(1), resize]), null, `${f}, held`);
+    assert.equal(walkFault(read(f), [start, ...Array.from({ length: n }, (_, i) => line(i)), end, resize]), null, `${f}, after his end`);
+  }
+});
 test("with reduced motion his walk leaves the film still, every line lit, while he speaks", () => {
   for (const f of rooms) {
     const html = read(f), { sel } = lineSelector(html), n = beatsOf(html).length;
-    for (const s of runFilm(html, { reduced: true, walk: walkOf(html) }).steps) {
+    for (const s of runFilm(html, { reduced: true, corner: CORNER }).steps) {
       assert.equal(s.running, false, `${f}: the film ran under reduced motion`);
       assert.equal(s.lit[sel], n, `${f}: ${s.lit[sel]} of ${n} lines lit under reduced motion`);
     }

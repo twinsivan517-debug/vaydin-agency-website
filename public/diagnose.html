@@ -653,7 +653,7 @@
     return t > END;
   }
   /* The clock of the film, moved on by the frames that run. Guided by him from the corner (the vaydin:film event,
-     from public/guide/corner.js and the data-walk of this stage), it plays to the second his line starts at and holds
+     from public/guide/corner.js and the data-walk of this stage), his start holds it at its first second, and it plays to the second each line starts at and holds
      until his next line, so the film and his voice stay in step whatever the length of a take; when he ends, it plays
      out. Alone, it runs from the start each time the film comes into view, and settles on its end. */
   var played = 0, last = 0, guided = false, hold = Infinity;
@@ -668,7 +668,7 @@
   function run(){ if (!raf){ last = 0; raf = requestAnimationFrame(frame); } }
   function follow(e){
     var d = e.detail || {};
-    if (d.restart){ played = 0; done = false; }
+    if (d.restart) done = false;
     if (typeof d.at === 'number') played = Math.max(played, d.at);
     guided = !!d.guided; hold = guided ? d.hold : Infinity;
     run();
@@ -690,7 +690,7 @@
     window.addEventListener('vaydin:film', follow);
   }
   var rt = 0;
-  window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ layout(); if (done) settle(); }, 150); });
+  window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ layout(); if (done) settle(); else draw(played); }, 150); });
 })();
 </script>
 <script src="/guide/corner.js" defer></script>

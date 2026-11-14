@@ -6,7 +6,7 @@ import { ANSWERS, CHOOSE, GROUPS, HELLO, MORE, UNKNOWN, UNLISTED, answer, answer
 import { afterTalk, followUp, match, reply, yesNo, type Reply } from "./match.ts";
 import { CHAPTERS, POKES, RESTING, SLEEPING } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
-import { GUIDE, ROOMS, SUMMARIES, WELCOME, cornerReply, inCorner, rememberNo, saidNo, turnsDown, walkable } from "./pages.ts";
+import { GUIDE, ROOMS, SUMMARIES, WELCOME, cornerReply, inCorner, rememberNo, saidNo, speakable, turnsDown, walkable } from "./pages.ts";
 import { TALK } from "./talk.ts";
 
 const run = (events: Event[], from: State = START) => events.reduce(reduce, from);
@@ -401,6 +401,11 @@ check("every room's page carries its lines word for word, in order", () => {
    the film's start or one of its own beats or labels' times, so corner.js and the film never disagree on a scene. */
 check("every room he walks has one film second per spoken line, each a beat or label time of its own film", () => {
   const root = new URL("../../", import.meta.url);
+  /* A room with one line short of its recording is not walked; one wholly recorded is; nothing is not. */
+  const recorded = ROOMS.diagnose;
+  assert.equal(speakable([...recorded.slice(0, 9), { id: "dg-x", text: "A line not recorded." }]), undefined);
+  assert.equal(speakable(recorded), recorded);
+  assert.equal(speakable([]), undefined);
   for (const room of Object.keys(ROOMS)) {
     const lines = walkable(room);
     assert.ok(lines, `${room}: not every spoken line has its recording`);

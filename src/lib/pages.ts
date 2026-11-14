@@ -127,11 +127,11 @@ export const SPOKEN: Record<string, Line[]> = {
   ].map((text, i) => line(`es-${String(i + 1).padStart(2, "0")}`, text)),
 };
 
-/* A room he can walk a visitor through: one whose every spoken line has its recording. */
-export const walkable = (page: string): Line[] | undefined => {
-  const lines = Object.hasOwn(SPOKEN, page) ? SPOKEN[page] : Object.hasOwn(ROOMS, page) ? ROOMS[page] : [];
-  return lines.length > 0 && lines.every((l) => l.audio) ? lines : undefined;
-};
+/* A room he can walk a visitor through: one whose every spoken line has its recording. A room missing one is not
+   walked: he offers its summary instead. */
+export const speakable = (lines: Line[]): Line[] | undefined => (lines.length > 0 && lines.every((l) => l.audio) ? lines : undefined);
+export const walkable = (page: string): Line[] | undefined =>
+  speakable(Object.hasOwn(SPOKEN, page) ? SPOKEN[page] : Object.hasOwn(ROOMS, page) ? ROOMS[page] : []);
 
 /* In the corner there are no chapter chips to point at: a greeting is met
    with the welcome, and a question he cannot answer with the list. */

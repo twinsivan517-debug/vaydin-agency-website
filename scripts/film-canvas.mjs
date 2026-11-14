@@ -24,11 +24,11 @@ const classes = () => {
     toggle: (c, f) => ((f ?? !set.has(c)) ? set.add(c) : set.delete(c), set.has(c)) };
 };
 
-// walk: the seconds his lines start at (the stage's data-walk). After the film plays alone, it is told what
-// public/guide/corner.js tells it while he walks (restart, then each line's start and the hold before the next later
-// start, then his end), and each step records whether the film still runs and how many of each selector's elements
-// are lit.
-export function runFilm(html, { width = 1240, reduced = false, seconds = 120, walk = null } = {}) {
+// corner: the source of public/guide/corner.js. After the film plays alone, the corner's own code runs against
+// stand-ins of the page and is handed his messages as src/components/Corner.tsx posts them (messages, by default his
+// start, each line of the stage's data-walk, his end); every event it sends the film is played, and each message
+// leaves a step: whether the film still runs and how many of each selector's elements are lit.
+export function runFilm(html, { width = 1240, reduced = false, seconds = 120, corner = null, messages = null } = {}) {
   const script = filmScript(html);
   if (!script) throw new Error("no film script (no <script> with getContext) on a room page");
   const calls = new Map(), state = {}, phone = width < 900;
@@ -50,6 +50,7 @@ export function runFilm(html, { width = 1240, reduced = false, seconds = 120, wa
     getContext: () => ctx, querySelector: () => element("child") });
   const byId = new Map(), bySelector = new Map(), byAll = new Map(), listeners = [];
   let io = null, raf = null;
+  const timers = [];
   const sandbox = {
     window: { matchMedia: () => ({ matches: reduced }), devicePixelRatio: 1,
       addEventListener: (type, fn) => listeners.push({ type, fn }), innerWidth: width },
@@ -60,7 +61,7 @@ export function runFilm(html, { width = 1240, reduced = false, seconds = 120, wa
     },
     IntersectionObserver: function (cb) { io = cb; this.observe = () => {}; this.disconnect = () => {}; },
     requestAnimationFrame: (cb) => { raf = cb; return 1; }, cancelAnimationFrame: () => { raf = null; },
-    setTimeout: () => 0, clearTimeout: () => {}, Math, Date, console,
+    setTimeout: (fn) => timers.push(fn), clearTimeout: () => {}, Math, Date, console,
   };
   vm.runInNewContext(script, sandbox, { timeout: 10_000 });
   let frames = 0, now = 1000;
@@ -68,18 +69,35 @@ export function runFilm(html, { width = 1240, reduced = false, seconds = 120, wa
   if (io) io([{ isIntersecting: true, intersectionRatio: 1 }]);
   play();
   const settled = raf === null, steps = [];
-  if (walk) {
+  if (corner) {
+    const walk = html.match(/data-walk="([^"]*)"/)?.[1] ?? null;
+    const origin = "https://vaydin.agency", his = {}, heard = [];
+    const stage = { getAttribute: (k) => (k === "data-walk" ? walk : null), getBoundingClientRect: () => ({ top: 300 }) };
+    const page = {
+      location: { pathname: "/room.html", origin },
+      document: { readyState: "complete", body: { appendChild() {} }, querySelectorAll: () => [], addEventListener() {},
+        querySelector: (s) => (s === "[data-walk]" && walk !== null ? stage : null),
+        createElement: () => ({ style: {}, setAttribute() {}, contentWindow: his }) },
+      addEventListener: (type, fn) => heard.push({ type, fn }),
+      getComputedStyle: () => ({}), innerHeight: 844, innerWidth: 390, scrollY: 0, scrollTo() {},
+      requestAnimationFrame() {}, setTimeout: (fn) => fn(),
+      CustomEvent: class { constructor(type, init) { this.type = type; this.detail = init?.detail; } },
+      dispatchEvent: (e) => { for (const l of listeners) if (l.type === e.type) l.fn(e); play(); return true; },
+    };
+    vm.runInNewContext(corner, page, { timeout: 10_000 });
     const lit = () => Object.fromEntries([...byAll].map(([sel, els]) => [sel, els.filter((e) => e.classList.contains("on")).length]));
-    const tell = (detail) => { for (const l of listeners) if (l.type === "vaydin:film") l.fn({ detail }); play(); };
-    tell({ restart: true, guided: true, hold: 0 });
-    walk.forEach((at, i) => {
-      const next = walk.slice(i + 1).find((s) => s > at);
-      const hold = next === undefined ? Infinity : next - 0.05;
-      tell({ guided: true, at, hold });
-      steps.push({ at, hold, running: raf !== null, lit: lit() });
-    });
-    tell({ guided: false, hold: Infinity });
-    steps.push({ end: true, running: raf !== null, lit: lit() });
+    const lines = walk === null ? 0 : walk.split(",").length;
+    const said = messages ?? [{ vaydinGuide: "start" }, ...Array.from({ length: lines }, (_, i) => ({ vaydinLine: i })), { vaydinGuide: "end" }];
+    /* A { resize: true } message is the page resized instead of his word: the film's resize handlers and the timers
+       they set run, and the step records whether the film drew. */
+    for (const data of said) {
+      const drawn = calls.get("fillRect") || 0;
+      if (data.resize) {
+        for (const l of listeners) if (l.type === "resize") l.fn();
+        timers.splice(0).forEach((fn) => fn());
+      } else for (const h of heard) if (h.type === "message") h.fn({ origin, source: his, data });
+      steps.push({ ...data, running: raf !== null, lit: lit(), drew: (calls.get("fillRect") || 0) > drawn });
+    }
   }
   return { methods: Object.fromEntries(calls), frames, settled, listeners, bySelector, byAll, steps };
 }
