@@ -484,6 +484,10 @@ check("a visitor who turns him down gets his goodbye, never the list or an answe
     assert.equal(said(cornerReply(text, false, CHOOSE.id, offered)), "talk:bye", `corner, after Did you mean: ${text}`);
     assert.equal(said(reply(text, CHOOSE.id, offered)), "talk:bye", `home, after Did you mean: ${text}`);
   }
+  /* His "No, thanks" button under the offer says what a visitor would type, through the same decision. */
+  const corner = readFileSync(new URL("../components/Corner.tsx", import.meta.url), "utf8");
+  assert.match(corner, /onClick=\{\(\) => ask\("No, thanks"\)\}[^>]*>\s*No, thanks\s*</);
+  assert.equal(said(cornerReply("No, thanks", true, WELCOME.id, [])), "talk:bye");
   /* Controls, each what the live commit before this rule gave: a plain no to "Did you mean" asks for the list; a yes is the summary; a
      question, or a line that names something, is read for it. */
   assert.equal(said(cornerReply("no", false, CHOOSE.id, offered)), "more");

@@ -230,7 +230,8 @@ export function Corner() {
                 <button type="button" onClick={summarise} className={`${BUTTON} bg-accent/15`}>
                   Yes, tell me
                 </button>
-                <button type="button" onClick={more} className={BUTTON}>
+                {/* The same words typed: read by the one decision, so the button and the box never disagree. */}
+                <button type="button" onClick={() => ask("No, thanks")} className={BUTTON}>
                   No, thanks
                 </button>
               </div>
