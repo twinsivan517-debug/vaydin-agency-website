@@ -2,6 +2,7 @@
 // src/components/Corner.tsx posts them: opening him, his panel growing and his closing change only the frame's clip,
 // never its box, so nothing on the page moves when he comes up by himself (a box that moves with no tap before it is a
 // layout shift, and the speed gate's measure of it). The clip shows him, closed, or as much of his panel as it needs.
+import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
 
@@ -31,7 +32,7 @@ function corner({ bar = null } = {}) {
 
 let n = 0;
 const same = (name, got, want) => {
-  if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${name}: expected ${JSON.stringify(want)}, got ${JSON.stringify(got)}`);
+  assert.deepStrictEqual(got, want, name);
   n++;
 };
 
