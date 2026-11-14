@@ -6,7 +6,7 @@ import { ANSWERS, CHOOSE, GROUPS, HELLO, MORE, UNKNOWN, UNLISTED, answer, answer
 import { afterTalk, followUp, match, reply, yesNo, type Reply } from "./match.ts";
 import { CHAPTERS, POKES, RESTING, SLEEPING } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
-import { ROOMS, SUMMARIES, WELCOME, cornerReply, inCorner } from "./pages.ts";
+import { ROOMS, SUMMARIES, WELCOME, cornerReply, inCorner, walkable } from "./pages.ts";
 import { TALK } from "./talk.ts";
 
 const run = (events: Event[], from: State = START) => events.reduce(reduce, from);
@@ -394,6 +394,25 @@ check("every room's page carries its lines word for word, in order", () => {
     const shown = [...list[1].matchAll(/<li\b([^>]*)>([\s\S]*?)<\/li>/g)].filter((m) => !marked || /\bdata-line\b/.test(m[1]))
       .map((m) => plain(m[2])).join(" ");
     assert.equal(shown, lines.map((l) => l.text).join(" "), `public/${room}.html's lines differ from src/lib/pages.ts ROOMS.${room}`);
+  }
+});
+
+/* His walk: the film's stage names the second each of his spoken lines starts at, one per line, never going back, each
+   the film's start or one of its own beats or labels' times, so corner.js and the film never disagree on a scene. */
+check("every room he walks has one film second per spoken line, each a beat or label time of its own film", () => {
+  const root = new URL("../../", import.meta.url);
+  for (const room of Object.keys(ROOMS)) {
+    const lines = walkable(room);
+    assert.ok(lines, `${room}: not every spoken line has its recording`);
+    const page = readFileSync(new URL(`public/${room}.html`, root), "utf8");
+    const walk = page.match(/data-walk="([^"]+)"/)?.[1].split(",").map(Number) ?? [];
+    assert.equal(walk.length, lines.length, `${room}: data-walk has ${walk.length} seconds for ${lines.length} spoken lines`);
+    const beats = (page.match(/var BEATS = \[([^\]]*)\]/)?.[1] ?? "").split(",").map(Number);
+    const tags = [...page.matchAll(/data-in="([\d.]+)"/g)].map((m) => Number(m[1]));
+    walk.forEach((s, i) => {
+      assert.ok(s === 0 || beats.includes(s) || tags.includes(s), `${room}: line ${i + 1} starts at ${s}, no beat or label of its film`);
+      assert.ok(i === 0 || s >= walk[i - 1], `${room}: line ${i + 1} starts before line ${i}`);
+    });
   }
 });
 

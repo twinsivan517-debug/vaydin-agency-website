@@ -64,6 +64,24 @@
     });
   }
 
+  /* While he walks the room, the page's film follows him. The film's stage lists, in data-walk, the second of the
+     film each of his lines starts at; the film is told to play to that second and hold until his next line starts
+     later (a scene that carries two lines holds through both), and to play out when he ends. His start brings the
+     film's top under the bar across the top (76 px, as above). */
+  function walked(walk, line) {
+    var stage = document.querySelector("[data-walk]");
+    if (!stage || (!walk && typeof line !== "number")) return;
+    var starts = stage.getAttribute("data-walk").split(",").map(Number);
+    var film = { restart: walk === "start", guided: walk !== "end", hold: walk === "start" ? 0 : Infinity };
+    if (typeof line === "number" && line < starts.length) {
+      film.at = starts[line];
+      var next = starts.slice(line + 1).filter(function (s) { return s > film.at; })[0];
+      film.hold = next === undefined ? Infinity : next - 0.05;
+    }
+    if (film.restart) scrollTo({ top: stage.getBoundingClientRect().top + scrollY - 76, behavior: "smooth" });
+    dispatchEvent(new CustomEvent("vaydin:film", { detail: film }));
+  }
+
   function add() {
     frame = document.createElement("iframe");
     frame.src = "/corner.html?p=" + encodeURIComponent(page);
@@ -76,10 +94,7 @@
     addEventListener("message", function (event) {
       if (event.origin !== location.origin || event.source !== frame.contentWindow || !event.data) return;
       if (typeof event.data.vaydinTalking === "boolean") talking = event.data.vaydinTalking;
-      /* While he walks the room: which line he is on, or that he starts or ends; a film that listens follows. */
-      var walk = event.data.vaydinGuide, line = event.data.vaydinLine;
-      if (walk || typeof line === "number")
-        dispatchEvent(new CustomEvent("vaydin:guide", { detail: { walk: walk || null, line: typeof line === "number" ? line : null } }));
+      walked(event.data.vaydinGuide, event.data.vaydinLine);
       var said = event.data.vaydinCorner;
       if (said) want = said === "closed" ? null : Math.round(event.data.height || 640);
       place();

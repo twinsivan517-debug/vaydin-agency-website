@@ -199,7 +199,7 @@
 </header>
 
 <main>
-  <div class="en-stage" id="enstage" aria-label="The engine, drawn: the same clinic with the engine off, then on">
+  <div class="en-stage" id="enstage" data-walk="0,8.4,14,16.4,18.8,21.6,24,25.6" aria-label="The engine, drawn: the same clinic with the engine off, then on">
     <canvas id="encanvas" aria-hidden="true"></canvas>
     <div class="en-film" id="enslot"></div>
     <div class="en-tags" id="entags" aria-hidden="true">
@@ -269,7 +269,7 @@
   var TOUT = tags.map(function(e){ var o = e.getAttribute('data-out'); return o === null ? Infinity : +o; });
   var CY = '#34e3f0', NAVY = '#0b1d2e', RED = '#f87171', GREEN = '#25D366', AMBER = '#f5d978', WHITE = '#eaf6ff', PINK = '#f9a8d4', GREY = '#6f8378';
   var BEATS = [1.0, 14.0, 15.2, 16.4, 17.6, 18.8, 20.0, 21.6, 22.8, 24.0, 25.6, 26.4, 27.2, 28.0], END = 33.0;
-  var W, H, dpr, F, s, ox, oy, t0 = 0, raf = 0, visible = false, done = false;
+  var W, H, dpr, F, s, ox, oy, raf = 0, visible = false, done = false;
   var clamp = function(x){ return x < 0 ? 0 : x > 1 ? 1 : x; };
   var E = function(x){ x = clamp(x); return 1 - Math.pow(1 - x, 3); };
   var EIO = function(x){ x = clamp(x); return x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2; };
@@ -446,7 +446,27 @@
     for (var n4 = 0; n4 < tags.length; n4++) tags[n4].classList.toggle('on', t >= TIN[n4] && t < TOUT[n4]);
     return t > END;
   }
-  function frame(now){ if (!t0) t0 = now; var settled = draw((now - t0) / 1000); if (settled){ done = true; raf = 0; return; } raf = visible ? requestAnimationFrame(frame) : 0; }
+  /* The clock of the film, moved on by the frames that run. Guided by him from the corner (the vaydin:film event,
+     from public/guide/corner.js and the data-walk of this stage), it plays to the second his line starts at and holds
+     until his next line, so the film and his voice stay in step whatever the length of a take; when he ends, it plays
+     out. */
+  var played = 0, last = 0, guided = false, hold = Infinity;
+  function frame(now){
+    played = Math.min(played + (last ? Math.min(0.1, (now - last) / 1000) : 0), hold);
+    last = now;
+    var settled = draw(played);
+    if (settled || played >= hold){ if (settled && !guided) done = true; raf = 0; last = 0; return; }
+    raf = visible ? requestAnimationFrame(frame) : 0;
+    if (!raf) last = 0;
+  }
+  function run(){ if (!raf){ last = 0; raf = requestAnimationFrame(frame); } }
+  function follow(e){
+    var d = e.detail || {};
+    if (d.restart){ played = 0; done = false; }
+    if (typeof d.at === 'number') played = Math.max(played, d.at);
+    guided = !!d.guided; hold = guided ? d.hold : Infinity;
+    run();
+  }
   function settle(){ draw(99); done = true; }
   layout();
   if (reduced){ settle(); }
@@ -454,7 +474,8 @@
     var list = document.querySelector('.en-list');
     /* The lines are lit unless this film runs: dimmed only from here, and lit again by any error on the page. */
     list.classList.add('dim'); window.addEventListener('error', function(){ list.classList.remove('dim'); });
-    new IntersectionObserver(function(es){ es.forEach(function(e){ visible = e.isIntersecting && e.intersectionRatio >= 0.2; if (visible && !done && !raf){ if (t0) t0 = 0; raf = requestAnimationFrame(frame); } }); }, { threshold: [0, 0.2] }).observe(stage);
+    new IntersectionObserver(function(es){ es.forEach(function(e){ visible = e.isIntersecting && e.intersectionRatio >= 0.2; if (visible && !done && !raf){ if (!guided) played = 0; run(); } }); }, { threshold: [0, 0.2] }).observe(stage);
+    window.addEventListener('vaydin:film', follow);
   }
   var rt = 0;
   window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ layout(); if (done) settle(); }, 150); });

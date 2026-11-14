@@ -94,11 +94,15 @@ for (const f of rooms) {
 }
 // The lines the film leaves unlit when it settles, or null when every one is lit. The film's own selector for its
 // lines is read from its script; the stand-ins it was handed are counted against the list's items in the markup.
-export function unlitLines(html, { reduced = false } = {}) {
+function lineSelector(html) {
   const list = html.match(/<ol class="([\w-]+)" data-room=/)[1];
   const block = html.slice(html.indexOf(`class="${list}"`)).split("</ol>")[0];
   const item = block.match(/<li class="([\w-]+)/)[1];
   const sel = [...filmScript(html).matchAll(/querySelectorAll\('([^']+)'\)/g)].map((m) => m[1]).find((s) => s.includes(list) || s.includes(`.${item}`));
+  return { block, sel };
+}
+export function unlitLines(html, { reduced = false } = {}) {
+  const { block, sel } = lineSelector(html);
   if (!sel) return "the film never asks for its lines";
   /* The list's own items that the film's selector names: a bare or valued attribute, or one class among several. */
   const last = sel.trim().split(/\s+/).pop(), attr = last.match(/\[([\w-]+)\]/), cls = last.match(/\.([\w-]+)/);
@@ -119,6 +123,37 @@ test("a film that never lights a line, or has a beat too few, is caught", () => 
   assert.notEqual(off, html); assert.notEqual(short, html);
   assert.match(unlitLines(off) ?? "", /unlit/);
   assert.match(unlitLines(short) ?? "", /unlit/);
+});
+
+// --- his walk ------------------------------------------------------------------------------------------------
+// When he walks a room from the corner, public/guide/corner.js tells the film the second each of his lines starts at
+// (the stage's data-walk) and to hold before his next later line. The film must stop there, its lines lit exactly as
+// far as its beats have come, and play out to every line lit when he ends.
+const walkOf = (html) => html.match(/data-walk="([^"]+)"/)?.[1].split(",").map(Number);
+const beatsOf = (html) => filmScript(html).match(/var BEATS = \[([^\]]*)\]/)[1].split(",").map(Number);
+export function walkFault(html) {
+  const walk = walkOf(html);
+  if (!walk) return "no data-walk on the stage";
+  const { sel } = lineSelector(html), beats = beatsOf(html);
+  const { steps } = runFilm(html, { walk });
+  for (const [i, s] of steps.entries()) {
+    const at = s.end ? "at his end" : `at line ${i + 1}`;
+    const want = s.end ? beats.length : beats.filter((b) => b <= s.hold).length;
+    if (s.running) return `${at} the film did not stop`;
+    if (s.lit[sel] !== want) return `${at} ${s.lit[sel]} lines lit, ${want} wanted`;
+  }
+  return null;
+}
+test("every room film follows his walk: it holds at each line, lit as far as its beats, and plays out at his end", () => {
+  for (const f of rooms) assert.equal(walkFault(read(f)), null, f);
+});
+test("a film that ignores his walk, or never holds, is caught", () => {
+  const html = read(rooms.find((r) => read(r).includes("window.addEventListener('vaydin:film', follow)")));
+  const deaf = html.replace("window.addEventListener('vaydin:film', follow)", "void follow");
+  const loose = html.replace("if (settled || played >= hold){", "if (settled){");
+  assert.notEqual(deaf, html); assert.notEqual(loose, html);
+  assert.match(walkFault(deaf) ?? "", /lines lit|did not stop/);
+  assert.match(walkFault(loose) ?? "", /lines lit|did not stop/);
 });
 
 // --- the films' labels -------------------------------------------------------------------------------------

@@ -109,13 +109,15 @@ export function Corner() {
     return () => document.removeEventListener("visibilitychange", hide);
   }, []);
 
-  /* On a room he can walk through, he comes up by himself a moment after the page opens and offers; his voice
-     waits for the visitor's tap, the only way a browser lets a page speak. */
+  /* On every page he has something to say about (a room he walks through, or a page with its summary), he comes up
+     by himself a moment after the page opens and offers; his voice waits for the visitor's tap, the only way a
+     browser lets a page speak. */
   useEffect(() => {
-    const lines = walkable(new URLSearchParams(location.search).get("p") ?? "");
-    if (!lines) return;
+    const page = new URLSearchParams(location.search).get("p") ?? "";
+    const lines = walkable(page);
+    if (!lines && !Object.hasOwn(SUMMARIES, page)) return;
     const timer = window.setTimeout(() => {
-      setRoom(lines);
+      setRoom(lines ?? null);
       setOpen(true);
       setOffering(true);
       dispatch({ type: "say", lines: [GUIDE] });
@@ -270,7 +272,7 @@ export function Corner() {
             {offering ? (
               <div className="flex flex-wrap gap-2">
                 <button type="button" onClick={summarise} className={`${BUTTON} bg-accent/15`}>
-                  {room ? "Yes, guide me" : "Yes, tell me"}
+                  {room || state.cloud.id === GUIDE.id ? "Yes, guide me" : "Yes, tell me"}
                 </button>
                 {/* The same words typed: read by the one decision, so the button and the box never disagree. */}
                 <button type="button" onClick={() => ask("No, thanks")} className={BUTTON}>

@@ -181,7 +181,7 @@
 </header>
 
 <main>
-  <div class="gr-stage" id="grstage" aria-label="Grow, drawn in gold line: an ad and the clinic's Instagram send messages to its WhatsApp, where patients book">
+  <div class="gr-stage" id="grstage" data-walk="0,4,8,12,16,20,24,28,32,36" aria-label="Grow, drawn in gold line: an ad and the clinic's Instagram send messages to its WhatsApp, where patients book">
     <div class="gr-film" id="grfilm"><canvas id="grcanvas" aria-hidden="true"></canvas>
       <div class="gr-tags" aria-hidden="true">
         <div class="gr-tag" data-in="4.6" style="left:21.5%;top:4.8%">Paid campaign</div>
@@ -245,7 +245,7 @@
   var TOUT = tags.map(function(e){ var o = e.getAttribute('data-out'); return o === null ? Infinity : +o; });
   var BG = '#0b0906', GOLD = '#e8d48b', DIM = '#6b5f45', GREEN = '#25D366', VIOLET = '#a78bfa', RED = '#f87171', TEAL = '#34e3f0', INK = '#f3ead2';
   var BEATS = [0.6, 4.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0, 32.0, 36.0], END = 40.6;
-  var S = 0, dpr = 1, t0 = 0, raf = 0, visible = false, done = false, shown = 0, TAU = Math.PI * 2;
+  var S = 0, dpr = 1, raf = 0, visible = false, done = false, TAU = Math.PI * 2;
   var clamp = function(x){ return x < 0 ? 0 : x > 1 ? 1 : x; };
   var E = function(x){ x = clamp(x); return 1 - Math.pow(1 - x, 3); };
   var EIO = function(x){ x = clamp(x); return x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2; };
@@ -410,22 +410,42 @@
     ctx.globalAlpha = 1;
     for (var i = 0; i < items.length; i++) items[i].classList.toggle('on', t >= BEATS[i]);
     for (var j = 0; j < tags.length; j++) tags[j].classList.toggle('on', t >= TIN[j] && t < TOUT[j]);
-    shown = t; return t >= END; }
+    return t >= END; }
 
   function size(){ var r = slot.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1); S = r.width;
     cv.width = Math.round(S * dpr); cv.height = Math.round(S * dpr); }
-  function frame(now){ if (!t0) t0 = now - shown * 1000; var settled = draw((now - t0) / 1000);
-    if (settled){ done = true; raf = 0; return; } raf = visible ? requestAnimationFrame(frame) : 0; }
+  /* The clock of the film, moved on by the frames that run. Guided by him from the corner (the vaydin:film event,
+     from public/guide/corner.js and the data-walk of this stage), it plays to the second his line starts at and holds
+     until his next line, so the film and his voice stay in step whatever the length of a take; when he ends, it plays
+     out. */
+  var played = 0, last = 0, guided = false, hold = Infinity;
+  function frame(now){
+    played = Math.min(played + (last ? Math.min(0.1, (now - last) / 1000) : 0), hold);
+    last = now;
+    var settled = draw(played);
+    if (settled || played >= hold){ if (settled && !guided) done = true; raf = 0; last = 0; return; }
+    raf = visible ? requestAnimationFrame(frame) : 0;
+    if (!raf) last = 0;
+  }
+  function run(){ if (!raf){ last = 0; raf = requestAnimationFrame(frame); } }
+  function follow(e){
+    var d = e.detail || {};
+    if (d.restart){ played = 0; done = false; }
+    if (typeof d.at === 'number') played = Math.max(played, d.at);
+    guided = !!d.guided; hold = guided ? d.hold : Infinity;
+    run();
+  }
   size();
   var rt = 0;
-  window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ size(); draw(done ? END : shown); }, 150); });
+  window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ size(); draw(done ? END : played); }, 150); });
   if (reduced){ draw(END); return; }
   /* The lines are lit unless this film runs: dimmed only from here, and lit again by any error on the page. */
   list.classList.add('dim'); window.addEventListener('error', function(){ list.classList.remove('dim'); });
   draw(0);
   /* It pauses only when the whole room, film and lines, has left the screen, so reading the lines never stops it. */
   new IntersectionObserver(function(es){ es.forEach(function(e){ visible = e.isIntersecting;
-    if (visible && !done && !raf){ t0 = 0; raf = requestAnimationFrame(frame); } }); }, { threshold: 0 }).observe(stage);
+    if (visible && !done && !raf) run(); }); }, { threshold: 0 }).observe(stage);
+  window.addEventListener('vaydin:film', follow);
 })();
 </script>
 <script src="/guide/corner.js" defer></script>

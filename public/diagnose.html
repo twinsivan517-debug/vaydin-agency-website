@@ -201,7 +201,7 @@
 </header>
 
 <main>
-  <div class="dg-stage" id="dgstage" aria-label="The diagnostic, drawn, one part at a time">
+  <div class="dg-stage" id="dgstage" data-walk="0,0,6,11.5,11.5,17.5,22,26.5,30,30" aria-label="The diagnostic, drawn, one part at a time">
     <canvas id="dgcanvas" aria-hidden="true"></canvas>
     <div class="dg-screen" id="dgslot"></div>
     <div class="dg-tags" id="dgtags" aria-hidden="true">
@@ -652,26 +652,27 @@
     for (var ti = 0; ti < tags.length; ti++) tags[ti].classList.toggle('on', t >= TIN[ti] && t < TOUT[ti]);
     return t > END;
   }
-  /* The film's clock. Alone, it runs from the start each time the film comes into view, and settles on its end.
-     Guided by him from the corner (public/guide/corner.js passes his lines on as 'vaydin:guide'), each line's scene
-     plays as he says it and holds there until his next line, so the film and his voice stay in step whatever a
-     take's length; when he ends, the film plays out. */
-  var clock = 0, last = 0, guided = false, hold = Infinity, lineScene = null;
-  /* Which scene each of his lines belongs to: a scene's lines are its heading and its paragraphs, in order. */
-  function sceneOf(n){
-    if (!lineScene){ lineScene = []; items.forEach(function(li, s){ li.querySelectorAll('h2, p').forEach(function(){ lineScene.push(s); }); }); }
-    return lineScene[n];
-  }
+  /* The clock of the film, moved on by the frames that run. Guided by him from the corner (the vaydin:film event,
+     from public/guide/corner.js and the data-walk of this stage), it plays to the second his line starts at and holds
+     until his next line, so the film and his voice stay in step whatever the length of a take; when he ends, it plays
+     out. Alone, it runs from the start each time the film comes into view, and settles on its end. */
+  var played = 0, last = 0, guided = false, hold = Infinity;
   function frame(now){
-    clock = Math.min(clock + (last ? Math.min(0.1, (now - last) / 1000) : 0), guided ? hold : Infinity);
+    played = Math.min(played + (last ? Math.min(0.1, (now - last) / 1000) : 0), hold);
     last = now;
-    var settled = draw(clock);
-    if (settled && !guided){ done = true; raf = 0; last = 0; return; }
-    if (guided && clock >= hold){ raf = 0; last = 0; return; }
+    var settled = draw(played);
+    if (settled || played >= hold){ if (settled && !guided) done = true; raf = 0; last = 0; return; }
     raf = visible ? requestAnimationFrame(frame) : 0;
     if (!raf) last = 0;
   }
   function run(){ if (!raf){ last = 0; raf = requestAnimationFrame(frame); } }
+  function follow(e){
+    var d = e.detail || {};
+    if (d.restart){ played = 0; done = false; }
+    if (typeof d.at === 'number') played = Math.max(played, d.at);
+    guided = !!d.guided; hold = guided ? d.hold : Infinity;
+    run();
+  }
   function settle(){ draw(99); done = true; }
 
   layout();
@@ -683,25 +684,10 @@
     new IntersectionObserver(function(es){
       es.forEach(function(e){
         visible = e.isIntersecting && e.intersectionRatio >= 0.2;
-        if (visible && !done && !raf){ if (!guided) clock = 0; run(); }
+        if (visible && !done && !raf){ if (!guided) played = 0; run(); }
       });
     }, { threshold: [0, 0.2] }).observe(stage);
-    window.addEventListener('vaydin:guide', function(e){
-      var d = e.detail || {};
-      if (d.walk === 'start'){
-        guided = true; clock = 0; hold = 0; done = false;
-        /* The film's top just under the bar across the top (76 px, as corner.js counts it): on a phone the drawing is
-           the top of a stage taller than the screen, so centring it showed only the lines. */
-        window.scrollTo({ top: stage.getBoundingClientRect().top + window.scrollY - 76, behavior: 'smooth' });
-      }
-      var s = d.line === null ? undefined : sceneOf(d.line);
-      if (guided && s !== undefined){
-        clock = Math.max(clock, s === 0 ? 0 : BEATS[s]);
-        hold = s + 1 < BEATS.length ? BEATS[s + 1] - 0.05 : END;
-      }
-      if (d.walk === 'end'){ guided = false; hold = Infinity; }
-      run();
-    });
+    window.addEventListener('vaydin:film', follow);
   }
   var rt = 0;
   window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ layout(); if (done) settle(); }, 150); });
