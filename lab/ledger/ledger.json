@@ -1204,7 +1204,8 @@
   "read": "",
   "where": [
    "engine.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:es-01"
   ]
  },
  {
@@ -1213,7 +1214,8 @@
   "read": "",
   "where": [
    "engine.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:es-01"
   ]
  },
  {
@@ -1222,7 +1224,8 @@
   "read": "",
   "where": [
    "engine.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:es-01"
   ]
  },
  {
@@ -1558,7 +1561,8 @@
   "read": "core 2026-11-12: OK (fx-01)",
   "where": [
    "fix.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:fx-01"
   ]
  },
  {
@@ -1567,7 +1571,8 @@
   "read": "core 2026-11-12: OK (fx-01) | Layer 2 2026-11-12: OK (fx-01)",
   "where": [
    "fix.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:fx-01"
   ]
  },
  {
@@ -1576,7 +1581,8 @@
   "read": "Layer 2 2026-11-12: OK (fx-02)",
   "where": [
    "fix.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:fx-02"
   ]
  },
  {
@@ -1585,7 +1591,8 @@
   "read": "Layer 2 2026-11-12: OK (fx-02)",
   "where": [
    "fix.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:fx-02"
   ]
  },
  {
@@ -1594,7 +1601,8 @@
   "read": "Layer 2 2026-11-12: true words applied (fx-03)",
   "where": [
    "fix.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:fx-03"
   ]
  },
  {
@@ -1603,7 +1611,8 @@
   "read": "Layer 2 2026-11-12: true words applied (fx-03)",
   "where": [
    "fix.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:fx-03"
   ]
  },
  {
@@ -1612,7 +1621,8 @@
   "read": "Layer 2 2026-11-12: by his ruling (fx-04)",
   "where": [
    "fix.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:fx-04"
   ]
  },
  {
@@ -1621,7 +1631,8 @@
   "read": "Layer 2 2026-11-12: by his ruling (fx-05)",
   "where": [
    "fix.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:fx-05"
   ]
  },
  {
@@ -1630,7 +1641,8 @@
   "read": "Layer 2 2026-11-12: by his ruling (fx-06)",
   "where": [
    "fix.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:fx-06"
   ]
  },
  {
@@ -1639,7 +1651,8 @@
   "read": "Layer 2 2026-11-12: true words applied (fx-07)",
   "where": [
    "fix.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:fx-07"
   ]
  },
  {
@@ -1648,7 +1661,8 @@
   "read": "Layer 2 2026-11-12: OK (fx-07)",
   "where": [
    "fix.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:fx-07"
   ]
  },
  {
@@ -1657,7 +1671,8 @@
   "read": "core 2026-11-12: OK (fx-08) | Layer 2 2026-11-12: OK (fx-08)",
   "where": [
    "fix.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:fx-08"
   ]
  },
  {
@@ -1666,7 +1681,8 @@
   "read": "Layer 2 2026-11-12: true words applied (fx-09) | core 2026-11-12: OK (fx-09)",
   "where": [
    "fix.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:fx-09"
   ]
  },
  {
@@ -1675,7 +1691,8 @@
   "read": "Layer 2 2026-11-12: no claim (fx-09)",
   "where": [
    "fix.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:fx-09"
   ]
  },
  {
@@ -1685,6 +1702,7 @@
   "where": [
    "fix.html",
    "pages.ts",
+   "voice:fx-10",
    "voice:p-fix"
   ]
  },
@@ -1694,7 +1712,8 @@
   "read": "Layer 2 2026-11-12: OK (fx-10) | core 2026-11-12: OK (fx-10)",
   "where": [
    "fix.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:fx-10"
   ]
  },
  {
@@ -1867,7 +1886,8 @@
   "read": "main house 2026-11-12: OK (gr-01) | core 2026-11-12: OK (gr-01)",
   "where": [
    "grow.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:gr-01"
   ]
  },
  {
@@ -1876,7 +1896,8 @@
   "read": "main house 2026-11-12: OK (gr-01) | core 2026-11-12: OK (gr-01)",
   "where": [
    "grow.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:gr-01"
   ]
  },
  {
@@ -1885,7 +1906,8 @@
   "read": "main house 2026-11-12: OK (gr-02) | core 2026-11-12: OK (gr-02)",
   "where": [
    "grow.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:gr-02"
   ]
  },
  {
@@ -1894,7 +1916,8 @@
   "read": "Layer 2 2026-11-12: true words applied (gr-03) | core 2026-11-12: OK (gr-03) | main house 2026-11-12: OK (gr-03)",
   "where": [
    "grow.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:gr-03"
   ]
  },
  {
@@ -1903,7 +1926,8 @@
   "read": "main house 2026-11-12: OK (gr-04) | core 2026-11-12: OK (gr-04)",
   "where": [
    "grow.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:gr-04"
   ]
  },
  {
@@ -1912,7 +1936,8 @@
   "read": "main house 2026-11-12: OK (gr-05) | Layer 2 2026-11-12: true words applied (gr-05) | core 2026-11-12: OK (gr-05)",
   "where": [
    "grow.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:gr-05"
   ]
  },
  {
@@ -1921,7 +1946,8 @@
   "read": "main house 2026-11-12: OK (gr-05)",
   "where": [
    "grow.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:gr-05"
   ]
  },
  {
@@ -1930,7 +1956,8 @@
   "read": "main house 2026-11-10: OK",
   "where": [
    "grow.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:gr-06"
   ]
  },
  {
@@ -1939,7 +1966,8 @@
   "read": "main house 2026-11-12: OK (gr-07) | core 2026-11-12: OK (gr-07)",
   "where": [
    "grow.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:gr-07"
   ]
  },
  {
@@ -1948,7 +1976,8 @@
   "read": "main house 2026-11-12: OK (gr-08) | core 2026-11-12: OK (gr-08)",
   "where": [
    "grow.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:gr-08"
   ]
  },
  {
@@ -1957,7 +1986,8 @@
   "read": "Layer 2 2026-11-12: OK (gr-09) | core 2026-11-12: OK (gr-09) | main house 2026-11-12: OK (gr-09)",
   "where": [
    "grow.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:gr-09"
   ]
  },
  {
@@ -1966,7 +1996,8 @@
   "read": "core 2026-11-12: OK (gr-10)",
   "where": [
    "grow.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:gr-10"
   ]
  },
  {
@@ -1975,7 +2006,8 @@
   "read": "Layer 2 2026-11-12: OK (gr-10) | core 2026-11-12: OK (gr-10)",
   "where": [
    "grow.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:gr-10"
   ]
  },
  {
@@ -1984,7 +2016,8 @@
   "read": "main house 2026-11-12: OK (gr-10)",
   "where": [
    "grow.html",
-   "pages.ts"
+   "pages.ts",
+   "voice:gr-10"
   ]
  },
  {
@@ -2556,7 +2589,8 @@
   "read": "main house 2026-11-13: OK (pl-01) | core 2026-11-13: OK (pl-01)",
   "where": [
    "pages.ts",
-   "pricing.html"
+   "pricing.html",
+   "voice:pl-01"
   ]
  },
  {
@@ -2565,7 +2599,8 @@
   "read": "core 2026-11-13: OK (pl-02) | main house 2026-11-13: OK (pl-02)",
   "where": [
    "pages.ts",
-   "pricing.html"
+   "pricing.html",
+   "voice:pl-02"
   ]
  },
  {
@@ -2574,7 +2609,8 @@
   "read": "core 2026-11-13: OK (pl-02) | main house 2026-11-13: OK (pl-02)",
   "where": [
    "pages.ts",
-   "pricing.html"
+   "pricing.html",
+   "voice:pl-02"
   ]
  },
  {
@@ -2583,7 +2619,8 @@
   "read": "Layer 2 2026-11-13: OK (pl-03) | core 2026-11-13: OK (pl-03) | main house 2026-11-13: OK (pl-03)",
   "where": [
    "pages.ts",
-   "pricing.html"
+   "pricing.html",
+   "voice:pl-03"
   ]
  },
  {
@@ -2592,7 +2629,8 @@
   "read": "main house 2026-11-13: OK (pl-04) | core 2026-11-13: OK (pl-04) | Layer 2 2026-11-13: OK (pl-04)",
   "where": [
    "pages.ts",
-   "pricing.html"
+   "pricing.html",
+   "voice:pl-04"
   ]
  },
  {
@@ -2601,7 +2639,8 @@
   "read": "core 2026-11-13: no claim (pl-05) | main house 2026-11-13: OK (pl-05) | Layer 2 2026-11-13: no claim (pl-05)",
   "where": [
    "pages.ts",
-   "pricing.html"
+   "pricing.html",
+   "voice:pl-05"
   ]
  },
  {
@@ -2610,7 +2649,8 @@
   "read": "core 2026-11-13: no claim (pl-06) | main house 2026-11-13: OK (pl-06) | Layer 2 2026-11-13: no claim (pl-06)",
   "where": [
    "pages.ts",
-   "pricing.html"
+   "pricing.html",
+   "voice:pl-06"
   ]
  },
  {
@@ -2619,7 +2659,8 @@
   "read": "main house 2026-11-13: OK (pl-07) | core 2026-11-13: OK (pl-07) | Layer 2 2026-11-13: OK (pl-07)",
   "where": [
    "pages.ts",
-   "pricing.html"
+   "pricing.html",
+   "voice:pl-07"
   ]
  },
  {
@@ -2628,7 +2669,8 @@
   "read": "Layer 2 2026-11-13: OK (pl-07) | core 2026-11-13: OK (pl-07) | main house 2026-11-13: OK (pl-07)",
   "where": [
    "pages.ts",
-   "pricing.html"
+   "pricing.html",
+   "voice:pl-07"
   ]
  },
  {
@@ -2637,7 +2679,8 @@
   "read": "main house 2026-11-13: OK (pl-08) | core 2026-11-13: OK (pl-08)",
   "where": [
    "pages.ts",
-   "pricing.html"
+   "pricing.html",
+   "voice:pl-08"
   ]
  },
  {
@@ -2646,7 +2689,8 @@
   "read": "Layer 2 2026-11-13: OK (pl-09) | core 2026-11-13: OK (pl-09) | main house 2026-11-13: OK (pl-09)",
   "where": [
    "pages.ts",
-   "pricing.html"
+   "pricing.html",
+   "voice:pl-09"
   ]
  },
  {
@@ -2655,7 +2699,8 @@
   "read": "main house 2026-11-13: OK (pl-10) | core 2026-11-13: OK (pl-10) | Layer 2 2026-11-13: no claim (pl-10)",
   "where": [
    "pages.ts",
-   "pricing.html"
+   "pricing.html",
+   "voice:pl-10"
   ]
  },
  {
@@ -5732,6 +5777,80 @@
   ]
  },
  {
+  "s": "Your WhatsApp and your Google profile flow into one system that answers, books, reminds, invites back and counts.",
+  "tag": "task:L2-JOBS",
+  "read": "Layer 2 2026-11-10: OK (277)",
+  "where": [
+   "pages.ts",
+   "voice:es-02",
+   "voice:p-engine"
+  ]
+ },
+ {
+  "s": "Every first message gets your menu, and the patient books inside the chat.",
+  "tag": "job:1 + job:2",
+  "read": "Layer 2 2026-11-14: true words offered (es-03), 'Every hello gets your menu'; kept as job 1's name | core 2026-11-14: OK (es-03) | main house 2026-11-14: OK, job 1's name on seven surfaces (es-03)",
+  "where": [
+   "pages.ts",
+   "voice:es-03"
+  ]
+ },
+ {
+  "s": "Before each booked visit, a reminder.",
+  "tag": "job:4",
+  "read": "Layer 2 2026-11-14: OK (es-04) | core 2026-11-14: OK (es-04)",
+  "where": [
+   "pages.ts",
+   "voice:es-04"
+  ]
+ },
+ {
+  "s": "And the quiet list is invited back.",
+  "tag": "job:5",
+  "read": "Layer 2 2026-11-14: OK (es-04); the invites wait on counsel's consent position, a start term | core 2026-11-14: OK (es-04)",
+  "where": [
+   "pages.ts",
+   "voice:es-04"
+  ]
+ },
+ {
+  "s": "After the visit, your next treatment is offered, and each step is counted.",
+  "tag": "job:7 + job:6",
+  "read": "Layer 2 2026-11-14: OK (es-05) | core 2026-11-14: OK (es-05)",
+  "where": [
+   "pages.ts",
+   "voice:es-05"
+  ]
+ },
+ {
+  "s": "Your Google profile is checked daily, and every new review has a reply ready.",
+  "tag": "job:8 + job:9",
+  "read": "Layer 2 2026-11-14: OK in words (es-06); built, inert until Google approves, a start term | core 2026-11-14: held 'checked daily', Layer 1 reads weekly | main house 2026-11-14: OK, two readers of two doors, each ruled (es-06)",
+  "where": [
+   "pages.ts",
+   "voice:es-06"
+  ]
+ },
+ {
+  "s": "Every attended patient is asked for a review.",
+  "tag": "job:10",
+  "read": "Layer 2 2026-11-14: OK (es-07) | core 2026-11-14: OK (es-07)",
+  "where": [
+   "pages.ts",
+   "voice:es-07"
+  ]
+ },
+ {
+  "s": "Nine jobs in the engine, and four more built around your clinic.",
+  "tag": "task:L2-JOBS",
+  "read": "Layer 2 2026-11-10: by his ruling (278)",
+  "where": [
+   "pages.ts",
+   "voice:es-08",
+   "voice:p-engine"
+  ]
+ },
+ {
   "s": "This page shows what you see once Vaydin works for your clinic: one link on your phone, how patients find you read for you every week and every month, one score with what to fix first, and, once the Engine runs, what it did, counted.",
   "tag": "task:CORE-F0 + task:CORE-3 + job:6",
   "read": "core 2026-11-10: true words applied | Layer 2 2026-11-10: true words applied",
@@ -5816,24 +5935,6 @@
   "s": "This page shows the engine on one screen.",
   "tag": "none",
   "read": "",
-  "where": [
-   "pages.ts",
-   "voice:p-engine"
-  ]
- },
- {
-  "s": "Your WhatsApp and your Google profile flow into one system that answers, books, reminds, invites back and counts.",
-  "tag": "task:L2-JOBS",
-  "read": "Layer 2 2026-11-10: OK (277)",
-  "where": [
-   "pages.ts",
-   "voice:p-engine"
-  ]
- },
- {
-  "s": "Nine jobs in the engine, and four more built around your clinic.",
-  "tag": "task:L2-JOBS",
-  "read": "Layer 2 2026-11-10: by his ruling (278)",
   "where": [
    "pages.ts",
    "voice:p-engine"

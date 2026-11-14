@@ -28,6 +28,8 @@ NEW = {
 # Emotion where it helps; the plain explanations stay calm and untagged.
 LEAD = {
     "dg-01": "[confident]", "dg-03": "[serious]", "dg-07": "[curious]", "dg-09": "[confident]", "dg-10": "[warm]",
+    "fx-01": "[confident]", "fx-10": "[warm]", "gr-01": "[serious]", "gr-08": "[serious]", "gr-10": "[confident]",
+    "pl-01": "[warm]", "pl-06": "[serious]", "pl-10": "[warm]", "es-01": "[confident]", "es-08": "[confident]",
     "w1": "[warm]", "10": "", "g1": "[confident]", "a-legit": "[laughs]", "a-chatgpt": "[confident]", "a-clients": "[confident]",
     "a-compliance": "[serious]", "a-medical": "[serious]", "a-legal": "[serious]", "a-patient": "[warm]", "a-jobs": "[warm]",
     "a-you": "[warm]", "a-unannounced": "[confident]", "p-pricing": "[warm]", "poke-1": "[warm]", "poke-2": "[curious]",

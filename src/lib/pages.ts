@@ -41,10 +41,11 @@ export const SUMMARIES: Record<string, Line> = {
   ),
 };
 
-/* A room's lines (the owner's round of 2026-11-11: the long text and the photos leave, the particles explain). They
-   stand beside the room's drawing as written (public/<room>.html, the list marked data-room), and the page speaks
-   none of them: he talks only from the corner. Recorded in Jon's voice and parked: no page plays them yet (his "ok",
-   2026-11-11). Diagnose's ten were read by core (no holds; 5 reworded) and Layer 2 (9), approved by the owner. */
+/* A room's lines (the owner's round: the long text and the photos leave, the particles explain). They stand beside
+   the room's drawing as written (public/<room>.html, the list marked data-room), and the page itself speaks none of
+   them: he says them from the corner, in Jon's voice, when a visitor takes his offer to be guided (walkable), the
+   film following his line. Diagnose's ten were read by core (no holds; 5 reworded) and Layer 2 (9), approved by the
+   owner. */
 export const ROOMS: Record<string, Line[]> = {
   diagnose: [
     line("dg-01", "Every thirty to sixty days, unannounced, a real person messages your clinic on WhatsApp, like any new patient."),
@@ -67,8 +68,7 @@ export const ROOMS: Record<string, Line[]> = {
     "Your Google profile, checked daily", "Every new review, a reply ready", "Every attended patient asked for a review",
     "Consultations, prepared", "Instagram DMs, connected", "Email, connected", "Website concierge",
   ].map((text, i) => ({ id: `en-${String(i).padStart(2, "0")}`, text })),
-  /* Fix: its ten lines as read by core and Layer 2 and approved by the owner, shown beside the film, never recorded
-     (his pick: show only until a page plays the rooms' lines). */
+  /* Fix: its ten lines as read by core and Layer 2 and approved by the owner, shown beside the film and recorded. */
   fix: [
     "The diagnostic shows you the leaks. Step two doesn't stop at the report: it runs the machine, inside the WhatsApp your patients already use.",
     "A patient who writes at 2am gets your clinic's menu at 2am. Anything typed beyond the menu goes straight to your reception.",
@@ -80,9 +80,9 @@ export const ROOMS: Record<string, Line[]> = {
     "Once the Engine runs, every step is counted on the page you already have: how many wrote, how many booked, how many came.",
     "If AI search can't read your site, Website concierge opens what your access lets us reach: a person lets AI search crawlers in where your site builder allows it, tells you the one switch if your host blocks them, and sets out your clinic's own address, hours and phone for machines to read. No promise of a place in AI answers.",
     "You grant access; you keep the keys. No passwords, nothing installed, and the engine never touches your medical system or your money.",
-  ].map((text, i) => ({ id: `fx-${String(i + 1).padStart(2, "0")}`, text })),
-  /* Grow: its ten lines as read by core, Layer 2 and the main house and approved by the owner, shown beside the film,
-     never recorded (his pick: show only, as Fix). */
+  ].map((text, i) => line(`fx-${String(i + 1).padStart(2, "0")}`, text)),
+  /* Grow: its ten lines as read by core, Layer 2 and the main house and approved by the owner, shown beside the film
+     and recorded. */
   grow: [
     "Grow is step three. It opens only once your Engine runs and its bookings are proven, because fuel poured into a leaking machine just makes a more expensive leak.",
     "Then we add the fuel: paid patient demand, and an Instagram your patients actually look at.",
@@ -94,9 +94,9 @@ export const ROOMS: Record<string, Line[]> = {
     "No AI-made patients, and no AI-made before-and-afters.",
     "Every inquiry it sends to your WhatsApp gets your menu at once, at midnight too, and books in the chat.",
     "Diagnose finds where patients are lost. The Engine answers and books them. Grow sends you more of them.",
-  ].map((text, i) => ({ id: `gr-${String(i + 1).padStart(2, "0")}`, text })),
+  ].map((text, i) => line(`gr-${String(i + 1).padStart(2, "0")}`, text)),
   /* Your plan: its ten lines as read by core, Layer 2 and the main house and approved by the owner, shown beside the
-     film, never recorded (as Fix and Grow). Keyed by its page, pricing.html, which the speed gate measures by name. */
+     film and recorded. Keyed by its page, pricing.html, which the speed gate measures by name. */
   pricing: [
     "Every plan is built for your clinic, and every plan starts with the measurement.",
     "First, the diagnostic: an unannounced shop, the way a patient meets your clinic. It tells you the truth.",
@@ -108,12 +108,28 @@ export const ROOMS: Record<string, Line[]> = {
     "The diagnostic runs month to month, and stops with thirty days' written notice.",
     "Every number is measured, never promised, and your medical records stay in your own system.",
     "Tell us about your clinic on WhatsApp: a person answers and sends your plan. No forms.",
-  ].map((text, i) => ({ id: `pl-${String(i + 1).padStart(2, "0")}`, text })),
+  ].map((text, i) => line(`pl-${String(i + 1).padStart(2, "0")}`, text)),
 };
 
-/* A room he can walk a visitor through: one whose every line has its recording. */
+/* What he says walking a room whose shown lines are names, not sentences: the Engine shows its job names, so he
+   speaks this over its film instead, each line on one of the film's beats. Read by core, Layer 2 and the main house,
+   approved by the owner; it follows the page's own words, the job names among them. */
+export const SPOKEN: Record<string, Line[]> = {
+  engine: [
+    "The same clinic. The same patients. A different machine underneath.",
+    "Your WhatsApp and your Google profile flow into one system that answers, books, reminds, invites back and counts.",
+    "Every first message gets your menu, and the patient books inside the chat.",
+    "Before each booked visit, a reminder. And the quiet list is invited back.",
+    "After the visit, your next treatment is offered, and each step is counted.",
+    "Your Google profile is checked daily, and every new review has a reply ready.",
+    "Every attended patient is asked for a review.",
+    "Nine jobs in the engine, and four more built around your clinic.",
+  ].map((text, i) => line(`es-${String(i + 1).padStart(2, "0")}`, text)),
+};
+
+/* A room he can walk a visitor through: one whose every spoken line has its recording. */
 export const walkable = (page: string): Line[] | undefined => {
-  const lines = Object.hasOwn(ROOMS, page) ? ROOMS[page] : [];
+  const lines = Object.hasOwn(SPOKEN, page) ? SPOKEN[page] : Object.hasOwn(ROOMS, page) ? ROOMS[page] : [];
   return lines.length > 0 && lines.every((l) => l.audio) ? lines : undefined;
 };
 

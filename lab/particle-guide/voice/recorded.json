@@ -600,6 +600,180 @@
    "unheard": [],
    "extra": []
   },
+  "es-01": {
+   "text": "e78a07b7f928b33ac7a18e6709fc79818dbaaf2f5a3b31078998c6fbee27e8dc",
+   "said": "the same clinic the same patients a different machine underneath",
+   "audio": "55436970439b482c7b72bc801bf4da5bc87aaefc8e0e1c5a70bc8ed521a5867a",
+   "heard": "the same clinic the same patients a different machine underneath",
+   "unheard": [],
+   "extra": []
+  },
+  "es-02": {
+   "text": "3bac56f45c5c70f1550664afb875a6a9847ce72a84bd7ec7522e352bd3392ee0",
+   "said": "your whatsapp and your google profile flow into one system that answers books reminds invites back and counts",
+   "audio": "25a894c78934bc7ce95cd47acea0567a5d5b8d2b539aafcf44dbfee379769bc5",
+   "heard": "your whatsapp and your google profile flow into one system that answers books reminds invites back and counts",
+   "unheard": [],
+   "extra": []
+  },
+  "es-03": {
+   "text": "c274045400be2eb5344cded00dfb572f555344431c7382b0cf521d2f33b7dc54",
+   "said": "every first message gets your menu and the patient books inside the chat",
+   "audio": "d684bde6c90b374659d50f0de0eef9550975dc4b784a999046296dddbbc67e28",
+   "heard": "every first message gets your menu and the patient books inside the chat",
+   "unheard": [],
+   "extra": []
+  },
+  "es-04": {
+   "text": "5280bf691a40e7e52fa39548fa6ae0cf2f2d79e01ddf2db700b28ff77b70f20a",
+   "said": "before each booked visit a reminder and the quiet list is invited back",
+   "audio": "ee7252a502529ea02a7ae4c931902ca6874918480307eaf812fb42f53e9f934f",
+   "heard": "before each booked visit a reminder and the quiet list is invited back",
+   "unheard": [],
+   "extra": []
+  },
+  "es-05": {
+   "text": "7a34ca6fe407d45652c847b9bbd8f95143a4a308fe850bc0fb7bc48d81bc551c",
+   "said": "after the visit your next treatment is offered and each step is counted",
+   "audio": "9d9e65369a2c2fad8e9a71eee2f92b15d4f542f31d14c535e5438ee9be202f9c",
+   "heard": "after the visit your next treatment is offered and each step is counted",
+   "unheard": [],
+   "extra": []
+  },
+  "es-06": {
+   "text": "d760969cd9361e5ee57fa60b4b79ae119b1dbc28832c162f903020f5e7f53fbb",
+   "said": "your google profile is checked daily and every new review has a reply ready",
+   "audio": "6f3028b2a15802d4b3f3146f937a53d585785f20dd59ebba56a0ed8332768f65",
+   "heard": "your google profile is checked daily and every new review has a reply ready",
+   "unheard": [],
+   "extra": []
+  },
+  "es-07": {
+   "text": "9a4fb84bdeaf52272c571c77b42331deb59023c82ef4ab12abf8cec9dc510d0f",
+   "said": "every attended patient is asked for a review",
+   "audio": "9491c8d372716f9a81f9d405046f62cf777a280e4673f055065d4c2035d42214",
+   "heard": "every attended patient is asked for a review",
+   "unheard": [],
+   "extra": []
+  },
+  "es-08": {
+   "text": "70d1097e59b4c576fb6196893e0b1e8eea31a43ad5c043dcce2b4860a3a3e0b0",
+   "said": "nine jobs in the engine and four more built around your clinic",
+   "audio": "b8bceb6aba825bb8f775905eb9acd0d6ec2878c2b7f81a09cafa587aee9ef77e",
+   "heard": "9 jobs in the engine and 4 more built around your clinic",
+   "unheard": [
+    "four",
+    "nine"
+   ],
+   "extra": [
+    "4",
+    "9"
+   ]
+  },
+  "fx-01": {
+   "text": "c4cb9acfff281de55744a1420f949c6eb6218a45e3d966be4f89aa43672e1f20",
+   "said": "the diagnostic shows you the leaks step two doesn't stop at the report it runs the machine inside the whatsapp your patients already use",
+   "audio": "1d664a3afbe959a8dc54d3f91e62dcd9476e5e6e04c96201ae3bfc8af4668873",
+   "heard": "the diagnostic shows you the leaks step 2 doesn't stop at the report it runs the machine inside the whatsapp your patient's already used",
+   "unheard": [
+    "patients",
+    "two",
+    "use"
+   ],
+   "extra": [
+    "2",
+    "patient's",
+    "used"
+   ]
+  },
+  "fx-02": {
+   "text": "70f142f2ff2492eac0ecb7676e21fb2a4190e9afe75ee3d8048d261505befef4",
+   "said": "a patient who writes at 2am gets your clinic's menu at 2am anything typed beyond the menu goes straight to your reception",
+   "audio": "a99d3c48efea3a93e14ba46463fc09d2e9740a8ede85c057f3bca139bb5ef45e",
+   "heard": "a patient who writes at 2 a m gets your clinic's menu at 2 a m anything typed beyond the menu goes straight to your reception",
+   "unheard": [
+    "2am",
+    "2am"
+   ],
+   "extra": [
+    "2",
+    "2",
+    "a",
+    "a",
+    "m",
+    "m"
+   ]
+  },
+  "fx-03": {
+   "text": "cf26b42f9c5172a2cc4a20a3cd976a0a29523cf2f9375b04fd2272f527a8f79e",
+   "said": "they tap a treatment pick a time and they're booked in the same chat your reception is told and can move it with one tap",
+   "audio": "2311c78541f0fa62d158c63071ed0b700f90d17b472eb4bc155b8e0cc2ce17b2",
+   "heard": "they tap a treatment pick a time and they're booked in the same chat your reception is told and can move it with one tap",
+   "unheard": [],
+   "extra": []
+  },
+  "fx-04": {
+   "text": "185fe68742b1faacd4a8e9afd9bf510c758398da960504c07599ce440e8a88f7",
+   "said": "before each visit a reminder a day ahead and two hours ahead with confirm and reschedule",
+   "audio": "dc782f6f2e2d24ef6c9a98d393bcc3c35ed0fce3714649451f527bb94c016b6a",
+   "heard": "before each visit a reminder a day ahead and two hours ahead with confirm and reschedule",
+   "unheard": [],
+   "extra": []
+  },
+  "fx-05": {
+   "text": "b6d7e1f4b1275c522bdbdba37b2eeef49267a6012d426f969c004a65025f0d67",
+   "said": "after a visit your reception marks as attended one polite request for a google review and your own next treatment offered once",
+   "audio": "4946ebff3cf864c5e4583f1e1f8e064d6b4305a280f58b0bd1616d5afb3bab63",
+   "heard": "after a visit your reception marks is attended one polite request for a google review and your own next treatment offered once",
+   "unheard": [
+    "as"
+   ],
+   "extra": [
+    "is"
+   ]
+  },
+  "fx-06": {
+   "text": "16ab46867e065f0f01cc5db8d32ce01c64351deb504223d4b16779ddf81563e6",
+   "said": "patients who came once and drifted get one invitation back only the ones on your list who agreed to hear from you",
+   "audio": "1ff4e1629f61a394a8c6639a5cf4acdc2862516b979813c7dd0a8f1899e96b74",
+   "heard": "patients who came once and drifted get one invitation back only the ones on your list who agreed to hear from you",
+   "unheard": [],
+   "extra": []
+  },
+  "fx-07": {
+   "text": "836d71f34029535d114e2829c4bc9bf209d7e9421f2999814e26f76e7bf961ba",
+   "said": "your google profile is read every day a change you didn't make hours that don't match your bookings or a listing google has closed or suspended is flagged to you every new review gets one of your approved replies posted when reception taps",
+   "audio": "a6d5ebec1c815cbde5ede7ecd6bc212b4aad39cd6ec2dcb1286883020055ceaa",
+   "heard": "your google profile is read every day a change you didn't make hours that don't match your bookings or listing google has closed or suspended is flagged to you every new review gets one of your approved replies posted when reception taps",
+   "unheard": [
+    "a"
+   ],
+   "extra": []
+  },
+  "fx-08": {
+   "text": "ea0339fb171726345dacd8a467f8d857ce67d78649179692b1b4a50d442a92db",
+   "said": "once the engine runs every step is counted on the page you already have how many wrote how many booked how many came",
+   "audio": "ee9b60179aa8654bbd0c346967b2d3bc7169d5fc7dcd8cbbd45625224281cd43",
+   "heard": "once the engine runs every step is counted on the page you already have how many wrote how many booked how many came",
+   "unheard": [],
+   "extra": []
+  },
+  "fx-09": {
+   "text": "1f765eba5d421663158ec54eac1bf97e3cd5b8e4fce0ee8c3717e2f427f0fdc1",
+   "said": "if ai search can't read your site website concierge opens what your access lets us reach a person lets ai search crawlers in where your site builder allows it tells you the one switch if your host blocks them and sets out your clinic's own address hours and phone for machines to read no promise of a place in ai answers",
+   "audio": "15eba2e84888dda479c7cec746f99ecd6b7ecfbe96fbdcc2cbe64aad8a28a52a",
+   "heard": "if ai search can't read your site website concierge opens what your access lets us reach a person lets ai search crawlers in where your site builder allows it tells you the one switch if your host blocks them and sets out your clinic's own address hours and phone for machines to read no promise of a place in ai answers",
+   "unheard": [],
+   "extra": []
+  },
+  "fx-10": {
+   "text": "7066884b024ed7e584f9c2e3a01df471380348960342c8754f267d0abc4cb26a",
+   "said": "you grant access you keep the keys no passwords nothing installed and the engine never touches your medical system or your money",
+   "audio": "e21a6e64823f2899487a3ef0d783f4aba5722d0a59832c10c2e3f6fe48ea71af",
+   "heard": "you grant access you keep the keys no passwords nothing installed and the engine never touches your medical system or your money",
+   "unheard": [],
+   "extra": []
+  },
   "g1": {
    "text": "6947c0a31c95e2a3d6f2b169d362236dbb19aad2cfccfd99ff2d5ae25bf24aeb",
    "said": "you gain the patients you are losing in public a whatsapp inquiry answered at once and booked inside the chat a reply ready for every new review the quiet ones you marked invited back and each step counted on one page",
@@ -611,6 +785,94 @@
    "extra": [
     "patience"
    ]
+  },
+  "gr-01": {
+   "text": "3861b9c8d26517385a904474f4ca166132032dd7238f02dd16b5d007514a4a6d",
+   "said": "grow is step three it opens only once your engine runs and its bookings are proven because fuel poured into a leaking machine just makes a more expensive leak",
+   "audio": "e3faf4f1b1194ddfb64a46f0f895fa9d73bfc0d34e870f78d62cca52780fdd56",
+   "heard": "grow is step 3 it opens only once your engine runs and its bookings are proven because fuel poured into a leaking machine just makes a more expensive leak",
+   "unheard": [
+    "three"
+   ],
+   "extra": [
+    "3"
+   ]
+  },
+  "gr-02": {
+   "text": "c515b4b89e5ef0e240326b3e6e3deebd3d3874753599330a73b91793ca60d0f0",
+   "said": "then we add the fuel paid patient demand and an instagram your patients actually look at",
+   "audio": "e30dc0f7d4c7e44c51d5ba02853a14c30cd33e77a937587143d5ee83082c30ad",
+   "heard": "then we add the fuel paid patient demand and an instagram your patients actually look at",
+   "unheard": [],
+   "extra": []
+  },
+  "gr-03": {
+   "text": "1888c8a79d65ba1d60c7e6da23a42d822c6b1e16c7b60d96a39928e03be3676a",
+   "said": "paid campaigns put your clinic in front of the right patients and every message they bring lands in the engine that already answers and books",
+   "audio": "dbe3fc1d6738ed5c1e46b8ed805b54d894c7fca142edcf3fdfd671b2857479a0",
+   "heard": "paid campaigns put your clinic in front of the right patients and every message they bring lands in the engine that already answers and books",
+   "unheard": [],
+   "extra": []
+  },
+  "gr-04": {
+   "text": "0475db5105babd21bb4a4fd4bdc0e4d07019efe37623fdf30d144f05e8d44969",
+   "said": "your ad spend is paid direct and never marked up",
+   "audio": "410e92d002884f93713ee48e52a2494454e3bc5a62d8f145cd43efb0f631d5f9",
+   "heard": "your ad spend is paid direct and never marked up",
+   "unheard": [],
+   "extra": []
+  },
+  "gr-05": {
+   "text": "289ec4d4ffc43ca8e9c188a1f21024009677f95a85d79e788ba1b63b8f1f282c",
+   "said": "grow reports it as booked patients and what each one cost not clicks not likes",
+   "audio": "15fba6e08b274499131db0b662bf0c32fb8867fdb5a7290c667fd7e2cdb2e076",
+   "heard": "grow reports it is booked patients and what each one cost not clicks not likes",
+   "unheard": [
+    "as"
+   ],
+   "extra": [
+    "is"
+   ]
+  },
+  "gr-06": {
+   "text": "850d64515962c05e48c6ee1e95971bc9d4211151fb4f0f773b503d0e675f5b7c",
+   "said": "in this market a clinic's instagram is the clinic",
+   "audio": "c7ea658b0bd47af01454c89fddce88f6cc381440aafbfe74c0788bd26f281e67",
+   "heard": "in this market a clinic's instagram is the clinic",
+   "unheard": [],
+   "extra": []
+  },
+  "gr-07": {
+   "text": "f8b1528c3e630db2e694c9b90541f2db4a6e71c8dfed2b7a48d6a72e0b84d74d",
+   "said": "so we make content for yours to a brief every month reels statics and stories",
+   "audio": "f0f75ed482ec8fd5f775c7736fbf98262ed338f8d6563d7d3f71908d60ec52fa",
+   "heard": "so we make content for yours to a brief every month reels statics and stories",
+   "unheard": [],
+   "extra": []
+  },
+  "gr-08": {
+   "text": "fbcae3079c4000b5f10dc72af7723824b1e406e76844d147d183b460acfe7476",
+   "said": "no ai made patients and no ai made before and afters",
+   "audio": "d8c8c3c7a11bb98960d82f65097c6b3c61b2e888dd327437d2afb6a7432a055b",
+   "heard": "no ai made patients and no ai made before and afters",
+   "unheard": [],
+   "extra": []
+  },
+  "gr-09": {
+   "text": "4ea01f697dbfb95047b2e01acd618501f263663db3ade67a5194dff516c5e6f0",
+   "said": "every inquiry it sends to your whatsapp gets your menu at once at midnight too and books in the chat",
+   "audio": "b3e43654d316ae80462a82786688ee7613c8c1fbf771f893025223dc9ea7d1db",
+   "heard": "every inquiry it sends to your whatsapp gets your menu at once at midnight too and books in the chat",
+   "unheard": [],
+   "extra": []
+  },
+  "gr-10": {
+   "text": "a2b00bd6e8b381ba4f78fa15af7d830502eb6d6339e5a14c69cc5c72cf491851",
+   "said": "diagnose finds where patients are lost the engine answers and books them grow sends you more of them",
+   "audio": "25d8cf45e37d8bdbb3dfc9ecd86dab2b877463c94e1ee7c5bf71a00295f4b45b",
+   "heard": "diagnose finds where patients are lost the engine answers and books them grow sends you more of them",
+   "unheard": [],
+   "extra": []
   },
   "o1": {
    "text": "80b63e34e33218659510015e576abc152af97fbac5e5fe78da6e175ae1f44df0",
@@ -686,6 +948,92 @@
    "said": "every plan is built for your clinic start with the diagnostic and add the engine when the numbers convince you message us on whatsapp and a person sends yours",
    "audio": "1f8578b400a9754123310f4e781c3c4368ac5fe4efb221508eb32f3f3ca85960",
    "heard": "every plan is built for your clinic start with the diagnostic and add the engine when the numbers convince you message us on whatsapp and a person sends yours",
+   "unheard": [],
+   "extra": []
+  },
+  "pl-01": {
+   "text": "b97a3be0e35f926c59c639f75b3862cba7715ed094893f5acf03d59b0a62a618",
+   "said": "every plan is built for your clinic and every plan starts with the measurement",
+   "audio": "eff3a29019217549cbfb85a7026d47aadc73dacea42d67017542bbcb7ab8ca82",
+   "heard": "every plan is built for your clinic and every plan starts with the measurement",
+   "unheard": [],
+   "extra": []
+  },
+  "pl-02": {
+   "text": "46a28558035b1efc421f662c948378ec26c56cd8c63aa484187f7419f93df752",
+   "said": "first the diagnostic an unannounced shop the way a patient meets your clinic it tells you the truth",
+   "audio": "20db64863312de3629e21e293d4faf239d16370fd50cc0b436d35722528d1d25",
+   "heard": "first the diagnostic an unannounced shop the way a patient meets your clinic it tells you the truth",
+   "unheard": [],
+   "extra": []
+  },
+  "pl-03": {
+   "text": "f0bed74e3b834155206f97b3068b76c358751b2f0de5a8a5e103f7c16b713bb6",
+   "said": "then the engine changes it on your own number every whatsapp inquiry gets your menu at once bookings are made in the chat visits reminded quiet patients invited back",
+   "audio": "3b476ace77136f312c85ae3cfbb402eca6e327a2840b12a503b1706a52ebf94a",
+   "heard": "then the engine changes it on your own number every whatsapp inquiry gets your menu at once bookings are made in the chat visits reminded quiet patients invited back",
+   "unheard": [],
+   "extra": []
+  },
+  "pl-04": {
+   "text": "4fb5e453586499b3a5ffcdd506d3275b5f14e2321dca4a149da30cb59840b140",
+   "said": "growth comes last paid demand and presence only once the engine runs and its bookings are proven",
+   "audio": "7648353a0745af1988be287b4400a244ecc5fe71e8f6b76ebe99adbfc40cf3ca",
+   "heard": "growth comes last paid demand and presence only once the engine runs and its bookings are proven",
+   "unheard": [],
+   "extra": []
+  },
+  "pl-05": {
+   "text": "693b54c9da054555d89d153398eee4becae9c89b37463c20cf8b8e27b6fee499",
+   "said": "a typical clinic already pays for the fragments an agency retainer tools nobody opens reception hours spent chasing messages",
+   "audio": "b29f490ca784d474972230031947220cfe6e277d03b28745fa3a6ad183282cf4",
+   "heard": "a typical clinic already pays for the fragments an agency retainer tools nobody opens reception hours spent chasing messages",
+   "unheard": [],
+   "extra": []
+  },
+  "pl-06": {
+   "text": "8f015d92642d7428e71f4db81d034477edad524e16d9eef55610015b06685ccf",
+   "said": "and still the message at two in the morning goes unanswered and new reviews wait on a busy reception",
+   "audio": "4fa633cc35613e1dfa48d0b8982c909c2229f9897a2ce8fbe3cc48e7ee3e6d27",
+   "heard": "and still the message at two in the morning goes unanswered and new reviews wait on a busy reception",
+   "unheard": [],
+   "extra": []
+  },
+  "pl-07": {
+   "text": "63a89e0e45294798cdd934227bf8f0f9f45306e2abdf88e0bf02b767f4a245be",
+   "said": "the full plan replaces them with one engine operated for you and growth on top once its bookings are proven your google profile checked daily a reply ready for every new review each step counted live on your own page",
+   "audio": "42bf199014fba2a104bd4f278d8bfb6d7d24d49d4b8cffb76fd4a9096a3cfdc8",
+   "heard": "the full plan replaces them with one engine operated for you and growth on top once its bookings are proven your google profile checked daily a reply ready for every new review each step counted live on your own page",
+   "unheard": [],
+   "extra": []
+  },
+  "pl-08": {
+   "text": "24ab383cadf16b60748159887c3bfc3a45ef0bb5d24ae2143074b4ed431e0346",
+   "said": "the diagnostic runs month to month and stops with thirty days' written notice",
+   "audio": "294b5c1b3bbffc3ab91e1d7bd0c744664c9bdd6cc80d98f3d6b99cddec6c102f",
+   "heard": "the diagnostic runs month to month and stops with 30 days written notice",
+   "unheard": [
+    "days'",
+    "thirty"
+   ],
+   "extra": [
+    "30",
+    "days"
+   ]
+  },
+  "pl-09": {
+   "text": "362c324c1365011d0117554e260269d8cf73a980051fe83afa2557cfdce19572",
+   "said": "every number is measured never promised and your medical records stay in your own system",
+   "audio": "6572fe8b081a69b7bca16c093eaa11716dec80cf52e0e8cf1ed4a2e7a1187f6b",
+   "heard": "every number is measured never promised and your medical records stay in your own system",
+   "unheard": [],
+   "extra": []
+  },
+  "pl-10": {
+   "text": "a8f30be94f046ae91cb817a1777ffbacf034bdb8fb382b268dc84c08743aa237",
+   "said": "tell us about your clinic on whatsapp a person answers and sends your plan no forms",
+   "audio": "f7d9dce6c22069bcb3d9f0db094f8af983883384a5d66734d8f18b127724bcf4",
+   "heard": "tell us about your clinic on whatsapp a person answers and sends your plan no forms",
    "unheard": [],
    "extra": []
   },
