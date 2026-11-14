@@ -221,19 +221,21 @@ export function afterTalk(input: string, lastLine: string): Reply | "more" | nul
 }
 
 /* A line that turns him down and asks nothing: a no, "no need (at all)", "I don't need it", "not now", "maybe
-   later", "I'm good". Never a question: a "?" or a question's first word ("is it not needed") keeps it one, and a
-   line that also names something ("I don't need the engine, just the diagnostic") is read for what it names.
-   "Need" alone is one of the need answer's keywords, so without this "no need" was answered as that question. */
-const DECLINE = /\b(?:no need|not needed|(?:do not|don't|dont|does not|doesn't) need|not (?:right )?now|not interested|not really|maybe later|i'?m (?:good|fine|ok|okay)|it'?s (?:ok|okay|fine)|all good|nothing)\b/g;
-const ASIDE = new Set("i it its it's that this there there's is really at all anymore any more for to do me you tell explain show say about thanks thank please ok okay just right now so actually else".split(" "));
+   later", "I'm good", "never mind". Never a question: a "?" or a question's first word ("is it not needed") keeps it
+   one, though "do not" and "does not" open a statement; and a line that also names something ("I don't need the
+   engine, just the diagnostic") is read for what it names. "Need" alone is one of the need answer's keywords, so
+   without this "no need" was answered as that question. */
+const DECLINE = /\b(?:no need|not needed|(?:do not|don't|dont|does not|doesn't) need|not (?:right now|now|today|at all)|not interested|not really|(?:maybe )?later|(?:i'?m|i am) (?:good|fine|ok|okay)|it'?s (?:ok|okay|fine)|all good|nothing|never ?mind|no worries|skip(?: it)?|leave it)\b/g;
+const ASIDE = new Set("i it its it's that this there there's is really at all anymore any more for to do don't dont me you tell explain show say about thanks thank thx please ok okay just right now so actually else".split(" "));
 const ASKS_FIRST = new Set("what how why when where who whom whose which is are am was were do does did can could will would should shall may might has have".split(" "));
 
 export function declines(input: string): boolean {
   if (input.includes("?")) return false;
   const said = normalise(input);
-  if (ASKS_FIRST.has(said.split(" ")[0])) return false;
+  const [first, second] = said.split(" ");
+  if (ASKS_FIRST.has(first) && !(/^(?:do|does|did)$/.test(first) && second === "not")) return false;
   const phrase = new RegExp(DECLINE.source).test(said);
-  if (!phrase && yesNo(input) !== "no") return false;
+  if (!phrase && !NO.has(first) && yesNo(input) !== "no") return false;
   return said.replace(DECLINE, " ").split(" ").every((w) => !w || ASIDE.has(w) || NO.has(w));
 }
 

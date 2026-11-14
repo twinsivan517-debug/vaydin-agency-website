@@ -472,6 +472,8 @@ check("a visitor who turns him down gets his goodbye, never the list or an answe
     "no need at all", "no need for that", "no need anymore", "there's no need", "no there is no need",
     "there is really no need to do this", "i do not need it", "i don't need", "dont need it", "no i don't need it",
     "not right now", "its not needed", "not interested", "nothing", "not really", "maybe later", "no i'm good",
+    "do not need it", "does not need", "no i dont", "not at all", "i am good", "never mind", "no worries", "skip",
+    "later", "not today", "leave it", "no thx",
   ];
   for (const text of declines) {
     assert.equal(said(cornerReply(text, true, WELCOME.id, [])), "talk:bye", `corner, offered the summary: ${text}`);
@@ -488,6 +490,13 @@ check("a visitor who turns him down gets his goodbye, never the list or an answe
   const corner = readFileSync(new URL("../components/Corner.tsx", import.meta.url), "utf8");
   assert.match(corner, /onClick=\{\(\) => ask\("No, thanks"\)\}[^>]*>\s*No, thanks\s*</);
   assert.equal(said(cornerReply("No, thanks", true, WELCOME.id, [])), "talk:bye");
+  /* Both surfaces hand the decision what "Did you mean" offered, so "the first one" there picks it. */
+  const shown = /state\.shown\.kind === "choose" \? state\.shown\.ids\.map\(answer\) : \[\]/;
+  assert.match(corner, new RegExp(`cornerReply\\(text, offering, state\\.cloud\\.id, ${shown.source}\\)`));
+  const stage = readFileSync(new URL("../components/Stage.tsx", import.meta.url), "utf8");
+  assert.match(stage, new RegExp(`reply\\(text, state\\.cloud\\.id, ${shown.source}\\)`));
+  assert.equal(said(reply("the first one", CHOOSE.id, offered)), "answer:price");
+  assert.equal(said(cornerReply("the second one", false, CHOOSE.id, offered)), "answer:need");
   /* Controls, each what the live commit before this rule gave: a plain no to "Did you mean" asks for the list; a yes is the summary; a
      question, or a line that names something, is read for it. */
   assert.equal(said(cornerReply("no", false, CHOOSE.id, offered)), "more");
@@ -502,6 +511,10 @@ check("a visitor who turns him down gets his goodbye, never the list or an answe
     ["is there no need for a contract", "choose"],
     ["no, tell me about the price", "choose"],
     ["no need, tell me about the price", "choose"],
+    ["do i need a website", "answer:need"],
+    ["can i pay later", "answer:price"],
+    ["skip the diagnostic and start the engine", "choose"],
+    ["never mind the price, what is the engine", "choose"],
   ]) {
     assert.equal(said(cornerReply(text, false, "a-price", [])), was, `corner: ${text}`);
     assert.equal(said(reply(text, "opener", [])), was, `home: ${text}`);
