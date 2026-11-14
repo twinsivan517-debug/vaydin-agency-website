@@ -5724,6 +5724,14 @@
   ]
  },
  {
+  "s": "Would you like me to guide you through this page?",
+  "tag": "none",
+  "read": "",
+  "where": [
+   "pages.ts"
+  ]
+ },
+ {
   "s": "This page shows what you see once Vaydin works for your clinic: one link on your phone, how patients find you read for you every week and every month, one score with what to fix first, and, once the Engine runs, what it did, counted.",
   "tag": "task:CORE-F0 + task:CORE-3 + job:6",
   "read": "core 2026-11-10: true words applied | Layer 2 2026-11-10: true words applied",
@@ -6027,6 +6035,14 @@
   "read": "",
   "where": [
    "src/components/Card.tsx"
+  ]
+ },
+ {
+  "s": "Yes, guide me",
+  "tag": "none",
+  "read": "",
+  "where": [
+   "src/components/Corner.tsx"
   ]
  },
  {
