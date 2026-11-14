@@ -121,9 +121,6 @@ export function Corner() {
     const timer = window.setTimeout(() => {
       setRoom(lines ?? null);
       if (saidNo(() => sessionStorage)) return setCalling(true);
-      setOpen(true);
-      setOffering(true);
-      dispatch({ type: "say", lines: [GUIDE] });
     }, 1000);
     return () => window.clearTimeout(timer);
   }, []);
