@@ -2,7 +2,8 @@
    each page's summary when the visitor says yes. The owner's words of
    2026-10-20; every fact is the page's own. Keyed by the page's file name. */
 
-import type { Reply } from "./match.ts";
+import type { Answer } from "./answers.ts";
+import { afterTalk, followUp, match, yesNo, type Reply } from "./match.ts";
 import type { Line } from "./pitch.ts";
 
 const line = (id: string, text: string): Line => ({ id, text, audio: `/voice/${id}.mp3` });
@@ -109,3 +110,14 @@ export const ROOMS: Record<string, Line[]> = {
 /* In the corner there are no chapter chips to point at: a greeting is met
    with the welcome, and a question he cannot answer with the list. */
 export const inCorner = (r: Reply): Reply | "welcome" | "more" => (r.kind === "greeting" ? "welcome" : r.kind === "unknown" ? "more" : r);
+
+/* A typed line in the corner. A yes to his offer is the page's summary; a no, there or anywhere, is his goodbye,
+   never the list and never an answer: a visitor who declines is left in peace, with the WhatsApp line. Only a no
+   to "Did you mean" asks for the list, because there it means "not those". */
+const BYE: Reply = { kind: "talk", talk: "bye" };
+export function cornerReply(text: string, offering: boolean, lastLine: string, offered: Answer[]): Reply | "more" | "summary" | "welcome" {
+  const said = yesNo(text);
+  if (offering && said) return said === "yes" ? "summary" : BYE;
+  const reply = afterTalk(text, lastLine) ?? followUp(text, offered) ?? (said === "no" ? BYE : null) ?? match(text);
+  return reply === "more" ? reply : inCorner(reply);
+}

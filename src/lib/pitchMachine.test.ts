@@ -6,7 +6,7 @@ import { ANSWERS, CHOOSE, GROUPS, HELLO, MORE, UNKNOWN, UNLISTED, answer, answer
 import { afterTalk, followUp, match, yesNo, type Reply } from "./match.ts";
 import { CHAPTERS, POKES, RESTING, SLEEPING } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
-import { ROOMS, SUMMARIES, WELCOME, inCorner } from "./pages.ts";
+import { ROOMS, SUMMARIES, WELCOME, cornerReply, inCorner } from "./pages.ts";
 import { TALK } from "./talk.ts";
 
 const run = (events: Event[], from: State = START) => events.reduce(reduce, from);
@@ -460,6 +460,34 @@ check("in the corner he never points at chapter chips", () => {
   assert.equal(inCorner(answered), answered);
   const spoken = [...ANSWERS.map(answerLine), ...Object.values(TALK), CHOOSE, MORE, WELCOME, ...Object.values(SUMMARIES)];
   for (const line of spoken) assert.ok(!/chapter/i.test(line.text), line.id);
+});
+
+check("in the corner a no is his goodbye, never the list or an answer", () => {
+  const said = (r: ReturnType<typeof cornerReply>) =>
+    typeof r === "string" ? r : r.kind === "answer" ? `answer:${r.answer.id}` : r.kind === "talk" ? `talk:${r.talk}` : r.kind;
+  const offered = [answer("price"), answer("need")];
+  /* The owner's own words, then the other ways of saying it. */
+  const noes = ["no need", "no need to tell me", "No need.", "no need, thanks", "not now", "not needed", "no", "nope", "nah", "no thanks"];
+  for (const text of noes) {
+    assert.equal(said(cornerReply(text, true, WELCOME.id, [])), "talk:bye", `offered the summary: ${text}`);
+    assert.equal(said(cornerReply(text, false, "x-hello", [])), "talk:bye", `after a question of his: ${text}`);
+    assert.equal(said(cornerReply(text, false, "a-price", [])), "talk:bye", `after an answer: ${text}`);
+  }
+  for (const text of ["no need", "no need to tell me", "not now"]) {
+    assert.equal(said(cornerReply(text, false, CHOOSE.id, offered)), "talk:bye", `after Did you mean: ${text}`);
+  }
+  /* Controls: a plain no to "Did you mean" still asks for the list; a yes, a question with "need" in it, and a
+     question after "no" are what they were. */
+  assert.equal(said(cornerReply("no", false, CHOOSE.id, offered)), "more");
+  assert.equal(said(cornerReply("yes", true, WELCOME.id, [])), "summary");
+  assert.equal(said(cornerReply("sure", true, WELCOME.id, [])), "summary");
+  assert.equal(said(cornerReply("what do you need from us", false, "a-price", [])), "answer:need");
+  assert.equal(said(cornerReply("what do you need from us", true, WELCOME.id, [])), "answer:need");
+  assert.equal(said(cornerReply("no, tell me about the price", true, WELCOME.id, [])), "choose");
+  assert.equal(said(cornerReply("is there no need for a contract", false, "a-price", [])), "choose");
+  assert.equal(said(cornerReply("what does it cost", false, "a-need", [])), "answer:price");
+  assert.equal(yesNo("no need to tell me"), "no");
+  assert.equal(yesNo("is there no need for a contract"), null);
 });
 
 console.log(`${cases} cases passed`);

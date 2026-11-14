@@ -14,8 +14,7 @@ import { Card } from "@/components/Card";
 import { Figure } from "@/components/Figure";
 import type { GuideHandle } from "@/components/Figure";
 import { answer, answerLine, type Answer } from "@/lib/answers";
-import { afterTalk, followUp, match, yesNo, type Reply } from "@/lib/match";
-import { SUMMARIES, WELCOME, inCorner } from "@/lib/pages";
+import { SUMMARIES, WELCOME, cornerReply } from "@/lib/pages";
 import { talkTime, type Line } from "@/lib/pitch";
 import { START, mode, reduce, replyLines, speaking, type State } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
@@ -160,15 +159,9 @@ export function Corner() {
     dispatch({ type: "stop" });
   }
 
-  /* A typed line: a yes or no to the summary or to his last question, a reply to "Did you mean", or a question. */
-  function heard(text: string): Reply | "more" | "summary" | "welcome" {
-    if (offering) {
-      const said = yesNo(text);
-      if (said) return said === "yes" ? "summary" : "more";
-    }
-    const reply =
-      afterTalk(text, state.cloud.id) ?? followUp(text, state.shown.kind === "choose" ? state.shown.ids.map(answer) : []) ?? match(text);
-    return reply === "more" ? reply : inCorner(reply);
+  /* A typed line, read the same way while it is typed (to fetch his reply early) and when it is sent. */
+  function heard(text: string) {
+    return cornerReply(text, offering, state.cloud.id, state.shown.kind === "choose" ? state.shown.ids.map(answer) : []);
   }
 
   function ask(text: string) {
