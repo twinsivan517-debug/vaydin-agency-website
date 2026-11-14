@@ -6,7 +6,7 @@ import { ANSWERS, CHOOSE, GROUPS, HELLO, MORE, UNKNOWN, UNLISTED, answer, answer
 import { afterTalk, followUp, match, reply, yesNo, type Reply } from "./match.ts";
 import { CHAPTERS, POKES, RESTING, SLEEPING } from "./pitch.ts";
 import { START, mode, pokeable, reduce, speaking, type Event, type State } from "./pitchMachine.ts";
-import { ROOMS, SUMMARIES, WELCOME, cornerReply, inCorner, walkable } from "./pages.ts";
+import { GUIDE, ROOMS, SUMMARIES, WELCOME, cornerReply, inCorner, rememberNo, saidNo, turnsDown, walkable } from "./pages.ts";
 import { TALK } from "./talk.ts";
 
 const run = (events: Event[], from: State = START) => events.reduce(reduce, from);
@@ -541,6 +541,27 @@ check("a visitor who turns him down gets his goodbye, never the list or an answe
   assert.equal(said(cornerReply("is it not needed", false, "a-price", [])), "more");
   assert.equal(said(reply("is it not needed", "opener", [])), "unknown");
   assert.equal(said(cornerReply("no need?", false, "a-price", [])), "answer:need");
+});
+
+check("a no is remembered for the visit: on the next pages he glows in his corner, closed, and offers no more", () => {
+  const offered = [answer("price"), answer("need")];
+  for (const text of ["no need", "No, thanks", "not now", "never mind"]) assert.ok(turnsDown(cornerReply(text, true, GUIDE.id, [])), text);
+  for (const r of [cornerReply("yes", true, GUIDE.id, []), cornerReply("what does it cost", false, "a-price", []), cornerReply("no", false, CHOOSE.id, offered)])
+    assert.ok(!turnsDown(r), typeof r === "string" ? r : r.kind);
+  /* The tab's own storage: a no kept is read on the next page; a storage that refuses, or cannot be reached, keeps nothing. */
+  const kept = new Map<string, string>();
+  const tab = { getItem: (k: string) => kept.get(k) ?? null, setItem: (k: string, v: string) => void kept.set(k, v) } as Storage;
+  assert.equal(saidNo(() => tab), false);
+  rememberNo(() => tab);
+  assert.equal(saidNo(() => tab), true);
+  const refusing = { getItem: () => { throw new Error("denied"); }, setItem: () => { throw new Error("denied"); } } as unknown as Storage;
+  assert.doesNotThrow(() => rememberNo(() => refusing));
+  assert.equal(saidNo(() => refusing), false);
+  assert.equal(saidNo(() => { throw new Error("SecurityError"); }), false);
+  /* The corner asks before it opens, and keeps a no when it hears one. */
+  const corner = readFileSync(new URL("../components/Corner.tsx", import.meta.url), "utf8");
+  assert.match(corner, /if \(saidNo\(\(\) => sessionStorage\)\) return setCalling\(true\);\s*setOpen\(true\);/);
+  assert.match(corner, /if \(turnsDown\(reply\)\) rememberNo\(\(\) => sessionStorage\);\s*dispatch\(\{ type: "ask", reply \}\);/);
 });
 
 console.log(`${cases} cases passed`);

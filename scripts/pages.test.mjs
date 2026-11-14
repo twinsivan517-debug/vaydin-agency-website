@@ -147,6 +147,15 @@ export function walkFault(html) {
 test("every room film follows his walk: it holds at each line, lit as far as its beats, and plays out at his end", () => {
   for (const f of rooms) assert.equal(walkFault(read(f)), null, f);
 });
+test("with reduced motion his walk leaves the film still, every line lit, while he speaks", () => {
+  for (const f of rooms) {
+    const html = read(f), { sel } = lineSelector(html), n = beatsOf(html).length;
+    for (const s of runFilm(html, { reduced: true, walk: walkOf(html) }).steps) {
+      assert.equal(s.running, false, `${f}: the film ran under reduced motion`);
+      assert.equal(s.lit[sel], n, `${f}: ${s.lit[sel]} of ${n} lines lit under reduced motion`);
+    }
+  }
+});
 test("a film that ignores his walk, or never holds, is caught", () => {
   const html = read(rooms.find((r) => read(r).includes("window.addEventListener('vaydin:film', follow)")));
   const deaf = html.replace("window.addEventListener('vaydin:film', follow)", "void follow");

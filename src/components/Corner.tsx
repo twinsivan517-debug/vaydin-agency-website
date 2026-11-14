@@ -14,7 +14,7 @@ import { Card } from "@/components/Card";
 import { Figure } from "@/components/Figure";
 import type { GuideHandle } from "@/components/Figure";
 import { answer, answerLine, type Answer } from "@/lib/answers";
-import { GUIDE, SUMMARIES, WELCOME, cornerReply, walkable } from "@/lib/pages";
+import { GUIDE, SUMMARIES, WELCOME, cornerReply, rememberNo, saidNo, turnsDown, walkable } from "@/lib/pages";
 import { talkTime, type Line } from "@/lib/pitch";
 import { START, mode, reduce, replyLines, speaking, type State } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
@@ -42,6 +42,8 @@ export function Corner() {
   const [offering, setOffering] = useState(false);
   /* The room's lines, on a page he can walk a visitor through. */
   const [room, setRoom] = useState<Line[] | null>(null);
+  /* True while he glows in his corner, closed, for a visitor who turned him down earlier in the visit. */
+  const [calling, setCalling] = useState(false);
   const [draft, setDraft] = useState("");
   const guide = useRef<GuideHandle>(null);
   const voice = useRef<Speaker | null>(null);
@@ -111,13 +113,14 @@ export function Corner() {
 
   /* On every page he has something to say about (a room he walks through, or a page with its summary), he comes up
      by himself a moment after the page opens and offers; his voice waits for the visitor's tap, the only way a
-     browser lets a page speak. */
+     browser lets a page speak. A visitor who turned him down earlier in the visit gets his glow alone, closed. */
   useEffect(() => {
     const page = new URLSearchParams(location.search).get("p") ?? "";
     const lines = walkable(page);
     if (!lines && !Object.hasOwn(SUMMARIES, page)) return;
     const timer = window.setTimeout(() => {
       setRoom(lines ?? null);
+      if (saidNo(() => sessionStorage)) return setCalling(true);
       setOpen(true);
       setOffering(true);
       dispatch({ type: "say", lines: [GUIDE] });
@@ -180,6 +183,7 @@ export function Corner() {
 
   function openUp() {
     unlock();
+    setCalling(false);
     if (!open) setOpen(true);
     /* Mid-line, the panel opens on what he is saying. */
     if (!busy) welcome();
@@ -215,6 +219,7 @@ export function Corner() {
     if (reply === "more") return more();
     unlock();
     setOffering(false);
+    if (turnsDown(reply)) rememberNo(() => sessionStorage);
     dispatch({ type: "ask", reply });
   }
 
@@ -326,7 +331,7 @@ export function Corner() {
           </div>
         </section>
       )}
-      <div className={`relative h-[180px] w-[101px] shrink-0 ${offering && !busy ? "corner-alive" : ""}`}>
+      <div className={`relative h-[180px] w-[101px] shrink-0 ${(offering && !busy) || calling ? "corner-alive" : ""}`}>
         {!open &&
           (busy ? (
             <button

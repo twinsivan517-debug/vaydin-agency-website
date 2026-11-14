@@ -145,3 +145,23 @@ export function cornerReply(text: string, offering: boolean, lastLine: string, o
   const said = reply(text, lastLine, offered);
   return said === "more" ? said : inCorner(said);
 }
+
+/* A visitor who turned him down is not offered again on the next pages of the visit (the owner's pick: until the
+   tab closes). The tab's own storage, reached and used inside try, so a browser that refuses it only means he
+   offers again. */
+const TURNED_DOWN = "vaydin-turned-down";
+export const turnsDown = (r: ReturnType<typeof cornerReply>) => typeof r !== "string" && r.kind === "talk" && r.talk === "bye";
+export function rememberNo(store: () => Storage) {
+  try {
+    store().setItem(TURNED_DOWN, "1");
+  } catch {
+    /* Nothing kept: he offers again on the next page. */
+  }
+}
+export function saidNo(store: () => Storage) {
+  try {
+    return store().getItem(TURNED_DOWN) === "1";
+  } catch {
+    return false;
+  }
+}
