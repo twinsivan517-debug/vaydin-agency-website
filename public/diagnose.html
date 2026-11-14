@@ -269,7 +269,7 @@
   var BEATS = [1.0, 6.0, 11.5, 17.5, 22.0, 26.5, 30.0], END = 37.4;  /* when each line lights; the film's length */
   var SLOT_COLORS = [GOLD, SUN, CYAN, GREEN, CYAN, GOLD, GREEN], SLOT_SYMS = ['chat', 'clock', 'lens', 'ring', 'key', 'phone', 'tick'];
   var W, H, dpr, F, U, sky = [], skyline = [], roads = [], pins = [], glyphs = [], rivers = [], seekers = [], unitCache = {};
-  var t0 = 0, raf = 0, visible = false, done = false, full = 2 * Math.PI;
+  var raf = 0, visible = false, done = false, full = 2 * Math.PI;
 
   function rnd(seed){ return function(){ seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }; }
   function outline(x, y, w, h, r, n){
@@ -652,12 +652,26 @@
     for (var ti = 0; ti < tags.length; ti++) tags[ti].classList.toggle('on', t >= TIN[ti] && t < TOUT[ti]);
     return t > END;
   }
-  function frame(now){
-    if (!t0) t0 = now;
-    var settled = draw((now - t0) / 1000);
-    if (settled){ done = true; raf = 0; return; }
-    raf = visible ? requestAnimationFrame(frame) : 0;
+  /* The film's clock. Alone, it runs from the start each time the film comes into view, and settles on its end.
+     Guided by him from the corner (public/guide/corner.js passes his lines on as 'vaydin:guide'), each line's scene
+     plays as he says it and holds there until his next line, so the film and his voice stay in step whatever a
+     take's length; when he ends, the film plays out. */
+  var clock = 0, last = 0, guided = false, hold = Infinity, lineScene = null;
+  /* Which scene each of his lines belongs to: a scene's lines are its heading and its paragraphs, in order. */
+  function sceneOf(n){
+    if (!lineScene){ lineScene = []; items.forEach(function(li, s){ li.querySelectorAll('h2, p').forEach(function(){ lineScene.push(s); }); }); }
+    return lineScene[n];
   }
+  function frame(now){
+    clock = Math.min(clock + (last ? Math.min(0.1, (now - last) / 1000) : 0), guided ? hold : Infinity);
+    last = now;
+    var settled = draw(clock);
+    if (settled && !guided){ done = true; raf = 0; last = 0; return; }
+    if (guided && clock >= hold){ raf = 0; last = 0; return; }
+    raf = visible ? requestAnimationFrame(frame) : 0;
+    if (!raf) last = 0;
+  }
+  function run(){ if (!raf){ last = 0; raf = requestAnimationFrame(frame); } }
   function settle(){ draw(99); done = true; }
 
   layout();
@@ -669,9 +683,23 @@
     new IntersectionObserver(function(es){
       es.forEach(function(e){
         visible = e.isIntersecting && e.intersectionRatio >= 0.2;
-        if (visible && !done && !raf){ if (t0) t0 = 0; raf = requestAnimationFrame(frame); }
+        if (visible && !done && !raf){ if (!guided) clock = 0; run(); }
       });
     }, { threshold: [0, 0.2] }).observe(stage);
+    window.addEventListener('vaydin:guide', function(e){
+      var d = e.detail || {};
+      if (d.walk === 'start'){
+        guided = true; clock = 0; hold = 0; done = false;
+        stage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      var s = d.line === null ? undefined : sceneOf(d.line);
+      if (guided && s !== undefined){
+        clock = Math.max(clock, s === 0 ? 0 : BEATS[s]);
+        hold = s + 1 < BEATS.length ? BEATS[s + 1] - 0.05 : END;
+      }
+      if (d.walk === 'end'){ guided = false; hold = Infinity; }
+      run();
+    });
   }
   var rt = 0;
   window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ layout(); if (done) settle(); }, 150); });

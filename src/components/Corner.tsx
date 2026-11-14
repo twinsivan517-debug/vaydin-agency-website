@@ -14,7 +14,7 @@ import { Card } from "@/components/Card";
 import { Figure } from "@/components/Figure";
 import type { GuideHandle } from "@/components/Figure";
 import { answer, answerLine, type Answer } from "@/lib/answers";
-import { SUMMARIES, WELCOME, cornerReply } from "@/lib/pages";
+import { GUIDE, SUMMARIES, WELCOME, cornerReply, walkable } from "@/lib/pages";
 import { talkTime, type Line } from "@/lib/pitch";
 import { START, mode, reduce, replyLines, speaking, type State } from "@/lib/pitchMachine";
 import { speaker, type Speaker } from "@/lib/speaker";
@@ -40,6 +40,8 @@ export function Corner() {
   const [open, setOpen] = useState(false);
   /* True while he waits for a yes or no to the page's summary. */
   const [offering, setOffering] = useState(false);
+  /* The room's lines, on a page he can walk a visitor through. */
+  const [room, setRoom] = useState<Line[] | null>(null);
   const [draft, setDraft] = useState("");
   const guide = useRef<GuideHandle>(null);
   const voice = useRef<Speaker | null>(null);
@@ -68,7 +70,8 @@ export function Corner() {
     return () => watch.disconnect();
   }, [open]);
   /* The card under his words, unless he is offering or saying the page's own lines. */
-  const pageLine = state.cloud.id === WELCOME.id || Object.values(SUMMARIES).includes(state.cloud);
+  const pageLine =
+    state.cloud.id === WELCOME.id || state.cloud.id === GUIDE.id || Object.values(SUMMARIES).includes(state.cloud) || !!room?.includes(state.cloud);
   const card = !offering && !pageLine && state.shown.kind !== "chapter";
   /* His words above the card, unless the card already says them. */
   const echoed =
@@ -106,6 +109,41 @@ export function Corner() {
     return () => document.removeEventListener("visibilitychange", hide);
   }, []);
 
+  /* On a room he can walk through, he comes up by himself a moment after the page opens and offers; his voice
+     waits for the visitor's tap, the only way a browser lets a page speak. */
+  useEffect(() => {
+    const lines = walkable(new URLSearchParams(location.search).get("p") ?? "");
+    if (!lines) return;
+    const timer = window.setTimeout(() => {
+      setRoom(lines);
+      setOpen(true);
+      setOffering(true);
+      dispatch({ type: "say", lines: [GUIDE] });
+    }, 1000);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  /* While he walks the room, the page hears which line he is on, so its film plays that line's scene; when he
+     ends or is stopped, it hears that too. */
+  const walking = useRef(false);
+  useEffect(() => {
+    if (!walking.current || !room) return;
+    const at = room.indexOf(cloud);
+    if (talking && at >= 0) window.parent.postMessage({ vaydinLine: at }, location.origin);
+    else if (!talking) {
+      walking.current = false;
+      window.parent.postMessage({ vaydinGuide: "end" }, location.origin);
+    }
+  }, [talking, cloud, room]);
+
+  function walk(lines: Line[]) {
+    unlock();
+    setOffering(false);
+    walking.current = true;
+    window.parent.postMessage({ vaydinGuide: "start" }, location.origin);
+    dispatch({ type: "say", lines });
+  }
+
   function unlock() {
     (voice.current ??= speaker()).arm();
     guide.current?.unlock();
@@ -127,6 +165,7 @@ export function Corner() {
   }
 
   function summarise() {
+    if (room) return walk(room);
     const summary = pageSummary();
     if (!summary) return more();
     unlock();
@@ -146,8 +185,8 @@ export function Corner() {
     if (!summary) return more();
     unlock();
     setOffering(true);
-    dispatch({ type: "say", lines: [WELCOME] });
-    ready(summary);
+    dispatch({ type: "say", lines: [room ? GUIDE : WELCOME] });
+    ready(room ? room[0] : summary);
   }
 
   function hide() {
@@ -228,7 +267,7 @@ export function Corner() {
             {offering ? (
               <div className="flex flex-wrap gap-2">
                 <button type="button" onClick={summarise} className={`${BUTTON} bg-accent/15`}>
-                  Yes, tell me
+                  {room ? "Yes, guide me" : "Yes, tell me"}
                 </button>
                 {/* The same words typed: read by the one decision, so the button and the box never disagree. */}
                 <button type="button" onClick={() => ask("No, thanks")} className={BUTTON}>
@@ -282,7 +321,7 @@ export function Corner() {
           </div>
         </section>
       )}
-      <div className="relative h-[180px] w-[101px] shrink-0">
+      <div className={`relative h-[180px] w-[101px] shrink-0 ${offering && !busy ? "corner-alive" : ""}`}>
         {!open &&
           (busy ? (
             <button

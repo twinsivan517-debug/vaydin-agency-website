@@ -10,6 +10,10 @@ const line = (id: string, text: string): Line => ({ id, text, audio: `/voice/${i
 
 export const WELCOME = line("x-welcome", "Hi, welcome to this page. Would you like a short summary of it?");
 
+/* His offer on a room he can walk a visitor through. It shows before any tap, when a browser lets no page make a
+   sound, so it is read, never spoken, and has no recording. */
+export const GUIDE: Line = { id: "x-guide", text: "Would you like me to guide you through this page?" };
+
 export const SUMMARIES: Record<string, Line> = {
   app: line(
     "p-app",
@@ -105,6 +109,12 @@ export const ROOMS: Record<string, Line[]> = {
     "Every number is measured, never promised, and your medical records stay in your own system.",
     "Tell us about your clinic on WhatsApp: a person answers and sends your plan. No forms.",
   ].map((text, i) => ({ id: `pl-${String(i + 1).padStart(2, "0")}`, text })),
+};
+
+/* A room he can walk a visitor through: one whose every line has its recording. */
+export const walkable = (page: string): Line[] | undefined => {
+  const lines = Object.hasOwn(ROOMS, page) ? ROOMS[page] : [];
+  return lines.length > 0 && lines.every((l) => l.audio) ? lines : undefined;
 };
 
 /* In the corner there are no chapter chips to point at: a greeting is met

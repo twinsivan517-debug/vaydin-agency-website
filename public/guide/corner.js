@@ -76,6 +76,10 @@
     addEventListener("message", function (event) {
       if (event.origin !== location.origin || event.source !== frame.contentWindow || !event.data) return;
       if (typeof event.data.vaydinTalking === "boolean") talking = event.data.vaydinTalking;
+      /* While he walks the room: which line he is on, or that he starts or ends; a film that listens follows. */
+      var walk = event.data.vaydinGuide, line = event.data.vaydinLine;
+      if (walk || typeof line === "number")
+        dispatchEvent(new CustomEvent("vaydin:guide", { detail: { walk: walk || null, line: typeof line === "number" ? line : null } }));
       var said = event.data.vaydinCorner;
       if (said) want = said === "closed" ? null : Math.round(event.data.height || 640);
       place();
