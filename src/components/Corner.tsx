@@ -136,9 +136,12 @@ export function Corner() {
     }
   }, [talking, cloud, room]);
 
+  /* His panel folds away while he walks the room: on a phone it would cover the film he is telling, and the page
+     already shows each line as he says it. He talks from the corner, his Stop in reach. */
   function walk(lines: Line[]) {
     unlock();
     setOffering(false);
+    hide();
     walking.current = true;
     window.parent.postMessage({ vaydinGuide: "start" }, location.origin);
     dispatch({ type: "say", lines });

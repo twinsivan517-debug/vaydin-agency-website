@@ -690,7 +690,7 @@
       var d = e.detail || {};
       if (d.walk === 'start'){
         guided = true; clock = 0; hold = 0; done = false;
-        stage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        cv.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
       var s = d.line === null ? undefined : sceneOf(d.line);
       if (guided && s !== undefined){
