@@ -690,7 +690,9 @@
       var d = e.detail || {};
       if (d.walk === 'start'){
         guided = true; clock = 0; hold = 0; done = false;
-        cv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        /* The film's top just under the bar across the top (76 px, as corner.js counts it): on a phone the drawing is
+           the top of a stage taller than the screen, so centring it showed only the lines. */
+        window.scrollTo({ top: stage.getBoundingClientRect().top + window.scrollY - 76, behavior: 'smooth' });
       }
       var s = d.line === null ? undefined : sceneOf(d.line);
       if (guided && s !== undefined){
